@@ -4,8 +4,8 @@
 **Document Version:** 1.0  
 **Architecture:** Multi-Tenant SaaS, Modular Monolith  
 **Primary Framework:** Laravel / PHP  
-**Database:** PostgreSQL  
-**Frontend:** React + TypeScript / Next.js  
+**Database:** MySQL  
+**Frontend:** Blade
 **Purpose:** Master specification and coding guide for AI-assisted development
 
 ---
@@ -191,15 +191,13 @@ External Integration Layer
 
 Recommended:
 
-- React
-- TypeScript
-- Next.js
+- Blade
 - Tailwind CSS
 - A reusable component library
 
 ## Database
 
-- PostgreSQL
+- MySQL
 
 ## Cache
 
@@ -278,7 +276,7 @@ Company A
 
 ## 5.2 Tenant model
 
-Use a shared application and initially a shared PostgreSQL database with tenant-aware rows.
+Use a shared application and initially a shared MySQL database with tenant-aware rows.
 
 Tenant-owned tables should include:
 
@@ -1190,7 +1188,7 @@ series_instance_uid
 sop_instance_uid
 ```
 
-Do not store large DICOM objects in PostgreSQL as the normal architecture.
+Do not store large DICOM objects in MySQL as the normal architecture.
 
 Store metadata and references in HMS and images in PACS/object storage.
 
@@ -1833,7 +1831,7 @@ Avoid:
 - hidden side effects
 - duplicated business logic
 - raw SQL when Eloquent/query builder is sufficient
-- business logic in Blade/React components
+- business logic in Blade/Blade components
 
 ---
 
@@ -2198,7 +2196,7 @@ A feature is complete only when:
 Deliver:
 
 - Laravel application
-- PostgreSQL
+- MySQL
 - Redis
 - authentication
 - tenancy
@@ -2636,7 +2634,7 @@ national_identifier where legally permitted
 
 Search results must always apply tenant and branch permissions.
 
-For high scale, introduce Elasticsearch/OpenSearch only after PostgreSQL search is no longer sufficient.
+For high scale, introduce Elasticsearch/OpenSearch only after MySQL search is no longer sufficient.
 
 ---
 
@@ -2807,10 +2805,9 @@ You are the Principal Software Architect and Senior Healthcare Software Engineer
 
 STACK:
 - Laravel / PHP
-- PostgreSQL
+- MySQL
 - Redis
-- React + TypeScript
-- Next.js where appropriate
+- Blade
 - RabbitMQ for integration messaging where needed
 - FHIR / HL7 v2 / DICOM integration
 - Modular monolith architecture
@@ -2934,7 +2931,7 @@ Initialize the Laravel multi-tenant SaaS HMS foundation.
 
 Implement:
 1. Laravel application structure
-2. PostgreSQL configuration
+2. MySQL configuration
 3. Redis configuration
 4. Authentication
 5. Companies
@@ -2970,7 +2967,7 @@ Multi-Tenant SaaS
         +
 Modular Laravel Monolith
         +
-PostgreSQL
+MySQL
         +
 Redis
         +
