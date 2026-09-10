@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c5dc46e4534b15d9950044fe324c3a7",
+    "content-hash": "a435f4707ddffab4d71a842f9ed3e263",
     "packages": [
+        {
+            "name": "almasaeed2010/adminlte",
+            "version": "v4.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ColorlibHQ/AdminLTE.git",
+                "reference": "a3702d79b95573eadef771f67065a9033cb4338b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/a3702d79b95573eadef771f67065a9033cb4338b",
+                "reference": "a3702d79b95573eadef771f67065a9033cb4338b",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colorlib"
+                }
+            ],
+            "description": "AdminLTE - admin control panel and dashboard that's based on Bootstrap 4",
+            "homepage": "https://adminlte.io/",
+            "keywords": [
+                "JS",
+                "admin",
+                "back-end",
+                "css",
+                "less",
+                "responsive",
+                "template",
+                "theme",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/ColorlibHQ/AdminLTE/issues",
+                "source": "https://github.com/ColorlibHQ/AdminLTE/tree/v4.9.1"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/daniel007in",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/danny007in",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-26T09:18:41+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.18.0",
@@ -1058,6 +1111,81 @@
                 }
             ],
             "time": "2026-08-24T17:13:02+00:00"
+        },
+        {
+            "name": "jeroennoten/laravel-adminlte",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jeroennoten/Laravel-AdminLTE.git",
+                "reference": "c1290ac46b1454ff9c211132f184d7985fac3134"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jeroennoten/Laravel-AdminLTE/zipball/c1290ac46b1454ff9c211132f184d7985fac3134",
+                "reference": "c1290ac46b1454ff9c211132f184d7985fac3134",
+                "shasum": ""
+            },
+            "require": {
+                "almasaeed2010/adminlte": "^4.9",
+                "laravel/framework": "^12.0|^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0|^11.0",
+                "phpunit/phpunit": "^11.0|^12.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JeroenNoten\\LaravelAdminLte\\AdminLteServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JeroenNoten\\LaravelAdminLte\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen Noten",
+                    "email": "jeroennoten@me.com",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Diego Smania",
+                    "email": "diego.smania@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Florian Ressel",
+                    "email": "florian@genxtreme.de",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Easy AdminLTE v4 integration with Laravel",
+            "homepage": "https://jeroennoten.github.io/Laravel-AdminLTE",
+            "keywords": [
+                "AdminLTE",
+                "admin",
+                "administrator",
+                "blade",
+                "bootstrap5",
+                "dashboard",
+                "laravel"
+            ],
+            "support": {
+                "docs": "https://jeroennoten.github.io/Laravel-AdminLTE",
+                "issues": "https://github.com/jeroennoten/Laravel-AdminLTE/issues",
+                "source": "https://github.com/jeroennoten/Laravel-AdminLTE"
+            },
+            "time": "2026-09-03T13:43:19+00:00"
         },
         {
             "name": "laravel/framework",
