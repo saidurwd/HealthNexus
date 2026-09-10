@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'HealthNexus',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -77,12 +77,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Health</b>Nexus',
     'logo_img' => 'vendor/adminlte/dist/assets/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image opacity-75 shadow',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs opacity-75',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'HealthNexus Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -760,102 +760,47 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
+        ['header' => 'main'],
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
+            'text' => 'Dashboard',
+            'url' => 'home',
+            'icon' => 'bi bi-speedometer2',
+        ],
+        ['header' => 'management'],
+        [
+            'text' => 'Companies',
+            'url' => 'admin/companies',
+            'icon' => 'bi bi-building',
+            'can' => 'manage companies',
         ],
         [
-            'type' => 'darkmode-widget',
-            'topnav_right' => true,
+            'text' => 'Branches',
+            'url' => 'admin/branches',
+            'icon' => 'bi bi-shop',
+            'can' => 'manage branches',
         ],
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Departments',
+            'url' => 'admin/departments',
+            'icon' => 'bi bi-diagram-3',
+            'can' => 'manage departments',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Users',
+            'url' => 'admin/users',
+            'icon' => 'bi bi-people',
+            'can' => 'manage users',
         ],
+        ['header' => 'settings'],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'bi bi-file-earmark',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
+            'text' => 'Profile',
+            'url' => 'admin/profile',
             'icon' => 'bi bi-person',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
+            'text' => 'Change Password',
+            'url' => 'admin/change-password',
             'icon' => 'bi bi-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'bi bi-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'danger',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'warning',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'info',
-            'url' => '#',
         ],
     ],
 
