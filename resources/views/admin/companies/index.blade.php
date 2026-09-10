@@ -19,6 +19,7 @@
                         <th>Code</th>
                         <th>Email</th>
                         <th>Status</th>
+                        <th>Branches</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -34,6 +35,11 @@
                                 </span>
                             </td>
                             <td>
+                                <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-xs btn-success">
+                                    {{ $company->branches_count ?? $company->branches()->count() }} Branches
+                                </a>
+                            </td>
+                            <td>
                                 <a href="{{ route('admin.companies.show', $company) }}" class="btn btn-xs btn-info">View</a>
                                 <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-xs btn-warning">Edit</a>
                                 <form action="{{ route('admin.companies.destroy', $company) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
@@ -45,7 +51,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">No companies found.</td>
+                            <td colspan="6" class="text-center">No companies found.</td>
                         </tr>
                     @endforelse
                 </tbody>

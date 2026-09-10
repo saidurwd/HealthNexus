@@ -11,6 +11,7 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         $companies = Company::query()
+            ->withCount('branches')
             ->when($request->filled('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
                 ->orWhere('code', 'like', "%{$search}%"))
             ->when($request->filled('status'), fn ($q, $status) => $q->where('is_active', $status === 'active'))
