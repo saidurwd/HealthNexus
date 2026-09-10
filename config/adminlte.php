@@ -781,6 +781,31 @@ return [
             'icon' => 'bi bi-building',
             'can' => 'manage companies',
         ],
+        [
+            'text' => 'Departments',
+            'url' => 'admin/departments',
+            'icon' => 'bi bi-diagram-3',
+            'can' => 'manage departments',
+        ],
+        ['header' => 'access_control'],
+        [
+            'text' => 'Users',
+            'url' => 'admin/users',
+            'icon' => 'bi bi-people',
+            'can' => 'manage users',
+        ],
+        [
+            'text' => 'Roles',
+            'url' => 'admin/roles',
+            'icon' => 'bi bi-shield-lock',
+            'can' => 'manage roles',
+        ],
+        [
+            'text' => 'Permissions',
+            'url' => 'admin/permissions',
+            'icon' => 'bi bi-key',
+            'can' => 'manage permissions',
+        ],
         ['header' => 'settings'],
         [
             'text' => 'Profile',

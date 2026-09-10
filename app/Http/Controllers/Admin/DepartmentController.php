@@ -23,6 +23,26 @@ class DepartmentController extends Controller
         return view('admin.departments.index', compact('company', 'branch', 'departments'));
     }
 
+    public function globalIndex(Request $request)
+    {
+        $user = auth()->user();
+
+        $departments = Department::query()
+            ->whereHas('branch', function ($q) use ($user) {
+                $q->whereHas('company', function ($q2) use ($user) {
+                    $q2->whereHas('users', function ($q3) use ($user) {
+                        $q3->where('user_id', $user->id);
+                    });
+                });
+            })
+            ->when($request->filled('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('code', 'like', "%{$search}%"))
+            ->latest()
+            ->paginate(20);
+
+        return view('admin.departments.global', compact('departments'));
+    }
+
     public function create(Company $company, Branch $branch)
     {
         return view('admin.departments.create', compact('company', 'branch'));

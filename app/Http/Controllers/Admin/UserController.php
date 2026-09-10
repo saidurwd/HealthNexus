@@ -21,6 +21,17 @@ class UserController extends Controller
         return view('admin.users.index', compact('company', 'users'));
     }
 
+    public function globalIndex(Request $request)
+    {
+        $users = User::query()
+            ->when($request->filled('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%"))
+            ->latest()
+            ->paginate(20);
+
+        return view('admin.users.global', compact('users'));
+    }
+
     public function show(Company $company, User $user)
     {
         abort_if(! $user->companies()->where('companies.id', $company->id)->exists(), 404);
