@@ -98,12 +98,12 @@ class CrossBranchIsolationTest extends TestCase
         $response->assertJsonFragment(['name' => $this->deptA->name]);
     }
 
-    public function test_user_cannot_create_department_in_branch_they_dont_have_access_to(): void
+    public function test_user_cannot_create_department_in_branch_they_are_not_assigned_to(): void
     {
         $otherBranch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->user->branches()->attach($otherBranch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
+        $this->user->branches()->detach($otherBranch->id);
 
-        $response = $this->postJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}/departments", [
+        $response = $this->withHeader('X-Company-Id', $this->company->id)->postJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}/departments", [
             'name' => 'New Department',
             'code' => 'NEW-DEPT',
         ]);
@@ -111,24 +111,24 @@ class CrossBranchIsolationTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_user_cannot_update_branch_they_dont_manage(): void
+    public function test_user_cannot_update_branch_they_are_not_assigned_to(): void
     {
         $otherBranch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->user->branches()->attach($otherBranch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
+        $this->user->branches()->detach($otherBranch->id);
 
-        $response = $this->putJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}", [
+        $response = $this->withHeader('X-Company-Id', $this->company->id)->putJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}", [
             'name' => 'Hacked Branch',
         ]);
 
         $response->assertStatus(403);
     }
 
-    public function test_user_cannot_delete_branch_they_dont_own(): void
+    public function test_user_cannot_delete_branch_they_are_not_assigned_to(): void
     {
         $otherBranch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->user->branches()->attach($otherBranch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
+        $this->user->branches()->detach($otherBranch->id);
 
-        $response = $this->deleteJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}");
+        $response = $this->withHeader('X-Company-Id', $this->company->id)->deleteJson("/api/v1/companies/{$this->company->id}/branches/{$otherBranch->id}");
 
         $response->assertStatus(403);
     }

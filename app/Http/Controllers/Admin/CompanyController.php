@@ -56,8 +56,8 @@ class CompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:companies,code,' . $company->id],
-            'slug' => ['required', 'string', 'max:255', 'unique:companies,slug,' . $company->id],
+            'code' => ['required', 'string', 'max:50', 'unique:companies,code,'.$company->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:companies,slug,'.$company->id],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],

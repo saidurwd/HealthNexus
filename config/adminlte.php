@@ -1,5 +1,13 @@
 <?php
 
+use JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter;
+
 /*
 |--------------------------------------------------------------------------
 | Laravel AdminLTE Configuration
@@ -190,7 +198,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
 
     // The HTTP method spoofed on the logout form. Set it to 'GET' when your
@@ -763,7 +771,7 @@ return [
         ['header' => 'main'],
         [
             'text' => 'Dashboard',
-            'url' => 'home',
+            'url' => 'dashboard',
             'icon' => 'bi bi-speedometer2',
         ],
         ['header' => 'tenants'],
@@ -799,13 +807,13 @@ return [
     */
 
     'filters' => [
-        JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
+        GateFilter::class,
+        HrefFilter::class,
+        SearchFilter::class,
+        ActiveFilter::class,
+        ClassesFilter::class,
+        LangFilter::class,
+        DataFilter::class,
     ],
 
     /*

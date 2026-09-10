@@ -32,7 +32,7 @@ class DepartmentController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:departments,code,NULL,id,company_id,' . $company->id . ',branch_id,' . $branch->id],
+            'code' => ['required', 'string', 'max:50', 'unique:departments,code,NULL,id,company_id,'.$company->id.',branch_id,'.$branch->id],
             'description' => ['nullable', 'string'],
             'head_of_department' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email'],
@@ -65,7 +65,7 @@ class DepartmentController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:departments,code,' . $department->id . ',id,company_id,' . $company->id . ',branch_id,' . $branch->id],
+            'code' => ['required', 'string', 'max:50', 'unique:departments,code,'.$department->id.',id,company_id,'.$company->id.',branch_id,'.$branch->id],
             'description' => ['nullable', 'string'],
             'head_of_department' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email'],

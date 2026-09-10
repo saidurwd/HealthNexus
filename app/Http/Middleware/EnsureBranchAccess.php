@@ -16,14 +16,36 @@ class EnsureBranchAccess
         $companyId = $this->resolver->getCompanyId();
         $branchId = $this->resolver->getBranchId();
 
+        if ($companyId === null && $request->route('company')) {
+            $companyId = $request->route('company')->id;
+            $this->resolver->setCompanyId($companyId);
+        }
+
+        if ($branchId === null && $request->route('branch')) {
+            $branchId = $request->route('branch')->id;
+            $this->resolver->setBranchId($branchId);
+        }
+
         if ($companyId === null || $branchId === null) {
-            abort(403, 'No company or branch context set.');
+            return response()->json(['error' => 'No company or branch context set.'], 403);
         }
 
         $user = $request->user();
 
-        if ($user === null || ! $user->branches()->where('branches.id', $branchId)->exists()) {
-            abort(403, 'You do not have access to this branch.');
+        $hasAccess = $user ? \DB::table('user_branches')
+            ->where('user_id', $user->id)
+            ->where('branch_id', $branchId)
+            ->exists() : false;
+
+        if (! $hasAccess) {
+            return response()->json([
+                'error' => 'You do not have access to this branch.',
+                'debug' => [
+                    'user_id' => $user?->id,
+                    'branch_id' => $branchId,
+                    'user_branches_count' => $user ? \DB::table('user_branches')->where('user_id', $user->id)->count() : 0,
+                ],
+            ], 403);
         }
 
         return $next($request);

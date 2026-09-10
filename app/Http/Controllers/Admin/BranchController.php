@@ -30,8 +30,8 @@ class BranchController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:branches,code,NULL,id,company_id,' . $company->id],
-            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,NULL,id,company_id,' . $company->id],
+            'code' => ['required', 'string', 'max:50', 'unique:branches,code,NULL,id,company_id,'.$company->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,NULL,id,company_id,'.$company->id],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],
@@ -63,8 +63,8 @@ class BranchController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:branches,code,' . $branch->id . ',id,company_id,' . $company->id],
-            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,' . $branch->id . ',id,company_id,' . $company->id],
+            'code' => ['required', 'string', 'max:50', 'unique:branches,code,'.$branch->id.',id,company_id,'.$company->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,'.$branch->id.',id,company_id,'.$company->id],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],

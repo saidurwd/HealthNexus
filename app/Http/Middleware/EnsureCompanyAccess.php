@@ -15,14 +15,24 @@ class EnsureCompanyAccess
     {
         $companyId = $this->resolver->getCompanyId();
 
+        if ($companyId === null && $request->route('company')) {
+            $companyId = $request->route('company')->id;
+            $this->resolver->setCompanyId($companyId);
+        }
+
         if ($companyId === null) {
-            abort(403, 'No company context set.');
+            return response()->json(['error' => 'No company context set.'], 403);
         }
 
         $user = $request->user();
 
-        if ($user === null || ! $user->companies()->where('companies.id', $companyId)->exists()) {
-            abort(403, 'You do not have access to this company.');
+        $hasAccess = $user ? \DB::table('user_companies')
+            ->where('user_id', $user->id)
+            ->where('company_id', $companyId)
+            ->exists() : false;
+
+        if (! $hasAccess) {
+            return response()->json(['error' => 'You do not have access to this company.'], 403);
         }
 
         return $next($request);
