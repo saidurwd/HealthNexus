@@ -773,25 +773,6 @@ return [
             'icon' => 'bi bi-building',
             'can' => 'manage companies',
         ],
-        [
-            'text' => 'Branches',
-            'url' => 'admin/branches',
-            'icon' => 'bi bi-shop',
-            'can' => 'manage branches',
-        ],
-        [
-            'text' => 'Departments',
-            'url' => 'admin/departments',
-            'icon' => 'bi bi-diagram-3',
-            'can' => 'manage departments',
-        ],
-        ['header' => 'users'],
-        [
-            'text' => 'Users',
-            'url' => 'admin/users',
-            'icon' => 'bi bi-people',
-            'can' => 'manage users',
-        ],
         ['header' => 'settings'],
         [
             'text' => 'Profile',
