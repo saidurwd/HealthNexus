@@ -766,7 +766,7 @@ return [
             'url' => 'home',
             'icon' => 'bi bi-speedometer2',
         ],
-        ['header' => 'management'],
+        ['header' => 'tenants'],
         [
             'text' => 'Companies',
             'url' => 'admin/companies',
@@ -785,6 +785,7 @@ return [
             'icon' => 'bi bi-diagram-3',
             'can' => 'manage departments',
         ],
+        ['header' => 'users'],
         [
             'text' => 'Users',
             'url' => 'admin/users',
