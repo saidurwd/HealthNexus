@@ -10,13 +10,7 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        try {
-            $companies = \App\Models\Company::where('is_active', true)->get();
-        } catch (\Throwable $e) {
-            $companies = collect();
-        }
-
-        return view('auth.login', compact('companies'));
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -24,51 +18,78 @@ class LoginController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
-            'branch_id' => ['required', 'integer', 'exists:branches,id'],
         ]);
 
-        $loginCredentials = [
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-        ];
-
-        if (! Auth::attempt($loginCredentials, $request->filled('remember'))) {
+        if (! Auth::attempt($credentials, $request->filled('remember'))) {
             return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
             ])->onlyInput('email');
         }
 
-        $request->session()->regenerate();
+        $request->session()->put('login_email', $credentials['email']);
 
-        $user = Auth::user();
+        return redirect()->route('login.context');
+    }
 
-        $companyId = (int) $credentials['company_id'];
-        $branchId = (int) $credentials['branch_id'];
+    public function showCompanyBranchForm(Request $request)
+    {
+        $email = $request->session()->get('login_email');
+
+        if (! $email) {
+            return redirect()->route('login');
+        }
+
+        $user = \App\Models\User::where('email', $email)->first();
+
+        if (! $user) {
+            return redirect()->route('login')->withErrors(['email' => 'User not found.']);
+        }
+
+        $companies = $user->companies()->get();
+
+        return view('auth.context', compact('companies', 'user'));
+    }
+
+    public function storeCompanyBranch(Request $request)
+    {
+        $request->validate([
+            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'branch_id' => ['required', 'integer', 'exists:branches,id'],
+        ]);
+
+        $email = $request->session()->get('login_email');
+
+        if (! $email) {
+            return redirect()->route('login')->withErrors(['email' => 'Session expired. Please login again.']);
+        }
+
+        $user = \App\Models\User::where('email', $email)->first();
+
+        if (! $user) {
+            return redirect()->route('login')->withErrors(['email' => 'User not found.']);
+        }
+
+        $companyId = (int) $request->input('company_id');
+        $branchId = (int) $request->input('branch_id');
 
         $hasCompanyAccess = $user->companies()->where('companies.id', $companyId)->exists();
         $hasBranchAccess = $user->branches()->where('branches.id', $branchId)->exists();
 
         if (! $hasCompanyAccess || ! $hasBranchAccess) {
-            Auth::logout();
-
-            return back()->withErrors([
-                'email' => 'You do not have access to the selected company or branch.',
-            ])->onlyInput('email');
+            return back()->withErrors(['email' => 'You do not have access to the selected company or branch.']);
         }
 
         $branch = \App\Models\Branch::findOrFail($branchId);
 
         if ($branch->company_id !== $companyId) {
-            Auth::logout();
-
-            return back()->withErrors([
-                'email' => 'The selected branch does not belong to the selected company.',
-            ])->onlyInput('email');
+            return back()->withErrors(['email' => 'The selected branch does not belong to the selected company.']);
         }
 
         $request->session()->put('tenant_company_id', $companyId);
         $request->session()->put('tenant_branch_id', $branchId);
+        $request->session()->forget('login_email');
+
+        $user->update(['last_login_at' => now()]);
 
         return redirect()->intended('/dashboard');
     }
