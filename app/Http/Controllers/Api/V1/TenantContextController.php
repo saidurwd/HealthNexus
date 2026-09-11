@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use App\Models\Department;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\JsonResponse;
@@ -16,19 +17,17 @@ class TenantContextController extends Controller
     {
         $user = $request->user();
 
-        return response()->json([
-            'data' => [
-                'company_id' => $this->resolver->getCompanyId(),
-                'branch_id' => $this->resolver->getBranchId(),
-                'department_id' => $this->resolver->getDepartmentId(),
-                'companies' => $user->companies()->get(['companies.id', 'companies.name', 'companies.code']),
-                'branches' => $this->resolver->getCompanyId()
-                    ? $user->branches()->whereHas('company', fn ($q) => $q->where('id', $this->resolver->getCompanyId()))->get(['branches.id', 'branches.name', 'branches.code'])
-                    : collect(),
-                'departments' => $this->resolver->getBranchId()
-                    ? Department::where('branch_id', $this->resolver->getBranchId())->get(['departments.id', 'departments.name', 'departments.code'])
-                    : collect(),
-            ],
+        return ApiResponse::success([
+            'company_id' => $this->resolver->getCompanyId(),
+            'branch_id' => $this->resolver->getBranchId(),
+            'department_id' => $this->resolver->getDepartmentId(),
+            'companies' => $user->companies()->get(['companies.id', 'companies.name', 'companies.code']),
+            'branches' => $this->resolver->getCompanyId()
+                ? $user->branches()->whereHas('company', fn ($q) => $q->where('id', $this->resolver->getCompanyId()))->get(['branches.id', 'branches.name', 'branches.code'])
+                : collect(),
+            'departments' => $this->resolver->getBranchId()
+                ? Department::where('branch_id', $this->resolver->getBranchId())->get(['departments.id', 'departments.name', 'departments.code'])
+                : collect(),
         ]);
     }
 
@@ -58,12 +57,10 @@ class TenantContextController extends Controller
             $this->resolver->setDepartmentId($validated['department_id']);
         }
 
-        return response()->json([
-            'data' => [
-                'company_id' => $this->resolver->getCompanyId(),
-                'branch_id' => $this->resolver->getBranchId(),
-                'department_id' => $this->resolver->getDepartmentId(),
-            ],
-        ]);
+        return ApiResponse::success([
+            'company_id' => $this->resolver->getCompanyId(),
+            'branch_id' => $this->resolver->getBranchId(),
+            'department_id' => $this->resolver->getDepartmentId(),
+        ], 'Tenant context updated successfully');
     }
 }

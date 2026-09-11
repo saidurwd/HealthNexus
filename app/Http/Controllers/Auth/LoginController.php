@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +41,7 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
 
-        $user = \App\Models\User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
         if (! $user) {
             return redirect()->route('login')->withErrors(['email' => 'User not found.']);
@@ -63,7 +65,7 @@ class LoginController extends Controller
             return redirect()->route('login')->withErrors(['email' => 'Session expired. Please login again.']);
         }
 
-        $user = \App\Models\User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
         if (! $user) {
             return redirect()->route('login')->withErrors(['email' => 'User not found.']);
@@ -79,7 +81,7 @@ class LoginController extends Controller
             return back()->withErrors(['email' => 'You do not have access to the selected company or branch.']);
         }
 
-        $branch = \App\Models\Branch::findOrFail($branchId);
+        $branch = Branch::findOrFail($branchId);
 
         if ($branch->company_id !== $companyId) {
             return back()->withErrors(['email' => 'The selected branch does not belong to the selected company.']);

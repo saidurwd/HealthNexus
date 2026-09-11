@@ -3,10 +3,15 @@
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EncounterController;
+use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\EnsureBranchAccess;
 use App\Http\Middleware\EnsureCompanyAccess;
@@ -24,8 +29,18 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/login/context', [LoginController::class, 'showCompanyBranchForm'])->name('login.context');
 Route::post('/login/context', [LoginController::class, 'storeCompanyBranch'])->name('login.context.store');
 
-Route::middleware(['auth', EnsureTenantContext::class])->group(function () {
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/change-password', [PasswordController::class, 'create'])->name('password.change');
+    Route::post('/change-password', [PasswordController::class, 'store']);
+
+    Route::middleware([EnsureTenantContext::class])->group(function () {
+        Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+    });
 
     Route::prefix('admin')->name('admin.')->middleware('can:manage companies')->group(function () {
         Route::resource('companies', CompanyController::class);
@@ -60,6 +75,10 @@ Route::middleware(['auth', EnsureTenantContext::class])->group(function () {
         });
 
         Route::get('departments', [DepartmentController::class, 'globalIndex'])->name('departments.global');
+
+        Route::resource('patients', PatientController::class);
+
+        Route::resource('encounters', EncounterController::class);
 
         Route::resource('roles', RoleController::class)->except(['show']);
         Route::resource('permissions', PermissionController::class)->except(['show']);

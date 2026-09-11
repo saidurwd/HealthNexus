@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use App\Models\Branch;
 use App\Models\Company;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +19,7 @@ class BranchController extends Controller
             ->where('company_id', $company->id)
             ->get();
 
-        return response()->json(['data' => $branches]);
+        return ApiResponse::success($branches);
     }
 
     public function store(Request $request, Company $company): JsonResponse
@@ -37,7 +38,7 @@ class BranchController extends Controller
 
         $branch = $company->branches()->create($validated);
 
-        return response()->json(['data' => $branch], 201);
+        return ApiResponse::success($branch, 'Branch created successfully', 201);
     }
 
     public function show(Request $request, Company $company, Branch $branch): JsonResponse
@@ -46,7 +47,7 @@ class BranchController extends Controller
 
         abort_if($branch->company_id !== $company->id, 404);
 
-        return response()->json(['data' => $branch]);
+        return ApiResponse::success($branch);
     }
 
     public function update(Request $request, Company $company, Branch $branch): JsonResponse
@@ -67,7 +68,7 @@ class BranchController extends Controller
 
         $branch->update($validated);
 
-        return response()->json(['data' => $branch]);
+        return ApiResponse::success($branch, 'Branch updated successfully');
     }
 
     public function destroy(Request $request, Company $company, Branch $branch): JsonResponse
@@ -78,6 +79,6 @@ class BranchController extends Controller
 
         $branch->delete();
 
-        return response()->json(null, 204);
+        return ApiResponse::success(null, 'Branch deleted successfully');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use App\Models\Company;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class CompanyController extends Controller
             ->when($user->hasRole('super_admin'), fn ($q) => $q, fn ($q) => $q->whereHas('users', fn ($q2) => $q2->where('user_id', $user->id)))
             ->get();
 
-        return response()->json(['data' => $companies]);
+        return ApiResponse::success($companies);
     }
 
     public function store(Request $request): JsonResponse
@@ -34,14 +35,14 @@ class CompanyController extends Controller
 
         $company = Company::create($validated);
 
-        return response()->json(['data' => $company], 201);
+        return ApiResponse::success($company, 'Company created successfully', 201);
     }
 
     public function show(Request $request, Company $company): JsonResponse
     {
         $this->authorize('view', $company);
 
-        return response()->json(['data' => $company]);
+        return ApiResponse::success($company);
     }
 
     public function update(Request $request, Company $company): JsonResponse
@@ -60,7 +61,7 @@ class CompanyController extends Controller
 
         $company->update($validated);
 
-        return response()->json(['data' => $company]);
+        return ApiResponse::success($company, 'Company updated successfully');
     }
 
     public function destroy(Request $request, Company $company): JsonResponse
@@ -69,6 +70,6 @@ class CompanyController extends Controller
 
         $company->delete();
 
-        return response()->json(null, 204);
+        return ApiResponse::success(null, 'Company deleted successfully');
     }
 }

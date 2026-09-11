@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -34,7 +35,7 @@ class UserController extends Controller
 
         $users = $query->get(['users.id', 'users.name', 'users.email', 'users.phone', 'users.avatar', 'users.timezone', 'users.locale', 'users.is_active', 'users.created_at']);
 
-        return response()->json(['data' => $users]);
+        return ApiResponse::success($users);
     }
 
     public function show(Request $request, Company $company, User $user): JsonResponse
@@ -43,7 +44,7 @@ class UserController extends Controller
 
         abort_if(! $user->companies()->where('companies.id', $company->id)->exists(), 404);
 
-        return response()->json(['data' => $user]);
+        return ApiResponse::success($user);
     }
 
     public function update(Request $request, Company $company, User $user): JsonResponse
@@ -63,6 +64,6 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json(['data' => $user]);
+        return ApiResponse::success($user, 'User updated successfully');
     }
 }

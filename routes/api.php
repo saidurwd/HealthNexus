@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\DepartmentController;
+use App\Http\Controllers\Api\V1\EncounterController;
+use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TenantContextController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Middleware\EnsureBranchAccess;
@@ -11,7 +13,7 @@ use App\Http\Middleware\EnsureCompanyAccess;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
     Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
@@ -40,5 +42,17 @@ Route::prefix('v1')->group(function () {
         Route::get('/companies/{company}/users', [UserController::class, 'index'])->middleware(EnsureCompanyAccess::class);
         Route::get('/companies/{company}/users/{user}', [UserController::class, 'show'])->middleware(EnsureCompanyAccess::class);
         Route::put('/companies/{company}/users/{user}', [UserController::class, 'update'])->middleware(EnsureCompanyAccess::class);
+
+        Route::get('/patients', [PatientController::class, 'index']);
+        Route::post('/patients', [PatientController::class, 'store']);
+        Route::get('/patients/{patient}', [PatientController::class, 'show']);
+        Route::put('/patients/{patient}', [PatientController::class, 'update']);
+        Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
+
+        Route::get('/encounters', [EncounterController::class, 'index']);
+        Route::post('/encounters', [EncounterController::class, 'store']);
+        Route::get('/encounters/{encounter}', [EncounterController::class, 'show']);
+        Route::put('/encounters/{encounter}', [EncounterController::class, 'update']);
+        Route::delete('/encounters/{encounter}', [EncounterController::class, 'destroy']);
     });
 });

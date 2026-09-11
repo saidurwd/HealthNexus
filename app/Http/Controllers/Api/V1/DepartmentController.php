@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\ApiResponse;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Department;
@@ -22,7 +23,7 @@ class DepartmentController extends Controller
             ->where('branch_id', $branch->id)
             ->get();
 
-        return response()->json(['data' => $departments]);
+        return ApiResponse::success($departments);
     }
 
     public function store(Request $request, Company $company, Branch $branch): JsonResponse
@@ -43,7 +44,7 @@ class DepartmentController extends Controller
 
         $department = $company->departments()->create(array_merge($validated, ['branch_id' => $branch->id]));
 
-        return response()->json(['data' => $department], 201);
+        return ApiResponse::success($department, 'Department created successfully', 201);
     }
 
     public function show(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
@@ -53,7 +54,7 @@ class DepartmentController extends Controller
         abort_if($branch->company_id !== $company->id, 404);
         abort_if($department->branch_id !== $branch->id, 404);
 
-        return response()->json(['data' => $department]);
+        return ApiResponse::success($department);
     }
 
     public function update(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
@@ -75,7 +76,7 @@ class DepartmentController extends Controller
 
         $department->update($validated);
 
-        return response()->json(['data' => $department]);
+        return ApiResponse::success($department, 'Department updated successfully');
     }
 
     public function destroy(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
@@ -87,6 +88,6 @@ class DepartmentController extends Controller
 
         $department->delete();
 
-        return response()->json(null, 204);
+        return ApiResponse::success(null, 'Department deleted successfully');
     }
 }

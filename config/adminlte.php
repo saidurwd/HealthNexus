@@ -787,6 +787,12 @@ return [
             'icon' => 'bi bi-diagram-3',
             'can' => 'manage departments',
         ],
+        [
+            'text' => 'Patients',
+            'url' => 'admin/patients',
+            'icon' => 'bi bi-person',
+            'can' => 'manage patients',
+        ],
         ['header' => 'access_control'],
         [
             'text' => 'Users',
