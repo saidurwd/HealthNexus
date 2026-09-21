@@ -807,7 +807,7 @@ return [
                 ],
                 [
                     'text' => 'States',
-                    'url' => 'admin.master-data.states',
+                    'url' => 'admin.master-data.all-states',
                     'icon' => 'bi bi-map',
                     'can' => 'settings.view',
                 ],
