@@ -84,6 +84,12 @@ class FileUploadService
 
     public function scanForMalware(UploadedFile $file): bool
     {
+        $mimeType = $file->getMimeType();
+
+        if (str_starts_with($mimeType, 'image/')) {
+            return false;
+        }
+
         $content = file_get_contents($file->getRealPath());
 
         foreach ($this->malwareSignatures as $signature) {

@@ -14,6 +14,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Photo</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Roles</th>
@@ -25,6 +26,15 @@
                 <tbody>
                     @forelse($users as $user)
                         <tr>
+                            <td>
+                                @if ($user->profile_picture)
+                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ $user->name }}" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                @else
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: white; font-size: 14px;">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->getRoleNames()->join(', ') ?: '-' }}</td>
@@ -45,7 +55,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No users found.</td>
+                            <td colspan="7" class="text-center">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>
