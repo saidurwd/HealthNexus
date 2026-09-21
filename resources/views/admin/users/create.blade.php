@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Create User</h3>
         </div>
-        <form action="{{ route('admin.users.store') }}" method="post">
+        <form action="{{ route('admin.users.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="card-body">
                 <div class="row">
@@ -45,6 +45,11 @@
                             <label for="locale" class="form-label">Locale</label>
                             <input type="text" name="locale" id="locale" value="{{ old('locale') }}" class="form-control @error('locale') is-invalid @enderror">
                             @error('locale') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" name="profile_picture" id="profile_picture" class="form-control @error('profile_picture') is-invalid @enderror">
+                            @error('profile_picture') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
                             <div class="form-check">

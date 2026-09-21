@@ -80,11 +80,13 @@ Route::middleware(['auth'])->group(function () {
 
             Route::resource('users', UserController::class)->except(['show']);
 
+            Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+
             Route::prefix('companies/{company}')->name('companies.')->middleware(EnsureCompanyAccess::class)->group(function () {
-                Route::get('users', [UserController::class, 'companyIndex'])->name('users.index');
-                Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
-                Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-                Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+                Route::get('users', [UserController::class, 'companyIndex'])->name('users.company-index');
+                Route::get('users/{user}', [UserController::class, 'show'])->name('users.company-show');
+                Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.company-edit');
+                Route::put('users/{user}', [UserController::class, 'update'])->name('users.company-update');
             });
 
             Route::get('departments', [DepartmentController::class, 'globalIndex'])->name('departments.global');

@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'timezone', 'locale', 'is_active'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'profile_picture', 'timezone', 'locale', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -71,5 +71,18 @@ class User extends Authenticatable
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        if ($this->profile_picture) {
+            return asset('storage/'.$this->profile_picture);
+        }
+
+        if ($this->avatar) {
+            return $this->avatar;
+        }
+
+        return null;
     }
 }

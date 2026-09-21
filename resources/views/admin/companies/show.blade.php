@@ -9,7 +9,7 @@
                 <div class="card-tools">
                     <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-warning btn-sm">Edit</a>
                     <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-info btn-sm">Manage Branches</a>
-                    <a href="{{ route('admin.companies.users.index', $company) }}" class="btn btn-success btn-sm">Manage Users</a>
+                    <a href="{{ route('admin.users.company-index', $company) }}" class="btn btn-success btn-sm">Manage Users</a>
                     <a href="{{ route('admin.companies.index') }}" class="btn btn-secondary btn-sm">Back</a>
                 </div>
         </div>

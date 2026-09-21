@@ -33,8 +33,8 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.companies.users.show', [$company, $user]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.companies.users.edit', [$company, $user]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.users.company-edit', [$company, $user]) }}" class="btn btn-xs btn-warning">Edit</a>
                             </td>
                         </tr>
                     @empty

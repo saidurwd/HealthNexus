@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Edit User</h3>
         </div>
-        <form action="{{ route('admin.users.update', $user) }}" method="post">
+        <form action="{{ route('admin.users.update', $user) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="card-body">
@@ -37,6 +37,16 @@
                             <label for="locale" class="form-label">Locale</label>
                             <input type="text" name="locale" id="locale" value="{{ old('locale', $user->locale) }}" class="form-control @error('locale') is-invalid @enderror">
                             @error('locale') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" name="profile_picture" id="profile_picture" class="form-control @error('profile_picture') is-invalid @enderror">
+                            @error('profile_picture') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            @if ($user->profile_picture)
+                                <div class="mt-2">
+                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile" width="80" height="80" class="rounded">
+                                </div>
+                            @endif
                         </div>
                         <div class="mb-3">
                             <div class="form-check">

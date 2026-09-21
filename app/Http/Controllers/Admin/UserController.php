@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct(private FileUploadService $fileUploadService) {}
+
     public function index(Request $request)
     {
         $users = User::query()
@@ -52,13 +55,14 @@ class UserController extends Controller
             'timezone' => ['nullable', 'string', 'max:100'],
             'locale' => ['nullable', 'string', 'max:10'],
             'is_active' => ['boolean'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
             'companies' => ['array'],
             'companies.*' => ['integer', 'exists:companies,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
         ]);
 
-        $user = User::create([
+        $userData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
@@ -66,7 +70,13 @@ class UserController extends Controller
             'timezone' => $validated['timezone'] ?? 'UTC',
             'locale' => $validated['locale'] ?? 'en',
             'is_active' => $validated['is_active'] ?? true,
-        ]);
+        ];
+
+        if ($request->hasFile('profile_picture')) {
+            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures');
+        }
+
+        $user = User::create($userData);
 
         if (! empty($validated['companies'])) {
             foreach ($validated['companies'] as $companyId) {
@@ -110,21 +120,28 @@ class UserController extends Controller
             'timezone' => ['nullable', 'string', 'max:100'],
             'locale' => ['nullable', 'string', 'max:10'],
             'is_active' => ['boolean'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
             'companies' => ['array'],
             'companies.*' => ['integer', 'exists:companies,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
         ]);
 
-        $user->update([
+        $userData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'phone' => $validated['phone'],
-            'avatar' => $validated['avatar'],
-            'timezone' => $validated['timezone'],
-            'locale' => $validated['locale'],
+            'phone' => $validated['phone'] ?? null,
+            'avatar' => $validated['avatar'] ?? null,
+            'timezone' => $validated['timezone'] ?? 'UTC',
+            'locale' => $validated['locale'] ?? 'en',
             'is_active' => $validated['is_active'] ?? true,
-        ]);
+        ];
+
+        if ($request->hasFile('profile_picture')) {
+            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures');
+        }
+
+        $user->update($userData);
 
         $user->companies()->sync($validated['companies'] ?? []);
         $user->branches()->sync($validated['branches'] ?? []);
