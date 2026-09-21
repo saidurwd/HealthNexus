@@ -13,8 +13,10 @@
                 <h1 class="m-0">@yield('page_title', 'Dashboard')</h1>
             </div>
             <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    @yield('breadcrumbs')
+                <ol class="breadcrumb float-sm-end">
+                    @auth
+                        {!! app(\App\Services\Breadcrumbs::class)->render() !!}
+                    @endauth
                 </ol>
             </div>
         </div>

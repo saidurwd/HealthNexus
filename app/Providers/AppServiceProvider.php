@@ -12,6 +12,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TenantContextResolver::class, function ($app) {
             return new TenantContextResolver;
         });
+
+        $this->app->singleton(\App\Services\Breadcrumbs::class, function ($app) {
+            return new \App\Services\Breadcrumbs($app['request']);
+        });
     }
 
     public function boot(): void
