@@ -168,11 +168,11 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
-    'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_image' => true,
+    'usermenu_desc' => true,
+    'usermenu_profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -190,7 +190,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
 
     // The HTTP method spoofed on the logout form. Set it to 'GET' when your
@@ -201,7 +201,7 @@ return [
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -565,7 +565,7 @@ return [
     // Persist the collapsed state of the sidebar on the browser, so it
     // survives a page load (the AdminLTE push menu plugin takes care of it).
 
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
 
     // The breakpoint where the sidebar turns into an overlay. AdminLTE only
     // provides the 'sm', 'md', 'lg', 'xl' and 'xxl' stylesheets, so any other
