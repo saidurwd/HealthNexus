@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('appointment_id')->constrained()->cascadeOnDelete();
             $table->string('token_number')->unique();
             $table->string('counter')->nullable();
-            $table->enum('status', ['waiting', 'called', 'in_progress', 'completed', 'skipped', 'cancelled'])->default('waiting');
+            $table->enum('status', ['waiting', 'called', 'checked_in', 'in_progress', 'completed', 'skipped', 'cancelled'])->default('waiting');
             $table->timestamp('generated_at')->nullable();
             $table->timestamp('called_at')->nullable();
             $table->timestamp('started_at')->nullable();

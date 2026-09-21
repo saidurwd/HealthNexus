@@ -71,6 +71,15 @@ class OpdConsultationTest extends TestCase
             'source' => 'online',
             'reason' => 'Routine checkup',
         ]);
+
+        \App\Models\AppointmentToken::create([
+            'company_id' => $this->company->id,
+            'branch_id' => $this->branch->id,
+            'appointment_id' => $this->appointment->id,
+            'token_number' => 'T-001',
+            'status' => 'waiting',
+            'generated_at' => now(),
+        ]);
     }
 
     public function test_user_can_view_consultation(): void
@@ -253,5 +262,42 @@ class OpdConsultationTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('items');
+    }
+
+    public function test_user_can_check_in_appointment(): void
+    {
+        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/check-in');
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('appointments', [
+            'id' => $this->appointment->id,
+            'status' => 'checked_in',
+        ]);
+        $this->assertDatabaseHas('appointment_tokens', [
+            'appointment_id' => $this->appointment->id,
+            'status' => 'checked_in',
+        ]);
+    }
+
+    public function test_user_can_create_follow_up_appointment(): void
+    {
+        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/follow-up', [
+            'appointment_date' => '2025-02-01',
+            'appointment_time' => '10:00',
+            'reason' => 'Follow-up on treatment',
+            'notes' => 'Monitor progress',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('appointments', [
+            'patient_id' => $this->patient->id,
+            'doctor_id' => $this->user->id,
+            'type' => 'followup',
+            'source' => 'followup',
+            'reason' => 'Follow-up on treatment',
+        ]);
+        $this->assertDatabaseHas('appointment_tokens', [
+            'appointment_id' => Appointment::where('type', 'followup')->first()->id,
+        ]);
     }
 }

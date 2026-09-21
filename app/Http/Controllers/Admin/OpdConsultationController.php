@@ -13,6 +13,7 @@ use App\Models\InvestigationOrder;
 use App\Models\Prescription;
 use App\Models\PrescriptionItem;
 use App\Services\AuditLogger;
+use App\Services\Appointments\AppointmentService;
 use App\Services\Appointments\OpdService;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ class OpdConsultationController extends Controller
 {
     public function __construct(
         private OpdService $opdService,
+        private AppointmentService $appointmentService,
         private AuditLogger $auditLogger
     ) {}
 
@@ -105,5 +107,30 @@ class OpdConsultationController extends Controller
         $this->authorize('update', $appointment);
         $this->opdService->updateAppointmentStatus($appointment, 'completed');
         return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Appointment completed.');
+    }
+
+    public function checkIn(Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $this->appointmentService->checkIn($appointment);
+
+        return back()->with('success', 'Patient checked in successfully.');
+    }
+
+    public function createFollowUp(Request $request, Appointment $appointment)
+    {
+        $this->authorize('create', Appointment::class);
+
+        $validated = $request->validate([
+            'appointment_date' => ['required', 'date'],
+            'appointment_time' => ['required', 'date_format:H:i'],
+            'reason' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $followUp = $this->appointmentService->createFollowUp($appointment, $validated, $request->user());
+
+        return redirect()->route('admin.appointments.show', $followUp)->with('success', 'Follow-up appointment created successfully.');
     }
 }

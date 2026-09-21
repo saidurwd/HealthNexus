@@ -31,6 +31,15 @@
                     <i class="bi bi-arrow-left me-1"></i>Back
                 </a>
             </div>
+
+            @if($appointment->status !== 'checked_in' && $appointment->status !== 'in_progress' && $appointment->status !== 'completed')
+                <form method="POST" action="{{ route('admin.appointments.check-in', $appointment) }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-door-open me-1"></i>Check-in Patient
+                    </button>
+                </form>
+            @endif
         </div>
 
         <ul class="nav nav-pills mb-4 flex-wrap" id="consultationTab" role="tablist">
@@ -52,6 +61,11 @@
             <li class="nav-item" role="presentation">
                 <a href="#investigations" class="nav-link" data-bs-toggle="pill" data-bs-target="#investigations" role="tab">
                     <i class="bi bi-test-tube me-1"></i>Investigations
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="#followup" class="nav-link" data-bs-toggle="pill" data-bs-target="#followup" role="tab">
+                    <i class="bi bi-calendar-check me-1"></i>Follow-up
                 </a>
             </li>
         </ul>
@@ -394,6 +408,41 @@
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-secondary">
                                     <i class="bi bi-save me-1"></i>Order Investigation
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            <div class="tab-pane fade" id="followup" role="tabpanel">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Schedule Follow-up Appointment</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('admin.appointments.follow-up', $appointment) }}">
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Follow-up Date *</label>
+                                    <input type="date" name="appointment_date" class="form-control" value="{{ old('appointment_date', now()->addDays(7)->toDateString()) }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Follow-up Time *</label>
+                                    <input type="time" name="appointment_time" class="form-control" value="{{ old('appointment_time', $appointment->appointment_time->format('H:i')) }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Reason</label>
+                                    <input type="text" name="reason" class="form-control" value="{{ old('reason', $appointment->reason) }}" placeholder="Reason for follow-up...">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Notes</label>
+                                    <textarea name="notes" class="form-control" rows="2" placeholder="Additional notes..."></textarea>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="bi bi-calendar-check me-1"></i>Create Follow-up
                                 </button>
                             </div>
                         </form>

@@ -180,4 +180,58 @@ class AppointmentService
 
         $token->appointment->update(['status' => 'completed', 'ended_at' => now()]);
     }
+
+    public function checkIn(Appointment $appointment): Appointment
+    {
+        return DB::transaction(function () use ($appointment) {
+            $appointment->update([
+                'status' => 'checked_in',
+                'actual_datetime' => now(),
+            ]);
+
+            if ($appointment->token) {
+                $appointment->token->update([
+                    'status' => 'checked_in',
+                ]);
+            }
+
+            return $appointment;
+        });
+    }
+
+    public function createFollowUp(Appointment $appointment, array $data, User $user): Appointment
+    {
+        return DB::transaction(function () use ($appointment, $data, $user) {
+            $company = $appointment->company;
+
+            $followUpData = [
+                'company_id' => $appointment->company_id,
+                'branch_id' => $appointment->branch_id,
+                'patient_id' => $appointment->patient_id,
+                'doctor_id' => $appointment->doctor_id,
+                'appointment_no' => $this->generateAppointmentNo($company),
+                'appointment_date' => $data['appointment_date'] ?? now()->addDays(7)->toDateString(),
+                'appointment_time' => $data['appointment_time'] ?? $appointment->appointment_time,
+                'type' => 'followup',
+                'source' => 'followup',
+                'reason' => $data['reason'] ?? $appointment->reason,
+                'notes' => $data['notes'] ?? null,
+                'status' => 'scheduled',
+                'created_by' => $user->id,
+                'actual_datetime' => null,
+            ];
+
+            $followUp = Appointment::create($followUpData);
+
+            $tokenNo = $this->generateTokenNo($company, $appointment->branch);
+            $followUp->token()->create([
+                'company_id' => $company->id,
+                'branch_id' => $followUp->branch_id,
+                'token_number' => $tokenNo,
+                'generated_at' => now(),
+            ]);
+
+            return $followUp;
+        });
+    }
 }

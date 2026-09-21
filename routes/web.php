@@ -125,6 +125,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('queue/{token}/complete', [QueueController::class, 'complete'])->name('queue.complete');
             Route::get('queue/slots', [QueueController::class, 'searchSlots'])->name('queue.slots');
 
+            Route::post('appointments/{appointment}/check-in', [OpdConsultationController::class, 'checkIn'])->name('appointments.check-in');
+            Route::post('appointments/{appointment}/follow-up', [OpdConsultationController::class, 'createFollowUp'])->name('appointments.follow-up');
+
             // OPD consultation
             Route::get('appointments/{appointment}/consultation', [OpdConsultationController::class, 'show'])->name('opd.consultation');
             Route::post('opd/vital-signs', [OpdConsultationController::class, 'storeVitalSigns'])->name('opd.vital-signs');
