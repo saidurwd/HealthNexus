@@ -2,14 +2,13 @@
 
 @section('page_title', $branch->name . ' - Departments')
 
-@section('content_top_nav_left')
-    <a href="{{ route('admin.companies.branches.departments.create', [$company, $branch]) }}" class="btn btn-primary btn-sm">New Department</a>
-@stop
-
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Departments - {{ $company->name }} / {{ $branch->name }}</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.companies.branches.departments.create', [$company, $branch]) }}" class="btn btn-primary btn-sm">New Department</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
@@ -52,6 +51,7 @@
             </table>
         </div>
         <div class="card-footer">
+            {{ $departments->links() }}
             <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary">Back to Branches</a>
         </div>
     </div>
