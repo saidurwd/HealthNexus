@@ -37,9 +37,9 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'Health Nexus',
     'title_prefix' => '',
-    'title_postfix' => '',
+    'title_postfix' => '- Health Nexus',
 
     /*
     |--------------------------------------------------------------------------
@@ -77,12 +77,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Health</b>Nexus',
     'logo_img' => 'vendor/adminlte/dist/assets/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image opacity-75 shadow',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs opacity-75',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'Health Nexus Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -760,28 +760,28 @@ return [
     */
 
     'menu' => [
-        ['header' => 'main'],
+        // ['header' => 'main'],
         [
             'text' => 'Dashboard',
-            'url' => 'home',
+            'url' => '/dashboard',
             'icon' => 'bi bi-speedometer2',
         ],
         ['header' => 'tenants'],
         [
             'text' => 'Companies',
-            'url' => 'admin.companies.index',
+            'url' => '/admin/companies',
             'icon' => 'bi bi-building',
             'can' => 'manage companies',
         ],
         [
             'text' => 'Departments',
-            'url' => 'admin.departments.global',
+            'url' => '/admin/departments',
             'icon' => 'bi bi-diagram-3',
             'can' => 'manage departments',
         ],
         [
             'text' => 'Patients',
-            'url' => 'admin.patients.index',
+            'url' => '/admin/patients',
             'icon' => 'bi bi-person',
             'can' => 'manage patients',
         ],
@@ -793,25 +793,25 @@ return [
             'submenu' => [
                 [
                     'text' => 'Countries',
-                    'url' => 'admin.master-data.countries',
+                    'url' => '/admin/master-data/countries',
                     'icon' => 'bi bi-globe',
                     'can' => 'settings.view',
                 ],
                 [
                     'text' => 'States',
-                    'url' => 'admin.master-data.all-states',
+                    'url' => '/admin/master-data/states',
                     'icon' => 'bi bi-map',
                     'can' => 'settings.view',
                 ],
                 [
                     'text' => 'Currencies',
-                    'url' => 'admin.master-data.currencies',
+                    'url' => '/admin/master-data/currencies',
                     'icon' => 'bi bi-currency-dollar',
                     'can' => 'settings.view',
                 ],
                 [
                     'text' => 'Identification Types',
-                    'url' => 'admin.master-data.identification-types',
+                    'url' => '/admin/master-data/identification-types',
                     'icon' => 'bi bi-card-list',
                     'can' => 'settings.view',
                 ],
@@ -820,33 +820,33 @@ return [
         ['header' => 'access_control'],
         [
             'text' => 'Users',
-            'url' => 'admin.users.index',
+            'url' => '/admin/users',
             'icon' => 'bi bi-people',
             'can' => 'manage users',
         ],
         [
             'text' => 'Roles',
-            'url' => 'admin.roles.index',
+            'url' => '/admin/roles',
             'icon' => 'bi bi-shield-lock',
             'can' => 'manage roles',
         ],
         [
             'text' => 'Permissions',
-            'url' => 'admin.permissions.index',
+            'url' => '/admin/permissions',
             'icon' => 'bi bi-key',
             'can' => 'manage permissions',
         ],
         ['header' => 'audit'],
         [
             'text' => 'Audit Logs',
-            'url' => 'admin.audit.index',
+            'url' => '/admin/audit-logs',
             'icon' => 'bi bi-journal-text',
             'can' => 'audit.view',
         ],
         ['header' => 'settings'],
         [
             'text' => 'Change Password',
-            'url' => 'password.change',
+            'url' => '/change-password',
             'icon' => 'bi bi-lock',
         ],
     ],
