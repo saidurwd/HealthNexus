@@ -163,6 +163,9 @@ class PermissionSeeder extends Seeder
             'reporting.export',
             'reporting.print',
 
+            // Audit
+            'audit.view',
+
             // Settings
             'settings.view',
             'settings.update',

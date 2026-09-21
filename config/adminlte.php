@@ -849,7 +849,7 @@ return [
             'text' => 'Audit Logs',
             'url' => 'admin.audit.index',
             'icon' => 'bi bi-journal-text',
-            'can' => 'view audit logs',
+            'can' => 'audit.view',
         ],
         ['header' => 'settings'],
         [
