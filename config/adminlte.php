@@ -800,7 +800,7 @@ return [
                 [
                     'text' => 'Hospital Dashboard',
                     'url' => '#',
-                    'icon' => 'bi bi-dashboard',
+                    'icon' => 'bi bi-speedometer',
                     'can' => 'settings.view',
                 ],
                 [
@@ -825,7 +825,7 @@ return [
                 [
                     'text' => 'Patient Dashboard',
                     'url' => '#',
-                    'icon' => 'bi bi-dashboard',
+                    'icon' => 'bi bi-speedometer',
                     'can' => 'settings.view',
                 ],
                 [
@@ -844,7 +844,7 @@ return [
                 [
                     'text' => 'Appointment Dashboard',
                     'url' => '#',
-                    'icon' => 'bi bi-dashboard',
+                    'icon' => 'bi bi-speedometer',
                     'can' => 'settings.view',
                 ],
                 [
