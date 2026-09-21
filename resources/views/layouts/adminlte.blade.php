@@ -7,7 +7,24 @@
 @stop
 
 @section('content_top_nav_left')
-    @include('components.tenant-context-selector')
+    @php
+        $company = app(\App\Services\TenantContextResolver::class)->getCompany();
+        $branch = app(\App\Services\TenantContextResolver::class)->getBranch();
+    @endphp
+    @if($company)
+        <li class="nav-item d-none d-md-flex align-items-center">
+            <span class="nav-link text-secondary small mb-0">
+                <i class="bi bi-building me-1"></i>
+                <span class="fw-semibold">{{ $company->name }}</span>
+                @if($branch)
+                    <span class="mx-1">·</span>
+                    <i class="bi bi-geo-alt me-1"></i>
+                    {{ $branch->name }}
+                @endif
+            </span>
+        </li>
+    @endif
+    {{-- @include('components.tenant-context-selector') --}}
 @stop
 
 @section('footer')
