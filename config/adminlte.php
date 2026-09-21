@@ -853,13 +853,8 @@ return [
         ],
         ['header' => 'settings'],
         [
-            'text' => 'Profile',
-            'url' => 'admin/profile',
-            'icon' => 'bi bi-person',
-        ],
-        [
             'text' => 'Change Password',
-            'url' => 'admin/change-password',
+            'url' => 'password.change',
             'icon' => 'bi bi-lock',
         ],
     ],
