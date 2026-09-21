@@ -760,6 +760,10 @@ return [
     */
 
     'menu' => [
+        [
+            'type' => 'sidebar-menu-search',
+            'text' => 'Search menu...',
+        ],
         // Navbar items (right side) - custom dropdowns handled via content_top_nav_right
         [
             'type' => 'darkmode-widget',

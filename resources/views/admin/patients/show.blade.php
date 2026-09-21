@@ -277,6 +277,81 @@
                             </div>
                         </div>
                     @endif
+
+                    @if($patient->documents->isNotEmpty())
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Documents</h5>
+                                <a href="{{ route('admin.patients.documents', $patient) }}" class="btn btn-sm btn-outline-light">View All</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover mb-0">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>File Name</th>
+                                                <th>Type</th>
+                                                <th class="text-end">Size</th>
+                                                <th class="text-end">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($patient->documents->take(5) as $document)
+                                                <tr>
+                                                    <td>{{ $document->file_name }}</td>
+                                                    <td>{{ ucfirst(str_replace('_', ' ', $document->document_type)) }}</td>
+                                                    <td class="text-end">{{ $document->file_size ? number_format($document->file_size / 1024, 1).' KB' : '-' }}</td>
+                                                    <td class="text-end"><small class="text-muted">{{ $document->created_at->format('M d, Y') }}</small></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($patient->histories->isNotEmpty())
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Medical History</h5>
+                                <a href="{{ route('admin.patients.history', $patient) }}" class="btn btn-sm btn-outline-light">Manage History</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover mb-0">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>Condition</th>
+                                                <th>Diagnosed</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($patient->histories->take(5) as $history)
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ $history->condition }}</strong>
+                                                        @if($history->description)
+                                                            <br><small class="text-muted">{{ Str::limit($history->description, 50) }}</small>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $history->diagnosed_at ? $history->diagnosed_at->format('M d, Y') : '-' }}</td>
+                                                    <td class="text-center">
+                                                        @if($history->is_active)
+                                                            <span class="badge bg-success">Active</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Inactive</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="col-lg-4">
