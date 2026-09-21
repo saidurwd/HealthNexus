@@ -85,4 +85,9 @@ class User extends Authenticatable
 
         return asset('vendor/adminlte/dist/assets/img/default-150x150.png');
     }
+
+    public function adminlte_image(): string
+    {
+        return $this->profile_picture_url;
+    }
 }
