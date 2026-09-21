@@ -112,7 +112,7 @@ class FileUploadService
         $disk = $disk ?: config('filesystems.default');
         $path = $file->store($directory, $disk);
 
-        return Storage::disk($disk)->url($path);
+        return $path;
     }
 
     public function delete(string $path, ?string $disk = null): void

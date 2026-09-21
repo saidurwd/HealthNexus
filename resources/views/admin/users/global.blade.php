@@ -27,13 +27,7 @@
                     @forelse($users as $user)
                         <tr>
                             <td>
-                                @if ($user->profile_picture)
-                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ $user->name }}" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
-                                @else
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: white; font-size: 14px;">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </div>
-                                @endif
+                                <img src="{{ $user->profile_picture_url }}" alt="{{ $user->name }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                             </td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>

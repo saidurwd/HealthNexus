@@ -73,7 +73,7 @@ class UserController extends Controller
         ];
 
         if ($request->hasFile('profile_picture')) {
-            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures');
+            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures', 'public');
         }
 
         $user = User::create($userData);
@@ -138,7 +138,7 @@ class UserController extends Controller
         ];
 
         if ($request->hasFile('profile_picture')) {
-            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures');
+            $userData['profile_picture'] = $this->fileUploadService->upload($request->file('profile_picture'), 'profile-pictures', 'public');
         }
 
         $user->update($userData);

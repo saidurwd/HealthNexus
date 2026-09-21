@@ -73,7 +73,7 @@ class User extends Authenticatable
         return $this->hasMany(AuditLog::class);
     }
 
-    public function getProfilePictureUrlAttribute(): ?string
+    public function getProfilePictureUrlAttribute(): string
     {
         if ($this->profile_picture) {
             return asset('storage/'.$this->profile_picture);
@@ -83,6 +83,6 @@ class User extends Authenticatable
             return $this->avatar;
         }
 
-        return null;
+        return asset('vendor/adminlte/dist/assets/img/default-150x150.png');
     }
 }
