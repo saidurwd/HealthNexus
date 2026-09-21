@@ -1,35 +1,37 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte')
 
-@section('title', 'Edit Encounter')
+@section('page_title', 'Edit Encounter')
 
-@section('content_header')
-    <h1>Edit Encounter</h1>
-@stop
-
-@section('content')
+@section('page_content')
     <div class="card">
-        <div class="card-body">
-            <form method="POST" action="{{ route('admin.encounters.update', $encounter) }}">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-                    <label>Status</label>
-                    <select name="status" class="form-control" required>
+        <div class="card-header">
+            <h3 class="card-title">Edit Encounter</h3>
+        </div>
+        <form method="POST" action="{{ route('admin.encounters.update', $encounter) }}">
+            @csrf
+            @method('PUT')
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
                         @foreach (['active', 'completed', 'cancelled'] as $status)
                             <option value="{{ $status }}" {{ old('status', $encounter->status) == $status ? 'selected' : '' }}>
                                 {{ $status }}
                             </option>
                         @endforeach
                     </select>
-                    @error('status') <span class="text-danger">{{ $message }}</span> @enderror
+                    @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea name="notes" class="form-control">{{ old('notes', $encounter->notes) }}</textarea>
-                    @error('notes') <span class="text-danger">{{ $message }}</span> @enderror
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea name="notes" id="notes" class="form-control @error('notes') is-invalid @enderror">{{ old('notes', $encounter->notes) }}</textarea>
+                    @error('notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ route('admin.encounters.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Update Encounter</button>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 @stop

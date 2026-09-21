@@ -2,7 +2,7 @@
 
 @section('page_title', $department->name)
 
-@section('content')
+@section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Department Details</h3>

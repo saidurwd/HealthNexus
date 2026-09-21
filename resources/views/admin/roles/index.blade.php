@@ -2,14 +2,13 @@
 
 @section('page_title', 'Roles')
 
-@section('content_top_nav_left')
-    <a href="{{ route('admin.roles.create') }}" class="btn btn-primary btn-sm">New Role</a>
-@stop
-
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Roles</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.roles.create') }}" class="btn btn-primary btn-sm">New Role</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">

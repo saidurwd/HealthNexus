@@ -2,15 +2,15 @@
 
 @section('page_title', $branch->name)
 
-@section('content')
+@section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Branch Details</h3>
-                <div class="card-tools">
-                    <a href="{{ route('admin.companies.branches.edit', [$company, $branch]) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="{{ route('admin.companies.branches.departments.index', [$company, $branch]) }}" class="btn btn-info btn-sm">Manage Departments</a>
-                    <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary btn-sm">Back</a>
-                </div>
+            <div class="card-tools">
+                <a href="{{ route('admin.companies.branches.edit', [$company, $branch]) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ route('admin.companies.branches.departments.index', [$company, $branch]) }}" class="btn btn-info btn-sm">Manage Departments</a>
+                <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary btn-sm">Back</a>
+            </div>
         </div>
         <div class="card-body">
             <dl class="row">

@@ -6,6 +6,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Users - {{ $company->name }}</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">New User</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">

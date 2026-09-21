@@ -2,14 +2,13 @@
 
 @section('page_title', $company->name . ' - Branches')
 
-@section('content_top_nav_left')
-    <a href="{{ route('admin.companies.branches.create', $company) }}" class="btn btn-primary btn-sm">New Branch</a>
-@stop
-
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Branches - {{ $company->name }}</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.companies.branches.create', $company) }}" class="btn btn-primary btn-sm">New Branch</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">

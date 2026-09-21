@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.users.global') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Create User</button>
             </div>
         </form>
