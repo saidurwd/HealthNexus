@@ -19,6 +19,8 @@ class EncounterApiTest extends TestCase
 
     private Company $company;
 
+    private Branch $branch;
+
     private Patient $patient;
 
     protected function setUp(): void
@@ -27,9 +29,11 @@ class EncounterApiTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->company = Company::factory()->create();
+        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
         $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
 
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
 
         Permission::create(['name' => 'encounters.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.update', 'guard_name' => 'web']);
@@ -40,11 +44,13 @@ class EncounterApiTest extends TestCase
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
+        $this->withHeader('X-Company-Id', (string) $this->company->id);
+        $this->withHeader('X-Branch-Id', (string) $this->branch->id);
     }
 
     public function test_user_can_list_encounters(): void
     {
-        Encounter::factory()->count(3)->create(['company_id' => $this->company->id]);
+        Encounter::factory()->count(3)->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/api/v1/encounters');
 
@@ -54,11 +60,9 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_create_encounter(): void
     {
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
-
         $response = $this->post('/api/v1/encounters', [
             'company_id' => $this->company->id,
-            'branch_id' => $branch->id,
+            'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'encounter_type' => 'OPD',
         ]);
@@ -69,7 +73,7 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_view_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/api/v1/encounters/'.$encounter->id);
 
@@ -79,7 +83,7 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_update_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->put('/api/v1/encounters/'.$encounter->id, [
             'status' => 'completed',
@@ -91,7 +95,7 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_delete_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->delete('/api/v1/encounters/'.$encounter->id);
 

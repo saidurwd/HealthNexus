@@ -35,6 +35,7 @@ class PatientApiTest extends TestCase
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
+        $this->withHeader('X-Company-Id', (string) $this->company->id);
     }
 
     public function test_user_can_list_patients(): void

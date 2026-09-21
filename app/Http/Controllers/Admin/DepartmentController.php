@@ -60,6 +60,8 @@ class DepartmentController extends Controller
             'is_active' => ['boolean'],
         ]);
 
+        $validated['company_id'] = $company->id;
+
         $branch->departments()->create($validated);
 
         return redirect()->route('admin.companies.branches.departments.index', [$company, $branch])->with('success', 'Department created successfully.');

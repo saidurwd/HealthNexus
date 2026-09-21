@@ -14,6 +14,8 @@ class Patient extends Model
 
     protected $fillable = [
         'company_id',
+        'country_id',
+        'state_id',
         'enterprise_patient_no',
         'national_identifier',
         'first_name',
@@ -26,8 +28,6 @@ class Patient extends Model
         'email',
         'address',
         'city',
-        'state',
-        'country',
         'postal_code',
         'emergency_contact',
         'notes',
@@ -43,6 +43,16 @@ class Patient extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class);
     }
 
     public function branchRegistrations(): HasMany

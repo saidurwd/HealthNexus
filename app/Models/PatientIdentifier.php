@@ -14,6 +14,7 @@ class PatientIdentifier extends Model
     protected $fillable = [
         'company_id',
         'patient_id',
+        'identification_type_id',
         'identifier_type',
         'identifier_value',
         'issuing_authority',
@@ -36,5 +37,10 @@ class PatientIdentifier extends Model
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function identificationType(): BelongsTo
+    {
+        return $this->belongsTo(IdentificationType::class);
     }
 }

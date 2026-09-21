@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function __construct(private AuditLogger $auditLogger) {}
+
     public function index(Request $request)
     {
         $companies = Company::query()
@@ -40,6 +43,8 @@ class CompanyController extends Controller
 
         $company = Company::create($validated);
 
+        $this->auditLogger->log('CREATE', Company::class, $company->id, null, $company->toArray(), $request);
+
         return redirect()->route('admin.companies.index')->with('success', 'Company created successfully.');
     }
 
@@ -65,14 +70,20 @@ class CompanyController extends Controller
             'is_active' => ['boolean'],
         ]);
 
+        $oldValues = $company->toArray();
         $company->update($validated);
+
+        $this->auditLogger->log('UPDATE', Company::class, $company->id, $oldValues, $company->toArray(), $request);
 
         return redirect()->route('admin.companies.index')->with('success', 'Company updated successfully.');
     }
 
     public function destroy(Company $company)
     {
+        $oldValues = $company->toArray();
         $company->delete();
+
+        $this->auditLogger->log('DELETE', Company::class, $company->id, $oldValues, null, $request);
 
         return redirect()->route('admin.companies.index')->with('success', 'Company deleted successfully.');
     }

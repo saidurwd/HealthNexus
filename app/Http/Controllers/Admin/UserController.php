@@ -62,9 +62,9 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'phone' => $validated['phone'],
-            'timezone' => $validated['timezone'],
-            'locale' => $validated['locale'],
+            'phone' => $validated['phone'] ?? null,
+            'timezone' => $validated['timezone'] ?? 'UTC',
+            'locale' => $validated['locale'] ?? 'en',
             'is_active' => $validated['is_active'] ?? true,
         ]);
 

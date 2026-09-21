@@ -197,7 +197,7 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    'use_route_url' => true,
     'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
 
@@ -771,46 +771,85 @@ return [
         ['header' => 'main'],
         [
             'text' => 'Dashboard',
-            'url' => 'dashboard',
+            'url' => 'home',
             'icon' => 'bi bi-speedometer2',
         ],
         ['header' => 'tenants'],
         [
             'text' => 'Companies',
-            'url' => 'admin/companies',
+            'url' => 'admin.companies.index',
             'icon' => 'bi bi-building',
             'can' => 'manage companies',
         ],
         [
             'text' => 'Departments',
-            'url' => 'admin/departments',
+            'url' => 'admin.departments.global',
             'icon' => 'bi bi-diagram-3',
             'can' => 'manage departments',
         ],
         [
             'text' => 'Patients',
-            'url' => 'admin/patients',
+            'url' => 'admin.patients.index',
             'icon' => 'bi bi-person',
             'can' => 'manage patients',
+        ],
+        ['header' => 'master_data'],
+        [
+            'text' => 'Master Data',
+            'icon' => 'bi bi-database',
+            'can' => 'settings.view',
+            'submenu' => [
+                [
+                    'text' => 'Countries',
+                    'url' => 'admin.master-data.countries',
+                    'icon' => 'bi bi-globe',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'States',
+                    'url' => 'admin.master-data.states',
+                    'icon' => 'bi bi-map',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'Currencies',
+                    'url' => 'admin.master-data.currencies',
+                    'icon' => 'bi bi-currency-dollar',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'Identification Types',
+                    'url' => 'admin.master-data.identification-types',
+                    'icon' => 'bi bi-card-list',
+                    'can' => 'settings.view',
+                ],
+            ],
         ],
         ['header' => 'access_control'],
         [
             'text' => 'Users',
-            'url' => 'admin/users',
+            'url' => 'admin.users.index',
             'icon' => 'bi bi-people',
             'can' => 'manage users',
         ],
         [
             'text' => 'Roles',
-            'url' => 'admin/roles',
+            'url' => 'admin.roles.index',
             'icon' => 'bi bi-shield-lock',
             'can' => 'manage roles',
         ],
         [
             'text' => 'Permissions',
-            'url' => 'admin/permissions',
+            'url' => 'admin.permissions.index',
             'icon' => 'bi bi-key',
             'can' => 'manage permissions',
+        ],
+        ['header' => 'audit'],
+        [
+            'text' => 'Audit Logs',
+            'url' => 'admin.audit.index',
+            'icon' => 'bi bi-journal-text',
+            'can' => 'view audit logs',
         ],
         ['header' => 'settings'],
         [

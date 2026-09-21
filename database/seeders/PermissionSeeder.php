@@ -12,22 +12,228 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            // Core Administration
             'manage companies',
             'manage branches',
             'manage departments',
             'manage users',
+            'manage roles',
+            'manage permissions',
+
+            // Patient
+            'patient.view',
+            'patient.create',
+            'patient.update',
+            'patient.delete',
+            'patient.merge',
+            'patient.export',
+
+            // Appointment
+            'appointment.view',
+            'appointment.create',
+            'appointment.update',
+            'appointment.cancel',
+
+            // OPD
+            'opd.view',
+            'opd.create',
+            'opd.update',
+            'opd.consult',
+
+            // Emergency
+            'emergency.view',
+            'emergency.create',
+            'emergency.update',
+            'emergency.triage',
+
+            // IPD
+            'ipd.view',
+            'ipd.create',
+            'ipd.update',
+            'ipd.admit',
+            'ipd.discharge',
+
+            // Bed Management
+            'bed.view',
+            'bed.allocate',
+            'bed.transfer',
+            'bed.block',
+
+            // Nursing
+            'nursing.view',
+            'nursing.create',
+            'nursing.update',
+            'nursing.administer',
+
+            // Doctor/Physician
+            'doctor.view',
+            'doctor.create',
+            'doctor.update',
+            'doctor.consult',
+
+            // EMR
+            'emr.view',
+            'emr.create',
+            'emr.update',
+            'emr.amend',
+            'emr.approve',
+
+            // Prescription
+            'prescription.view',
+            'prescription.create',
+            'prescription.update',
+            'prescription.amend',
+
+            // Pharmacy
+            'pharmacy.view',
+            'pharmacy.create',
+            'pharmacy.update',
+            'pharmacy.dispense',
+            'pharmacy.adjust',
+
+            // Laboratory
+            'laboratory.view',
+            'laboratory.create',
+            'laboratory.update',
+            'laboratory.verify',
+            'laboratory.approve',
+            'laboratory.release',
+
+            // Radiology
+            'radiology.view',
+            'radiology.create',
+            'radiology.update',
+            'radiology.report',
+
+            // OT
+            'ot.view',
+            'ot.create',
+            'ot.update',
+            'ot.schedule',
+
+            // ICU
+            'icu.view',
+            'icu.create',
+            'icu.update',
+
+            // Billing
+            'billing.view',
+            'billing.create',
+            'billing.update',
+            'billing.discount',
+            'billing.refund',
+            'billing.payment',
+
+            // Insurance
+            'insurance.view',
+            'insurance.create',
+            'insurance.update',
+            'insurance.submit',
+            'insurance.approve',
+
+            // Finance
+            'finance.view',
+            'finance.create',
+            'finance.update',
+            'finance.post',
+            'finance.close',
+
+            // Inventory
+            'inventory.view',
+            'inventory.create',
+            'inventory.update',
+            'inventory.adjust',
+            'inventory.transfer',
+
+            // Procurement
+            'procurement.view',
+            'procurement.create',
+            'procurement.update',
+            'procurement.approve',
+
+            // HR
+            'hr.view',
+            'hr.create',
+            'hr.update',
+            'hr.attendance',
+            'hr.payroll',
+
+            // Reporting
+            'reporting.view',
+            'reporting.export',
+            'reporting.print',
+
+            // Settings
+            'settings.view',
+            'settings.update',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
-        $role = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
-        $role->syncPermissions($permissions);
+        // Create default roles
+        $roles = [
+            'super_admin' => $permissions,
+            'hospital_admin' => [
+                'manage companies', 'manage branches', 'manage departments', 'manage users',
+                'patient.view', 'patient.create', 'patient.update', 'patient.export',
+                'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
+                'opd.view', 'opd.create', 'opd.update', 'opd.consult',
+                'billing.view', 'billing.create', 'billing.update', 'billing.payment',
+                'reporting.view', 'reporting.export', 'reporting.print',
+                'settings.view',
+            ],
+            'doctor' => [
+                'patient.view', 'patient.create', 'patient.update',
+                'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
+                'opd.view', 'opd.create', 'opd.update', 'opd.consult',
+                'emr.view', 'emr.create', 'emr.update', 'emr.amend', 'emr.approve',
+                'prescription.view', 'prescription.create', 'prescription.update', 'prescription.amend',
+                'laboratory.view', 'laboratory.create', 'laboratory.update',
+                'radiology.view', 'radiology.create', 'radiology.update', 'radiology.report',
+                'reporting.view',
+            ],
+            'nurse' => [
+                'patient.view',
+                'nursing.view', 'nursing.create', 'nursing.update', 'nursing.administer',
+                'emr.view', 'emr.create', 'emr.update',
+                'reporting.view',
+            ],
+            'receptionist' => [
+                'patient.view', 'patient.create', 'patient.update',
+                'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
+                'billing.view', 'billing.create', 'billing.update', 'billing.payment',
+                'reporting.view',
+            ],
+            'lab_technician' => [
+                'laboratory.view', 'laboratory.create', 'laboratory.update', 'laboratory.verify',
+                'reporting.view',
+            ],
+            'pharmacist' => [
+                'pharmacy.view', 'pharmacy.create', 'pharmacy.update', 'pharmacy.dispense', 'pharmacy.adjust',
+                'reporting.view',
+            ],
+            'cashier' => [
+                'billing.view', 'billing.create', 'billing.update', 'billing.payment',
+                'reporting.view',
+            ],
+            'accountant' => [
+                'finance.view', 'finance.create', 'finance.update', 'finance.post', 'finance.close',
+                'billing.view', 'billing.update',
+                'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+        ];
 
+        foreach ($roles as $roleName => $rolePermissions) {
+            $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+            $role->syncPermissions($rolePermissions);
+        }
+
+        // Assign super_admin to first user
         $user = User::first();
         if ($user) {
-            $user->assignRole($role);
+            $user->assignRole('super_admin');
         }
     }
 }

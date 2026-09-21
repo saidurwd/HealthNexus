@@ -43,16 +43,16 @@ Route::prefix('v1')->group(function () {
         Route::get('/companies/{company}/users/{user}', [UserController::class, 'show'])->middleware(EnsureCompanyAccess::class);
         Route::put('/companies/{company}/users/{user}', [UserController::class, 'update'])->middleware(EnsureCompanyAccess::class);
 
-        Route::get('/patients', [PatientController::class, 'index']);
-        Route::post('/patients', [PatientController::class, 'store']);
-        Route::get('/patients/{patient}', [PatientController::class, 'show']);
-        Route::put('/patients/{patient}', [PatientController::class, 'update']);
-        Route::delete('/patients/{patient}', [PatientController::class, 'destroy']);
+        Route::get('/patients', [PatientController::class, 'index'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients', [PatientController::class, 'store'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}', [PatientController::class, 'show'])->middleware(EnsureCompanyAccess::class);
+        Route::put('/patients/{patient}', [PatientController::class, 'update'])->middleware(EnsureCompanyAccess::class);
+        Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->middleware(EnsureCompanyAccess::class);
 
-        Route::get('/encounters', [EncounterController::class, 'index']);
-        Route::post('/encounters', [EncounterController::class, 'store']);
-        Route::get('/encounters/{encounter}', [EncounterController::class, 'show']);
-        Route::put('/encounters/{encounter}', [EncounterController::class, 'update']);
-        Route::delete('/encounters/{encounter}', [EncounterController::class, 'destroy']);
+        Route::get('/encounters', [EncounterController::class, 'index'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters', [EncounterController::class, 'store'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::get('/encounters/{encounter}', [EncounterController::class, 'show'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::put('/encounters/{encounter}', [EncounterController::class, 'update'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::delete('/encounters/{encounter}', [EncounterController::class, 'destroy'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
     });
 });
