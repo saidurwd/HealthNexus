@@ -4,6 +4,7 @@ namespace App\Services\Appointments;
 
 use App\Models\Appointment;
 use App\Models\AppointmentSlot;
+use App\Models\AppointmentToken;
 use App\Models\DoctorSchedule;
 use App\Models\User;
 use App\Models\Company;

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('recorded_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'patient_id']);
             $table->index(['company_id', 'appointment_id']);

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('slot_duration_minutes')->default(15);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['company_id', 'doctor_id', 'day_of_week'], 'doctor_schedule_unique');
         });

@@ -13,14 +13,14 @@
             </div>
             <div class="d-flex gap-2">
                 @if($appointment->status !== 'in_progress')
-                    <form method="POST" action="{{ route('opd.status.in-progress', $appointment) }}" class="d-inline">
+                    <form method="POST" action="{{ route('admin.opd.status.in-progress', $appointment) }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-play-circle me-1"></i>Start Consultation
                         </button>
                     </form>
                 @else
-                    <form method="POST" action="{{ route('opd.status.completed', $appointment) }}" class="d-inline">
+                    <form method="POST" action="{{ route('admin.opd.status.completed', $appointment) }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-check-circle me-1"></i>Complete Consultation
@@ -406,8 +406,6 @@
 
 @section('js')
 <script>
-let prescriptionItemCount = 0;
-
 function addPrescriptionItem() {
     prescriptionItemCount++;
     const container = document.getElementById('prescription-items');
@@ -433,5 +431,4 @@ function addPrescriptionItem() {
     container.appendChild(newRow);
 }
 </script>
-@stop
 @endsection

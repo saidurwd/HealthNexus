@@ -71,7 +71,7 @@ class OpdConsultationController extends Controller
         $this->authorize('view', $appointment);
 
         $data = $request->validated();
-        unset($data['company_id'], $data['branch_id'], $data['order_no']);
+        unset($data['company_id'], $data['branch_id']);
         $order = $this->opdService->addInvestigationOrder($appointment, $data, $request->user());
 
         $this->auditLogger->log('CREATE', InvestigationOrder::class, $order->id, null, $order->toArray(), $request);

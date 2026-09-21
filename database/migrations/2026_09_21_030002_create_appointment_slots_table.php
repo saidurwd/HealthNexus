@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('booked_count')->default(0);
             $table->enum('status', ['available', 'booked', 'blocked', 'cancelled'])->default('available');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['company_id', 'doctor_id', 'slot_datetime'], 'slot_datetime_unique');
         });

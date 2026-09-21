@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('prescribed_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'patient_id']);
             $table->index(['company_id', 'appointment_id']);
@@ -40,6 +41,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'prescription_id']);
         });

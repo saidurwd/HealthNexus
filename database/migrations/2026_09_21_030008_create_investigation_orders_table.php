@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('ordered_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('ordered_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'patient_id']);
             $table->index(['company_id', 'appointment_id']);

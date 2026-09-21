@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status', ['scheduled', 'confirmed', 'checked_in', 'in_progress', 'completed', 'cancelled', 'no_show'])->default('scheduled');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'branch_id', 'appointment_date']);
             $table->index(['company_id', 'patient_id']);

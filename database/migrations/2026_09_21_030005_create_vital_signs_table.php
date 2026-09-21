@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('oxygen_saturation', 10)->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['company_id', 'patient_id']);
             $table->index(['company_id', 'appointment_id']);

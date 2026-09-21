@@ -23,7 +23,7 @@ class DoctorScheduleFactory extends Factory
             'doctor_id' => User::factory(),
             'name' => 'Dr. '.fake()->name().' Schedule',
             'description' => fake()->sentence(),
-            'day_of_week' => fake()->numberBetween(0, 6),
+            'day_of_week' => fake()->randomElement(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
             'start_time' => $startTime,
             'end_time' => $endTime,
             'slot_duration_minutes' => fake()->randomElement([15, 20, 30, 45, 60]),
