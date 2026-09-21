@@ -8,195 +8,316 @@
 @endphp
 
 @section('page_content')
-    <div class="card">
-        <div class="card-header p-0 p-2">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h3 class="card-title">Patient Profile</h3>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+            <div class="d-flex align-items-center">
+                <div class="me-4 text-center">
+                    @if($patient->profile_picture)
+                        <img src="{{ url('storage/'.$patient->profile_picture) }}" alt="{{ $patient->full_name }}" class="img-thumbnail rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                    @else
+                        <div class="d-inline-flex align-items-center justify-content-center bg-secondary text-white rounded-circle" style="width: 120px; height: 120px; font-size: 40px;">
+                            {{ strtoupper(substr($patient->first_name, 0, 1)) }}{{ $patient->middle_name ? strtoupper(substr($patient->middle_name, 0, 1)) : '' }}{{ strtoupper(substr($patient->last_name, 0, 1)) }}
+                        </div>
+                    @endif
+                </div>
+                <div>
+                    <h2 class="mb-1">{{ $patient->full_name }}</h2>
+                    <div class="d-flex gap-2 mb-2 flex-wrap">
+                        @php
+                            $statusClass = match($patient->status) {
+                                'active' => 'bg-success',
+                                'inactive' => 'bg-warning text-dark',
+                                'deceased' => 'bg-danger',
+                                default => 'bg-secondary',
+                            };
+                        @endphp
+                        <span class="badge {{ $statusClass }}">{{ ucfirst($patient->status) }}</span>
+                        @if($patient->blood_group)
+                            <span class="badge bg-info text-dark">{{ $patient->blood_group }}</span>
+                        @endif
                     </div>
-                    <div class="col-sm-6">
-                        <nav class="navbar navbar-pills float-sm-end">
-                            <ul class="navbar-nav">
-                                <li class="nav-item {{ $isOverview ? 'active' : '' }}" style="margin-right: 5px;">
-                                    <a class="nav-link" href="{{ route('admin.patients.show', $patient) }}" style="padding: 0.375rem 0.75rem;">
-                                        <i class="bi bi-person me-1"></i> Overview
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ str_contains($currentPath, 'timeline') ? 'active' : '' }}" style="margin-right: 5px;">
-                                    <a class="nav-link" href="{{ route('admin.patients.timeline', $patient) }}" style="padding: 0.375rem 0.75rem;">
-                                        <i class="bi bi-clock-history me-1"></i> Timeline
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ str_contains($currentPath, 'documents') ? 'active' : '' }}" style="margin-right: 5px;">
-                                    <a class="nav-link" href="{{ route('admin.patients.documents', $patient) }}" style="padding: 0.375rem 0.75rem;">
-                                        <i class="bi bi-file-earmark me-1"></i> Documents
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ str_contains($currentPath, 'allergies') ? 'active' : '' }}" style="margin-right: 5px;">
-                                    <a class="nav-link" href="{{ route('admin.patients.allergies', $patient) }}" style="padding: 0.375rem 0.75rem;">
-                                        <i class="bi bi-bug me-1"></i> Allergies
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ str_contains($currentPath, 'history') && !str_contains($currentPath, 'medical') ? 'active' : '' }}" style="margin-right: 5px;">
-                                    <a class="nav-link" href="{{ route('admin.patients.history', $patient) }}" style="padding: 0.375rem 0.75rem;">
-                                        <i class="bi bi-journal-medical me-1"></i> Medical History
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                    <p class="text-muted mb-0">
+                        @if($patient->phone)
+                            <i class="bi bi-telephone me-2"></i>{{ $patient->phone }}
+                            @if($patient->email) <span class="mx-3">|</span> @endif
+                        @endif
+                        @if($patient->email)
+                            <i class="bi bi-envelope me-2"></i>{{ $patient->email }}
+                        @endif
+                        @if(!$patient->phone && !$patient->email)
+                            No contact details recorded
+                        @endif
+                    </p>
                 </div>
             </div>
-            <div class="card-tools" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
-                <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary btn-sm">Back</a>
+
+            <div class="d-flex gap-2">
+                <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-outline-warning">
+                    <i class="bi bi-pencil me-1"></i>Edit Patient
+                </a>
+                <a href="{{ route('admin.patients.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Back to List
+                </a>
             </div>
         </div>
-        <div class="card-body">
+
+        @php
+            $tabs = [
+                ['name' => 'Overview', 'route' => route('admin.patients.show', $patient), 'icon' => 'bi-person', 'active' => $isOverview],
+                ['name' => 'Timeline', 'route' => route('admin.patients.timeline', $patient), 'icon' => 'bi-clock-history', 'active' => str_contains($currentPath, 'timeline')],
+                ['name' => 'Documents', 'route' => route('admin.patients.documents', $patient), 'icon' => 'bi-file-earmark', 'active' => str_contains($currentPath, 'documents')],
+                ['name' => 'Allergies', 'route' => route('admin.patients.allergies', $patient), 'icon' => 'bi-bug', 'active' => str_contains($currentPath, 'allergies')],
+                ['name' => 'Medical History', 'route' => route('admin.patients.history', $patient), 'icon' => 'bi-journal-medical', 'active' => str_contains($currentPath, 'history')],
+            ];
+        @endphp
+
+        <ul class="nav nav-pills mb-4 flex-wrap">
+            @foreach($tabs as $tab)
+                <li class="nav-item">
+                    <a href="{{ $tab['route'] }}" class="nav-link {{ $tab['active'] ? 'active' : '' }}">
+                        <i class="{{ $tab['icon'] }} me-1"></i>{{ $tab['name'] }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+
+        @if($isOverview)
             <div class="row">
-                <div class="col-md-4 text-center">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px; font-size: 60px; color: white;">
-                        {{ strtoupper(substr($patient->first_name, 0, 1)) }}
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <dl class="row">
-                        <dt class="col-sm-3">Patient No</dt>
-                        <dd class="col-sm-9">{{ $patient->enterprise_patient_no }}</dd>
-
-                        <dt class="col-sm-3">National ID</dt>
-                        <dd class="col-sm-9">{{ $patient->national_identifier ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Name</dt>
-                        <dd class="col-sm-9">{{ $patient->full_name }}</dd>
-
-                        <dt class="col-sm-3">Date of Birth</dt>
-                        <dd class="col-sm-9">{{ $patient->date_of_birth?->format('Y-m-d') ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Age</dt>
-                        <dd class="col-sm-9">{{ $patient->date_of_birth ? \Carbon\Carbon::parse($patient->date_of_birth)->age.' years' : '-' }}</dd>
-
-                        <dt class="col-sm-3">Sex</dt>
-                        <dd class="col-sm-9">{{ $patient->sex ? ['M' => 'Male', 'F' => 'Female', 'O' => 'Other'][$patient->sex] : '-' }}</dd>
-
-                        <dt class="col-sm-3">Blood Group</dt>
-                        <dd class="col-sm-9">{{ $patient->blood_group ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Phone</dt>
-                        <dd class="col-sm-9">{{ $patient->phone ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Email</dt>
-                        <dd class="col-sm-9">{{ $patient->email ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Address</dt>
-                        <dd class="col-sm-9">{{ $patient->address ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">City</dt>
-                        <dd class="col-sm-9">{{ $patient->city ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">State</dt>
-                        <dd class="col-sm-9">{{ $patient->state ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Country</dt>
-                        <dd class="col-sm-9">{{ $patient->country ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Postal Code</dt>
-                        <dd class="col-sm-9">{{ $patient->postal_code ?? '-' }}</dd>
-
-                        <dt class="col-sm-3">Status</dt>
-                        <dd class="col-sm-9">
-                            <span class="badge {{ $patient->status === 'active' ? 'bg-success' : ($patient->status === 'inactive' ? 'bg-warning' : 'bg-danger') }}">
-                                {{ ucfirst($patient->status) }}
-                            </span>
-                        </dd>
-
-                        <dt class="col-sm-3">Created</dt>
-                        <dd class="col-sm-9">{{ $patient->created_at->format('Y-m-d H:i') }}</dd>
-                    </dl>
-                </div>
-            </div>
-
-            @if($patient->identifiers->isNotEmpty())
-                <div class="mt-4">
-                    <h4>Identification Documents</h4>
-                    <table class="table table-sm table-striped">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Value</th>
-                                <th>Issuing Authority</th>
-                                <th>Issued</th>
-                                <th>Expires</th>
-                                <th>Primary</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($patient->identifiers as $identifier)
-                                <tr>
-                                    <td>{{ $identifier->identifier_type }}</td>
-                                    <td>{{ $identifier->identifier_value }}</td>
-                                    <td>{{ $identifier->issuing_authority ?? '-' }}</td>
-                                    <td>{{ $identifier->issued_at?->format('Y-m-d') ?? '-' }}</td>
-                                    <td>{{ $identifier->expires_at?->format('Y-m-d') ?? '-' }}</td>
-                                    <td>{{ $identifier->is_primary ? 'Yes' : 'No' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-
-            @if($patient->contacts->isNotEmpty())
-                <div class="mt-4">
-                    <h4>Contacts</h4>
-                    <div class="row">
-                        @foreach($patient->contacts as $contact)
-                            <div class="col-md-6 mb-3">
-                                <div class="border p-3 rounded">
-                                    <strong>{{ $contact->name }}</strong>
-                                    <br>
-                                    <small class="text-muted">{{ $contact->relationship ?? '' }}</small>
-                                    <br>
-                                    <i class="bi bi-telephone me-1"></i> {{ $contact->phone ?? '-' }}
-                                    <br>
-                                    <i class="bi bi-envelope me-1"></i> {{ $contact->email ?? '-' }}
-                                    @if ($contact->is_emergency)
-                                        <span class="badge bg-danger">Emergency</span>
-                                    @endif
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Patient Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">Patient No</dt>
+                                        <dd class="col-sm-7">{{ $patient->enterprise_patient_no ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">National ID</dt>
+                                        <dd class="col-sm-7">{{ $patient->national_identifier ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">DOB</dt>
+                                        <dd class="col-sm-7">{{ $patient->date_of_birth?->format('Y-m-d') ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">Age</dt>
+                                        <dd class="col-sm-7">{{ $patient->date_of_birth ? \Carbon\Carbon::parse($patient->date_of_birth)->age.' years' : '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">Sex</dt>
+                                        <dd class="col-sm-7">{{ $patient->sex ? ['M' => 'Male', 'F' => 'Female', 'O' => 'Other'][$patient->sex] : '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">Blood Group</dt>
+                                        <dd class="col-sm-7">{{ $patient->blood_group ?? '-' }}</dd>
+                                    </dl>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Contact Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-3 col-md-2">Address</dt>
+                                        <dd class="col-sm-9 col-md-10">{{ $patient->address ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">City</dt>
+                                        <dd class="col-sm-7">{{ $patient->city ?? '-' }}</dd>
+                                        <dt class="col-sm-5">State</dt>
+                                        <dd class="col-sm-7">{{ $patient->state ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-md-6">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-5">Country</dt>
+                                        <dd class="col-sm-7">{{ $patient->country ?? '-' }}</dd>
+                                        <dt class="col-sm-5">Postal Code</dt>
+                                        <dd class="col-sm-7">{{ $patient->postal_code ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-12">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-3 col-md-2">Phone</dt>
+                                        <dd class="col-sm-9 col-md-10">{{ $patient->phone ?? '-' }}</dd>
+                                        <dt class="col-sm-3 col-md-2">Email</dt>
+                                        <dd class="col-sm-9 col-md-10">{{ $patient->email ?? '-' }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Contact Persons</h5>
+                        </div>
+                        <div class="card-body">
+                            @forelse($patient->contacts as $contact)
+                                <div class="d-flex justify-content-between align-items-start py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                    <div>
+                                        <strong>{{ $contact->name }}</strong>
+                                        @if($contact->relationship)
+                                            <span class="text-muted">({{ $contact->relationship }})</span>
+                                        @endif
+                                        <br>
+                                        <small class="text-muted">
+                                            @if($contact->phone)
+                                                <i class="bi bi-telephone me-1"></i>{{ $contact->phone }}
+                                                @if($contact->email) | @endif
+                                            @endif
+                                            @if($contact->email)
+                                                <i class="bi bi-envelope me-1"></i>{{ $contact->email }}
+                                            @endif
+                                        </small>
+                                    </div>
+                                    @if($contact->is_emergency)
+                                        <span class="badge bg-danger">Emergency Contact</span>
+                                    @endif
+                                </div>
+                            @empty
+                                <p class="text-muted mb-0">No contacts recorded.</p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    @if($patient->identifiers->isNotEmpty())
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Identification Documents</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Value</th>
+                                                <th>Authority</th>
+                                                <th class="text-end">Issued</th>
+                                                <th class="text-end">Expires</th>
+                                                <th>Primary</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($patient->identifiers as $identifier)
+                                                <tr>
+                                                    <td>{{ $identifier->identifier_type }}</td>
+                                                    <td>{{ $identifier->identifier_value }}</td>
+                                                    <td>{{ $identifier->issuing_authority ?? '-' }}</td>
+                                                    <td class="text-end">{{ $identifier->issued_at?->format('M d, Y') ?? '-' }}</td>
+                                                    <td class="text-end">{{ $identifier->expires_at?->format('M d, Y') ?? '-' }}</td>
+                                                    <td>{{ $identifier->is_primary ? '<span class="badge bg-success">Yes</span>' : 'No' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($patient->allergies->isNotEmpty())
+                        <div class="card mb-4">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Allergies</h5>
+                                <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-primary">Manage Allergies</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Substance</th>
+                                                <th>Severity</th>
+                                                <th>Reaction</th>
+                                                <th class="text-end">Active</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($patient->allergies as $allergy)
+                                                <tr>
+                                                    <td>{{ $allergy->substance }}</td>
+                                                    <td>{{ ucfirst($allergy->severity ?? '') }}</td>
+                                                    <td>{{ ucfirst($allergy->reaction ?? '') }}</td>
+                                                    <td class="text-end">
+                                                        @if($allergy->is_active)
+                                                            <span class="badge bg-success">Active</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">Inactive</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Quick Stats</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <div class="text-muted small">Allergies</div>
+                                <div class="h4 mb-0 text-danger">{{ $patient->allergies->count() }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="text-muted small">Medical History</div>
+                                <div class="h4 mb-0 text-primary">{{ $patient->histories->count() }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="text-muted small">Documents</div>
+                                <div class="h4 mb-0 text-info">{{ $patient->documents->count() }}</div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="text-muted small">Created</div>
+                                <div class="small">{{ $patient->created_at->format('M d, Y') }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a href="{{ route('admin.patients.history', $patient) }}" class="btn btn-outline-primary">
+                            <i class="bi bi-journal-medical me-1"></i>View Medical History
+                        </a>
+                        <a href="{{ route('admin.patients.documents', $patient) }}" class="btn btn-outline-primary">
+                            <i class="bi bi-file-earmark me-1"></i>View Documents
+                        </a>
+                        <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-outline-primary">
+                            <i class="bi bi-bug me-1"></i>View Allergies
+                        </a>
                     </div>
                 </div>
-            @endif
-
-            @if($patient->allergies->isNotEmpty())
-                <div class="mt-4">
-                    <h4>Allergies</h4>
-                    <table class="table table-sm table-striped">
-                        <thead>
-                            <tr>
-                                <th>Substance</th>
-                                <th>Severity</th>
-                                <th>Reaction</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($patient->allergies as $allergy)
-                                <tr>
-                                    <td>{{ $allergy->substance }}</td>
-                                    <td>{{ ucfirst($allergy->severity ?? '') }}</td>
-                                    <td>{{ ucfirst($allergy->reaction ?? '') }}</td>
-                                    <td>{{ $allergy->notes ?? '-' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-primary">View all allergies</a>
-                </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
-@stop
+@endsection
