@@ -760,7 +760,39 @@ return [
     */
 
     'menu' => [
-        // ['header' => 'main'],
+        // Navbar items (right side)
+        [
+            'text' => 'Messages',
+            'icon' => 'bi bi-chat-left-text',
+            'topnav_right' => true,
+            'submenu' => [
+                [
+                    'text' => 'No new messages',
+                    'url' => '#',
+                    'icon' => 'bi bi-info-circle',
+                ],
+            ],
+        ],
+        [
+            'type' => 'navbar-notification',
+            'id' => 'navbar-notifications',
+            'icon' => 'bi bi-bell',
+            'icon_color' => 'primary',
+            'url' => '/admin/notifications',
+            'label' => 0,
+            'label_color' => 'danger',
+            'topnav_right' => true,
+        ],
+        [
+            'type' => 'fullscreen-widget',
+            'topnav_right' => true,
+        ],
+        [
+            'type' => 'darkmode-widget',
+            'topnav_right' => true,
+        ],
+        
+        // Sidebar items:
         [
             'text' => 'Dashboard',
             'url' => '/dashboard',

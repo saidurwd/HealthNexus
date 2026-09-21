@@ -105,6 +105,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit.show');
         });
 
+        Route::get('notifications', function () {
+            return view('admin.notifications.index');
+        })->name('notifications.index');
+
         Route::middleware(['can:settings.view'])->group(function () {
             Route::get('master-data', [MasterDataController::class, 'index'])->name('master-data.index');
 
