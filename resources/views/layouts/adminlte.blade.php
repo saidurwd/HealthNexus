@@ -10,6 +10,16 @@
     @include('components.tenant-context-selector')
 @stop
 
+@section('footer')
+    <strong>&copy; {{ date('Y') }} Health Nexus</strong>
+    <span class="mx-2">|</span>
+    <small>v{{ config('app.version', '1.0.0') }}</small>
+    <span class="d-none d-md-inline">
+        <span class="mx-2">|</span>
+        <a href="https://github.com/Kilo-Org/kilocode" class="text-reset text-decoration-none" target="_blank">Support</a>
+    </span>
+@stop
+
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
