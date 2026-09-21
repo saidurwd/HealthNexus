@@ -439,8 +439,21 @@ return [
     'rtl' => [
         'enabled' => null,
         'locales' => [
-            'ar', 'arc', 'ckb', 'dv', 'fa', 'ha', 'he', 'khw', 'ks', 'ps',
-            'sd', 'ug', 'ur', 'uz-AF', 'yi',
+            'ar',
+            'arc',
+            'ckb',
+            'dv',
+            'fa',
+            'ha',
+            'he',
+            'khw',
+            'ks',
+            'ps',
+            'sd',
+            'ug',
+            'ur',
+            'uz-AF',
+            'yi',
         ],
     ],
 
@@ -779,24 +792,73 @@ return [
             'url' => '/dashboard',
             'icon' => 'bi bi-speedometer2',
         ],
-        ['header' => 'tenants'],
+
+        ['header' => 'hospital_operations'],
         [
-            'text' => 'Companies',
-            'url' => '/admin/companies',
-            'icon' => 'bi bi-building',
-            'can' => 'manage companies',
+            'text' => 'Hospital Operations',
+            'icon' => 'bi bi-hospital',
+            'can' => 'settings.view',
+            'submenu' => [
+                [
+                    'text' => 'Hospital Dashboard',
+                    'url' => '#',
+                    'icon' => 'bi bi-dashboard',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'Hospital & Branches',
+                    'url' => '/admin/companies',
+                    'icon' => 'bi bi-building',
+                    'can' => 'manage companies',
+                ],
+                [
+                    'text' => 'Departments',
+                    'url' => '/admin/departments',
+                    'icon' => 'bi bi-diagram-3',
+                    'can' => 'manage departments',
+                ],
+            ],
         ],
-        [
-            'text' => 'Departments',
-            'url' => '/admin/departments',
-            'icon' => 'bi bi-diagram-3',
-            'can' => 'manage departments',
-        ],
+
+        ['header' => 'patients'],
         [
             'text' => 'Patients',
-            'url' => '/admin/patients',
             'icon' => 'bi bi-person',
-            'can' => 'manage patients',
+            'can' => 'settings.view',
+            'submenu' => [
+                [
+                    'text' => 'Patient Dashboard',
+                    'url' => '#',
+                    'icon' => 'bi bi-dashboard',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'Patients',
+                    'url' => '/admin/patients',
+                    'icon' => 'bi bi-person',
+                    'can' => 'patients.view',
+                ],
+            ],
+        ],
+
+        ['header' => 'appointments'],
+        [
+            'text' => 'Appointments',
+            'url' => '/admin/appointments',
+            'icon' => 'bi bi-calendar-check',
+            'can' => 'appointments.view',
+        ],
+        [
+            'text' => 'Doctor Schedules',
+            'url' => '/admin/schedules',
+            'icon' => 'bi bi-clock',
+            'can' => 'schedules.view',
+        ],
+        [
+            'text' => 'Queue',
+            'url' => '/admin/queue',
+            'icon' => 'bi bi-speedometer2',
+            'can' => 'queue.view',
         ],
         ['header' => 'master_data'],
         [

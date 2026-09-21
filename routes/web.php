@@ -1,13 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admin\Audit\AuditLogController;
+use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\DoctorScheduleController;
 use App\Http\Controllers\Admin\EncounterController;
 use App\Http\Controllers\Admin\MasterData\MasterDataController;
+use App\Http\Controllers\Admin\OpdConsultationController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -109,6 +112,27 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('patients', PatientController::class);
 
             Route::resource('encounters', EncounterController::class);
+
+            // Phase 2: Appointment + OPD
+            Route::resource('appointments', AppointmentController::class);
+            Route::resource('schedules', DoctorScheduleController::class)->except(['show']);
+            Route::get('schedules/{schedule}', [DoctorScheduleController::class, 'show'])->name('schedules.show');
+
+            // Queue management
+            Route::get('queue', [QueueController::class, 'index'])->name('queue.index');
+            Route::post('queue/call-next', [QueueController::class, 'callNext'])->name('queue.call-next');
+            Route::post('queue/{token}/start', [QueueController::class, 'start'])->name('queue.start');
+            Route::post('queue/{token}/complete', [QueueController::class, 'complete'])->name('queue.complete');
+            Route::get('queue/slots', [QueueController::class, 'searchSlots'])->name('queue.slots');
+
+            // OPD consultation
+            Route::get('appointments/{appointment}/consultation', [OpdConsultationController::class, 'show'])->name('opd.consultation');
+            Route::post('opd/vital-signs', [OpdConsultationController::class, 'storeVitalSigns'])->name('opd.vital-signs');
+            Route::post('opd/diagnoses', [OpdConsultationController::class, 'storeDiagnosis'])->name('opd.diagnoses');
+            Route::post('opd/investigation-orders', [OpdConsultationController::class, 'storeInvestigationOrder'])->name('opd.investigation-orders');
+            Route::post('opd/prescriptions', [OpdConsultationController::class, 'storePrescription'])->name('opd.prescriptions');
+            Route::post('appointments/{appointment}/status/in-progress', [OpdConsultationController::class, 'markInProgress'])->name('opd.status.in-progress');
+            Route::post('appointments/{appointment}/status/completed', [OpdConsultationController::class, 'markCompleted'])->name('opd.status.completed');
 
             Route::resource('roles', RoleController::class)->except(['show']);
             Route::resource('permissions', PermissionController::class)->except(['show']);
