@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
 
 @section('content')
 <div class="container-fluid">
@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Identification Types</h3>
-                    <a href="{{ route('admin.master-data.index') }}" class="btn btn-secondary float-right">Back to Master Data</a>
+                    <a href="{{ route('admin.master-data.identification-types.create') }}" class="btn btn-primary float-right">Add Type</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
@@ -20,6 +20,7 @@
                                 <th>Issuing Authority</th>
                                 <th>Primary</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,9 +41,17 @@
                                             {{ $type->is_active ? 'Active' : 'Inactive' }}
                                         </span>
                                     </td>
+                                    <td>
+                                        <a href="{{ route('admin.master-data.identification-types.edit', $type) }}" class="btn btn-sm btn-warning">Edit</a>
+                                        <form action="{{ route('admin.master-data.identification-types.destroy', $type) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="7" class="text-center">No identification types found.</td></tr>
+                                <tr><td colspan="8" class="text-center">No identification types found.</td></tr>
                             @endforelse
                         </tbody>
                     </table>

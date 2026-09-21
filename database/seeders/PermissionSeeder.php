@@ -19,6 +19,7 @@ class PermissionSeeder extends Seeder
             'manage users',
             'manage roles',
             'manage permissions',
+            'manage patients',
 
             // Patient
             'patient.view',
@@ -179,7 +180,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'manage companies', 'manage branches', 'manage departments', 'manage users',
+                'manage companies', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patient.view', 'patient.create', 'patient.update', 'patient.export',
                 'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
                 'opd.view', 'opd.create', 'opd.update', 'opd.consult',

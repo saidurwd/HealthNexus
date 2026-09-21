@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
 
 @section('content')
 <div class="container-fluid">
@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">States - {{ $country->name }}</h3>
-                    <a href="{{ route('admin.master-data.countries') }}" class="btn btn-secondary float-right">Back to Countries</a>
+                    <a href="{{ route('admin.master-data.states.create') }}" class="btn btn-primary float-right">Add State</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">

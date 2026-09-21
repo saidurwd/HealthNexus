@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class State extends Model
 {
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'country_id',
         'name',
@@ -14,12 +18,13 @@ class State extends Model
         'is_active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected $dates = [
+        'deleted_at',
+    ];
 
     public function country(): BelongsTo
     {

@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IdentificationType extends Model
 {
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'name',
         'code',
@@ -15,11 +19,12 @@ class IdentificationType extends Model
         'is_active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_primary' => 'boolean',
-            'is_active' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_primary' => 'boolean',
+        'is_active' => 'boolean',
+    ];
+
+    protected $dates = [
+        'deleted_at',
+    ];
 }
