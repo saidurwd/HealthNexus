@@ -95,12 +95,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('roles', RoleController::class)->except(['show']);
         Route::resource('permissions', PermissionController::class)->except(['show']);
 
-        Route::middleware(['can:view audit logs'])->group(function () {
+        Route::middleware(['can:audit.view'])->group(function () {
             Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit.index');
             Route::get('audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit.show');
         });
 
-        Route::middleware(['can:manage settings'])->group(function () {
+        Route::middleware(['can:settings.view'])->group(function () {
             Route::get('master-data', [MasterDataController::class, 'index'])->name('master-data.index');
             Route::get('master-data/countries', [MasterDataController::class, 'countries'])->name('master-data.countries');
             Route::get('master-data/states', [MasterDataController::class, 'allStates'])->name('master-data.all-states');

@@ -1,13 +1,5 @@
 <?php
 
-use JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter;
-use JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter;
-
 /*
 |--------------------------------------------------------------------------
 | Laravel AdminLTE Configuration
@@ -45,7 +37,7 @@ return [
     |
     */
 
-    'title' => 'HealthNexus',
+    'title' => 'AdminLTE 4',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -85,12 +77,12 @@ return [
     |
     */
 
-    'logo' => '<b>Health</b>Nexus',
+    'logo' => '<b>Admin</b>LTE',
     'logo_img' => 'vendor/adminlte/dist/assets/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image opacity-75 shadow',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs opacity-75',
-    'logo_img_alt' => 'HealthNexus Logo',
+    'logo_img_alt' => 'Admin Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -197,8 +189,8 @@ return [
     |
     */
 
-    'use_route_url' => true,
-    'dashboard_url' => 'dashboard',
+    'use_route_url' => false,
+    'dashboard_url' => 'home',
     'logout_url' => 'logout',
 
     // The HTTP method spoofed on the logout form. Set it to 'GET' when your
@@ -872,13 +864,13 @@ return [
     */
 
     'filters' => [
-        GateFilter::class,
-        HrefFilter::class,
-        SearchFilter::class,
-        ActiveFilter::class,
-        ClassesFilter::class,
-        LangFilter::class,
-        DataFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
+        JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
     ],
 
     /*
