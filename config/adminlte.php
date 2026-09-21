@@ -862,7 +862,7 @@ return [
                 [
                     'text' => 'Queue',
                     'url' => '/admin/queue',
-                    'icon' => 'bi bi-ticket-dashed',
+                    'icon' => 'bi bi-ticket',
                     'can' => 'queue.view',
                 ],
             ],
