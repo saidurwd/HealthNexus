@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Create Country</h3>
-                    <a href="{{ route('admin.master-data.countries') }}" class="btn btn-secondary float-right">Back</a>
+                    <a href="{{ route('admin.master-data.countries') }}" class="btn btn-secondary float-end">Back</a>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.master-data.countries.store') }}">
