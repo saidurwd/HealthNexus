@@ -792,8 +792,6 @@ return [
             'url' => '/dashboard',
             'icon' => 'bi bi-speedometer2',
         ],
-
-        ['header' => 'hospital_operations'],
         [
             'text' => 'Hospital Operations',
             'icon' => 'bi bi-hospital',
@@ -819,8 +817,6 @@ return [
                 ],
             ],
         ],
-
-        ['header' => 'patients'],
         [
             'text' => 'Patients',
             'icon' => 'bi bi-person',
@@ -840,8 +836,6 @@ return [
                 ],
             ],
         ],
-
-        ['header' => 'appointments'],
         [
             'text' => 'Appointments',
             'icon' => 'bi bi-calendar-check',
@@ -873,8 +867,6 @@ return [
                 ],
             ],
         ],
-
-        ['header' => 'master_data'],
         [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
