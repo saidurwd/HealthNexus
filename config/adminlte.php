@@ -844,22 +844,36 @@ return [
         ['header' => 'appointments'],
         [
             'text' => 'Appointments',
-            'url' => '/admin/appointments',
             'icon' => 'bi bi-calendar-check',
-            'can' => 'appointments.view',
+            'can' => 'settings.view',
+            'submenu' => [
+                [
+                    'text' => 'Appointment Dashboard',
+                    'url' => '#',
+                    'icon' => 'bi bi-dashboard',
+                    'can' => 'settings.view',
+                ],
+                [
+                    'text' => 'Appointments',
+                    'url' => '/admin/appointments',
+                    'icon' => 'bi bi-calendar-check',
+                    'can' => 'appointments.view',
+                ],
+                [
+                    'text' => 'Doctor Schedules',
+                    'url' => '/admin/schedules',
+                    'icon' => 'bi bi-clock',
+                    'can' => 'schedules.view',
+                ],
+                [
+                    'text' => 'Queue',
+                    'url' => '/admin/queue',
+                    'icon' => 'bi bi-speedometer2',
+                    'can' => 'queue.view',
+                ],
+            ],
         ],
-        [
-            'text' => 'Doctor Schedules',
-            'url' => '/admin/schedules',
-            'icon' => 'bi bi-clock',
-            'can' => 'schedules.view',
-        ],
-        [
-            'text' => 'Queue',
-            'url' => '/admin/queue',
-            'icon' => 'bi bi-speedometer2',
-            'can' => 'queue.view',
-        ],
+
         ['header' => 'master_data'],
         [
             'text' => 'Master Data',
