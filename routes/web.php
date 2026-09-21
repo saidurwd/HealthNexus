@@ -109,6 +109,10 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.notifications.index');
         })->name('notifications.index');
 
+        Route::get('messages', function () {
+            return view('admin.messages.index');
+        })->name('messages.index');
+
         Route::middleware(['can:settings.view'])->group(function () {
             Route::get('master-data', [MasterDataController::class, 'index'])->name('master-data.index');
 
