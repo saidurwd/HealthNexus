@@ -832,7 +832,7 @@ return [
                     'text' => 'Patients',
                     'url' => '/admin/patients',
                     'icon' => 'bi bi-person',
-                    'can' => 'patients.view',
+                    'can' => 'patient.view',
                 ],
             ],
         ],
@@ -862,7 +862,7 @@ return [
                 [
                     'text' => 'Queue',
                     'url' => '/admin/queue',
-                    'icon' => 'bi bi-speedometer2',
+                    'icon' => 'bi bi-ticket-dashed',
                     'can' => 'queue.view',
                 ],
             ],
@@ -900,7 +900,7 @@ return [
         ],
         [
             'text' => 'Administration',
-            'icon' => 'bi bi-database',
+            'icon' => 'bi bi-gear',
             'can' => 'settings.view',
             'submenu' => [
                 [
@@ -925,7 +925,7 @@ return [
         ],
         [
             'text' => 'Security & Audit',
-            'icon' => 'bi bi-database',
+            'icon' => 'bi bi-shield-lock',
             'can' => 'settings.view',
             'submenu' => [
                 [

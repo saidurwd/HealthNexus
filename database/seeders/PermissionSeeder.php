@@ -30,10 +30,24 @@ class PermissionSeeder extends Seeder
             'patient.export',
 
             // Appointment
+            'appointments.view',
+            'appointments.create',
+            'appointments.update',
+            'appointments.delete',
             'appointment.view',
             'appointment.create',
             'appointment.update',
             'appointment.cancel',
+
+            // Doctor Schedules
+            'schedules.view',
+            'schedules.create',
+            'schedules.update',
+            'schedules.delete',
+
+            // Queue
+            'queue.view',
+            'queue.manage',
 
             // OPD
             'opd.view',
@@ -182,7 +196,9 @@ class PermissionSeeder extends Seeder
             'hospital_admin' => [
                 'manage companies', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patient.view', 'patient.create', 'patient.update', 'patient.export',
-                'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
+                'appointments.view', 'appointments.create', 'appointments.update', 'appointments.delete',
+                'schedules.view',
+                'queue.view', 'queue.manage',
                 'opd.view', 'opd.create', 'opd.update', 'opd.consult',
                 'billing.view', 'billing.create', 'billing.update', 'billing.payment',
                 'reporting.view', 'reporting.export', 'reporting.print',
@@ -206,7 +222,9 @@ class PermissionSeeder extends Seeder
             ],
             'receptionist' => [
                 'patient.view', 'patient.create', 'patient.update',
-                'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
+                'appointments.view', 'appointments.create', 'appointments.update',
+                'schedules.view',
+                'queue.view', 'queue.manage',
                 'billing.view', 'billing.create', 'billing.update', 'billing.payment',
                 'reporting.view',
             ],
