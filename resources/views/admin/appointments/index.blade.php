@@ -84,6 +84,14 @@
                                         <a href="{{ route('admin.appointments.show', $appointment) }}" class="btn btn-sm btn-outline-info" title="View">
                                             <i class="bi bi-eye"></i>
                                         </a>
+                                        @if(in_array($appointment->status, ['scheduled', 'confirmed']))
+                                            <form method="POST" action="{{ route('admin.appointments.check-in', $appointment) }}" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" title="Check-in">
+                                                    <i class="bi bi-door-open"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

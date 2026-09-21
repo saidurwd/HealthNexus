@@ -58,6 +58,14 @@
                                 </select>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">Source</label>
+                                <select name="source" class="form-select">
+                                    <option value="online">Online</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="referral">Referral</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Reason</label>
                                 <textarea name="reason" class="form-control" rows="2" placeholder="Chief complaint or reason for visit..."></textarea>
                             </div>

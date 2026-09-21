@@ -33,8 +33,9 @@ class QueueController extends Controller
         $companyId = app(TenantContextResolver::class)->getCompanyId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $doctorId = $request->input('doctor_id');
+        $tokenId = $request->input('token_id');
 
-        $token = $this->appointmentService->callNextToken($companyId, $branchId, $doctorId);
+        $token = $this->appointmentService->callNextToken($companyId, $branchId, $doctorId, $tokenId);
 
         if ($token) {
             return response()->json([

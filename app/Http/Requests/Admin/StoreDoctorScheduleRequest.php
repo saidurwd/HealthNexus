@@ -21,6 +21,8 @@ class StoreDoctorScheduleRequest extends FormRequest
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
             'slot_duration_minutes' => ['integer', 'min:5', 'max:120'],
+            'is_publish_slots' => ['boolean'],
+            'slot_date' => ['nullable', 'date'],
         ];
     }
 

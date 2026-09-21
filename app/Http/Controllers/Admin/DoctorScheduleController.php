@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDoctorScheduleRequest;
 use App\Models\DoctorSchedule;
+use App\Services\Appointments\AppointmentService;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
 
 class DoctorScheduleController extends Controller
 {
-    public function __construct(private AuditLogger $auditLogger) {}
+    public function __construct(
+        private AuditLogger $auditLogger,
+        private AppointmentService $appointmentService
+    ) {}
 
     public function index(Request $request)
     {
@@ -46,6 +50,10 @@ class DoctorScheduleController extends Controller
     {
         $validated = $request->validated();
         $schedule = DoctorSchedule::create($validated);
+
+        if ($validated['is_publish_slots'] ?? false) {
+            $this->appointmentService->createSlots($schedule, $validated['slot_date'] ?? today());
+        }
 
         $this->auditLogger->log('CREATE', DoctorSchedule::class, $schedule->id, null, $schedule->toArray(), $request);
 
