@@ -2265,3 +2265,405 @@ The completed platform should provide:
 ```
 
 This document should be treated as the **master development specification**, while individual module specifications should be created before implementing each major module.
+
+Recommended HMS ERP Menu Structure
+HOSPITAL MANAGEMENT SYSTEM
+│
+├── 🏠 Dashboard
+│
+├── 🏥 Hospital Operations
+│   ├── Hospital Dashboard
+│   ├── Hospital / Branches
+│   ├── Departments
+│   ├── Wards
+│   ├── Rooms
+│   ├── Beds
+│   ├── Bed Occupancy
+│   ├── Bed Transfers
+│   └── Hospital Calendar
+│
+├── 👤 Patients
+│   ├── Patient Dashboard
+│   ├── Register Patient
+│   ├── Patient List
+│   ├── Master Patient Index
+│   ├── Duplicate Patients
+│   ├── Patient Timeline
+│   ├── Patient Documents
+│   ├── Allergies
+│   ├── Medical History
+│   ├── Consents
+│   └── Patient Merge / Correction
+│
+├── 📅 Appointments
+│   ├── Appointment Dashboard
+│   ├── Calendar
+│   ├── New Appointment
+│   ├── Today's Appointments
+│   ├── Waiting Queue
+│   ├── Token Management
+│   ├── Doctor Schedule
+│   ├── Department Schedule
+│   ├── Follow-up Appointments
+│   ├── Cancelled Appointments
+│   └── No-Show Patients
+│
+├── 🩺 Clinical
+│   ├── Clinical Dashboard
+│   ├── OPD
+│   │   ├── OPD Dashboard
+│   │   ├── Today's Queue
+│   │   ├── Consultation
+│   │   ├── Clinical Notes
+│   │   ├── Diagnosis
+│   │   ├── Procedures
+│   │   ├── Prescription
+│   │   └── Follow-up
+│   │
+│   ├── Emergency
+│   │   ├── Emergency Dashboard
+│   │   ├── Registration
+│   │   ├── Triage
+│   │   ├── Emergency Queue
+│   │   ├── Emergency Treatment
+│   │   ├── Emergency Procedures
+│   │   └── Emergency Discharge
+│   │
+│   ├── Inpatient
+│   │   ├── Admission
+│   │   ├── Current Patients
+│   │   ├── Doctor Rounds
+│   │   ├── Progress Notes
+│   │   ├── Patient Transfer
+│   │   ├── Discharge Planning
+│   │   └── Discharge
+│   │
+│   ├── EMR
+│   │   ├── Patient Clinical Record
+│   │   ├── Clinical Timeline
+│   │   ├── Diagnoses
+│   │   ├── Procedures
+│   │   ├── Clinical Notes
+│   │   └── Medical History
+│   │
+│   ├── e-Prescription
+│   │   ├── Prescriptions
+│   │   ├── Drug Database
+│   │   ├── Drug Interactions
+│   │   ├── Prescription Templates
+│   │   └── Prescription History
+│   │
+│   ├── Nursing
+│   │   ├── Nursing Dashboard
+│   │   ├── My Patients
+│   │   ├── Vital Signs
+│   │   ├── Nursing Assessment
+│   │   ├── Care Plans
+│   │   ├── Medication Administration
+│   │   ├── Intake / Output
+│   │   ├── Nursing Notes
+│   │   └── Shift Handover
+│   │
+│   ├── Operation Theatre
+│   │   ├── OT Dashboard
+│   │   ├── OT Schedule
+│   │   ├── Pre-Operative
+│   │   ├── Surgical Checklist
+│   │   ├── Anesthesia
+│   │   ├── Operation Notes
+│   │   ├── Implants
+│   │   └── Recovery
+│   │
+│   └── ICU
+│       ├── ICU Dashboard
+│       ├── ICU Patients
+│       ├── Vital Monitoring
+│       ├── Ventilator
+│       ├── Fluid Balance
+│       ├── ICU Medication
+│       ├── ICU Notes
+│       └── ICU Rounds
+│
+├── 🔬 Diagnostics
+│   ├── Laboratory
+│   │   ├── Lab Dashboard
+│   │   ├── Test Orders
+│   │   ├── Sample Collection
+│   │   ├── Sample Tracking
+│   │   ├── Pending Results
+│   │   ├── Result Entry
+│   │   ├── Result Verification
+│   │   ├── Result Approval
+│   │   ├── Critical Results
+│   │   └── Test Master
+│   │
+│   ├── Radiology
+│   │   ├── Radiology Dashboard
+│   │   ├── Orders
+│   │   ├── Scheduling
+│   │   ├── Worklist
+│   │   ├── Reporting
+│   │   ├── Report Approval
+│   │   └── Critical Findings
+│   │
+│   ├── PACS / Imaging
+│   │   ├── Studies
+│   │   ├── Images
+│   │   └── PACS Integration
+│   │
+│   └── Diagnostic Reports
+│
+├── 💊 Pharmacy
+│   ├── Pharmacy Dashboard
+│   ├── Prescriptions
+│   ├── Dispensing
+│   ├── Sales
+│   ├── Returns
+│   ├── Drug Inventory
+│   ├── Batches
+│   ├── Expiry Management
+│   ├── Reorder
+│   ├── Stock Transfer
+│   ├── Controlled Drugs
+│   └── Drug Master
+│
+├── 🩸 Blood Bank
+│   ├── Blood Bank Dashboard
+│   ├── Donors
+│   ├── Blood Collection
+│   ├── Blood Groups
+│   ├── Components
+│   ├── Inventory
+│   ├── Cross Match
+│   ├── Blood Issue
+│   ├── Transfusion
+│   ├── Reactions
+│   └── Wastage
+│
+├── 💰 Billing & Revenue
+│   ├── Billing Dashboard
+│   ├── Service Charges
+│   ├── OPD Billing
+│   ├── IPD Billing
+│   ├── Emergency Billing
+│   ├── Pharmacy Billing
+│   ├── Lab Billing
+│   ├── Radiology Billing
+│   ├── OT Billing
+│   ├── ICU Billing
+│   ├── Invoices
+│   ├── Payments
+│   ├── Receipts
+│   ├── Advance / Deposit
+│   ├── Discounts
+│   ├── Refunds
+│   ├── Credit Notes
+│   └── Cashier Closing
+│
+├── 🛡️ Insurance & Claims
+│   ├── Insurance Dashboard
+│   ├── Insurance Companies
+│   ├── Insurance Plans
+│   ├── Patient Coverage
+│   ├── Eligibility
+│   ├── Pre-Authorization
+│   ├── Claims
+│   ├── Claim Submission
+│   ├── Claim Rejection
+│   ├── Claim Resubmission
+│   ├── Settlements
+│   └── TPA Management
+│
+├── 📦 Supply Chain
+│   ├── Procurement
+│   │   ├── Procurement Dashboard
+│   │   ├── Purchase Requisition
+│   │   ├── RFQ
+│   │   ├── Vendor Quotation
+│   │   ├── Purchase Orders
+│   │   ├── Goods Receipt
+│   │   ├── Purchase Invoice
+│   │   └── Purchase Return
+│   │
+│   ├── Inventory
+│   │   ├── Inventory Dashboard
+│   │   ├── Stock
+│   │   ├── Stock Ledger
+│   │   ├── Stock Issue
+│   │   ├── Stock Return
+│   │   ├── Stock Transfer
+│   │   ├── Stock Adjustment
+│   │   ├── Batch Management
+│   │   ├── Serial Numbers
+│   │   ├── Expiry
+│   │   └── Stock Valuation
+│   │
+│   └── Suppliers
+│       ├── Supplier List
+│       ├── Supplier Contracts
+│       └── Supplier Performance
+│
+├── 🏦 Finance
+│   ├── Finance Dashboard
+│   ├── Chart of Accounts
+│   ├── General Ledger
+│   ├── Journal Entries
+│   ├── Accounts Receivable
+│   ├── Accounts Payable
+│   ├── Cash & Bank
+│   ├── Cost Centers
+│   ├── Budgets
+│   ├── Tax / VAT
+│   ├── Financial Closing
+│   └── Financial Reports
+│
+├── 👨‍💼 HR & Payroll
+│   ├── HR Dashboard
+│   ├── Employees
+│   ├── Doctors
+│   ├── Nurses
+│   ├── Staff
+│   ├── Attendance
+│   ├── Shifts
+│   ├── Rosters
+│   ├── Leave
+│   ├── Payroll
+│   ├── Overtime
+│   ├── Training
+│   └── Licenses & Certifications
+│
+├── 🏥 Assets & Facilities
+│   ├── Asset Dashboard
+│   ├── Medical Equipment
+│   ├── General Assets
+│   ├── Asset Assignment
+│   ├── Asset Transfer
+│   ├── Warranty
+│   ├── AMC / Service Contract
+│   ├── Preventive Maintenance
+│   ├── Calibration
+│   ├── Breakdown / Repair
+│   └── Asset Disposal
+│
+├── 🚑 Ambulance
+│   ├── Ambulance Dashboard
+│   ├── Ambulances
+│   ├── Drivers
+│   ├── Booking
+│   ├── Dispatch
+│   ├── Trips
+│   ├── GPS Tracking
+│   ├── Fuel
+│   └── Maintenance
+│
+├── 🍽️ Diet & Nutrition
+│   ├── Diet Dashboard
+│   ├── Diet Plans
+│   ├── Diet Orders
+│   ├── Dietitian
+│   ├── Meal Schedule
+│   ├── Kitchen
+│   └── Meal Distribution
+│
+├── 📄 Documents & Consent
+│   ├── Document Dashboard
+│   ├── Patient Documents
+│   ├── Medical Documents
+│   ├── Consent Forms
+│   ├── Digital Signatures
+│   ├── Templates
+│   └── Document Expiry
+│
+├── 🛡️ Quality & Compliance
+│   ├── Quality Dashboard
+│   ├── Incident Management
+│   ├── Patient Safety
+│   ├── Infection Control
+│   ├── Complaints
+│   ├── Patient Feedback
+│   ├── CAPA
+│   ├── Internal Audit
+│   ├── Accreditation
+│   ├── Policies
+│   └── SOP Management
+│
+├── 📊 Reports & Analytics
+│   ├── Executive Dashboard
+│   ├── Clinical Reports
+│   ├── OPD Reports
+│   ├── IPD Reports
+│   ├── Emergency Reports
+│   ├── Laboratory Reports
+│   ├── Pharmacy Reports
+│   ├── Financial Reports
+│   ├── Inventory Reports
+│   ├── HR Reports
+│   ├── Quality Reports
+│   ├── Custom Reports
+│   └── Report Scheduler
+│
+├── 🔗 Integrations
+│   ├── Integration Dashboard
+│   ├── FHIR
+│   ├── HL7
+│   ├── DICOM
+│   ├── LIS
+│   ├── PACS
+│   ├── Medical Devices
+│   ├── Payment Gateways
+│   ├── SMS
+│   ├── Email
+│   ├── WhatsApp
+│   ├── Insurance APIs
+│   └── API Logs
+│
+├── 🤖 AI & Automation
+│   ├── AI Dashboard
+│   ├── Patient Summary
+│   ├── Clinical Note Assistant
+│   ├── Report Summarization
+│   ├── Demand Forecasting
+│   ├── Appointment Prediction
+│   ├── Inventory Forecasting
+│   └── AI Usage / Audit
+│
+├── 🌐 Portals
+│   ├── Patient Portal
+│   ├── Doctor Portal
+│   ├── Nurse Portal
+│   └── Telemedicine
+│
+├── ⚙️ Administration
+│   ├── Organization
+│   ├── Hospitals
+│   ├── Branches
+│   ├── Departments
+│   ├── Users
+│   ├── Roles
+│   ├── Permissions
+│   ├── User Sessions
+│   ├── Login History
+│   ├── Notifications
+│   ├── Workflows
+│   ├── Approval Rules
+│   ├── System Settings
+│   ├── Localization
+│   └── Master Data
+│
+├── 🔐 Security & Audit
+│   ├── Security Dashboard
+│   ├── Audit Logs
+│   ├── Login Audit
+│   ├── Data Access Audit
+│   ├── API Audit
+│   ├── Security Events
+│   ├── Access Reviews
+│   └── Data Export Audit
+│
+└── ❓ Help & Support
+    ├── User Guide
+    ├── Knowledge Base
+    ├── FAQs
+    ├── Support Tickets
+    ├── System Status
+    └── About
