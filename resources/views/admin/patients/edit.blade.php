@@ -6,6 +6,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Edit Patient</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-info btn-sm">View Profile</a>
+            </div>
         </div>
         <form action="{{ route('admin.patients.update', $patient) }}" method="post">
             @csrf
@@ -42,6 +45,11 @@
                                 <option value="O" {{ old('sex', $patient->sex) == 'O' ? 'selected' : '' }}>Other</option>
                             </select>
                             @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="national_identifier" class="form-label">National ID</label>
+                            <input type="text" name="national_identifier" id="national_identifier" value="{{ old('national_identifier', $patient->national_identifier) }}" class="form-control @error('national_identifier') is-invalid @enderror">
+                            @error('national_identifier') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -81,9 +89,76 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Emergency Contact --}}
+                @php
+                    $emergencyContact = $patient->emergencyContacts->first();
+                @endphp
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h4>Emergency Contact</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_name" class="form-label">Name *</label>
+                            <input type="text" name="emergency_contact[name]" id="emergency_contact_name" value="{{ old('emergency_contact.name', $emergencyContact?->name) }}" class="form-control @error('emergency_contact.name') is-invalid @enderror" required>
+                            @error('emergency_contact.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_phone" class="form-label">Phone *</label>
+                            <input type="text" name="emergency_contact[phone]" id="emergency_contact_phone" value="{{ old('emergency_contact.phone', $emergencyContact?->phone) }}" class="form-control @error('emergency_contact.phone') is-invalid @enderror" required>
+                            @error('emergency_contact.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_relationship" class="form-label">Relationship</label>
+                            <input type="text" name="emergency_contact[relationship]" id="emergency_contact_relationship" value="{{ old('emergency_contact.relationship', $emergencyContact?->relationship) }}" class="form-control @error('emergency_contact.relationship') is-invalid @enderror">
+                            @error('emergency_contact.relationship') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Next of Kin --}}
+                @php
+                    $nextOfKinList = $patient->nextOfKin ?? collect();
+                @endphp
+                <div class="row">
+                    <div class="col-12">
+                        <h4>Next of Kin</h4>
+                    </div>
+                    @foreach(range(0, 1) as $index)
+                        @php
+                            $kin = $nextOfKinList[$index] ?? null;
+                        @endphp
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="next_of_kin_{{ $index }}_name" class="form-label">Name @if($index === 0) * @endif</label>
+                                <input type="text" name="next_of_kin[{{ $index }}][name]" id="next_of_kin_{{ $index }}_name" value="{{ old('next_of_kin.'.$index.'.name', $kin?->name) }}" class="form-control @error('next_of_kin.'.$index.'.name') is-invalid @enderror" @if($index === 0) required @endif>
+                                @error('next_of_kin.'.$index.'.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="next_of_kin_{{ $index }}_phone" class="form-label">Phone</label>
+                                <input type="text" name="next_of_kin[{{ $index }}][phone]" id="next_of_kin_{{ $index }}_phone" value="{{ old('next_of_kin.'.$index.'.phone', $kin?->phone) }}" class="form-control @error('next_of_kin.'.$index.'.phone') is-invalid @enderror">
+                                @error('next_of_kin.'.$index.'.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="next_of_kin_{{ $index }}_relationship" class="form-label">Relationship</label>
+                                <input type="text" name="next_of_kin[{{ $index }}][relationship]" id="next_of_kin_{{ $index }}_relationship" value="{{ old('next_of_kin.'.$index.'.relationship', $kin?->relationship) }}" class="form-control @error('next_of_kin.'.$index.'.relationship') is-invalid @enderror">
+                                @error('next_of_kin.'.$index.'.relationship') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Update Patient</button>
             </div>
         </form>

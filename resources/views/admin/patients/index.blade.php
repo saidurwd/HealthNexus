@@ -11,6 +11,12 @@
             </div>
         </div>
         <div class="card-body p-0">
+            <form method="GET" action="{{ route('admin.patients.index') }}" class="p-3">
+                <div class="input-group">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name, patient no, phone...">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
             <table class="table table-striped">
                 <thead>
                     <tr>

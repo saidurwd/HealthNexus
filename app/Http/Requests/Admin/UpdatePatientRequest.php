@@ -30,4 +30,39 @@ class UpdatePatientRequest extends FormRequest
             'status' => ['string', 'in:active,inactive,deceased'],
         ];
     }
+
+    public function validated($key = null, $default = null): array
+    {
+        $data = parent::validated($key, $default);
+
+        if (! empty($data['emergency_contact']['name'] ?? null)) {
+            $data['contacts'][] = [
+                'name' => $data['emergency_contact']['name'],
+                'phone' => $data['emergency_contact']['phone'] ?? null,
+                'relationship' => $data['emergency_contact']['relationship'] ?? null,
+                'email' => null,
+                'address' => null,
+                'is_emergency' => true,
+            ];
+            unset($data['emergency_contact']);
+        }
+
+        if (! empty($data['next_of_kin'] ?? [])) {
+            foreach ($data['next_of_kin'] as $kin) {
+                if (! empty($kin['name'])) {
+                    $data['contacts'][] = [
+                        'name' => $kin['name'],
+                        'phone' => $kin['phone'] ?? null,
+                        'relationship' => $kin['relationship'] ?? null,
+                        'email' => null,
+                        'address' => null,
+                        'is_emergency' => false,
+                    ];
+                }
+            }
+            unset($data['next_of_kin']);
+        }
+
+        return $data;
+    }
 }

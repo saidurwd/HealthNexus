@@ -66,6 +66,11 @@
                             </select>
                             @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="check_duplicates" class="form-label">Check for duplicates before saving</label>
+                            <button type="button" id="check_duplicates" class="btn btn-outline-warning btn-sm">Check Duplicates</button>
+                            <div id="duplicates-result" class="mt-2"></div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -94,9 +99,9 @@
                             @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="city" class="form-label">City</label>
-                            <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control @error('city') is-invalid @enderror">
-                            @error('city') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <label for="national_identifier" class="form-label">National ID</label>
+                            <input type="text" name="national_identifier" id="national_identifier" value="{{ old('national_identifier') }}" class="form-control @error('national_identifier') is-invalid @enderror">
+                            @error('national_identifier') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
@@ -109,6 +114,62 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Emergency Contact --}}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h4>Emergency Contact</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_name" class="form-label">Name *</label>
+                            <input type="text" name="emergency_contact[name]" id="emergency_contact_name" value="{{ old('emergency_contact.name') }}" class="form-control @error('emergency_contact.name') is-invalid @enderror" required>
+                            @error('emergency_contact.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_phone" class="form-label">Phone *</label>
+                            <input type="text" name="emergency_contact[phone]" id="emergency_contact_phone" value="{{ old('emergency_contact.phone') }}" class="form-control @error('emergency_contact.phone') is-invalid @enderror" required>
+                            @error('emergency_contact.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="emergency_contact_relationship" class="form-label">Relationship</label>
+                            <input type="text" name="emergency_contact[relationship]" id="emergency_contact_relationship" value="{{ old('emergency_contact.relationship') }}" class="form-control @error('emergency_contact.relationship') is-invalid @enderror">
+                            @error('emergency_contact.relationship') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Next of Kin --}}
+                <div class="row">
+                    <div class="col-12">
+                        <h4>Next of Kin</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="next_of_kin_0_name" class="form-label">Name *</label>
+                            <input type="text" name="next_of_kin[0][name]" id="next_of_kin_0_name" value="{{ old('next_of_kin.0.name') }}" class="form-control @error('next_of_kin.0.name') is-invalid @enderror" required>
+                            @error('next_of_kin.0.name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="next_of_kin_0_phone" class="form-label">Phone</label>
+                            <input type="text" name="next_of_kin[0][phone]" id="next_of_kin_0_phone" value="{{ old('next_of_kin.0.phone') }}" class="form-control @error('next_of_kin.0.phone') is-invalid @enderror">
+                            @error('next_of_kin.0.phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="next_of_kin_0_relationship" class="form-label">Relationship</label>
+                            <input type="text" name="next_of_kin[0][relationship]" id="next_of_kin_0_relationship" value="{{ old('next_of_kin.0.relationship') }}" class="form-control @error('next_of_kin.0.relationship') is-invalid @enderror">
+                            @error('next_of_kin.0.relationship') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
                 <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary">Cancel</a>
@@ -116,4 +177,56 @@
             </div>
         </form>
     </div>
+@stop
+
+@section('js')
+<script>
+document.getElementById('check_duplicates').addEventListener('click', function() {
+    var firstName = document.getElementById('first_name').value;
+    var lastName = document.getElementById('last_name').value;
+    var phone = document.getElementById('phone').value;
+    var nationalId = document.getElementById('national_identifier')?.value || '';
+    var email = document.getElementById('email')?.value || '';
+
+    if (!firstName || !lastName) {
+        document.getElementById('duplicates-result').innerHTML =
+            '<div class="alert alert-warning">Please enter at least first name and last name to check for duplicates.</div>';
+        return;
+    }
+
+    fetch('{{ route('admin.patients.detect-duplicates') }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            phone: phone,
+            national_identifier: nationalId,
+            email: email,
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        var resultDiv = document.getElementById('duplicates-result');
+        if (data.duplicates.length === 0) {
+            resultDiv.innerHTML = '<div class="alert alert-success">No potential duplicates found.</div>';
+        } else {
+            var html = '<div class="alert alert-danger"><strong>Potential duplicates found:</strong><ul>';
+            data.duplicates.forEach(function(p) {
+                html += '<li>' + p.name + ' (' + p.enterprise_patient_no + ')' + (p.phone ? ' Phone: ' + p.phone : '') + (p.national_identifier ? ' ID: ' + p.national_identifier : '') + '</li>';
+            });
+            html += '</ul></div>';
+            resultDiv.innerHTML = html;
+        }
+    })
+    .catch(err => {
+        document.getElementById('duplicates-result').innerHTML =
+            '<div class="alert alert-warning">Error checking duplicates. Please try again.</div>';
+    });
+});
+</script>
 @stop

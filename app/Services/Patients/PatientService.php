@@ -5,8 +5,13 @@ namespace App\Services\Patients;
 use App\Events\PatientRegistered;
 use App\Models\Branch;
 use App\Models\Patient;
+use App\Models\PatientAllergy;
 use App\Models\PatientBranchRegistration;
+use App\Models\PatientContact;
+use App\Models\PatientHistory;
+use App\Models\PatientDocument;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PatientService
@@ -25,6 +30,20 @@ class PatientService
 
             if ($branch) {
                 $this->registerPatientToBranch($patient, $branch, $user);
+            }
+
+            if (! empty($data['identifiers'])) {
+                foreach ($data['identifiers'] as $identifierData) {
+                    $identifierData['company_id'] = $company->id;
+                    $patient->identifiers()->create($identifierData);
+                }
+            }
+
+            if (! empty($data['contacts'])) {
+                foreach ($data['contacts'] as $contactData) {
+                    $contactData['company_id'] = $company->id;
+                    $patient->contacts()->create($contactData);
+                }
             }
 
             event(new PatientRegistered($patient));
@@ -54,9 +73,26 @@ class PatientService
         $patient->identifiers()->create($identifierData);
     }
 
-    public function addContact(Patient $patient, array $contactData): void
+    public function addContact(Patient $patient, array $contactData): PatientContact
     {
-        $patient->contacts()->create($contactData);
+        $contactData['company_id'] = $patient->company_id;
+
+        return $patient->contacts()->create($contactData);
+    }
+
+    public function addAllergy(Patient $patient, array $allergyData): PatientAllergy
+    {
+        $allergyData['company_id'] = $patient->company_id;
+
+        return $patient->allergies()->create($allergyData);
+    }
+
+    public function addHistory(Patient $patient, array $historyData): PatientHistory
+    {
+        $historyData['company_id'] = $patient->company_id;
+        $historyData['recorded_by'] = auth()->id();
+
+        return $patient->histories()->create($historyData);
     }
 
     public function updatePatient(Patient $patient, array $data): Patient
@@ -64,5 +100,72 @@ class PatientService
         $patient->update($data);
 
         return $patient;
+    }
+
+    public function detectDuplicates(int $companyId, string $firstName, string $lastName, ?string $phone = null, ?string $nationalId = null, ?string $email = null): Collection
+    {
+        return Patient::query()
+            ->where('company_id', $companyId)
+            ->where(function ($query) use ($firstName, $lastName, $phone, $nationalId, $email) {
+                $query->where('first_name', 'like', '%'.$firstName.'%')
+                    ->where('last_name', 'like', '%'.$lastName.'%');
+
+                if ($phone) {
+                    $query->orWhere('phone', $phone);
+                }
+
+                if ($nationalId) {
+                    $query->orWhere('national_identifier', $nationalId);
+                }
+
+                if ($email) {
+                    $query->orWhere('email', $email);
+                }
+            })
+            ->get();
+    }
+
+    public function mergePatients(Patient $masterPatient, Patient $duplicatePatient): void
+    {
+        DB::transaction(function () use ($masterPatient, $duplicatePatient) {
+            $this->transferRelations($masterPatient, $duplicatePatient);
+
+            $duplicatePatient->update([
+                'first_name' => $duplicatePatient->first_name.' (merged)',
+                'status' => 'inactive',
+            ]);
+
+            $duplicatePatient->delete();
+        });
+    }
+
+    protected function transferRelations(Patient $masterPatient, Patient $duplicatePatient): void
+    {
+        $duplicatePatient->identifiers()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->contacts()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->allergies()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->histories()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->documents()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->branchRegistrations()->update(['patient_id' => $masterPatient->id]);
+    }
+
+    public function getTimeline(Patient $patient): Collection
+    {
+        $timeline = collect();
+
+        $timeline->push($patient);
+
+        $timeline = $timeline->merge($patient->identifiers);
+        $timeline = $timeline->merge($patient->contacts);
+        $timeline = $timeline->merge($patient->allergies);
+        $timeline = $timeline->merge($patient->histories);
+        $timeline = $timeline->merge($patient->documents);
+        $timeline = $timeline->merge($patient->branchRegistrations);
+
+        if ($patient->encounters()->exists()) {
+            $timeline = $timeline->merge($patient->encounters);
+        }
+
+        return $timeline->sortBy('created_at')->reverse();
     }
 }

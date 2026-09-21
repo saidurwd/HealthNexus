@@ -20,6 +20,16 @@ class PatientPolicy
         return $user->companies()->where('companies.id', $patient->company_id)->exists();
     }
 
+    public function merge(User $user): bool
+    {
+        return $user->can('patients.update') || $user->hasRole('super_admin');
+    }
+
+    public function uploadDocument(User $user, Patient $patient): bool
+    {
+        return $this->update($user, $patient);
+    }
+
     public function create(User $user): bool
     {
         return $user->can('patients.create') || $user->hasRole('super_admin');

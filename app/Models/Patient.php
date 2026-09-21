@@ -60,6 +60,11 @@ class Patient extends Model
         return $this->hasMany(PatientBranchRegistration::class);
     }
 
+    public function encounters(): HasMany
+    {
+        return $this->hasMany(Encounter::class);
+    }
+
     public function identifiers(): HasMany
     {
         return $this->hasMany(PatientIdentifier::class);
@@ -68,6 +73,31 @@ class Patient extends Model
     public function contacts(): HasMany
     {
         return $this->hasMany(PatientContact::class);
+    }
+
+    public function allergies(): HasMany
+    {
+        return $this->hasMany(PatientAllergy::class);
+    }
+
+    public function histories(): HasMany
+    {
+        return $this->hasMany(PatientHistory::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(PatientDocument::class);
+    }
+
+    public function emergencyContacts(): HasMany
+    {
+        return $this->contacts()->where('is_emergency', true);
+    }
+
+    public function nextOfKin(): HasMany
+    {
+        return $this->contacts()->where('is_emergency', false);
     }
 
     public function getFullNameAttribute(): string
