@@ -12,7 +12,7 @@
         </div>
 
         <div class="card">
-            <div class="card-header bg-light">
+            <div class="card-header bg-secondary text-white">
                 <ul class="nav nav-pills card-header-pills" id="documentTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">
@@ -28,16 +28,16 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                        <div class="tab-pane fade show active" id="upload" role="tabpanel">
                         <form method="POST" action="{{ route('admin.patients.documents.upload', $patient) }}" enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-4">
-                                    <label class="form-label">Document File *</label>
+                                    <label class="form-label fw-bold">Document File *</label>
                                     <input type="file" name="document" class="form-control" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Document Type *</label>
+                                    <label class="form-label fw-bold">Document Type *</label>
                                     <select name="document_type" class="form-select" required>
                                         <option value="">Select Type</option>
                                         <option value="lab_report">Lab Report</option>
@@ -49,7 +49,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label fw-bold">Description</label>
                                     <input type="text" name="description" class="form-control" placeholder="Brief description...">
                                 </div>
                                 <div class="col-md-1">
@@ -61,7 +61,7 @@
                     <div class="tab-pane fade" id="list" role="tabpanel">
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
+                                <thead class="table-secondary">
                                     <tr>
                                         <th>File Name</th>
                                         <th>Type</th>

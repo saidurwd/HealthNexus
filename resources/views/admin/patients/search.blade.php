@@ -36,7 +36,7 @@
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
+                                <thead class="table-secondary">
                                 <tr>
                                     <th>Patient</th>
                                     <th>Patient No</th>

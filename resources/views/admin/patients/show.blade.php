@@ -85,7 +85,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0">Patient Information</h5>
                         </div>
                         <div class="card-body">
@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0">Contact Information</h5>
                         </div>
                         <div class="card-body">
@@ -171,7 +171,7 @@
                     </div>
 
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0">Contact Persons</h5>
                         </div>
                         <div class="card-body">
@@ -205,13 +205,13 @@
 
                     @if($patient->identifiers->isNotEmpty())
                         <div class="card mb-4">
-                            <div class="card-header bg-light">
+                            <div class="card-header bg-secondary text-white">
                                 <h5 class="mb-0">Identification Documents</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
-                                        <thead class="table-light">
+                                        <thead class="table-secondary">
                                             <tr>
                                                 <th>Type</th>
                                                 <th>Value</th>
@@ -241,14 +241,14 @@
 
                     @if($patient->allergies->isNotEmpty())
                         <div class="card mb-4">
-                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Recent Allergies</h5>
-                                <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-primary">Manage Allergies</a>
+                                <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-light">Manage Allergies</a>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
-                                        <thead class="table-light">
+                                        <thead class="table-secondary">
                                             <tr>
                                                 <th>Substance</th>
                                                 <th>Severity</th>
@@ -281,7 +281,7 @@
 
                 <div class="col-lg-4">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0">Quick Stats</h5>
                         </div>
                         <div class="card-body text-center">
