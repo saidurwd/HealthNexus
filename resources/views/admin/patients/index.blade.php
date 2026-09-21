@@ -2,14 +2,13 @@
 
 @section('page_title', 'Patients')
 
-@section('content_top_nav_left')
-    <a href="{{ route('admin.patients.create') }}" class="btn btn-primary btn-sm">New Patient</a>
-@stop
-
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Patients</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.patients.create') }}" class="btn btn-primary btn-sm">New Patient</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">

@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">States - {{ $country->name }}</h3>
-                    <a href="{{ route('admin.master-data.states.create') }}" class="btn btn-primary float-right">Add State</a>
+                    <div class="card-tools">
+                        <a href="{{ route('admin.master-data.states.create') }}" class="btn btn-primary btn-sm">Add State</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">

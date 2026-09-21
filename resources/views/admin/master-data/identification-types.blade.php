@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Identification Types</h3>
-                    <a href="{{ route('admin.master-data.identification-types.create') }}" class="btn btn-primary float-right">Add Type</a>
+                    <div class="card-tools">
+                        <a href="{{ route('admin.master-data.identification-types.create') }}" class="btn btn-primary btn-sm">Add Type</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">

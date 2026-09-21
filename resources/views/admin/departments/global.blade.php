@@ -6,6 +6,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Departments</h3>
+            <div class="card-tools">
+                <span class="text-muted small">Create departments from within a Company → Branch</span>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">

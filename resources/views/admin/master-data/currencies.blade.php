@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Currencies</h3>
-                    <a href="{{ route('admin.master-data.currencies.create') }}" class="btn btn-primary float-right">Add Currency</a>
+                    <div class="card-tools">
+                        <a href="{{ route('admin.master-data.currencies.create') }}" class="btn btn-primary btn-sm">Add Currency</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">

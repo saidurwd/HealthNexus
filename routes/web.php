@@ -88,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::get('departments', [DepartmentController::class, 'globalIndex'])->name('departments.global');
+        Route::get('departments/create', [DepartmentController::class, 'createGlobal'])->name('departments.create.global');
 
             Route::resource('patients', PatientController::class);
 

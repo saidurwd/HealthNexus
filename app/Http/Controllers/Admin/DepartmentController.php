@@ -48,6 +48,17 @@ class DepartmentController extends Controller
         return view('admin.departments.create', compact('company', 'branch'));
     }
 
+    public function createGlobal()
+    {
+        $user = auth()->user();
+        $companies = Company::query()
+            ->whereHas('users', fn ($q) => $q->where('user_id', $user->id))
+            ->where('is_active', true)
+            ->get();
+
+        return view('admin.departments.create-global', compact('companies'));
+    }
+
     public function store(Request $request, Company $company, Branch $branch)
     {
         $validated = $request->validate([

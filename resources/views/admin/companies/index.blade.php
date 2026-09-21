@@ -2,14 +2,13 @@
 
 @section('page_title', 'Companies')
 
-@section('content_top_nav_left')
-    <a href="{{ route('admin.companies.create') }}" class="btn btn-primary btn-sm">New Company</a>
-@stop
-
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Companies</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.companies.create') }}" class="btn btn-primary btn-sm">New Company</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
