@@ -2,6 +2,10 @@
 
 @section('title', config('adminlte.title', 'HealthNexus'))
 
+@section('content_top_nav_right')
+    @include('components.nav-notifications-messages')
+@stop
+
 @section('content_top_nav_left')
     @include('components.tenant-context-selector')
 @stop
