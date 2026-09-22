@@ -1,48 +1,42 @@
 @extends('layouts.adminlte')
 
 @section('page_content')
+    {{-- Reusable dashboard widgets — see App\Services\Dashboard\DashboardWidgetRegistry. Any
+         module can register a widget here without touching this view or HomeController. --}}
     <div class="row">
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ $userCompanies->count() }}</h3>
-                    <p>Companies</p>
-                </div>
-                <div class="icon">
-                    <i class="bi bi-building"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $currentCompany ? $currentCompany->branches()->count() : 0 }}</h3>
-                    <p>Branches</p>
-                </div>
-                <div class="icon">
-                    <i class="bi bi-shop"></i>
+        @forelse($widgets as $widget)
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-{{ $widget->color }}" data-widget-key="{{ $widget->key }}" data-refresh-interval="{{ $widget->refreshIntervalSeconds }}">
+                    <div class="inner">
+                        <h3>{{ $widget->resolveValue() }}</h3>
+                        <p>{{ $widget->title }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="{{ $widget->icon }}"></i>
+                    </div>
+                    @if($widget->url())
+                        <a href="{{ $widget->url() }}" class="small-box-footer">
+                            More info <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    @endif
                 </div>
             </div>
-        </div>
+        @empty
+            <div class="col-12">
+                <p class="text-muted">No dashboard widgets are available for your role.</p>
+            </div>
+        @endforelse
+    </div>
+
+    <div class="row">
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ $currentCompany ? $currentCompany->departments()->count() : 0 }}</h3>
-                    <p>Departments</p>
+                    <p>Departments (current company)</p>
                 </div>
                 <div class="icon">
                     <i class="bi bi-diagram-3"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $currentCompany ? $currentCompany->users()->count() : 0 }}</h3>
-                    <p>Users</p>
-                </div>
-                <div class="icon">
-                    <i class="bi bi-people"></i>
                 </div>
             </div>
         </div>

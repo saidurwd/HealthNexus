@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\Mfa\MfaController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Middleware\EnsureTenantContext;
 use App\Http\Middleware\RequireMfa;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('home');
 });
+
+Route::post('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -36,6 +40,14 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
     Route::get('/mfa/challenge', [MfaController::class, 'showChallenge'])->name('mfa.challenge');
     Route::post('/mfa/verify', [MfaController::class, 'verify'])->name('mfa.verify');
     Route::get('/mfa/setup', [MfaController::class, 'showSetup'])->name('mfa.setup');
@@ -50,6 +62,8 @@ Route::middleware(['auth'])->group(function () {
         require __DIR__.'/../modules/Appointments/Routes/web.php';
         require __DIR__.'/../modules/Billing/Routes/web.php';
         require __DIR__.'/../modules/Audit/Routes/web.php';
+        require __DIR__.'/../modules/System/Routes/web.php';
+        require __DIR__.'/../modules/Workflow/Routes/web.php';
         require __DIR__.'/../modules/Settings/Routes/web.php';
         require __DIR__.'/../modules/Files/Routes/web.php';
 

@@ -267,6 +267,16 @@ class PermissionSeeder extends Seeder
             'security.event.resolve',
             'login.history.view',
 
+            // System
+            'system.health.view',
+            'system.queue.view',
+            'system.scheduler.view',
+
+            // Workflow
+            'workflow.view',
+            'workflow.act',
+            'workflow.manage',
+
             // Settings
             'settings.view',
             'settings.update',
@@ -304,6 +314,7 @@ class PermissionSeeder extends Seeder
                 'billing.report.view',
                 'reporting.view', 'reporting.export', 'reporting.print',
                 'settings.view',
+                'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
                 'patient.view', 'patient.create', 'patient.update',
@@ -356,6 +367,7 @@ class PermissionSeeder extends Seeder
                 'billing.corporate.view', 'billing.insurance.policy.view',
                 'billing.report.view',
                 'reporting.view', 'reporting.export', 'reporting.print',
+                'workflow.view', 'workflow.act',
             ],
         ];
 

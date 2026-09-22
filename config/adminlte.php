@@ -1170,6 +1170,12 @@ return [
                     'icon' => 'bi bi-key',
                     'can' => 'manage permissions',
                 ],
+                [
+                    'text' => 'Workflows',
+                    'url' => '/admin/workflow',
+                    'icon' => 'bi bi-diagram-2',
+                    'can' => 'workflow.view',
+                ],
             ],
         ],
         [
@@ -1205,6 +1211,37 @@ return [
                     'text' => 'Change Password',
                     'url' => '/change-password',
                     'icon' => 'bi bi-lock',
+                ],
+            ],
+        ],
+        [
+            'text' => 'System',
+            'icon' => 'bi bi-hdd-stack',
+            'can' => 'system.health.view',
+            'submenu' => [
+                [
+                    'text' => 'System Health',
+                    'url' => '/admin/system/health',
+                    'icon' => 'bi bi-heart-pulse',
+                    'can' => 'system.health.view',
+                ],
+                [
+                    'text' => 'Queue Monitor',
+                    'url' => '/admin/system/queue',
+                    'icon' => 'bi bi-stack',
+                    'can' => 'system.queue.view',
+                ],
+                [
+                    'text' => 'Scheduled Jobs',
+                    'url' => '/admin/system/scheduled-jobs',
+                    'icon' => 'bi bi-calendar-week',
+                    'can' => 'system.scheduler.view',
+                ],
+                [
+                    'text' => 'About',
+                    'url' => '/admin/system/about',
+                    'icon' => 'bi bi-info-circle',
+                    'can' => 'system.health.view',
                 ],
             ],
         ],

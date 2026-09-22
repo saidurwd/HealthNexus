@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RequestIdMiddleware;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetTenantContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,7 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
             RequestIdMiddleware::class,
         ]);
 
+        // SetLocale needs session access (session/user-saved locale), so it must run after
+        // Laravel's own StartSession middleware — which only exists inside the default 'web'
+        // group, not before it. append: runs after the whole group, including StartSession.
         $middleware->web(append: [
+            SetLocale::class,
             SetTenantContext::class,
         ]);
 
