@@ -29,6 +29,13 @@ class PermissionSeeder extends Seeder
             'patient.merge',
             'patient.export',
 
+            'patients.view',
+            'patients.create',
+            'patients.update',
+            'patients.delete',
+            'patients.merge',
+            'patients.export',
+
             // Appointment
             'appointments.view',
             'appointments.create',
@@ -196,6 +203,7 @@ class PermissionSeeder extends Seeder
             'hospital_admin' => [
                 'manage companies', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patient.view', 'patient.create', 'patient.update', 'patient.export',
+                'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export',
                 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.delete',
                 'schedules.view',
                 'queue.view', 'queue.manage',
@@ -206,6 +214,7 @@ class PermissionSeeder extends Seeder
             ],
             'doctor' => [
                 'patient.view', 'patient.create', 'patient.update',
+                'patients.view', 'patients.create', 'patients.update',
                 'appointment.view', 'appointment.create', 'appointment.update', 'appointment.cancel',
                 'opd.view', 'opd.create', 'opd.update', 'opd.consult',
                 'emr.view', 'emr.create', 'emr.update', 'emr.amend', 'emr.approve',
@@ -222,6 +231,7 @@ class PermissionSeeder extends Seeder
             ],
             'receptionist' => [
                 'patient.view', 'patient.create', 'patient.update',
+                'patients.view', 'patients.create', 'patients.update',
                 'appointments.view', 'appointments.create', 'appointments.update',
                 'schedules.view',
                 'queue.view', 'queue.manage',

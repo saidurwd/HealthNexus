@@ -139,7 +139,7 @@ class PatientController extends Controller
 
     public function detectDuplicates(Request $request)
     {
-        $this->authorize('create', Patient::class);
+        $this->authorize('viewAny', Patient::class);
 
         $companyId = app(TenantContextResolver::class)->getCompanyId();
 

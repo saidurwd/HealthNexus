@@ -2,6 +2,8 @@
 
 @section('title', config('adminlte.title', 'HealthNexus'))
 
+@section('title', config('adminlte.title', 'HealthNexus'))
+
 @section('content_top_nav_right')
     @include('components.nav-notifications-messages')
 @stop
