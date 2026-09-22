@@ -3,7 +3,9 @@
 namespace App\Services\Appointments;
 
 use App\Models\Appointment;
+use App\Models\AppointmentNote;
 use App\Models\AppointmentSlot;
+use App\Models\AppointmentStatusHistory;
 use App\Models\AppointmentToken;
 use App\Models\DoctorSchedule;
 use App\Models\User;
@@ -40,6 +42,8 @@ class AppointmentService
 
             $data['company_id'] = $company->id;
             $data['appointment_no'] = $this->generateAppointmentNo($company);
+            $data['booked_at'] = now();
+            $data['created_by'] = $user->id;
 
             $appointment = Appointment::create($data);
 
@@ -168,7 +172,11 @@ class AppointmentService
             'started_at' => now(),
         ]);
 
-        $token->appointment->update(['status' => 'in_progress', 'started_at' => now()]);
+        $token->appointment->update([
+            'status' => 'in_progress',
+            'started_at' => now(),
+            'actual_datetime' => $token->appointment->actual_datetime ?? now(),
+        ]);
     }
 
     public function completeToken(AppointmentToken $token): void
@@ -178,15 +186,38 @@ class AppointmentService
             'completed_at' => now(),
         ]);
 
-        $token->appointment->update(['status' => 'completed', 'ended_at' => now()]);
+        $token->appointment->update([
+            'status' => 'completed',
+            'ended_at' => now(),
+            'completed_at' => now(),
+            'actual_datetime' => $token->appointment->actual_datetime ?? now(),
+        ]);
     }
 
-    public function checkIn(Appointment $appointment): Appointment
+    public function complete(Appointment $appointment, ?User $user = null): Appointment
     {
-        return DB::transaction(function () use ($appointment) {
+        return DB::transaction(function () use ($appointment, $user) {
+            $appointment->update([
+                'status' => 'completed',
+                'ended_at' => now(),
+                'completed_at' => now(),
+                'actual_datetime' => $appointment->actual_datetime ?? now(),
+            ]);
+
+            $this->recordHistory($appointment, 'completed', $user, null, 'Appointment completed.');
+
+            return $appointment;
+        });
+    }
+
+    public function checkIn(Appointment $appointment, ?User $user = null): Appointment
+    {
+        return DB::transaction(function () use ($appointment, $user) {
             $appointment->update([
                 'status' => 'checked_in',
                 'actual_datetime' => now(),
+                'checked_in_at' => now(),
+                'checked_in_by' => $user?->id ?? auth()->id(),
             ]);
 
             if ($appointment->token) {
@@ -194,6 +225,23 @@ class AppointmentService
                     'status' => 'checked_in',
                 ]);
             }
+
+            $this->recordHistory($appointment, 'checked_in', $user, null, 'Patient checked in.');
+
+            return $appointment;
+        });
+    }
+
+    public function confirm(Appointment $appointment, ?User $user = null): Appointment
+    {
+        return DB::transaction(function () use ($appointment, $user) {
+            $appointment->update([
+                'status' => 'confirmed',
+                'confirmed_at' => now(),
+                'confirmed_by' => $user?->id ?? auth()->id(),
+            ]);
+
+            $this->recordHistory($appointment, 'confirmed', $user, null, 'Appointment confirmed.');
 
             return $appointment;
         });
@@ -233,5 +281,67 @@ class AppointmentService
 
             return $followUp;
         });
+    }
+
+    public function recordHistory(Appointment $appointment, string $newStatus, ?User $user = null, ?string $reason = null, ?string $notes = null): AppointmentStatusHistory
+    {
+        return $appointment->statusHistory()->create([
+            'old_status' => $appointment->status,
+            'new_status' => $newStatus,
+            'changed_by' => $user?->id ?? auth()->id(),
+            'reason' => $reason,
+            'notes' => $notes,
+        ]);
+    }
+
+    public function reschedule(Appointment $appointment, array $data, ?User $user = null): Appointment
+    {
+        $oldStatus = $appointment->status;
+
+        $appointment->update([
+            'appointment_date' => $data['appointment_date'] ?? $appointment->appointment_date,
+            'appointment_time' => $data['appointment_time'] ?? $appointment->appointment_time,
+            'doctor_id' => $data['doctor_id'] ?? $appointment->doctor_id,
+            'slot_id' => $data['slot_id'] ?? $appointment->slot_id,
+        ]);
+
+        $this->recordHistory($appointment, $appointment->status, $user, $data['reason'] ?? null, 'Appointment rescheduled.');
+
+        return $appointment;
+    }
+
+    public function cancel(Appointment $appointment, ?string $reason = null, ?User $user = null): Appointment
+    {
+        $appointment->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now(),
+            'cancelled_by' => $user?->id ?? auth()->id(),
+            'cancellation_reason' => $reason,
+        ]);
+
+        $this->recordHistory($appointment, 'cancelled', $user, $reason, 'Appointment cancelled.');
+
+        return $appointment;
+    }
+
+    public function markNoShow(Appointment $appointment, ?string $reason = null, ?User $user = null): Appointment
+    {
+        $appointment->update([
+            'status' => 'no_show',
+            'no_show_at' => now(),
+        ]);
+
+        $this->recordHistory($appointment, 'no_show', $user, $reason, 'Appointment marked as no-show.');
+
+        return $appointment;
+    }
+
+    public function addNote(Appointment $appointment, string $note, ?User $user = null): AppointmentNote
+    {
+        return $appointment->notes()->create([
+            'company_id' => $appointment->company_id,
+            'note' => $note,
+            'created_by' => $user?->id ?? auth()->id(),
+        ]);
     }
 }

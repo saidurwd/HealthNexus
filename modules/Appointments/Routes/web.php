@@ -19,8 +19,15 @@ Route::middleware('can:manage companies')->group(function () {
     Route::post('queue/{token}/complete', [QueueController::class, 'complete'])->name('queue.complete');
     Route::get('queue/slots', [QueueController::class, 'searchSlots'])->name('queue.slots');
 
-    Route::post('appointments/{appointment}/check-in', [OpdConsultationController::class, 'checkIn'])->name('appointments.check-in');
+    Route::post('appointments/{appointment}/reschedule', [AppointmentController::class, 'reschedule'])->name('appointments.reschedule');
+    Route::post('appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::post('appointments/{appointment}/no-show', [AppointmentController::class, 'noShow'])->name('appointments.no-show');
+    Route::post('appointments/{appointment}/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
+    Route::post('appointments/{appointment}/check-in', [AppointmentController::class, 'checkIn'])->name('appointments.check-in');
+    Route::post('appointments/{appointment}/complete', [AppointmentController::class, 'complete'])->name('appointments.complete');
     Route::post('appointments/{appointment}/follow-up', [OpdConsultationController::class, 'createFollowUp'])->name('appointments.follow-up');
+    Route::post('appointments/{appointment}/notes', [AppointmentController::class, 'addNote'])->name('appointments.notes.add');
+    Route::get('appointments/{appointment}/history', [AppointmentController::class, 'history'])->name('appointments.history');
 
     // OPD consultation
     Route::get('appointments/{appointment}/consultation', [OpdConsultationController::class, 'show'])->name('opd.consultation');

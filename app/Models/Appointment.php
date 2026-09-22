@@ -27,9 +27,24 @@ class Appointment extends Model
         'source',
         'reason',
         'status',
-        'actual_datetime',
         'started_at',
         'ended_at',
+        'is_walk_in',
+        'is_follow_up',
+        'is_telemedicine',
+        'previous_appointment_id',
+        'referral_source',
+        'referred_by',
+        'booked_at',
+        'confirmed_at',
+        'confirmed_by',
+        'checked_in_at',
+        'checked_in_by',
+        'completed_at',
+        'cancelled_at',
+        'cancelled_by',
+        'cancellation_reason',
+        'no_show_at',
         'created_by',
     ];
 
@@ -39,6 +54,15 @@ class Appointment extends Model
         'actual_datetime' => 'datetime',
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
+        'booked_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'checked_in_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'no_show_at' => 'datetime',
+        'is_walk_in' => 'boolean',
+        'is_follow_up' => 'boolean',
+        'is_telemedicine' => 'boolean',
     ];
 
     public function company(): BelongsTo
@@ -91,8 +115,38 @@ class Appointment extends Model
         return $this->hasMany(InvestigationOrder::class);
     }
 
+    public function confirmedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'confirmed_by');
+    }
+
+    public function checkedInBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'checked_in_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function previousAppointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class, 'previous_appointment_id');
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function statusHistory(): HasMany
+    {
+        return $this->hasMany(AppointmentStatusHistory::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(AppointmentNote::class);
     }
 }

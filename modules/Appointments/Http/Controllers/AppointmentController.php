@@ -117,4 +117,116 @@ class AppointmentController extends Controller
 
         return redirect()->route('admin.appointments.index')->with('success', 'Appointment deleted successfully.');
     }
+
+    public function reschedule(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $validated = $request->validate([
+            'appointment_date' => ['required', 'date'],
+            'appointment_time' => ['required', 'date_format:H:i'],
+            'doctor_id' => ['nullable', 'integer', 'exists:users,id'],
+            'slot_id' => ['nullable', 'integer', 'exists:appointment_slots,id'],
+            'reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->reschedule($appointment, $validated, $request->user());
+
+        $this->auditLogger->log('RESCHEDULE', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment rescheduled successfully.');
+    }
+
+    public function cancel(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $validated = $request->validate([
+            'cancellation_reason' => ['required', 'string', 'max:255'],
+        ]);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->cancel($appointment, $validated['cancellation_reason'], $request->user());
+
+        $this->auditLogger->log('CANCEL', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.index')->with('success', 'Appointment cancelled successfully.');
+    }
+
+    public function noShow(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->markNoShow($appointment, $validated['reason'], $request->user());
+
+        $this->auditLogger->log('NO_SHOW', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.index')->with('success', 'Appointment marked as no-show.');
+    }
+
+    public function confirm(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->confirm($appointment, $request->user());
+
+        $this->auditLogger->log('CONFIRM', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment confirmed successfully.');
+    }
+
+    public function checkIn(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->checkIn($appointment, $request->user());
+
+        $this->auditLogger->log('CHECK_IN', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Patient checked in successfully.');
+    }
+
+    public function complete(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $oldValues = $appointment->toArray();
+        $this->appointmentService->complete($appointment, $request->user());
+
+        $this->auditLogger->log('COMPLETE', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
+
+        return redirect()->route('admin.appointments.index')->with('success', 'Appointment completed successfully.');
+    }
+
+    public function addNote(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $validated = $request->validate([
+            'note' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $this->appointmentService->addNote($appointment, $validated['note'], $request->user());
+
+        $this->auditLogger->log('NOTE_ADDED', Appointment::class, $appointment->id, null, ['note' => $validated['note']], $request);
+
+        return back()->with('success', 'Note added successfully.');
+    }
+
+    public function history(Appointment $appointment)
+    {
+        $this->authorize('view', $appointment);
+
+        $history = $appointment->statusHistory()->with('changer')->latest()->get();
+
+        return view('admin.appointments.history', compact('appointment', 'history'));
+    }
 }
