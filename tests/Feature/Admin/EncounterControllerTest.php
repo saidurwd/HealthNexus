@@ -59,6 +59,14 @@ class EncounterControllerTest extends TestCase
         $response->assertViewHas('encounters');
     }
 
+    public function test_user_can_view_encounter_create_page(): void
+    {
+        $response = $this->get('/admin/encounters/create');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('admin.encounters.create');
+    }
+
     public function test_user_can_create_encounter(): void
     {
         $response = $this->post('/admin/encounters', [

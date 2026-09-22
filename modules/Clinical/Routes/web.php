@@ -8,12 +8,15 @@ use Modules\Clinical\Http\Controllers\ClinicalReportController;
 
 Route::middleware(['can:encounters.view'])->group(function () {
     Route::get('encounters', [EncounterController::class, 'index'])->name('encounters.index');
-    Route::get('encounters/{encounter}', [EncounterController::class, 'show'])->name('encounters.show');
 });
 
 Route::middleware(['can:encounters.create'])->group(function () {
     Route::get('encounters/create', [EncounterController::class, 'create'])->name('encounters.create');
     Route::post('encounters', [EncounterController::class, 'store'])->name('encounters.store');
+});
+
+Route::middleware(['can:encounters.view'])->group(function () {
+    Route::get('encounters/{encounter}', [EncounterController::class, 'show'])->name('encounters.show');
 });
 
 Route::middleware(['can:encounters.update'])->group(function () {
