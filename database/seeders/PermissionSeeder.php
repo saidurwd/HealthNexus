@@ -28,6 +28,9 @@ class PermissionSeeder extends Seeder
             'patient.delete',
             'patient.merge',
             'patient.export',
+            'patient.alert.view',
+            'patient.alert.manage',
+            'patient.amend',
 
             'patients.view',
             'patients.create',

@@ -18,5 +18,10 @@ Route::middleware('can:manage companies')->group(function () {
     Route::post('patients/{patient}/history', [PatientController::class, 'addHistory'])->name('patients.history.add');
     Route::delete('patients/{patient}/history/{history}', [PatientController::class, 'deleteHistory'])->name('patients.history.delete');
 
+    Route::get('patients/{patient}/alerts', [PatientController::class, 'alerts'])->name('patients.alerts');
+    Route::post('patients/{patient}/alerts', [PatientController::class, 'addAlert'])->name('patients.alerts.add');
+    Route::put('patients/{patient}/alerts/{alert}/resolve', [PatientController::class, 'resolveAlert'])->name('patients.alerts.resolve');
+    Route::delete('patients/{patient}/alerts/{alert}', [PatientController::class, 'deleteAlert'])->name('patients.alerts.delete');
+
     Route::resource('patients', PatientController::class);
 });

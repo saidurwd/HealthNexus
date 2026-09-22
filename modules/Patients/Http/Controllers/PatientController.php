@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\IdentificationType;
 use App\Models\Patient;
+use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\PatientDocument;
 use App\Models\PatientHistory;
@@ -321,5 +322,65 @@ class PatientController extends Controller
         $this->auditLogger->log('DELETE', PatientHistory::class, $history->id, $oldValues, null, request());
 
         return redirect()->route('admin.patients.history', $patient)->with('success', 'Medical history removed successfully.');
+    }
+
+    public function alerts(Patient $patient)
+    {
+        $this->authorize('view', $patient);
+
+        $alerts = $patient->alerts()->latest()->get();
+
+        return view('admin.patients.alerts', compact('patient', 'alerts'));
+    }
+
+    public function addAlert(Request $request, Patient $patient)
+    {
+        $this->authorize('update', $patient);
+
+        $validated = $request->validate([
+            'alert_type' => ['required', 'string', 'max:100'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'severity' => ['required', 'in:info,warning,critical'],
+            'status' => ['sometimes', 'in:active,inactive,resolved,expired'],
+            'start_at' => ['nullable', 'date'],
+            'expires_at' => ['nullable', 'date', 'after_or_equal:start_at'],
+        ]);
+
+        $alert = $this->patientService->addAlert($patient, $validated);
+
+        $this->auditLogger->log('CREATE', PatientAlert::class, $alert->id, null, $alert->toArray(), $request);
+
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert added successfully.');
+    }
+
+    public function resolveAlert(Request $request, Patient $patient, PatientAlert $alert)
+    {
+        $this->authorize('update', $patient);
+
+        $validated = $request->validate([
+            'resolution_note' => ['nullable', 'string'],
+        ]);
+
+        $oldValues = $alert->toArray();
+
+        $this->patientService->resolveAlert($alert, $validated);
+
+        $this->auditLogger->log('UPDATE', PatientAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
+
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert resolved.');
+    }
+
+    public function deleteAlert(Request $request, Patient $patient, PatientAlert $alert)
+    {
+        $this->authorize('update', $patient);
+
+        $oldValues = $alert->toArray();
+
+        $alert->delete();
+
+        $this->auditLogger->log('DELETE', PatientAlert::class, $alert->id, $oldValues, null, $request);
+
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert removed successfully.');
     }
 }

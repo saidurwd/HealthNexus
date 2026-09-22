@@ -80,6 +80,11 @@ class Patient extends Model
         return $this->hasMany(PatientAllergy::class);
     }
 
+    public function alerts(): HasMany
+    {
+        return $this->hasMany(PatientAlert::class);
+    }
+
     public function histories(): HasMany
     {
         return $this->hasMany(PatientHistory::class);
@@ -128,5 +133,10 @@ class Patient extends Model
     public function getFullNameAttribute(): string
     {
         return trim($this->first_name.' '.$this->middle_name.' '.$this->last_name);
+    }
+
+    public function activeAlerts(): HasMany
+    {
+        return $this->alerts()->where('status', 'active');
     }
 }

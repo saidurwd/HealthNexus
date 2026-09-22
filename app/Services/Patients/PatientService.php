@@ -5,11 +5,11 @@ namespace App\Services\Patients;
 use App\Events\PatientRegistered;
 use App\Models\Branch;
 use App\Models\Patient;
+use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\PatientBranchRegistration;
 use App\Models\PatientContact;
 use App\Models\PatientHistory;
-use App\Models\PatientDocument;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +87,25 @@ class PatientService
         return $patient->allergies()->create($allergyData);
     }
 
+    public function addAlert(Patient $patient, array $alertData): PatientAlert
+    {
+        $alertData['company_id'] = $patient->company_id;
+        $alertData['created_by'] = $alertData['created_by'] ?? auth()->id();
+
+        return $patient->alerts()->create($alertData);
+    }
+
+    public function resolveAlert(PatientAlert $alert, array $data): PatientAlert
+    {
+        $alert->update(array_merge($data, [
+            'status' => 'resolved',
+            'resolved_by' => $data['resolved_by'] ?? auth()->id(),
+            'resolved_at' => now(),
+        ]));
+
+        return $alert;
+    }
+
     public function addHistory(Patient $patient, array $historyData): PatientHistory
     {
         $historyData['company_id'] = $patient->company_id;
@@ -145,6 +164,7 @@ class PatientService
         $duplicatePatient->contacts()->update(['patient_id' => $masterPatient->id]);
         $duplicatePatient->allergies()->update(['patient_id' => $masterPatient->id]);
         $duplicatePatient->histories()->update(['patient_id' => $masterPatient->id]);
+        $duplicatePatient->alerts()->update(['patient_id' => $masterPatient->id]);
         $duplicatePatient->documents()->update(['patient_id' => $masterPatient->id]);
         $duplicatePatient->branchRegistrations()->update(['patient_id' => $masterPatient->id]);
     }
