@@ -41,10 +41,14 @@ class RevenueService
 
         $today = Carbon::today()->toDateString();
 
+        // Not using forTenant() here: billing_payment_methods also has company_id/branch_id
+        // columns, so after the join those unqualified column names become ambiguous to MySQL.
+        // Every condition below is qualified to billing_payments explicitly instead.
         $byType = BillingPayment::query()
-            ->forTenant($companyId, $branchId)
-            ->where('status', 'completed')
-            ->where('payment_date', $today)
+            ->where('billing_payments.company_id', $companyId)
+            ->when($branchId, fn ($q) => $q->where('billing_payments.branch_id', $branchId))
+            ->where('billing_payments.status', 'completed')
+            ->where('billing_payments.payment_date', $today)
             ->join('billing_payment_methods', 'billing_payment_methods.id', '=', 'billing_payments.payment_method_id')
             ->selectRaw('billing_payment_methods.type as method_type, SUM(billing_payments.amount) as total')
             ->groupBy('billing_payment_methods.type')
