@@ -51,7 +51,7 @@ class AppointmentController extends Controller
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
             ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
             ->get();
-        $branches = auth()->user()->branches()->where('companies.id', $companyId)->get();
+        $branches = auth()->user()->branches()->where('branches.company_id', $companyId)->get();
 
         return view('admin.appointments.create', compact('patients', 'doctors', 'branches'));
     }
@@ -87,7 +87,7 @@ class AppointmentController extends Controller
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
             ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
             ->get();
-        $branches = auth()->user()->branches()->where('companies.id', $companyId)->get();
+        $branches = auth()->user()->branches()->where('branches.company_id', $companyId)->get();
 
         return view('admin.appointments.edit', compact('appointment', 'patients', 'doctors', 'branches'));
     }
