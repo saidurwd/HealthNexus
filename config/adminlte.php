@@ -870,14 +870,8 @@ return [
         [
             'text' => 'Clinical',
             'icon' => 'bi bi-heart-pulse',
-            'can' => 'settings.view',
+            'can' => 'encounters.view',
             'submenu' => [
-                [
-                    'text' => 'Clinical Dashboard',
-                    'url' => '#',
-                    'icon' => 'bi bi-speedometer',
-                    'can' => 'settings.view',
-                ],
                 [
                     'text' => 'Doctor Queue',
                     'url' => '/admin/queue',
@@ -897,70 +891,10 @@ return [
                     'can' => 'encounters.create',
                 ],
                 [
-                    'text' => 'Encounter List',
-                    'url' => '/admin/encounters',
-                    'icon' => 'bi bi-list-ul',
-                    'can' => 'encounters.view',
-                ],
-                [
-                    'text' => 'Patient History',
-                    'url' => '#',
-                    'icon' => 'bi bi-person-lines-fill',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Clinical Templates',
-                    'url' => '#',
-                    'icon' => 'bi bi-file-earmark-text',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Diagnoses',
-                    'url' => '#',
-                    'icon' => 'bi bi-clipboard-pulse',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Problem List',
-                    'url' => '#',
-                    'icon' => 'bi bi-list-check',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Clinical Orders',
-                    'url' => '#',
-                    'icon' => 'bi bi-box-seam',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Prescriptions',
-                    'url' => '#',
-                    'icon' => 'bi bi-capsule',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Referrals',
-                    'url' => '#',
-                    'icon' => 'bi bi-share',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Follow-Ups',
-                    'url' => '#',
-                    'icon' => 'bi bi-calendar-check',
-                    'can' => 'settings.view',
-                ],
-                [
                     'text' => 'Clinical Reports',
-                    'url' => '#',
+                    'url' => '/admin/reports/clinical',
                     'icon' => 'bi bi-bar-chart',
-                    'can' => 'settings.view',
-                ],
-                [
-                    'text' => 'Settings',
-                    'url' => '#',
-                    'icon' => 'bi bi-gear',
-                    'can' => 'settings.view',
+                    'can' => 'encounter.export',
                 ],
             ],
         ],

@@ -135,8 +135,10 @@ class PermissionSeeder extends Seeder
             // Prescription
             'prescription.view',
             'prescription.create',
+            'prescription.update',
             'prescription.issue',
             'prescription.cancel',
+            'prescription.amend',
 
             // Pharmacy
             'pharmacy.view',

@@ -12,11 +12,9 @@ return new class extends Migration
             $table->unsignedBigInteger('appointment_id')->nullable()->after('patient_id');
             $table->foreign('appointment_id')->references('id')->on('appointments')->nullOnDelete();
             $table->unsignedBigInteger('encounter_type_id')->nullable()->after('encounter_type');
-            $table->foreign('encounter_type_id')->references('id')->on('encounter_types')->nullOnDelete();
             $table->unsignedBigInteger('provider_id')->nullable()->after('department_id');
             $table->foreign('provider_id')->references('id')->on('users')->nullOnDelete();
             $table->unsignedBigInteger('specialty_id')->nullable()->after('provider_id');
-            $table->foreign('specialty_id')->references('id')->on('specialties')->nullOnDelete();
             $table->date('encounter_date')->nullable()->after('encounter_no');
             $table->string('priority')->nullable()->after('status');
             $table->string('source')->nullable()->after('priority');
