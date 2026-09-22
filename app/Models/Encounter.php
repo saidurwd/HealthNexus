@@ -133,6 +133,26 @@ class Encounter extends Model
         return $this->hasMany(VitalSign::class);
     }
 
+    public function encounterVitals(): HasMany
+    {
+        return $this->hasMany(EncounterVital::class);
+    }
+
+    public function assessments(): HasMany
+    {
+        return $this->hasMany(EncounterAssessment::class);
+    }
+
+    public function allergies(): HasMany
+    {
+        return $this->hasMany(EncounterAllergy::class);
+    }
+
+    public function medicationHistories(): HasMany
+    {
+        return $this->hasMany(EncounterMedicationHistory::class);
+    }
+
     public function diagnoses(): HasMany
     {
         return $this->hasMany(Diagnosis::class);
@@ -181,5 +201,10 @@ class Encounter extends Model
     public function amendments(): HasMany
     {
         return $this->hasMany(EncounterAmendment::class);
+    }
+
+    public function followUps(): HasMany
+    {
+        return $this->hasMany(EncounterFollowUp::class);
     }
 }

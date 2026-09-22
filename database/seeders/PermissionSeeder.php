@@ -103,11 +103,40 @@ class PermissionSeeder extends Seeder
             'emr.amend',
             'emr.approve',
 
+            // Encounter
+            'encounters.view',
+            'encounters.create',
+            'encounters.update',
+            'encounters.delete',
+            'encounter.start',
+            'encounter.complete',
+            'encounter.cancel',
+            'encounter.amend',
+            'encounter.lock',
+            'encounter.export',
+            'encounter.print',
+
+            // Clinical
+            'clinical.note.view',
+            'clinical.note.create',
+            'clinical.note.update',
+            'clinical.vitals.view',
+            'clinical.vitals.create',
+            'clinical.diagnosis.view',
+            'clinical.diagnosis.create',
+            'clinical.diagnosis.update',
+            'clinical.order.view',
+            'clinical.order.create',
+            'clinical.order.cancel',
+            'clinical.referral.view',
+            'clinical.referral.create',
+            'clinical.break_glass',
+
             // Prescription
             'prescription.view',
             'prescription.create',
-            'prescription.update',
-            'prescription.amend',
+            'prescription.issue',
+            'prescription.cancel',
 
             // Pharmacy
             'pharmacy.view',

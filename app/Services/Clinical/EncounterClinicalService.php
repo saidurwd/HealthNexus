@@ -17,6 +17,9 @@ use App\Models\EncounterNote;
 use App\Models\EncounterDocument;
 use App\Models\EncounterAmendment;
 use App\Models\User;
+use App\Events\Clinical\ClinicalOrderCreated;
+use App\Events\Clinical\ReferralCreated;
+use App\Events\Clinical\ClinicalAmendmentCreated;
 use Illuminate\Support\Facades\DB;
 
 class EncounterClinicalService
@@ -149,6 +152,8 @@ class EncounterClinicalService
                 $order->items()->create(array_merge($itemData, ['company_id' => $company->id]));
             }
 
+            event(new ClinicalOrderCreated($encounter, $order));
+
             return $order;
         });
     }
@@ -156,7 +161,7 @@ class EncounterClinicalService
     public function addReferral(Encounter $encounter, array $data, ?User $user = null): EncounterReferral
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
-            return $encounter->referrals()->create([
+            $referral = $encounter->referrals()->create([
                 'patient_id' => $encounter->patient_id,
                 'company_id' => $encounter->company_id,
                 'referral_type' => $data['referral_type'],
@@ -167,6 +172,10 @@ class EncounterClinicalService
                 'status' => 'pending',
                 'created_by' => $user?->id ?? auth()->id(),
             ]);
+
+            event(new ReferralCreated($encounter, $referral));
+
+            return $referral;
         });
     }
 
@@ -212,10 +221,40 @@ class EncounterClinicalService
         });
     }
 
+    public function issuePrescription(Encounter $encounter, ?User $user = null): Prescription
+    {
+        $prescription = $encounter->prescriptions()->where('status', 'draft')->latest()->first();
+
+        abort_if(! $prescription, 404, 'No draft prescription found.');
+
+        $prescription->update([
+            'status' => 'issued',
+            'issued_at' => now(),
+            'issued_by' => $user?->id ?? auth()->id(),
+        ]);
+
+        event(new \App\Events\Clinical\PrescriptionIssued($encounter, $prescription));
+
+        return $prescription;
+    }
+
+    public function cancelPrescription(Encounter $encounter, ?User $user = null): Prescription
+    {
+        $prescription = $encounter->prescriptions()->where('status', 'draft')->latest()->first();
+
+        abort_if(! $prescription, 404, 'No draft prescription found.');
+
+        $prescription->update([
+            'status' => 'cancelled',
+        ]);
+
+        return $prescription;
+    }
+
     public function createAmendment(Encounter $encounter, array $data, ?User $user = null): EncounterAmendment
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
-            return $encounter->amendments()->create([
+            $amendment = $encounter->amendments()->create([
                 'patient_id' => $encounter->patient_id,
                 'company_id' => $encounter->company_id,
                 'amendment_type' => $data['amendment_type'],
@@ -225,6 +264,10 @@ class EncounterClinicalService
                 'approved_by' => $data['approved_by'] ?? null,
                 'approved_at' => $data['approved_at'] ?? null,
             ]);
+
+            event(new ClinicalAmendmentCreated($encounter, $amendment));
+
+            return $amendment;
         });
     }
 }

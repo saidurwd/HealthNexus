@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Encounter;
 use App\Models\Patient;
+use App\Services\EncounterLifecycleService;
 use App\Services\EncounterService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -15,7 +16,10 @@ use Modules\Clinical\Http\Requests\UpdateEncounterRequest;
 
 class EncounterController extends Controller
 {
-    public function __construct(private EncounterService $encounterService) {}
+    public function __construct(
+        private EncounterService $encounterService,
+        private EncounterLifecycleService $lifecycleService
+    ) {}
 
     public function index(Request $request)
     {
@@ -98,7 +102,15 @@ class EncounterController extends Controller
 
         $validated = $request->validated();
 
-        $this->encounterService->updateEncounter($encounter, $validated);
+        if (isset($validated['status'])) {
+            $this->lifecycleService->moveTo($encounter, $validated['status'], $request->user());
+
+            unset($validated['status']);
+        }
+
+        if (! empty($validated)) {
+            $this->encounterService->updateEncounter($encounter, $validated);
+        }
 
         return redirect()->route('admin.encounters.index')->with('success', 'Encounter updated successfully.');
     }

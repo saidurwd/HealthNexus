@@ -16,17 +16,22 @@ class Prescription extends Model
         'company_id',
         'branch_id',
         'appointment_id',
+        'encounter_id',
         'patient_id',
         'doctor_id',
         'prescription_no',
+        'status',
         'clinical_notes',
         'advice',
         'created_by',
+        'issued_by',
+        'issued_at',
         'prescribed_at',
     ];
 
     protected $casts = [
         'prescribed_at' => 'datetime',
+        'issued_at' => 'datetime',
     ];
 
     public function company(): BelongsTo

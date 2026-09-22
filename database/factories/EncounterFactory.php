@@ -30,7 +30,7 @@ class EncounterFactory extends Factory
             'encounter_date' => fake()->date(),
             'started_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'ended_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
-            'status' => fake()->randomElement(['registered', 'waiting', 'in_progress', 'completed', 'cancelled', 'locked']),
+            'status' => 'registered',
             'priority' => fake()->optional()->randomElement(['routine', 'urgent', 'stat']),
             'source' => fake()->optional()->randomElement(['appointment', 'walk_in', 'referral', 'emergency', 'follow_up']),
             'chief_complaint_summary' => fake()->optional()->sentence(),
@@ -40,8 +40,8 @@ class EncounterFactory extends Factory
             'created_by' => User::factory(),
             'completed_by' => fake()->optional()->randomElement([User::factory(), null]),
             'completed_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
-            'locked_at' => fake()->optional()->dateTimeBetween('-1 year', 'now'),
-            'locked_by' => fake()->optional()->randomElement([User::factory(), null]),
+            'locked_at' => null,
+            'locked_by' => null,
         ];
     }
 }

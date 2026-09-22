@@ -12,15 +12,8 @@
             @method('PUT')
             <div class="card-body">
                 <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
-                        @foreach (['active', 'completed', 'cancelled'] as $status)
-                            <option value="{{ $status }}" {{ old('status', $encounter->status) == $status ? 'selected' : '' }}>
-                                {{ $status }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <label class="form-label">Status</label>
+                    <p class="form-control-plaintext">{{ $encounter->status }}</p>
                 </div>
                 <div class="mb-3">
                     <label for="notes" class="form-label">Notes</label>

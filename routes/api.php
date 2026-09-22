@@ -57,5 +57,15 @@ Route::prefix('v1')->group(function () {
         Route::get('/encounters/{encounter}', [EncounterController::class, 'show'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
         Route::put('/encounters/{encounter}', [EncounterController::class, 'update'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
         Route::delete('/encounters/{encounter}', [EncounterController::class, 'destroy'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::post('/encounters/{encounter}/start', [EncounterController::class, 'start'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/pause', [EncounterController::class, 'pause'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/resume', [EncounterController::class, 'resume'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/complete', [EncounterController::class, 'complete'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/cancel', [EncounterController::class, 'cancel'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/transfer', [EncounterController::class, 'transfer'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/lock', [EncounterController::class, 'lock'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::get('/encounters/{encounter}/summary', [EncounterController::class, 'summary'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
     });
 });

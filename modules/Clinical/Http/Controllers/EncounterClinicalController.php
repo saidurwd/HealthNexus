@@ -5,7 +5,7 @@ namespace Modules\Clinical\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Encounter;
 use App\Services\Clinical\EncounterClinicalService;
-use App\Services\EncounterService;
+use App\Services\EncounterLifecycleService;
 use Illuminate\Http\Request;
 use Modules\Clinical\Http\Requests\StoreEncounterComplaintRequest;
 use Modules\Clinical\Http\Requests\StoreEncounterHistoryRequest;
@@ -24,14 +24,14 @@ class EncounterClinicalController extends Controller
 {
     public function __construct(
         private EncounterClinicalService $clinicalService,
-        private EncounterService $encounterService
+        private EncounterLifecycleService $lifecycleService
     ) {}
 
     public function start(Request $request, Encounter $encounter)
     {
         $this->authorize('update', $encounter);
 
-        $this->encounterService->startEncounter($encounter, $request->user());
+        $this->lifecycleService->start($encounter, $request->user());
 
         return back()->with('success', 'Encounter started successfully.');
     }
@@ -40,7 +40,7 @@ class EncounterClinicalController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $this->encounterService->pauseEncounter($encounter, $request->user());
+        $this->lifecycleService->pause($encounter, $request->user());
 
         return back()->with('success', 'Encounter paused successfully.');
     }
@@ -49,7 +49,7 @@ class EncounterClinicalController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $this->encounterService->resumeEncounter($encounter, $request->user());
+        $this->lifecycleService->resume($encounter, $request->user());
 
         return back()->with('success', 'Encounter resumed successfully.');
     }
@@ -58,7 +58,7 @@ class EncounterClinicalController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $this->encounterService->completeEncounter($encounter, $request->user());
+        $this->lifecycleService->complete($encounter, $request->user());
 
         return back()->with('success', 'Encounter completed successfully.');
     }
@@ -67,9 +67,49 @@ class EncounterClinicalController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $this->encounterService->lockEncounter($encounter, $request->user());
+        $this->lifecycleService->lock($encounter, $request->user());
 
         return back()->with('success', 'Encounter locked successfully.');
+    }
+
+    public function cancel(Request $request, Encounter $encounter)
+    {
+        $this->authorize('update', $encounter);
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string'],
+        ]);
+
+        $this->lifecycleService->cancel($encounter, $validated['reason'] ?? null, $request->user());
+
+        return back()->with('success', 'Encounter cancelled successfully.');
+    }
+
+    public function transfer(Request $request, Encounter $encounter)
+    {
+        $this->authorize('update', $encounter);
+
+        $this->lifecycleService->transfer($encounter, $request->user());
+
+        return back()->with('success', 'Encounter transferred successfully.');
+    }
+
+    public function issuePrescription(Request $request, Encounter $encounter)
+    {
+        $this->authorize('update', $encounter);
+
+        $this->clinicalService->issuePrescription($encounter, $request->user());
+
+        return back()->with('success', 'Prescription issued successfully.');
+    }
+
+    public function cancelPrescription(Request $request, Encounter $encounter)
+    {
+        $this->authorize('update', $encounter);
+
+        $this->clinicalService->cancelPrescription($encounter, $request->user());
+
+        return back()->with('success', 'Prescription cancelled successfully.');
     }
 
     public function storeComplaint(StoreEncounterComplaintRequest $request, Encounter $encounter)

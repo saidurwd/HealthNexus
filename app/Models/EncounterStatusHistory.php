@@ -9,11 +9,17 @@ class EncounterStatusHistory extends Model
 {
     protected $fillable = [
         'encounter_id',
-        'old_status',
-        'new_status',
+        'from_status',
+        'to_status',
         'changed_by',
+        'changed_at',
         'reason',
-        'notes',
+        'metadata',
+    ];
+
+    protected $casts = [
+        'changed_at' => 'datetime',
+        'metadata' => 'array',
     ];
 
     public function encounter(): BelongsTo

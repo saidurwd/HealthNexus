@@ -36,10 +36,12 @@ class EncounterControllerTest extends TestCase
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
         Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'encounters.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.update', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.delete', 'guard_name' => 'web']);
         $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('encounters.view');
         $this->user->givePermissionTo('encounters.create');
         $this->user->givePermissionTo('encounters.update');
         $this->user->givePermissionTo('encounters.delete');
@@ -85,7 +87,7 @@ class EncounterControllerTest extends TestCase
 
     public function test_user_can_update_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
         $response = $this->put('/admin/encounters/'.$encounter->id, [
             'status' => 'completed',

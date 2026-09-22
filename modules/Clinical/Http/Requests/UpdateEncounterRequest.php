@@ -17,7 +17,7 @@ class UpdateEncounterRequest extends FormRequest
             'encounter_type' => ['sometimes', 'string', 'in:OPD,IPD,ER,LAB,RADIOLOGY,FOLLOW_UP,TELEMEDICINE'],
             'attending_doctor_id' => ['nullable', 'integer', 'exists:users,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
-            'status' => ['sometimes', 'string', 'in:active,completed,cancelled'],
+            'status' => ['sometimes', 'string', 'in:registered,waiting,in_progress,paused,completed,cancelled,transferred,locked,amended'],
             'notes' => ['nullable', 'string'],
         ];
     }

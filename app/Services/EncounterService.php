@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Encounter;
 use App\Models\EncounterStatusHistory;
 use App\Models\User;
+use App\Events\Clinical\EncounterCreated;
 use Illuminate\Support\Facades\DB;
 
 class EncounterService
@@ -26,6 +27,8 @@ class EncounterService
             $encounter = Encounter::create($data);
 
             $this->recordHistory($encounter, $data['status'] ?? 'registered', $user, null, 'Encounter created.');
+
+            event(new EncounterCreated($encounter));
 
             return $encounter;
         });
@@ -140,11 +143,13 @@ class EncounterService
     public function recordHistory(Encounter $encounter, string $newStatus, ?User $user = null, ?string $reason = null, ?string $notes = null): EncounterStatusHistory
     {
         return $encounter->statusHistory()->create([
-            'old_status' => $encounter->status,
-            'new_status' => $newStatus,
+            'from_status' => $encounter->status,
+            'to_status' => $newStatus,
             'changed_by' => $user?->id ?? auth()->id(),
+            'changed_at' => now(),
             'reason' => $reason,
             'notes' => $notes,
+            'metadata' => [],
         ]);
     }
 

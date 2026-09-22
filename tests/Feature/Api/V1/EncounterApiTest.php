@@ -83,7 +83,7 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_update_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
         $response = $this->put('/api/v1/encounters/'.$encounter->id, [
             'status' => 'completed',

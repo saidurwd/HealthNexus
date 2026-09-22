@@ -24,6 +24,14 @@
                             <i class="bi bi-play-circle me-1"></i>Start Encounter
                         </button>
                     </form>
+                    @can('encounter.cancel')
+                        <form method="POST" action="{{ route('admin.encounters.cancel', $encounter) }}" class="d-inline" onsubmit="return confirm('Cancel this encounter?')">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </button>
+                        </form>
+                    @endcan
                 @elseif($encounter->status === 'in_progress')
                     <form method="POST" action="{{ route('admin.encounters.pause', $encounter) }}" class="d-inline">
                         @csrf
@@ -37,6 +45,14 @@
                             <i class="bi bi-check-circle me-1"></i>Complete
                         </button>
                     </form>
+                    @can('encounter.cancel')
+                        <form method="POST" action="{{ route('admin.encounters.transfer', $encounter) }}" class="d-inline" onsubmit="return confirm('Transfer this encounter?')">
+                            @csrf
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-arrow-right-circle me-1"></i>Transfer
+                            </button>
+                        </form>
+                    @endcan
                 @elseif($encounter->status === 'paused')
                     <form method="POST" action="{{ route('admin.encounters.resume', $encounter) }}" class="d-inline">
                         @csrf
@@ -51,6 +67,12 @@
                             <i class="bi bi-lock me-1"></i>Lock Record
                         </button>
                     </form>
+                @elseif($encounter->locked_at)
+                    @can('clinical.break_glass')
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#breakGlassModal">
+                            <i class="bi bi-shield-unlocked me-1"></i>Break Glass
+                        </button>
+                    @endcan
                 @endif
                 <a href="{{ route('admin.encounters.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>Back
@@ -113,7 +135,37 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="breakGlassModal" tabindex="-1" aria-labelledby="breakGlassModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.encounters.break-glass', $encounter) }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="breakGlassModalLabel">Break-Glass Access</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-warning">You are requesting emergency access to a locked clinical record. This action will be audited.</p>
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Reason <span class="text-danger">*</span></label>
+                        <textarea name="reason" id="reason" class="form-control" rows="3" required minlength="10"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="scope" class="form-label">Scope</label>
+                        <input type="text" name="scope" id="scope" class="form-control" placeholder="e.g., view, edit, prescription">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Request Access</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @stop
