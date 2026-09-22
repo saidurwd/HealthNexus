@@ -203,6 +203,10 @@ class PermissionSeeder extends Seeder
             // Notifications
             'notification.view',
             'notification.manage',
+
+            // Files
+            'file.view',
+            'file.manage',
         ];
 
         foreach ($permissions as $permission) {

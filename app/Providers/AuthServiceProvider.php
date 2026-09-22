@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
+use App\Models\File;
 use App\Models\IdentificationType;
 use App\Models\InvestigationOrder;
 use App\Models\Patient;
@@ -46,6 +47,7 @@ class AuthServiceProvider extends ServiceProvider
         Currency::class => CurrencyPolicy::class,
         IdentificationType::class => IdentificationTypePolicy::class,
         Notification::class => NotificationPolicy::class,
+        File::class => FilePolicy::class,
     ];
 
     public function boot(): void
