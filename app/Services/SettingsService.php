@@ -105,6 +105,23 @@ class SettingsService
             ['group' => 'files',      'key' => 'files.allowed_extensions',    'value' => json_encode(['pdf', 'jpg', 'png', 'docx']), 'type' => 'json'],
 
             ['group' => 'audit',      'key' => 'audit.retention_days',        'value' => '365',                       'type' => 'integer'],
+
+            ['group' => 'billing',    'key' => 'billing.currency',                            'value' => 'BDT',   'type' => 'string', 'description' => 'Default billing currency'],
+            ['group' => 'billing',    'key' => 'billing.invoice_prefix',                      'value' => 'INV',   'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.payment_prefix',                      'value' => 'PMT',   'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.receipt_prefix',                      'value' => 'RCT',   'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.refund_prefix',                       'value' => 'RFD',   'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.adjustment_prefix',                    'value' => 'ADJ',   'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.invoice_number_format',                'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string', 'description' => 'Document numbering format'],
+            ['group' => 'billing',    'key' => 'billing.rounding_precision',                   'value' => '2',     'type' => 'integer'],
+            ['group' => 'billing',    'key' => 'billing.rounding_mode',                        'value' => 'nearest', 'type' => 'string', 'description' => 'nearest|up|down'],
+            ['group' => 'billing',    'key' => 'billing.discount_approval_threshold_percent',  'value' => '10',    'type' => 'integer', 'description' => 'Discount % above which approval is required'],
+            ['group' => 'billing',    'key' => 'billing.discount_approval_threshold_amount',   'value' => '5000',  'type' => 'integer', 'description' => 'Discount amount above which approval is required'],
+            ['group' => 'billing',    'key' => 'billing.discount_approver_role',               'value' => 'hospital_admin', 'type' => 'string'],
+            ['group' => 'billing',    'key' => 'billing.refund_approval_required',             'value' => '1',     'type' => 'boolean'],
+            ['group' => 'billing',    'key' => 'billing.default_price_list_priority',          'value' => '100',   'type' => 'integer'],
+            ['group' => 'billing',    'key' => 'billing.tax_inclusive_default',                'value' => '0',     'type' => 'boolean'],
+            ['group' => 'billing',    'key' => 'billing.advance_min_balance',                  'value' => '0',     'type' => 'integer'],
         ];
     }
 

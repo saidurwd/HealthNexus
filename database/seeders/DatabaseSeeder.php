@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             SettingsTableSeeder::class,
             CompanyWithTwoBranchesSeeder::class,
+            BillingSeeder::class,
         ]);
     }
 }

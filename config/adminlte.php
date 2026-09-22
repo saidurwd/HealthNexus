@@ -899,6 +899,224 @@ return [
             ],
         ],
         [
+            'text' => 'Billing & Revenue',
+            'icon' => 'bi bi-cash-coin',
+            'can' => 'billing.dashboard.view',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard',
+                    'url' => '/admin/billing',
+                    'icon' => 'bi bi-speedometer',
+                    'can' => 'billing.dashboard.view',
+                ],
+                [
+                    'text' => 'Billing',
+                    'icon' => 'bi bi-receipt',
+                    'can' => 'billing.invoice.view',
+                    'submenu' => [
+                        [
+                            'text' => 'New Invoice',
+                            'url' => '/admin/billing/invoices/create',
+                            'icon' => 'bi bi-plus-circle',
+                            'can' => 'billing.invoice.create',
+                        ],
+                        [
+                            'text' => 'Invoices',
+                            'url' => '/admin/billing/invoices',
+                            'icon' => 'bi bi-receipt',
+                            'can' => 'billing.invoice.view',
+                        ],
+                        [
+                            'text' => 'Charges',
+                            'url' => '/admin/billing/charges',
+                            'icon' => 'bi bi-list-check',
+                            'can' => 'billing.charge.view',
+                        ],
+                        [
+                            'text' => 'Adjustments',
+                            'url' => '/admin/billing/adjustments',
+                            'icon' => 'bi bi-sliders',
+                            'can' => 'billing.adjustment.request',
+                        ],
+                        [
+                            'text' => 'Outstanding',
+                            'url' => '/admin/billing/reports/receivables',
+                            'icon' => 'bi bi-exclamation-circle',
+                            'can' => 'billing.report.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Payments',
+                    'icon' => 'bi bi-credit-card',
+                    'can' => 'billing.payment.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Collect Payment',
+                            'url' => '/admin/billing/payments/create',
+                            'icon' => 'bi bi-cash',
+                            'can' => 'billing.payment.create',
+                        ],
+                        [
+                            'text' => 'Payments',
+                            'url' => '/admin/billing/payments',
+                            'icon' => 'bi bi-credit-card',
+                            'can' => 'billing.payment.view',
+                        ],
+                        [
+                            'text' => 'Receipts',
+                            'url' => '/admin/billing/receipts',
+                            'icon' => 'bi bi-file-earmark-text',
+                            'can' => 'billing.receipt.view',
+                        ],
+                        [
+                            'text' => 'Refunds',
+                            'url' => '/admin/billing/refunds',
+                            'icon' => 'bi bi-arrow-counterclockwise',
+                            'can' => 'billing.refund.request',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Cashier',
+                    'icon' => 'bi bi-shop',
+                    'can' => 'billing.cashier.view',
+                    'submenu' => [
+                        [
+                            'text' => 'My Session',
+                            'url' => '/admin/billing/cashier/my-session',
+                            'icon' => 'bi bi-person-badge',
+                            'can' => 'billing.cashier.view',
+                        ],
+                        [
+                            'text' => 'Open Session',
+                            'url' => '/admin/billing/cashier/open',
+                            'icon' => 'bi bi-door-open',
+                            'can' => 'billing.cashier.open',
+                        ],
+                        [
+                            'text' => 'All Sessions',
+                            'url' => '/admin/billing/cashier',
+                            'icon' => 'bi bi-list-ul',
+                            'can' => 'billing.cashier.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Pricing',
+                    'icon' => 'bi bi-tags',
+                    'can' => 'billing.pricing.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Service Catalog',
+                            'url' => '/admin/billing/items',
+                            'icon' => 'bi bi-list-ul',
+                            'can' => 'billing.pricing.view',
+                        ],
+                        [
+                            'text' => 'Categories',
+                            'url' => '/admin/billing/categories',
+                            'icon' => 'bi bi-diagram-3',
+                            'can' => 'billing.pricing.view',
+                        ],
+                        [
+                            'text' => 'Price Lists',
+                            'url' => '/admin/billing/price-lists',
+                            'icon' => 'bi bi-currency-exchange',
+                            'can' => 'billing.pricing.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Corporate',
+                    'icon' => 'bi bi-building-gear',
+                    'can' => 'billing.corporate.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Companies',
+                            'url' => '/admin/billing/corporates',
+                            'icon' => 'bi bi-building',
+                            'can' => 'billing.corporate.view',
+                        ],
+                        [
+                            'text' => 'Receivables',
+                            'url' => '/admin/billing/corporates/receivables',
+                            'icon' => 'bi bi-cash-stack',
+                            'can' => 'billing.corporate.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Insurance',
+                    'icon' => 'bi bi-shield-plus',
+                    'can' => 'insurance.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Providers',
+                            'url' => '/admin/billing/insurance/providers',
+                            'icon' => 'bi bi-shield-check',
+                            'can' => 'insurance.view',
+                        ],
+                        [
+                            'text' => 'Policies',
+                            'url' => '/admin/billing/insurance/policies',
+                            'icon' => 'bi bi-file-earmark-medical',
+                            'can' => 'billing.insurance.policy.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-bar-chart',
+                    'can' => 'billing.report.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Billing Report',
+                            'url' => '/admin/billing/reports/billing',
+                            'icon' => 'bi bi-file-bar-graph',
+                            'can' => 'billing.report.view',
+                        ],
+                        [
+                            'text' => 'Collection Report',
+                            'url' => '/admin/billing/reports/collection',
+                            'icon' => 'bi bi-cash-coin',
+                            'can' => 'billing.report.view',
+                        ],
+                        [
+                            'text' => 'Revenue Report',
+                            'url' => '/admin/billing/reports/revenue',
+                            'icon' => 'bi bi-graph-up',
+                            'can' => 'billing.report.view',
+                        ],
+                        [
+                            'text' => 'Receivables Report',
+                            'url' => '/admin/billing/reports/receivables',
+                            'icon' => 'bi bi-hourglass-split',
+                            'can' => 'billing.report.view',
+                        ],
+                        [
+                            'text' => 'Refunds Report',
+                            'url' => '/admin/billing/reports/refunds',
+                            'icon' => 'bi bi-arrow-counterclockwise',
+                            'can' => 'billing.report.view',
+                        ],
+                        [
+                            'text' => 'Discounts Report',
+                            'url' => '/admin/billing/reports/discounts',
+                            'icon' => 'bi bi-percent',
+                            'can' => 'billing.report.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Settings',
+                    'url' => '/admin/billing/settings',
+                    'icon' => 'bi bi-gear',
+                    'can' => 'billing.settings.manage',
+                ],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',
