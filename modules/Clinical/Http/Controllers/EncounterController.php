@@ -53,7 +53,32 @@ class EncounterController extends Controller
     {
         $this->authorize('view', $encounter);
 
-        return view('admin.encounters.show', compact('encounter'));
+        $encounter->load([
+            'patient',
+            'appointment',
+            'encounterType',
+            'provider',
+            'department',
+            'specialty',
+            'complaints',
+            'histories',
+            'examinations',
+            'reviewOfSystems',
+            'vitals',
+            'diagnoses',
+            'problems',
+            'procedures',
+            'orders.items',
+            'prescriptions.items',
+            'referrals',
+            'instructions',
+            'notes',
+            'documents',
+            'amendments',
+            'statusHistory.changer',
+        ]);
+
+        return view('admin.encounters.clinical', compact('encounter'));
     }
 
     public function edit(Encounter $encounter)
