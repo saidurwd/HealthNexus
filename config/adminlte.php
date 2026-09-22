@@ -1184,6 +1184,24 @@ return [
                     'can' => 'audit.view',
                 ],
                 [
+                    'text' => 'Activity Logs',
+                    'url' => '/admin/activity-logs',
+                    'icon' => 'bi bi-activity',
+                    'can' => 'activity.view',
+                ],
+                [
+                    'text' => 'Security Events',
+                    'url' => '/admin/security-events',
+                    'icon' => 'bi bi-shield-exclamation',
+                    'can' => 'security.event.view',
+                ],
+                [
+                    'text' => 'Login History',
+                    'url' => '/admin/login-history',
+                    'icon' => 'bi bi-box-arrow-in-right',
+                    'can' => 'login.history.view',
+                ],
+                [
                     'text' => 'Change Password',
                     'url' => '/change-password',
                     'icon' => 'bi bi-lock',

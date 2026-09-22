@@ -265,6 +265,7 @@ class PermissionSeeder extends Seeder
             // Security
             'security.event.view',
             'security.event.resolve',
+            'login.history.view',
 
             // Settings
             'settings.view',

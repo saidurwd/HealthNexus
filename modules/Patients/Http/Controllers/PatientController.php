@@ -11,10 +11,13 @@ use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\PatientDocument;
 use App\Models\PatientHistory;
+use App\Services\ActivityLogger;
 use App\Services\AuditLogger;
+use App\Services\FileUploadService;
 use App\Services\Patients\PatientService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Modules\Patients\Http\Requests\StorePatientRequest;
 use Modules\Patients\Http\Requests\UpdatePatientRequest;
 
@@ -22,7 +25,9 @@ class PatientController extends Controller
 {
     public function __construct(
         private PatientService $patientService,
-        private AuditLogger $auditLogger
+        private AuditLogger $auditLogger,
+        private ActivityLogger $activityLogger,
+        private FileUploadService $fileUploadService,
     ) {}
 
     public function index(Request $request)
@@ -40,6 +45,8 @@ class PatientController extends Controller
             ->latest()
             ->paginate(20);
 
+        $this->activityLogger->log('PATIENT_LIST_VIEWED', 'Viewed patient list', null, [], $request);
+
         return view('admin.patients.index', compact('patients'));
     }
 
@@ -54,6 +61,8 @@ class PatientController extends Controller
 
     public function store(StorePatientRequest $request)
     {
+        $this->authorize('create', Patient::class);
+
         $validated = $request->validated();
 
         $user = $request->user();
@@ -71,6 +80,8 @@ class PatientController extends Controller
         $this->authorize('view', $patient);
 
         $patient->load(['identifiers', 'contacts', 'allergies', 'histories', 'documents', 'encounters']);
+
+        $this->activityLogger->log('PATIENT_VIEWED', 'Viewed patient record', $patient);
 
         return view('admin.patients.show', compact('patient'));
     }
@@ -166,10 +177,16 @@ class PatientController extends Controller
 
     public function merge(Request $request)
     {
-        $this->authorize('update', new Patient);
+        $this->authorize('merge', Patient::class);
 
         $masterPatient = Patient::findOrFail($request->input('master_patient_id'));
         $duplicatePatient = Patient::findOrFail($request->input('duplicate_patient_id'));
+
+        // The "merge" ability only checks the permission grant, not company ownership (it takes
+        // no Patient instance) — verify both records explicitly so a user with patients.update
+        // can't merge records belonging to a company they aren't assigned to.
+        $this->authorize('view', $masterPatient);
+        $this->authorize('view', $duplicatePatient);
 
         $oldValues = $duplicatePatient->toArray();
 
@@ -210,7 +227,20 @@ class PatientController extends Controller
 
         $file = $request->file('document');
 
-        $path = $file->store('patient-documents', 'public');
+        // Enforces the same MIME/extension allow-list and malware-signature scan used by the
+        // generic file service, rather than trusting Laravel's "file" rule alone.
+        try {
+            $this->fileUploadService->validate($file);
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['document' => $e->getMessage()]);
+        }
+
+        if ($this->fileUploadService->scanForMalware($file)) {
+            return back()->withErrors(['document' => 'File appears to contain malicious content.']);
+        }
+
+        // Private disk — patient documents must never be reachable via a public URL.
+        $path = $file->store('patient-documents');
 
         $document = PatientDocument::create([
             'company_id' => $patient->company_id,
@@ -220,7 +250,7 @@ class PatientController extends Controller
             'mime_type' => $file->getMimeType(),
             'file_size' => $file->getSize(),
             'document_type' => $validated['document_type'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? null,
             'uploaded_by' => $request->user()->id,
         ]);
 
@@ -229,11 +259,24 @@ class PatientController extends Controller
         return redirect()->route('admin.patients.documents', $patient)->with('success', 'Document uploaded successfully.');
     }
 
+    public function downloadDocument(Request $request, Patient $patient, PatientDocument $document)
+    {
+        $this->authorize('view', $patient);
+
+        abort_unless($document->patient_id === $patient->id, 404);
+
+        $this->auditLogger->log('DOWNLOAD', PatientDocument::class, $document->id, null, null, $request);
+
+        return Storage::disk('local')->download($document->file_path, $document->file_name);
+    }
+
     public function deleteDocument(Patient $patient, PatientDocument $document)
     {
         $this->authorize('update', $patient);
 
         $oldValues = $document->toArray();
+
+        Storage::disk('local')->delete($document->file_path);
 
         $document->delete();
 

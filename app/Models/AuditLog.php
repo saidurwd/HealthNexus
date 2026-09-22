@@ -15,6 +15,7 @@ class AuditLog extends Model
         'company_id',
         'branch_id',
         'action',
+        'module',
         'model_type',
         'model_id',
         'old_values',
@@ -23,6 +24,7 @@ class AuditLog extends Model
         'user_agent',
         'url',
         'method',
+        'request_id',
     ];
 
     protected $casts = [

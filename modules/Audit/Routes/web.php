@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Audit\Http\Controllers\ActivityLogController;
 use Modules\Audit\Http\Controllers\AuditLogController;
+use Modules\Audit\Http\Controllers\LoginHistoryController;
 use Modules\Audit\Http\Controllers\SecurityEventController;
 
 Route::middleware(['can:audit.view'])->group(function () {
@@ -19,4 +20,8 @@ Route::middleware(['can:security.event.view'])->group(function () {
     Route::get('security-events', [SecurityEventController::class, 'index'])->name('security.index');
     Route::get('security-events/{securityEvent}', [SecurityEventController::class, 'show'])->name('security.show');
     Route::put('security-events/{securityEvent}/resolve', [SecurityEventController::class, 'resolve'])->name('security.resolve')->middleware('can:security.event.resolve');
+});
+
+Route::middleware(['can:login.history.view'])->group(function () {
+    Route::get('login-history', [LoginHistoryController::class, 'index'])->name('login-history.index');
 });

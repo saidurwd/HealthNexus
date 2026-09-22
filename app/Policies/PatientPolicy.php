@@ -37,11 +37,16 @@ class PatientPolicy
 
     public function update(User $user, Patient $patient): bool
     {
-        return $user->can('patients.update') || $user->hasRole('super_admin');
+        return ($user->can('patients.update') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
     }
 
     public function delete(User $user, Patient $patient): bool
     {
-        return $user->can('patients.delete') || $user->hasRole('super_admin');
+        return ($user->can('patients.delete') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
+    }
+
+    private function inScope(User $user, Patient $patient): bool
+    {
+        return $user->companies()->where('companies.id', $patient->company_id)->exists();
     }
 }

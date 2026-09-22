@@ -10,6 +10,7 @@ Route::middleware('can:manage companies')->group(function () {
     Route::get('patients/{patient}/timeline', [PatientController::class, 'timeline'])->name('patients.timeline');
     Route::get('patients/{patient}/documents', [PatientController::class, 'documents'])->name('patients.documents');
     Route::post('patients/{patient}/documents', [PatientController::class, 'uploadDocument'])->name('patients.documents.upload');
+    Route::get('patients/{patient}/documents/{document}/download', [PatientController::class, 'downloadDocument'])->name('patients.documents.download');
     Route::delete('patients/{patient}/documents/{document}', [PatientController::class, 'deleteDocument'])->name('patients.documents.delete');
     Route::get('patients/{patient}/allergies', [PatientController::class, 'allergies'])->name('patients.allergies');
     Route::post('patients/{patient}/allergies', [PatientController::class, 'addAllergy'])->name('patients.allergies.add');

@@ -42,8 +42,12 @@ class PatientDocument extends Model
         return $this->belongsTo(User::class, 'uploaded_by');
     }
 
+    /**
+     * Never a raw storage URL — patient documents are private and must go through the
+     * authorized download route, which checks the requesting user can view the patient.
+     */
     public function getUrlAttribute(): string
     {
-        return asset('storage/'.$this->file_path);
+        return route('admin.patients.documents.download', [$this->patient_id, $this->id]);
     }
 }
