@@ -2266,7 +2266,7 @@ The completed platform should provide:
 
 This document should be treated as the **master development specification**, while individual module specifications should be created before implementing each major module.
 
-Recommended HMS ERP Menu Structure
+# Recommended HMS ERP Menu Structure
 HOSPITAL MANAGEMENT SYSTEM
 │
 ├── 🏠 Dashboard
