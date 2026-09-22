@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RequestIdMiddleware;
 use App\Http\Middleware\SetTenantContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,11 +15,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(prepend: [
+            RequestIdMiddleware::class,
+        ]);
+
         $middleware->web(append: [
             SetTenantContext::class,
         ]);
 
         $middleware->api(prepend: [
+            RequestIdMiddleware::class,
             SetTenantContext::class,
         ]);
     })

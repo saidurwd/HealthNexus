@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Breadcrumbs;
+use App\Services\SettingsService;
 use App\Services\TenantContextResolver;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,8 +15,12 @@ class AppServiceProvider extends ServiceProvider
             return new TenantContextResolver;
         });
 
-        $this->app->singleton(\App\Services\Breadcrumbs::class, function ($app) {
-            return new \App\Services\Breadcrumbs($app['request']);
+        $this->app->singleton(Breadcrumbs::class, function ($app) {
+            return new Breadcrumbs($app['request']);
+        });
+
+        $this->app->singleton(SettingsService::class, function () {
+            return new SettingsService;
         });
     }
 

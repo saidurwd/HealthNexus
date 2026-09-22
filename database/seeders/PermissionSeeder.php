@@ -188,9 +188,21 @@ class PermissionSeeder extends Seeder
             // Audit
             'audit.view',
 
+            // Activity
+            'activity.view',
+            'activity.export',
+
+            // Security
+            'security.event.view',
+            'security.event.resolve',
+
             // Settings
             'settings.view',
             'settings.update',
+
+            // Notifications
+            'notification.view',
+            'notification.manage',
         ];
 
         foreach ($permissions as $permission) {

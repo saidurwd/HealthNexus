@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Country;
@@ -12,7 +13,6 @@ use App\Models\IdentificationType;
 use App\Models\InvestigationOrder;
 use App\Models\Patient;
 use App\Models\Prescription;
-use App\Models\Appointment;
 use App\Models\State;
 use App\Policies\AppointmentPolicy;
 use App\Policies\BranchPolicy;
@@ -23,6 +23,7 @@ use App\Policies\DiagnosisPolicy;
 use App\Policies\EncounterPolicy;
 use App\Policies\IdentificationTypePolicy;
 use App\Policies\InvestigationOrderPolicy;
+use App\Policies\NotificationPolicy;
 use App\Policies\PatientPolicy;
 use App\Policies\PrescriptionPolicy;
 use App\Policies\StatePolicy;
@@ -44,6 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         State::class => StatePolicy::class,
         Currency::class => CurrencyPolicy::class,
         IdentificationType::class => IdentificationTypePolicy::class,
+        Notification::class => NotificationPolicy::class,
     ];
 
     public function boot(): void

@@ -21,6 +21,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant/context', [TenantContextController::class, 'show']);
         Route::post('/tenant/context', [TenantContextController::class, 'update']);
 
+        require __DIR__.'/../modules/Settings/Routes/api.php';
+        require __DIR__.'/../modules/Notifications/Routes/api.php';
+
         Route::get('/companies', [CompanyController::class, 'index']);
         Route::post('/companies', [CompanyController::class, 'store']);
         Route::get('/companies/{company}', [CompanyController::class, 'show'])->middleware(EnsureCompanyAccess::class);

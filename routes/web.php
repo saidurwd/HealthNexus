@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         require __DIR__.'/../modules/Clinical/Routes/web.php';
         require __DIR__.'/../modules/Appointments/Routes/web.php';
         require __DIR__.'/../modules/Audit/Routes/web.php';
+        require __DIR__.'/../modules/Settings/Routes/web.php';
 
         Route::get('notifications', function () {
             return view('admin.notifications.index');

@@ -7,7 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ApiResponse
 {
-    public static function success($data = null, ?string $message = null, int $status = 200): JsonResponse
+    public static function success($data = null, ?string $message = null, int $status = 200, array $meta = []): JsonResponse
     {
         $response = [
             'success' => true,
@@ -16,6 +16,10 @@ class ApiResponse
 
         if ($data !== null) {
             $response['data'] = $data;
+        }
+
+        if (! empty($meta)) {
+            $response['meta'] = $meta;
         }
 
         return response()->json($response, $status);
