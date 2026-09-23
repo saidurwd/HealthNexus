@@ -18,10 +18,13 @@ class AppointmentToken extends Model
         'token_number',
         'counter',
         'status',
+        'priority',
         'generated_at',
         'called_at',
         'started_at',
         'completed_at',
+        'skipped_at',
+        'transferred_to_provider_id',
         'called_by',
     ];
 
@@ -30,7 +33,10 @@ class AppointmentToken extends Model
         'called_at' => 'datetime',
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
+        'skipped_at' => 'datetime',
     ];
+
+    public const PRIORITY_ORDER = ['emergency', 'priority', 'vip', 'regular', 'follow_up'];
 
     public function company(): BelongsTo
     {
@@ -50,5 +56,10 @@ class AppointmentToken extends Model
     public function caller(): BelongsTo
     {
         return $this->belongsTo(User::class, 'called_by');
+    }
+
+    public function transferredToProvider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'transferred_to_provider_id');
     }
 }

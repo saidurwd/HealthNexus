@@ -82,10 +82,4 @@ class OpdService
             return $prescription;
         });
     }
-
-    public function updateAppointmentStatus(Appointment $appointment, string $status): Appointment
-    {
-        $appointment->update(['status' => $status]);
-        return $appointment;
-    }
 }

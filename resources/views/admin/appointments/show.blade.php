@@ -206,6 +206,69 @@
                         @endforelse
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Documents</h5>
+                        <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#uploadDocModal">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                @forelse($appointment->documents as $document)
+                                    <tr>
+                                        <td>{{ ucfirst(str_replace('_', ' ', $document->document_type)) }}</td>
+                                        <td class="text-end">
+                                            <a href="{{ route('admin.appointments.documents.download', [$appointment, $document]) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-download"></i></a>
+                                            <form action="{{ route('admin.appointments.documents.delete', [$appointment, $document]) }}" method="POST" class="d-inline" onsubmit="return confirm('Remove this document?')">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr><td class="text-center py-3 text-muted">No documents attached.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="uploadDocModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('admin.appointments.documents.upload', $appointment) }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Upload Document</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Document Type *</label>
+                            <select name="document_type" class="form-select" required>
+                                <option value="referral_letter">Referral Letter</option>
+                                <option value="booking_confirmation">Booking Confirmation</option>
+                                <option value="external_medical_record">External Medical Record</option>
+                                <option value="supporting_document">Supporting Document</option>
+                            </select>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">File *</label>
+                            <input type="file" name="document" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

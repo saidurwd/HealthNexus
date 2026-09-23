@@ -89,7 +89,9 @@ class LocalizationTest extends TestCase
         $user->companies()->attach($company->id, ['access_level' => 'admin']);
 
         \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage companies', 'guard_name' => 'web']);
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
         $user->givePermissionTo('manage companies');
+        $user->givePermissionTo('patients.view');
 
         $this->actingAs($user);
         session()->put('tenant_company_id', $company->id);

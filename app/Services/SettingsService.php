@@ -122,6 +122,12 @@ class SettingsService
             ['group' => 'billing',    'key' => 'billing.default_price_list_priority',          'value' => '100',   'type' => 'integer'],
             ['group' => 'billing',    'key' => 'billing.tax_inclusive_default',                'value' => '0',     'type' => 'boolean'],
             ['group' => 'billing',    'key' => 'billing.advance_min_balance',                  'value' => '0',     'type' => 'integer'],
+
+            ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
+            // Deliberately excludes first_name/last_name — routine typo corrections are common
+            // and would make the approval workflow a burden; only fields where a change is rare
+            // and identity/clinical-safety sensitive require approval.
+            ['group' => 'patients',   'key' => 'patients.amendment_sensitive_fields', 'value' => json_encode(['date_of_birth', 'sex', 'national_identifier']), 'type' => 'json', 'description' => 'Fields that require the amendment approval workflow instead of a direct edit'],
         ];
     }
 

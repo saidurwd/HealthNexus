@@ -34,8 +34,10 @@ class PatientAlertsTest extends TestCase
         $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
         Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'patients.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
         $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('patients.view');
         $this->user->givePermissionTo('patients.update');
 
         $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);

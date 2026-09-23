@@ -18,15 +18,20 @@ class Appointment extends Model
         'branch_id',
         'patient_id',
         'doctor_id',
+        'provider_id',
         'slot_id',
         'appointment_no',
         'appointment_date',
         'appointment_time',
         'actual_datetime',
         'type',
+        'appointment_type_id',
+        'specialty_id',
+        'room_id',
         'source',
         'reason',
         'status',
+        'priority',
         'started_at',
         'ended_at',
         'is_walk_in',
@@ -35,6 +40,8 @@ class Appointment extends Model
         'previous_appointment_id',
         'referral_source',
         'referred_by',
+        'referral_organization',
+        'referral_reference',
         'booked_at',
         'confirmed_at',
         'confirmed_by',
@@ -83,6 +90,36 @@ class Appointment extends Model
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
+    public function appointmentType(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentType::class);
+    }
+
+    public function specialty(): BelongsTo
+    {
+        return $this->belongsTo(Specialty::class);
+    }
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentRoom::class, 'room_id');
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(AppointmentDocument::class);
+    }
+
+    public function reminders(): HasMany
+    {
+        return $this->hasMany(AppointmentReminder::class);
     }
 
     public function slot(): BelongsTo

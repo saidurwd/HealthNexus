@@ -45,14 +45,10 @@ class AppointmentTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.create', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.update', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.delete', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
-        $this->user->givePermissionTo('appointments.create');
-        $this->user->givePermissionTo('appointments.update');
-        $this->user->givePermissionTo('appointments.delete');
+        foreach (['manage companies', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.delete'] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $this->actingAs($this->user);
 
@@ -128,6 +124,9 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
+        // status is deliberately not accepted by this endpoint any more — it only changes
+        // through the dedicated confirm/check-in/cancel/no-show actions, each enforced by
+        // AppointmentStateMachine (see UpdateAppointmentRequest).
         $response = $this->put('/admin/appointments/'.$appointment->id, [
             'doctor_id' => $this->user->id,
             'appointment_date' => '2025-01-20',
@@ -139,7 +138,8 @@ class AppointmentTest extends TestCase
         $response->assertRedirect('/admin/appointments');
         $this->assertDatabaseHas('appointments', [
             'id' => $appointment->id,
-            'status' => 'confirmed',
+            'appointment_time' => '14:00',
+            'status' => 'scheduled',
         ]);
     }
 

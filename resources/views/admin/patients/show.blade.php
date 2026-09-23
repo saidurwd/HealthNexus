@@ -52,6 +52,14 @@
             </div>
 
             <div class="d-flex gap-2">
+                @can('create', \App\Models\Appointment::class)
+                    <a href="{{ route('admin.appointments.create', ['patient_id' => $patient->id]) }}" class="btn btn-primary">
+                        <i class="bi bi-calendar-plus me-1"></i>Book Appointment
+                    </a>
+                @endcan
+                <a href="{{ route('admin.patients.print', $patient) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-printer me-1"></i>Print
+                </a>
                 <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-outline-warning">
                     <i class="bi bi-pencil me-1"></i>Edit Patient
                 </a>
@@ -68,6 +76,11 @@
                 ['name' => 'Documents', 'route' => route('admin.patients.documents', $patient), 'icon' => 'bi-file-earmark', 'active' => str_contains($currentPath, 'documents')],
                 ['name' => 'Allergies', 'route' => route('admin.patients.allergies', $patient), 'icon' => 'bi-bug', 'active' => str_contains($currentPath, 'allergies')],
                 ['name' => 'Medical History', 'route' => route('admin.patients.history', $patient), 'icon' => 'bi-journal-medical', 'active' => str_contains($currentPath, 'history')],
+                ['name' => 'Appointments', 'route' => route('admin.patients.appointments', $patient), 'icon' => 'bi-calendar-check', 'active' => str_contains($currentPath, 'appointments')],
+                ['name' => 'Addresses', 'route' => route('admin.patients.addresses', $patient), 'icon' => 'bi-geo-alt', 'active' => str_contains($currentPath, 'addresses')],
+                ['name' => 'Guardians', 'route' => route('admin.patients.guardians', $patient), 'icon' => 'bi-people', 'active' => str_contains($currentPath, 'guardians')],
+                ['name' => 'Consents', 'route' => route('admin.patients.consents', $patient), 'icon' => 'bi-file-earmark-check', 'active' => str_contains($currentPath, 'consents')],
+                ['name' => 'Audit', 'route' => route('admin.patients.audit', $patient), 'icon' => 'bi-shield-check', 'active' => str_contains($currentPath, 'audit')],
             ];
         @endphp
 

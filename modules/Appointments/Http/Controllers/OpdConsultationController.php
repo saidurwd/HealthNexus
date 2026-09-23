@@ -8,7 +8,8 @@ use App\Models\Diagnosis;
 use App\Models\InvestigationOrder;
 use App\Models\Prescription;
 use App\Models\VitalSign;
-use App\Services\Appointments\AppointmentService;
+use App\Services\Appointments\AppointmentBookingService;
+use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\Appointments\OpdService;
 use App\Services\AuditLogger;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ class OpdConsultationController extends Controller
 {
     public function __construct(
         private OpdService $opdService,
-        private AppointmentService $appointmentService,
+        private AppointmentLifecycleService $lifecycle,
+        private AppointmentBookingService $bookingService,
         private AuditLogger $auditLogger
     ) {}
 
@@ -97,8 +99,8 @@ class OpdConsultationController extends Controller
 
     public function markInProgress(Appointment $appointment)
     {
-        $this->authorize('update', $appointment);
-        $this->opdService->updateAppointmentStatus($appointment, 'in_progress');
+        $this->authorize('checkIn', $appointment);
+        $this->lifecycle->startConsultation($appointment, auth()->user());
 
         return back()->with('success', 'Appointment marked as in progress.');
     }
@@ -106,16 +108,16 @@ class OpdConsultationController extends Controller
     public function markCompleted(Appointment $appointment)
     {
         $this->authorize('update', $appointment);
-        $this->opdService->updateAppointmentStatus($appointment, 'completed');
+        $this->lifecycle->complete($appointment, auth()->user());
 
         return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Appointment completed.');
     }
 
     public function checkIn(Appointment $appointment)
     {
-        $this->authorize('update', $appointment);
+        $this->authorize('checkIn', $appointment);
 
-        $this->appointmentService->checkIn($appointment);
+        $this->lifecycle->checkIn($appointment, auth()->user());
 
         return back()->with('success', 'Patient checked in successfully.');
     }
@@ -131,7 +133,7 @@ class OpdConsultationController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $followUp = $this->appointmentService->createFollowUp($appointment, $validated, $request->user());
+        $followUp = $this->bookingService->bookFollowUp($appointment, $validated, $request->user());
 
         return redirect()->route('admin.appointments.show', $followUp)->with('success', 'Follow-up appointment created successfully.');
     }

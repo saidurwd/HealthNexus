@@ -65,11 +65,31 @@
                                     @error('end_time') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Slot Duration (minutes)</label>
-                                <input type="number" name="slot_duration_minutes" class="form-control" value="{{ old('slot_duration_minutes', 15) }}" min="5" max="120">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Provider</label>
+                                    <select name="provider_id" class="form-select">
+                                        <option value="">Select Provider</option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{ $provider->id }}" {{ old('provider_id') == $provider->id ? 'selected' : '' }}>{{ $provider->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Specialty</label>
+                                    <select name="specialty_id" class="form-select">
+                                        <option value="">Select Specialty</option>
+                                        @foreach($specialties as $specialty)
+                                            <option value="{{ $specialty->id }}" {{ old('specialty_id') == $specialty->id ? 'selected' : '' }}>{{ $specialty->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Slot Duration (minutes)</label>
+                                    <input type="number" name="slot_duration_minutes" class="form-control" value="{{ old('slot_duration_minutes', 15) }}" min="5" max="120">
+                                </div>
                             </div>
-                            <div class="mb-0 form-check">
+                            <div class="mb-0 form-check mt-3">
                                 <input type="checkbox" name="is_active" value="1" class="form-check-input" checked>
                                 <label class="form-check-label">Active</label>
                             </div>
@@ -77,6 +97,25 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Generate Slots Now</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <input type="checkbox" name="is_publish_slots" value="1" class="form-check-input" id="publish_slots">
+                                <label class="form-check-label" for="publish_slots">Generate slots immediately</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Starting Date</label>
+                                <input type="date" name="slot_date" class="form-control" value="{{ now()->toDateString() }}">
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label">Number of Days</label>
+                                <input type="number" name="generate_days" class="form-control" value="30" min="1" max="90">
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0">Actions</h5>

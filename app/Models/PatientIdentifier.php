@@ -21,12 +21,17 @@ class PatientIdentifier extends Model
         'issued_at',
         'expires_at',
         'is_primary',
+        'is_verified',
+        'verified_by',
+        'verified_at',
     ];
 
     protected $casts = [
         'issued_at' => 'date',
         'expires_at' => 'date',
         'is_primary' => 'boolean',
+        'is_verified' => 'boolean',
+        'verified_at' => 'datetime',
     ];
 
     public function company(): BelongsTo
@@ -42,5 +47,10 @@ class PatientIdentifier extends Model
     public function identificationType(): BelongsTo
     {
         return $this->belongsTo(IdentificationType::class);
+    }
+
+    public function verifiedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 }

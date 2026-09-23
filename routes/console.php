@@ -36,3 +36,8 @@ Schedule::command('queue:prune-failed', ['--hours' => 24 * 30])
     ->daily()
     ->name('prune-failed-jobs')
     ->withoutOverlapping();
+
+Schedule::command('appointments:send-due-reminders')
+    ->everyFiveMinutes()
+    ->name('send-due-appointment-reminders')
+    ->withoutOverlapping();

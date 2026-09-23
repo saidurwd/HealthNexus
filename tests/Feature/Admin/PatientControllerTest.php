@@ -35,15 +35,21 @@ class PatientControllerTest extends TestCase
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
         Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'patients.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.delete', 'guard_name' => 'web']);
-        Permission::create(['name' => 'patients.search', 'guard_name' => 'web']);
+        Permission::create(['name' => 'patients.merge', 'guard_name' => 'web']);
+        Permission::create(['name' => 'patients.documents.view', 'guard_name' => 'web']);
+        Permission::create(['name' => 'patients.documents.manage', 'guard_name' => 'web']);
         $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('patients.view');
         $this->user->givePermissionTo('patients.create');
         $this->user->givePermissionTo('patients.update');
         $this->user->givePermissionTo('patients.delete');
-        $this->user->givePermissionTo('patients.search');
+        $this->user->givePermissionTo('patients.merge');
+        $this->user->givePermissionTo('patients.documents.view');
+        $this->user->givePermissionTo('patients.documents.manage');
 
         $this->actingAs($this->user);
 

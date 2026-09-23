@@ -35,10 +35,13 @@ class AppointmentLifecycleTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.update', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
-        $this->user->givePermissionTo('appointments.update');
+        foreach ([
+            'manage companies', 'appointments.view', 'appointments.update', 'appointments.confirm',
+            'appointments.checkin', 'appointments.cancel', 'appointments.reschedule', 'appointments.no_show',
+        ] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $this->appointment = Appointment::factory()->create([
             'company_id' => $this->company->id,
@@ -104,6 +107,8 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_check_in_sets_timestamp_and_user(): void
     {
+        $this->post("/admin/appointments/{$this->appointment->id}/confirm");
+
         $this->post("/admin/appointments/{$this->appointment->id}/check-in")->assertRedirect();
 
         $this->appointment->refresh();
@@ -119,6 +124,10 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_complete_sets_timestamps(): void
     {
+        $this->post("/admin/appointments/{$this->appointment->id}/confirm");
+        $this->post("/admin/appointments/{$this->appointment->id}/check-in");
+        $this->post("/admin/appointments/{$this->appointment->id}/start");
+
         $this->post("/admin/appointments/{$this->appointment->id}/complete")->assertRedirect();
 
         $this->appointment->refresh();
@@ -161,11 +170,18 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_history_page_shows_transitions(): void
     {
-        $this->appointment->update(['status' => 'confirmed']);
-        app(\App\Services\Appointments\AppointmentService::class)->recordHistory($this->appointment, 'confirmed');
+        $this->post("/admin/appointments/{$this->appointment->id}/confirm");
 
         $this->get("/admin/appointments/{$this->appointment->id}/history")
             ->assertOk()
             ->assertSee('confirmed');
+    }
+
+    public function test_check_in_cannot_be_skipped_directly_from_scheduled(): void
+    {
+        $this->post("/admin/appointments/{$this->appointment->id}/check-in")
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame('scheduled', $this->appointment->fresh()->status);
     }
 }

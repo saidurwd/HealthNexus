@@ -3,8 +3,14 @@
 namespace App\Providers;
 
 use App\Contracts\Billing\RevenuePostingInterface;
+use App\Events\Appointments\AppointmentCancelled;
+use App\Events\Appointments\AppointmentCreated;
+use App\Events\Appointments\AppointmentNoShow;
+use App\Events\Appointments\AppointmentRescheduled;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\EncounterCompleted;
+use App\Listeners\Appointments\CancelAppointmentReminders;
+use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
 use App\Services\Billing\NullRevenuePoster;
@@ -37,5 +43,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);
+
+        Event::listen(AppointmentCreated::class, [ScheduleAppointmentReminders::class, 'handleCreated']);
+        Event::listen(AppointmentRescheduled::class, [ScheduleAppointmentReminders::class, 'handleRescheduled']);
+        Event::listen(AppointmentCancelled::class, [CancelAppointmentReminders::class, 'handleCancelled']);
+        Event::listen(AppointmentNoShow::class, [CancelAppointmentReminders::class, 'handleNoShow']);
     }
 }

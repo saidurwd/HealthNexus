@@ -40,6 +40,32 @@ class WorkflowSeeder extends Seeder
             WorkflowApprover::create([
                 'workflow_step_id' => $final->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'super_admin',
             ]);
+
+            $this->seedPatientAmendmentWorkflow($company);
         });
+    }
+
+    /**
+     * Backs Phase 1's patient amendment/correction flow (App\Services\Patients\
+     * PatientAmendmentService): a single hospital_admin approval step for sensitive-field
+     * corrections (name, DOB, sex, national identifier).
+     */
+    private function seedPatientAmendmentWorkflow(Company $company): void
+    {
+        $workflow = Workflow::query()->firstOrCreate(
+            ['company_id' => $company->id, 'code' => 'patient_amendment'],
+            ['name' => 'Patient Record Amendment', 'description' => 'Approval required to correct sensitive patient identity fields.', 'is_active' => true],
+        );
+
+        if ($workflow->steps()->exists()) {
+            return;
+        }
+
+        $approval = WorkflowStep::create([
+            'workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Admin Approval', 'is_final' => true,
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'hospital_admin',
+        ]);
     }
 }

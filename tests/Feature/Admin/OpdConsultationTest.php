@@ -43,12 +43,10 @@ class OpdConsultationTest extends TestCase
 
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.create', 'guard_name' => 'web']);
-        Permission::create(['name' => 'appointments.update', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
-        $this->user->givePermissionTo('appointments.create');
-        $this->user->givePermissionTo('appointments.update');
+        foreach (['manage companies', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.checkin'] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $this->actingAs($this->user);
 
@@ -70,6 +68,10 @@ class OpdConsultationTest extends TestCase
             'type' => 'scheduled',
             'source' => 'online',
             'reason' => 'Routine checkup',
+            // Confirmed rather than the migration's default 'scheduled' — several tests below
+            // (check-in, mark-in-progress) exercise transitions that AppointmentStateMachine
+            // only allows starting from 'confirmed'/'checked_in'.
+            'status' => 'confirmed',
         ]);
 
         \App\Models\AppointmentToken::create([
@@ -202,6 +204,8 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_mark_appointment_in_progress(): void
     {
+        $this->appointment->update(['status' => 'checked_in']);
+
         $response = $this->post('/admin/appointments/'.$this->appointment->id.'/status/in-progress');
 
         $response->assertRedirect();

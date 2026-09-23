@@ -36,8 +36,10 @@ class QueueTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        foreach (['manage companies', 'appointments.queue', 'appointments.checkin', 'appointments.update'] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $this->actingAs($this->user);
 
@@ -133,6 +135,7 @@ class QueueTest extends TestCase
             'type' => 'scheduled',
             'source' => 'online',
             'reason' => 'Checkup',
+            'status' => 'checked_in',
         ]);
 
         $token = AppointmentToken::create([
@@ -144,7 +147,7 @@ class QueueTest extends TestCase
             'called_at' => now(),
         ]);
 
-        $response = $this->post('/admin/queue/'.$token->id.'/start');
+        $response = $this->postJson('/admin/queue/'.$token->id.'/start');
 
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);
@@ -174,6 +177,7 @@ class QueueTest extends TestCase
             'type' => 'scheduled',
             'source' => 'online',
             'reason' => 'Checkup',
+            'status' => 'in_progress',
         ]);
 
         $token = AppointmentToken::create([
@@ -184,7 +188,7 @@ class QueueTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $response = $this->post('/admin/queue/'.$token->id.'/complete');
+        $response = $this->postJson('/admin/queue/'.$token->id.'/complete');
 
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);

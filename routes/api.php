@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AppointmentController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\DepartmentController;
 use App\Http\Controllers\Api\V1\EncounterController;
 use App\Http\Controllers\Api\V1\PatientController;
+use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\TenantContextController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Middleware\EnsureBranchAccess;
@@ -48,9 +50,40 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/patients', [PatientController::class, 'index'])->middleware(EnsureCompanyAccess::class);
         Route::post('/patients', [PatientController::class, 'store'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/search', [PatientController::class, 'search'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/duplicate-check', [PatientController::class, 'duplicateCheck'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/duplicates', [PatientController::class, 'duplicates'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/merge', [PatientController::class, 'merge'])->middleware(EnsureCompanyAccess::class);
         Route::get('/patients/{patient}', [PatientController::class, 'show'])->middleware(EnsureCompanyAccess::class);
         Route::put('/patients/{patient}', [PatientController::class, 'update'])->middleware(EnsureCompanyAccess::class);
         Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}/identifiers', [PatientController::class, 'identifiers'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/{patient}/identifiers', [PatientController::class, 'storeIdentifier'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}/contacts', [PatientController::class, 'contacts'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/{patient}/contacts', [PatientController::class, 'storeContact'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}/addresses', [PatientController::class, 'addresses'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/{patient}/addresses', [PatientController::class, 'storeAddress'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}/documents', [PatientController::class, 'documents'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/patients/{patient}/documents', [PatientController::class, 'storeDocument'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/patients/{patient}/timeline', [PatientController::class, 'timeline'])->middleware(EnsureCompanyAccess::class);
+
+        Route::get('/appointments', [AppointmentController::class, 'index'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments', [AppointmentController::class, 'store'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/appointments/search', [AppointmentController::class, 'search'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/appointments/availability', [AppointmentController::class, 'availability'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/appointments/calendar', [AppointmentController::class, 'calendar'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->middleware(EnsureCompanyAccess::class);
+        Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirm'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/check-in', [AppointmentController::class, 'checkIn'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/reschedule', [AppointmentController::class, 'reschedule'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/no-show', [AppointmentController::class, 'noShow'])->middleware(EnsureCompanyAccess::class);
+        Route::post('/appointments/{appointment}/queue', [AppointmentController::class, 'queue'])->middleware(EnsureCompanyAccess::class);
+
+        Route::get('/providers', [ProviderController::class, 'index'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/providers/{provider}/schedule', [ProviderController::class, 'schedule'])->middleware(EnsureCompanyAccess::class);
+        Route::get('/providers/{provider}/availability', [ProviderController::class, 'availability'])->middleware(EnsureCompanyAccess::class);
 
         Route::get('/encounters', [EncounterController::class, 'index'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
         Route::post('/encounters', [EncounterController::class, 'store'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);

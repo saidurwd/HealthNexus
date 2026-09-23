@@ -53,8 +53,27 @@ class AppointmentSlot extends Model
         return $this->hasMany(Appointment::class, 'slot_id');
     }
 
-    public function isAvailable(): bool
+    /**
+     * @param  bool  $withOverbooking  when true, checks against max_capacity + the schedule's
+     *                                 overbooking_limit instead of the plain capacity — callers
+     *                                 must independently verify the actor holds the
+     *                                 appointments.override permission before passing true.
+     */
+    public function isAvailable(bool $withOverbooking = false): bool
     {
-        return $this->status === 'available' && $this->booked_count < $this->max_capacity;
+        if ($this->status !== 'available') {
+            return false;
+        }
+
+        $ceiling = $this->max_capacity + ($withOverbooking ? ($this->schedule?->overbooking_limit ?? 0) : 0);
+
+        return $this->booked_count < $ceiling;
+    }
+
+    public function remainingCapacity(bool $withOverbooking = false): int
+    {
+        $ceiling = $this->max_capacity + ($withOverbooking ? ($this->schedule?->overbooking_limit ?? 0) : 0);
+
+        return max(0, $ceiling - $this->booked_count);
     }
 }

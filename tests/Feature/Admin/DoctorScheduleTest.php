@@ -35,8 +35,10 @@ class DoctorScheduleTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        foreach (['manage companies', 'appointments.manage_schedule'] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $this->actingAs($this->user);
 

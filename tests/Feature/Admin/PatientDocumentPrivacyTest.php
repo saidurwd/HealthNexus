@@ -48,7 +48,7 @@ class PatientDocumentPrivacyTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
 
-        foreach (['manage companies', 'patients.update'] as $permission) {
+        foreach (['manage companies', 'patients.update', 'patients.view', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }

@@ -22,12 +22,37 @@ class PatientPolicy
 
     public function merge(User $user): bool
     {
-        return $user->can('patients.update') || $user->hasRole('super_admin');
+        return $user->can('patients.merge') || $user->hasRole('super_admin');
     }
 
     public function uploadDocument(User $user, Patient $patient): bool
     {
-        return $this->update($user, $patient);
+        return ($user->can('patients.documents.manage') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
+    }
+
+    public function viewDocuments(User $user, Patient $patient): bool
+    {
+        return ($user->can('patients.documents.view') && $this->inScope($user, $patient)) || $this->uploadDocument($user, $patient);
+    }
+
+    public function manageConsents(User $user, Patient $patient): bool
+    {
+        return ($user->can('patients.consents.manage') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
+    }
+
+    public function requestAmendment(User $user, Patient $patient): bool
+    {
+        return ($user->can('patients.amend.request') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
+    }
+
+    public function approveAmendment(User $user): bool
+    {
+        return $user->can('patients.amend.approve') || $user->hasRole('super_admin');
+    }
+
+    public function print(User $user, Patient $patient): bool
+    {
+        return ($user->can('patients.print') && $this->inScope($user, $patient)) || $user->hasRole('super_admin');
     }
 
     public function create(User $user): bool

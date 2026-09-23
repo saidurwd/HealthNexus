@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\AppointmentType;
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\Gender;
 use App\Models\IdentificationType;
+use App\Models\MaritalStatus;
+use App\Models\PatientType;
 use Illuminate\Database\Seeder;
 
 class MasterDataSeeder extends Seeder
@@ -14,6 +18,10 @@ class MasterDataSeeder extends Seeder
         $this->seedCountries();
         $this->seedCurrencies();
         $this->seedIdentificationTypes();
+        $this->seedGenders();
+        $this->seedMaritalStatuses();
+        $this->seedPatientTypes();
+        $this->seedAppointmentTypes();
     }
 
     private function seedCountries(): void
@@ -59,6 +67,80 @@ class MasterDataSeeder extends Seeder
 
         foreach ($types as $type) {
             IdentificationType::firstOrCreate(['code' => $type['code']], $type);
+        }
+    }
+
+    private function seedGenders(): void
+    {
+        $genders = [
+            ['code' => 'male', 'name' => 'Male', 'sort_order' => 1],
+            ['code' => 'female', 'name' => 'Female', 'sort_order' => 2],
+            ['code' => 'other', 'name' => 'Other', 'sort_order' => 3],
+            ['code' => 'unknown', 'name' => 'Unknown', 'sort_order' => 4],
+        ];
+
+        foreach ($genders as $gender) {
+            Gender::firstOrCreate(['code' => $gender['code']], $gender);
+        }
+    }
+
+    private function seedMaritalStatuses(): void
+    {
+        $statuses = [
+            ['code' => 'single', 'name' => 'Single', 'sort_order' => 1],
+            ['code' => 'married', 'name' => 'Married', 'sort_order' => 2],
+            ['code' => 'divorced', 'name' => 'Divorced', 'sort_order' => 3],
+            ['code' => 'widowed', 'name' => 'Widowed', 'sort_order' => 4],
+            ['code' => 'separated', 'name' => 'Separated', 'sort_order' => 5],
+            ['code' => 'unknown', 'name' => 'Unknown', 'sort_order' => 6],
+        ];
+
+        foreach ($statuses as $status) {
+            MaritalStatus::firstOrCreate(['code' => $status['code']], $status);
+        }
+    }
+
+    private function seedPatientTypes(): void
+    {
+        $types = [
+            ['code' => 'general', 'name' => 'General', 'sort_order' => 1],
+            ['code' => 'vip', 'name' => 'VIP', 'sort_order' => 2],
+            ['code' => 'corporate', 'name' => 'Corporate', 'sort_order' => 3],
+            ['code' => 'staff', 'name' => 'Staff', 'sort_order' => 4],
+            ['code' => 'insurance', 'name' => 'Insurance', 'sort_order' => 5],
+        ];
+
+        foreach ($types as $type) {
+            PatientType::firstOrCreate(['code' => $type['code']], $type);
+        }
+    }
+
+    /**
+     * company_id left null — these are system-wide defaults every company sees; a hospital can
+     * add its own via Administration > Appointment Types without touching these.
+     */
+    private function seedAppointmentTypes(): void
+    {
+        $types = [
+            ['code' => 'new_consultation', 'name' => 'New Consultation', 'sort_order' => 1],
+            ['code' => 'follow_up', 'name' => 'Follow-up', 'is_follow_up_type' => true, 'sort_order' => 2],
+            ['code' => 'review', 'name' => 'Review', 'sort_order' => 3],
+            ['code' => 'second_opinion', 'name' => 'Second Opinion', 'sort_order' => 4],
+            ['code' => 'procedure', 'name' => 'Procedure', 'sort_order' => 5],
+            ['code' => 'health_checkup', 'name' => 'Health Checkup', 'sort_order' => 6],
+            ['code' => 'referral', 'name' => 'Referral', 'sort_order' => 7],
+            ['code' => 'telemedicine', 'name' => 'Telemedicine', 'is_telemedicine_type' => true, 'sort_order' => 8],
+            ['code' => 'vaccination', 'name' => 'Vaccination', 'sort_order' => 9],
+            ['code' => 'diagnostic', 'name' => 'Diagnostic', 'sort_order' => 10],
+            ['code' => 'pre_operative', 'name' => 'Pre-operative', 'sort_order' => 11],
+            ['code' => 'post_operative', 'name' => 'Post-operative', 'sort_order' => 12],
+            ['code' => 'corporate', 'name' => 'Corporate', 'sort_order' => 13],
+            ['code' => 'package', 'name' => 'Package', 'sort_order' => 14],
+            ['code' => 'other', 'name' => 'Other', 'sort_order' => 15],
+        ];
+
+        foreach ($types as $type) {
+            AppointmentType::firstOrCreate(['company_id' => null, 'code' => $type['code']], $type);
         }
     }
 }

@@ -44,9 +44,7 @@ class PatientTenantIsolationTest extends TestCase
         $this->user->companies()->attach($this->ownCompany->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->ownCompany->id]);
 
-        // Every patient route (including the resource routes) is additionally wrapped in
-        // `can:manage companies` middleware, independent of the patients.* permissions below.
-        foreach (['manage companies', 'patients.create', 'patients.update', 'patients.delete'] as $permission) {
+        foreach (['manage companies', 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
@@ -105,6 +103,44 @@ class PatientTenantIsolationTest extends TestCase
             'status' => 'active',
             'emergency_contact' => ['name' => 'EC', 'phone' => '000'],
         ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_cannot_merge_a_patient_belonging_to_another_company(): void
+    {
+        $ownPatient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+
+        $response = $this->post('/admin/patients/merge', [
+            'master_patient_id' => $ownPatient->id,
+            'duplicate_patient_id' => $this->otherCompanyPatient->id,
+        ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('patients', ['id' => $this->otherCompanyPatient->id, 'status' => 'active']);
+    }
+
+    public function test_search_only_returns_patients_from_the_active_tenant_company(): void
+    {
+        $ownPatient = Patient::factory()->create(['company_id' => $this->ownCompany->id, 'first_name' => 'Findme']);
+
+        $response = $this->get('/admin/patients/search?q=Findme');
+
+        $response->assertOk();
+        $response->assertViewHas('patients', function ($patients) use ($ownPatient) {
+            return $patients->contains('id', $ownPatient->id)
+                && ! $patients->contains('id', $this->otherCompanyPatient->id);
+        });
+    }
+
+    public function test_cannot_download_another_companys_patient_document(): void
+    {
+        $document = \App\Models\PatientDocument::factory()->create([
+            'company_id' => $this->otherCompany->id,
+            'patient_id' => $this->otherCompanyPatient->id,
+        ]);
+
+        $response = $this->get("/admin/patients/{$this->otherCompanyPatient->id}/documents/{$document->id}/download");
 
         $response->assertForbidden();
     }

@@ -32,6 +32,40 @@
                             @error('last_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
+                            <label for="preferred_name" class="form-label">Preferred Name</label>
+                            <input type="text" name="preferred_name" id="preferred_name" value="{{ old('preferred_name', $patient->preferred_name) }}" class="form-control @error('preferred_name') is-invalid @enderror">
+                            @error('preferred_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="patient_type_id" class="form-label">Patient Type</label>
+                                <select name="patient_type_id" id="patient_type_id" class="form-control @error('patient_type_id') is-invalid @enderror">
+                                    <option value="">Select</option>
+                                    @foreach($patientTypes as $type)
+                                        <option value="{{ $type->id }}" {{ old('patient_type_id', $patient->patient_type_id) == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="gender_id" class="form-label">Gender</label>
+                                <select name="gender_id" id="gender_id" class="form-control @error('gender_id') is-invalid @enderror">
+                                    <option value="">Select</option>
+                                    @foreach($genders as $gender)
+                                        <option value="{{ $gender->id }}" {{ old('gender_id', $patient->gender_id) == $gender->id ? 'selected' : '' }}>{{ $gender->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="marital_status_id" class="form-label">Marital Status</label>
+                                <select name="marital_status_id" id="marital_status_id" class="form-control @error('marital_status_id') is-invalid @enderror">
+                                    <option value="">Select</option>
+                                    @foreach($maritalStatuses as $status)
+                                        <option value="{{ $status->id }}" {{ old('marital_status_id', $patient->marital_status_id) == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="date_of_birth" class="form-label">Date of Birth</label>
                             <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', $patient->date_of_birth?->format('Y-m-d')) }}" class="form-control @error('date_of_birth') is-invalid @enderror">
                             @error('date_of_birth') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -50,6 +84,12 @@
                             <label for="national_identifier" class="form-label">National ID</label>
                             <input type="text" name="national_identifier" id="national_identifier" value="{{ old('national_identifier', $patient->national_identifier) }}" class="form-control @error('national_identifier') is-invalid @enderror">
                             @error('national_identifier') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <div class="form-text">Changing Date of Birth, Sex, or National ID requires approval and will not apply immediately.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amendment_reason" class="form-label">Reason for change (if amending DOB/Sex/National ID)</label>
+                            <input type="text" name="amendment_reason" id="amendment_reason" value="{{ old('amendment_reason') }}" class="form-control @error('amendment_reason') is-invalid @enderror">
+                            @error('amendment_reason') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     <div class="col-md-6">
