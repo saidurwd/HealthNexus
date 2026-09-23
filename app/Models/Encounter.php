@@ -173,6 +173,15 @@ class Encounter extends Model
         return $this->hasMany(ClinicalOrder::class);
     }
 
+    /**
+     * The legacy lab-only order table (still the only one the OPD consultation UI writes to) —
+     * kept alongside the generic ClinicalOrder framework rather than migrating existing data.
+     */
+    public function investigationOrders(): HasMany
+    {
+        return $this->hasMany(InvestigationOrder::class);
+    }
+
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);

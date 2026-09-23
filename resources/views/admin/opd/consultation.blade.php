@@ -42,6 +42,22 @@
             @endif
         </div>
 
+        @php($activeAllergies = $appointment->patient->allergies->where('is_active', true))
+        @if($activeAllergies->isNotEmpty())
+            <div class="alert alert-danger d-flex align-items-start mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Allergy Alert:</strong>
+                    @foreach($activeAllergies as $allergy)
+                        <span class="badge bg-danger me-1">
+                            {{ $allergy->substance }}
+                            @if($allergy->severity) ({{ ucfirst($allergy->severity) }}) @endif
+                        </span>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <ul class="nav nav-pills mb-4 flex-wrap" id="consultationTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <a href="#vitals" class="nav-link active" data-bs-toggle="pill" data-bs-target="#vitals" role="tab">

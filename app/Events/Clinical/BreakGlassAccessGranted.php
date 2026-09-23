@@ -7,7 +7,7 @@ use App\Models\Encounter;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BreakGlassAccess
+class BreakGlassAccessGranted
 {
     use Dispatchable, SerializesModels;
 

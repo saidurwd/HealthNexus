@@ -15,6 +15,7 @@ class InvestigationOrder extends Model
         'company_id',
         'branch_id',
         'appointment_id',
+        'encounter_id',
         'patient_id',
         'doctor_id',
         'order_no',
@@ -44,6 +45,11 @@ class InvestigationOrder extends Model
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
     }
 
     public function patient(): BelongsTo

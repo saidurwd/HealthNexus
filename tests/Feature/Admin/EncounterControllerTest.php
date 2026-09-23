@@ -47,6 +47,9 @@ class EncounterControllerTest extends TestCase
         $this->user->givePermissionTo('encounters.delete');
 
         $this->actingAs($this->user);
+
+        session()->put('tenant_company_id', $this->company->id);
+        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
     }
 
     public function test_user_can_view_encounters_index(): void
@@ -70,22 +73,23 @@ class EncounterControllerTest extends TestCase
     public function test_user_can_create_encounter(): void
     {
         $response = $this->post('/admin/encounters', [
-            'company_id' => $this->company->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'encounter_type' => 'OPD',
         ]);
 
-        $response->assertRedirect('/admin/encounters');
         $this->assertDatabaseHas('encounters', [
             'patient_id' => $this->patient->id,
             'encounter_type' => 'OPD',
         ]);
+
+        $encounter = Encounter::where('patient_id', $this->patient->id)->firstOrFail();
+        $response->assertRedirect('/admin/encounters/'.$encounter->id);
     }
 
     public function test_user_can_view_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/admin/encounters/'.$encounter->id);
 
@@ -101,7 +105,7 @@ class EncounterControllerTest extends TestCase
             'status' => 'completed',
         ]);
 
-        $response->assertRedirect('/admin/encounters');
+        $response->assertRedirect('/admin/encounters/'.$encounter->id);
         $this->assertDatabaseHas('encounters', [
             'id' => $encounter->id,
             'status' => 'completed',
@@ -110,7 +114,7 @@ class EncounterControllerTest extends TestCase
 
     public function test_user_can_delete_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id]);
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->delete('/admin/encounters/'.$encounter->id);
 

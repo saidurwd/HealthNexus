@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Encounter;
 use App\Services\BreakGlassService;
 use App\Services\SecurityLogger;
-use App\Events\Clinical\BreakGlassAccess;
+use App\Events\Clinical\BreakGlassAccessGranted;
 use Illuminate\Http\Request;
 
 class BreakGlassController extends Controller
@@ -47,7 +47,7 @@ class BreakGlassController extends Controller
             $request
         );
 
-        event(new BreakGlassAccess($encounter, $access));
+        event(new BreakGlassAccessGranted($encounter, $access));
 
         return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Break-glass access granted temporarily. All actions are being audited.');
     }

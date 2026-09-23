@@ -100,5 +100,22 @@ Route::prefix('v1')->group(function () {
         Route::post('/encounters/{encounter}/lock', [EncounterController::class, 'lock'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
 
         Route::get('/encounters/{encounter}/summary', [EncounterController::class, 'summary'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::get('/encounters/{encounter}/vitals', [EncounterController::class, 'vitals'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/vitals', [EncounterController::class, 'storeVital'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::get('/encounters/{encounter}/diagnoses', [EncounterController::class, 'diagnoses'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/diagnoses', [EncounterController::class, 'storeDiagnosis'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::get('/encounters/{encounter}/orders', [EncounterController::class, 'orders'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/orders', [EncounterController::class, 'storeOrder'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::get('/encounters/{encounter}/prescriptions', [EncounterController::class, 'prescriptions'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/prescriptions', [EncounterController::class, 'storePrescription'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/prescriptions/{prescription}/issue', [EncounterController::class, 'issuePrescription'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::post('/encounters/{encounter}/prescriptions/{prescription}/cancel', [EncounterController::class, 'cancelPrescription'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+
+        Route::post('/encounters/{encounter}/amendments', [EncounterController::class, 'storeAmendment'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
+        Route::put('/encounters/{encounter}/amendments/{amendment}/approve', [EncounterController::class, 'approveAmendment'])->middleware(EnsureCompanyAccess::class)->middleware(EnsureBranchAccess::class);
     });
 });

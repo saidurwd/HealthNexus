@@ -91,6 +91,11 @@ class EncounterLifecycleService
         return DB::transaction(function () use ($encounter, $newStatus, $user, $reason, $notes) {
             $this->guardTransition($encounter, $newStatus);
 
+            // Captured before update() mutates the same in-memory instance — the previous
+            // implementation read $encounter->status for from_status *after* calling update(),
+            // so every history row logged from_status === to_status.
+            $previousStatus = $encounter->status;
+
             $updates = ['status' => $newStatus];
 
             if ($newStatus === 'in_progress' && ! $encounter->started_at) {
@@ -104,6 +109,12 @@ class EncounterLifecycleService
             if ($newStatus === 'completed') {
                 $updates['completed_at'] = now();
                 $updates['completed_by'] = $user?->id ?? auth()->id();
+                // Auto-lock on completion (spec §38/§73: "When doctor completes the encounter:
+                // status = completed, locked_at = now()") — locking was previously a separate,
+                // skippable manual step, leaving every completed encounter fully editable until
+                // someone remembered to call lock() explicitly.
+                $updates['locked_at'] = now();
+                $updates['locked_by'] = $user?->id ?? auth()->id();
             }
 
             if ($newStatus === 'locked') {
@@ -113,7 +124,7 @@ class EncounterLifecycleService
 
             $encounter->update($updates);
 
-            $this->recordHistory($encounter, $newStatus, $user, $reason, $notes);
+            $this->recordHistory($encounter, $previousStatus, $newStatus, $user, $reason, $notes);
 
             $eventClass = match ($newStatus) {
                 'in_progress' => EncounterStarted::class,
@@ -137,10 +148,10 @@ class EncounterLifecycleService
         }
     }
 
-    private function recordHistory(Encounter $encounter, string $newStatus, ?User $user, ?string $reason, ?string $notes): EncounterStatusHistory
+    private function recordHistory(Encounter $encounter, string $previousStatus, string $newStatus, ?User $user, ?string $reason, ?string $notes): EncounterStatusHistory
     {
         return $encounter->statusHistory()->create([
-            'from_status' => $encounter->status,
+            'from_status' => $previousStatus,
             'to_status' => $newStatus,
             'changed_by' => $user?->id ?? auth()->id(),
             'changed_at' => now(),

@@ -8,11 +8,16 @@ use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
 use App\Events\Appointments\AppointmentRescheduled;
 use App\Events\Clinical\ClinicalOrderCreated;
+use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\EncounterCompleted;
+use App\Events\Clinical\EncounterCreated;
+use App\Events\Clinical\PrescriptionIssued;
+use App\Events\Clinical\ReferralCreated;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
+use App\Listeners\Clinical\RecordEncounterTimelineEvent;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
 use App\Services\SettingsService;
@@ -43,6 +48,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);
+
+        Event::listen(EncounterCreated::class, [RecordEncounterTimelineEvent::class, 'handleEncounterCreated']);
+        Event::listen(EncounterCompleted::class, [RecordEncounterTimelineEvent::class, 'handleEncounterCompleted']);
+        Event::listen(DiagnosisAdded::class, [RecordEncounterTimelineEvent::class, 'handleDiagnosisAdded']);
+        Event::listen(PrescriptionIssued::class, [RecordEncounterTimelineEvent::class, 'handlePrescriptionIssued']);
+        Event::listen(ReferralCreated::class, [RecordEncounterTimelineEvent::class, 'handleReferralCreated']);
 
         Event::listen(AppointmentCreated::class, [ScheduleAppointmentReminders::class, 'handleCreated']);
         Event::listen(AppointmentRescheduled::class, [ScheduleAppointmentReminders::class, 'handleRescheduled']);

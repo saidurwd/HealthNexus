@@ -30,6 +30,9 @@ Route::middleware(['can:encounters.delete'])->group(function () {
 
 Route::middleware(['can:encounter.start'])->group(function () {
     Route::post('encounters/{encounter}/start', [EncounterClinicalController::class, 'start'])->name('encounters.start');
+    Route::post('encounters/{encounter}/pause', [EncounterClinicalController::class, 'pause'])->name('encounters.pause');
+    Route::post('encounters/{encounter}/resume', [EncounterClinicalController::class, 'resume'])->name('encounters.resume');
+    Route::post('encounters/{encounter}/transfer', [EncounterClinicalController::class, 'transfer'])->name('encounters.transfer');
 });
 
 Route::middleware(['can:encounter.complete'])->group(function () {
@@ -44,24 +47,49 @@ Route::middleware(['can:encounter.lock'])->group(function () {
     Route::post('encounters/{encounter}/lock', [EncounterClinicalController::class, 'lock'])->name('encounters.lock');
 });
 
-Route::middleware(['can:encounters.update'])->group(function () {
-    Route::post('encounters/{encounter}/pause', [EncounterClinicalController::class, 'pause'])->name('encounters.pause');
-    Route::post('encounters/{encounter}/resume', [EncounterClinicalController::class, 'resume'])->name('encounters.resume');
-    Route::post('encounters/{encounter}/transfer', [EncounterClinicalController::class, 'transfer'])->name('encounters.transfer');
+Route::middleware(['can:clinical.vitals.create'])->group(function () {
+    Route::post('encounters/{encounter}/vitals', [EncounterClinicalController::class, 'storeVital'])->name('encounters.vitals.store');
+});
+
+Route::middleware(['can:clinical.diagnosis.create'])->group(function () {
+    Route::post('encounters/{encounter}/diagnoses', [EncounterClinicalController::class, 'storeDiagnosis'])->name('encounters.diagnoses.store');
+    Route::post('encounters/{encounter}/problems', [EncounterClinicalController::class, 'storeProblem'])->name('encounters.problems.store');
+});
+
+Route::middleware(['can:prescription.create'])->group(function () {
+    Route::post('encounters/{encounter}/prescriptions', [EncounterClinicalController::class, 'storePrescription'])->name('encounters.prescriptions.store');
+});
+
+Route::middleware(['can:prescription.issue'])->group(function () {
+    Route::post('encounters/{encounter}/prescriptions/{prescription}/issue', [EncounterClinicalController::class, 'issuePrescription'])->name('encounters.prescriptions.issue');
+});
+
+Route::middleware(['can:prescription.cancel'])->group(function () {
+    Route::post('encounters/{encounter}/prescriptions/{prescription}/cancel', [EncounterClinicalController::class, 'cancelPrescription'])->name('encounters.prescriptions.cancel');
+});
+
+Route::middleware(['can:clinical.order.create'])->group(function () {
+    Route::post('encounters/{encounter}/orders', [EncounterClinicalController::class, 'storeOrder'])->name('encounters.orders.store');
+});
+
+Route::middleware(['can:clinical.referral.create'])->group(function () {
+    Route::post('encounters/{encounter}/referrals', [EncounterClinicalController::class, 'storeReferral'])->name('encounters.referrals.store');
+});
+
+Route::middleware(['can:clinical.note.create'])->group(function () {
     Route::post('encounters/{encounter}/complaints', [EncounterClinicalController::class, 'storeComplaint'])->name('encounters.complaints.store');
     Route::post('encounters/{encounter}/histories', [EncounterClinicalController::class, 'storeHistory'])->name('encounters.histories.store');
     Route::post('encounters/{encounter}/examinations', [EncounterClinicalController::class, 'storeExamination'])->name('encounters.examinations.store');
     Route::post('encounters/{encounter}/review-of-systems', [EncounterClinicalController::class, 'storeReviewOfSystem'])->name('encounters.review-of-systems.store');
-    Route::post('encounters/{encounter}/problems', [EncounterClinicalController::class, 'storeProblem'])->name('encounters.problems.store');
     Route::post('encounters/{encounter}/procedures', [EncounterClinicalController::class, 'storeProcedure'])->name('encounters.procedures.store');
-    Route::post('encounters/{encounter}/orders', [EncounterClinicalController::class, 'storeOrder'])->name('encounters.orders.store');
-    Route::post('encounters/{encounter}/referrals', [EncounterClinicalController::class, 'storeReferral'])->name('encounters.referrals.store');
     Route::post('encounters/{encounter}/instructions', [EncounterClinicalController::class, 'storeInstruction'])->name('encounters.instructions.store');
     Route::post('encounters/{encounter}/notes', [EncounterClinicalController::class, 'storeNote'])->name('encounters.notes.store');
     Route::post('encounters/{encounter}/documents', [EncounterClinicalController::class, 'storeDocument'])->name('encounters.documents.store');
+});
+
+Route::middleware(['can:encounter.amend'])->group(function () {
     Route::post('encounters/{encounter}/amendments', [EncounterClinicalController::class, 'storeAmendment'])->name('encounters.amendments.store');
-    Route::post('encounters/{encounter}/prescriptions/{prescription}/issue', [EncounterClinicalController::class, 'issuePrescription'])->name('encounters.prescriptions.issue');
-    Route::post('encounters/{encounter}/prescriptions/{prescription}/cancel', [EncounterClinicalController::class, 'cancelPrescription'])->name('encounters.prescriptions.cancel');
+    Route::put('encounters/{encounter}/amendments/{amendment}/approve', [EncounterClinicalController::class, 'approveAmendment'])->name('encounters.amendments.approve');
 });
 
 Route::middleware(['can:clinical.break_glass'])->group(function () {
@@ -70,4 +98,7 @@ Route::middleware(['can:clinical.break_glass'])->group(function () {
 
 Route::middleware(['can:encounter.export'])->group(function () {
     Route::get('reports/clinical', [ClinicalReportController::class, 'index'])->name('reports.clinical');
+    Route::get('reports/clinical/daily-opd', [ClinicalReportController::class, 'dailyOpd'])->name('reports.clinical.daily-opd');
+    Route::get('reports/clinical/provider-workload', [ClinicalReportController::class, 'providerWorkload'])->name('reports.clinical.provider-workload');
+    Route::get('reports/clinical/diagnosis-statistics', [ClinicalReportController::class, 'diagnosisStatistics'])->name('reports.clinical.diagnosis-statistics');
 });

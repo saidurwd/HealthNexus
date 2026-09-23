@@ -80,6 +80,22 @@
             </div>
         </div>
 
+        @php($activeAllergies = $encounter->patient?->allergies->where('is_active', true) ?? collect())
+        @if($activeAllergies->isNotEmpty())
+            <div class="alert alert-danger d-flex align-items-start mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                <div>
+                    <strong>Allergy Alert:</strong>
+                    @foreach($activeAllergies as $allergy)
+                        <span class="badge bg-danger me-1">
+                            {{ $allergy->substance }}
+                            @if($allergy->severity) ({{ ucfirst($allergy->severity) }}) @endif
+                        </span>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="row mb-4">
             <div class="col-md-3">
                 <div class="card card-primary card-outline">

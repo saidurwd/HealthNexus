@@ -11,10 +11,22 @@ use Illuminate\Support\Facades\Auth;
 
 class BreakGlassService
 {
+    /**
+     * Break-glass is emergency access to a record the requester is normally denied — within
+     * their own hospital (e.g. a restricted VIP or a patient outside their usual department),
+     * not a cross-hospital bypass. Without this check, any holder of clinical.break_glass could
+     * self-grant write access to any encounter ID in any company.
+     */
     public function requestAccess(Encounter $encounter, string $reason, ?User $user = null, ?Request $request = null, ?string $scope = null): BreakGlassAccess
     {
         $request ??= request();
         $user ??= Auth::user();
+
+        abort_unless(
+            $user->companies()->where('companies.id', $encounter->company_id)->exists(),
+            403,
+            'Break-glass access is only available within your own organization.'
+        );
 
         return BreakGlassAccess::create([
             'user_id' => $user->id,

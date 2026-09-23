@@ -4,7 +4,6 @@ namespace Modules\Clinical\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Services\EncounterLifecycleService;
@@ -23,34 +22,47 @@ class EncounterController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Encounter::class);
+
         $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $encounters = Encounter::query()
             ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
-            ->when($request->filled('patient_id'), fn ($q, $patientId) => $q->where('patient_id', $patientId))
-            ->when($request->filled('type'), fn ($q, $type) => $q->where('encounter_type', $type))
+            ->when($branchId, fn ($q, $branchId) => $q->where('branch_id', $branchId))
+            ->when($request->filled('patient_id'), fn ($q, $patientId) => $q->where('patient_id', $request->input('patient_id')))
+            ->when($request->filled('type'), fn ($q, $type) => $q->where('encounter_type', $request->input('type')))
+            ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
+            ->when($request->filled('provider_id'), fn ($q) => $q->where('provider_id', $request->input('provider_id')))
+            ->with(['patient', 'provider', 'encounterType'])
             ->latest()
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.encounters.index', compact('encounters'));
     }
 
     public function create()
     {
-        $companies = Company::all();
-        $branches = Branch::all();
-        $patients = Patient::all();
+        $this->authorize('create', Encounter::class);
 
-        return view('admin.encounters.create', compact('companies', 'branches', 'patients'));
+        $companyId = app(TenantContextResolver::class)->getCompanyId();
+
+        $branches = Branch::where('company_id', $companyId)->get();
+        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+
+        return view('admin.encounters.create', compact('branches', 'patients'));
     }
 
     public function store(StoreEncounterRequest $request)
     {
+        $this->authorize('create', Encounter::class);
+
         $validated = $request->validated();
 
-        $this->encounterService->createEncounter($validated, $request->user());
+        $encounter = $this->encounterService->createEncounter($validated, $request->user());
 
-        return redirect()->route('admin.encounters.index')->with('success', 'Encounter created successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter created successfully.');
     }
 
     public function show(Encounter $encounter)
@@ -58,7 +70,7 @@ class EncounterController extends Controller
         $this->authorize('view', $encounter);
 
         $encounter->load([
-            'patient',
+            'patient.allergies',
             'appointment',
             'encounterType',
             'provider',
@@ -73,12 +85,14 @@ class EncounterController extends Controller
             'problems',
             'procedures',
             'orders.items',
+            'investigationOrders',
             'prescriptions.items',
             'referrals',
             'instructions',
             'notes',
             'documents',
-            'amendments',
+            'amendments.createdBy',
+            'amendments.approvedBy',
             'statusHistory.changer',
         ]);
 
@@ -89,11 +103,12 @@ class EncounterController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $companies = Company::all();
-        $branches = Branch::all();
-        $patients = Patient::all();
+        $companyId = app(TenantContextResolver::class)->getCompanyId();
 
-        return view('admin.encounters.edit', compact('encounter', 'companies', 'branches', 'patients'));
+        $branches = Branch::where('company_id', $companyId)->get();
+        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+
+        return view('admin.encounters.edit', compact('encounter', 'branches', 'patients'));
     }
 
     public function update(UpdateEncounterRequest $request, Encounter $encounter)
@@ -112,7 +127,7 @@ class EncounterController extends Controller
             $this->encounterService->updateEncounter($encounter, $validated);
         }
 
-        return redirect()->route('admin.encounters.index')->with('success', 'Encounter updated successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter updated successfully.');
     }
 
     public function destroy(Encounter $encounter)

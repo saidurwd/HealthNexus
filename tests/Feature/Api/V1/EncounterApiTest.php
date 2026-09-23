@@ -35,12 +35,14 @@ class EncounterApiTest extends TestCase
         $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
 
-        Permission::create(['name' => 'encounters.create', 'guard_name' => 'web']);
-        Permission::create(['name' => 'encounters.update', 'guard_name' => 'web']);
-        Permission::create(['name' => 'encounters.delete', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('encounters.create');
-        $this->user->givePermissionTo('encounters.update');
-        $this->user->givePermissionTo('encounters.delete');
+        foreach ([
+            'encounters.create', 'encounters.update', 'encounters.delete',
+            'clinical.vitals.create', 'clinical.diagnosis.create', 'clinical.order.create',
+            'prescription.create', 'prescription.issue', 'prescription.cancel', 'encounter.amend',
+        ] as $permission) {
+            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $this->user->givePermissionTo($permission);
+        }
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
@@ -103,5 +105,125 @@ class EncounterApiTest extends TestCase
         $this->assertSoftDeleted('encounters', [
             'id' => $encounter->id,
         ]);
+    }
+
+    public function test_user_can_record_vital_signs_via_api(): void
+    {
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+
+        $response = $this->post("/api/v1/encounters/{$encounter->id}/vitals", [
+            'systolic' => 118,
+            'diastolic' => 76,
+            'pulse_rate' => 70,
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.systolic', 118);
+
+        $this->get("/api/v1/encounters/{$encounter->id}/vitals")
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_user_can_add_diagnosis_via_api(): void
+    {
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+
+        $response = $this->post("/api/v1/encounters/{$encounter->id}/diagnoses", [
+            'description' => 'Acute bronchitis',
+            'diagnosis_type' => 'primary',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.description', 'Acute bronchitis');
+    }
+
+    public function test_user_can_create_and_issue_prescription_via_api(): void
+    {
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+
+        $response = $this->post("/api/v1/encounters/{$encounter->id}/prescriptions", [
+            'items' => [
+                ['medicine_name' => 'Amoxicillin', 'frequency' => 'TDS', 'duration' => '7 days'],
+            ],
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.status', 'draft');
+
+        $prescriptionId = $response->json('data.id');
+
+        $this->post("/api/v1/encounters/{$encounter->id}/prescriptions/{$prescriptionId}/issue")
+            ->assertStatus(200)
+            ->assertJsonPath('data.status', 'issued');
+    }
+
+    public function test_user_can_create_clinical_order_via_api(): void
+    {
+        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+
+        $response = $this->post("/api/v1/encounters/{$encounter->id}/orders", [
+            'order_type' => 'lab',
+            'items' => [
+                ['item_name' => 'CBC'],
+            ],
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonPath('data.order_type', 'lab');
+    }
+
+    public function test_user_can_request_amendment_via_api(): void
+    {
+        $encounter = Encounter::factory()->create([
+            'company_id' => $this->company->id,
+            'branch_id' => $this->branch->id,
+            'status' => 'completed',
+            'locked_at' => now(),
+        ]);
+
+        $response = $this->post("/api/v1/encounters/{$encounter->id}/amendments", [
+            'amendment_type' => 'correction',
+            'reason' => 'Corrected diagnosis code',
+            'content' => 'Diagnosis code changed from I10 to I11.',
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('encounter_amendments', [
+            'encounter_id' => $encounter->id,
+            'created_by' => $this->user->id,
+        ]);
+    }
+
+    public function test_a_different_user_can_approve_an_amendment_via_api(): void
+    {
+        $encounter = Encounter::factory()->create([
+            'company_id' => $this->company->id,
+            'branch_id' => $this->branch->id,
+            'status' => 'completed',
+            'locked_at' => now(),
+        ]);
+
+        $amendment = app(\App\Services\Clinical\EncounterClinicalService::class)->createAmendment($encounter, [
+            'amendment_type' => 'correction',
+            'reason' => 'Corrected diagnosis code',
+            'content' => 'Diagnosis code changed from I10 to I11.',
+        ], $this->user);
+
+        $approver = User::factory()->create();
+        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $approver->givePermissionTo('encounter.amend');
+
+        $token = $approver->createToken('approver-token')->plainTextToken;
+
+        $this->app['auth']->forgetGuards();
+
+        $this->withHeader('Authorization', 'Bearer '.$token)
+            ->withHeader('X-Company-Id', (string) $this->company->id)
+            ->withHeader('X-Branch-Id', (string) $this->branch->id)
+            ->put("/api/v1/encounters/{$encounter->id}/amendments/{$amendment->id}/approve")
+            ->assertStatus(200)
+            ->assertJsonPath('data.approved_by', $approver->id);
     }
 }

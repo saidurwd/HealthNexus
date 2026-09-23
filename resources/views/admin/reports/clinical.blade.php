@@ -7,6 +7,21 @@
 @stop
 
 @section('content')
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="GET" class="form-inline">
+                <label class="mr-2">From</label>
+                <input type="date" name="from" value="{{ $from }}" class="form-control mr-3">
+                <label class="mr-2">To</label>
+                <input type="date" name="to" value="{{ $to }}" class="form-control mr-3">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('admin.reports.clinical.daily-opd') }}" class="btn btn-outline-secondary ml-2">Daily OPD Report</a>
+                <a href="{{ route('admin.reports.clinical.provider-workload') }}" class="btn btn-outline-secondary ml-2">Provider Workload</a>
+                <a href="{{ route('admin.reports.clinical.diagnosis-statistics') }}" class="btn btn-outline-secondary ml-2">Diagnosis Statistics</a>
+            </form>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">

@@ -49,6 +49,11 @@ class Prescription extends Model
         return $this->belongsTo(Appointment::class);
     }
 
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class);

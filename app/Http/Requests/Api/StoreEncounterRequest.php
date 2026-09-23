@@ -17,9 +17,15 @@ class StoreEncounterRequest extends FormRequest
             'company_id' => ['required', 'integer', 'exists:companies,id'],
             'branch_id' => ['required', 'integer', 'exists:branches,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
-            'encounter_type' => ['required', 'string', 'in:OPD,IPD,ER,LAB,RADIOLOGY,FOLLOW_UP,TELEMEDICINE'],
-            'attending_doctor_id' => ['nullable', 'integer', 'exists:users,id'],
+            'appointment_id' => ['nullable', 'integer', 'exists:appointments,id'],
+            'encounter_type_id' => ['nullable', 'integer', 'exists:encounter_types,id'],
+            'encounter_type' => ['nullable', 'string', 'max:100'],
+            'provider_id' => ['nullable', 'integer', 'exists:users,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
+            'specialty_id' => ['nullable', 'integer', 'exists:specialties,id'],
+            'priority' => ['nullable', 'string', 'in:routine,urgent,stat'],
+            'source' => ['nullable', 'string', 'max:100'],
+            'reason_for_visit' => ['nullable', 'string'],
             'notes' => ['nullable', 'string'],
         ];
     }

@@ -18,7 +18,6 @@
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>BMI</th>
-                                <th>Pain</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,14 +25,13 @@
                                 <tr>
                                     <td>{{ $vital->recorded_at->format('M d, Y H:i') }}</td>
                                     <td>{{ $vital->temperature }}°{{ $vital->temperature_unit ?? 'C' }}</td>
-                                    <td>{{ $vital->systolic_bp }}/{{ $vital->diastolic_bp }}</td>
-                                    <td>{{ $vital->pulse }}</td>
+                                    <td>{{ $vital->systolic }}/{{ $vital->diastolic }} {{ $vital->bp_unit }}</td>
+                                    <td>{{ $vital->pulse_rate }}</td>
                                     <td>{{ $vital->respiratory_rate }}</td>
-                                    <td>{{ $vital->spo2 }}%</td>
-                                    <td>{{ $vital->weight }} {{ $vital->weight_unit ?? 'kg' }}</td>
-                                    <td>{{ $vital->height }} {{ $vital->height_unit ?? 'cm' }}</td>
+                                    <td>{{ $vital->oxygen_saturation }}%</td>
+                                    <td>{{ $vital->weight }} kg</td>
+                                    <td>{{ $vital->height }} cm</td>
                                     <td>{{ $vital->bmi }}</td>
-                                    <td>{{ $vital->pain_score }}/10</td>
                                 </tr>
                             @endforeach
                         </tbody>
