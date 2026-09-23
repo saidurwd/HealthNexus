@@ -31,6 +31,22 @@ class NotificationService
             'title' => 'System Maintenance',
             'message' => 'Scheduled maintenance at :time.',
         ],
+        'sample_rejected' => [
+            'title' => 'Lab Sample Rejected',
+            'message' => 'Specimen :accession_number for :patient was rejected (:reason). Recollection is required.',
+        ],
+        'critical_result' => [
+            'title' => 'Critical Lab Result',
+            'message' => ':test for :patient is critical: :value. Immediate review required.',
+        ],
+        'report_ready' => [
+            'title' => 'Lab Report Ready',
+            'message' => 'Lab report :report_number for :patient is ready.',
+        ],
+        'report_amended' => [
+            'title' => 'Lab Report Amended',
+            'message' => 'Lab report :report_number for :patient has been amended. Reason: :reason.',
+        ],
     ];
 
     /**

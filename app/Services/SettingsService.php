@@ -123,6 +123,15 @@ class SettingsService
             ['group' => 'billing',    'key' => 'billing.tax_inclusive_default',                'value' => '0',     'type' => 'boolean'],
             ['group' => 'billing',    'key' => 'billing.advance_min_balance',                  'value' => '0',     'type' => 'integer'],
 
+            ['group' => 'laboratory', 'key' => 'laboratory.order_prefix',                      'value' => 'LAB',   'type' => 'string'],
+            ['group' => 'laboratory', 'key' => 'laboratory.accession_prefix',                   'value' => 'ACC',   'type' => 'string'],
+            ['group' => 'laboratory', 'key' => 'laboratory.report_prefix',                      'value' => 'RPT',   'type' => 'string'],
+            ['group' => 'laboratory', 'key' => 'laboratory.order_number_format',                'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string', 'description' => 'Document numbering format'],
+            ['group' => 'laboratory', 'key' => 'laboratory.accession_number_format',             'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string'],
+            ['group' => 'laboratory', 'key' => 'laboratory.default_turnaround_minutes',          'value' => '60',    'type' => 'integer'],
+            ['group' => 'laboratory', 'key' => 'laboratory.critical_notification_channels',      'value' => json_encode(['database', 'mail']), 'type' => 'json'],
+            ['group' => 'laboratory', 'key' => 'laboratory.require_pathologist_approval_default', 'value' => '0',    'type' => 'boolean'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

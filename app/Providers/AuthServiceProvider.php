@@ -24,6 +24,13 @@ use App\Models\Encounter;
 use App\Models\File;
 use App\Models\IdentificationType;
 use App\Models\InvestigationOrder;
+use App\Models\Laboratory\LabCriticalResultAlert;
+use App\Models\Laboratory\LabOrder;
+use App\Models\Laboratory\LabQcRun;
+use App\Models\Laboratory\LabReport;
+use App\Models\Laboratory\LabResult;
+use App\Models\Laboratory\LabSpecimen;
+use App\Models\Laboratory\LabTest;
 use App\Models\Notification;
 use App\Models\Patient;
 use App\Models\Prescription;
@@ -50,6 +57,13 @@ use App\Policies\EncounterPolicy;
 use App\Policies\FilePolicy;
 use App\Policies\IdentificationTypePolicy;
 use App\Policies\InvestigationOrderPolicy;
+use App\Policies\LabCriticalResultPolicy;
+use App\Policies\LabOrderPolicy;
+use App\Policies\LabQcPolicy;
+use App\Policies\LabReportPolicy;
+use App\Policies\LabResultPolicy;
+use App\Policies\LabSpecimenPolicy;
+use App\Policies\LabTestPolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\PatientPolicy;
 use App\Policies\PrescriptionPolicy;
@@ -86,6 +100,13 @@ class AuthServiceProvider extends ServiceProvider
         BillingPriceList::class => BillingPriceListPolicy::class,
         BillingCorporate::class => BillingCorporatePolicy::class,
         BillingInsurancePolicy::class => BillingInsurancePolicyPolicy::class,
+        LabOrder::class => LabOrderPolicy::class,
+        LabSpecimen::class => LabSpecimenPolicy::class,
+        LabResult::class => LabResultPolicy::class,
+        LabReport::class => LabReportPolicy::class,
+        LabCriticalResultAlert::class => LabCriticalResultPolicy::class,
+        LabTest::class => LabTestPolicy::class,
+        LabQcRun::class => LabQcPolicy::class,
     ];
 
     public function boot(): void

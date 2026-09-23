@@ -1171,6 +1171,138 @@ return [
             ],
         ],
         [
+            'text' => 'Laboratory',
+            'icon' => 'bi bi-clipboard2-pulse',
+            'can' => 'lab.dashboard.view',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard',
+                    'url' => '/admin/lab',
+                    'icon' => 'bi bi-speedometer',
+                    'can' => 'lab.dashboard.view',
+                ],
+                [
+                    'text' => 'Orders',
+                    'icon' => 'bi bi-clipboard-check',
+                    'can' => 'lab.order.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Lab Orders',
+                            'url' => '/admin/lab/orders',
+                            'icon' => 'bi bi-clipboard-check',
+                            'can' => 'lab.order.view',
+                        ],
+                        [
+                            'text' => 'Worklist',
+                            'url' => '/admin/lab/worklist',
+                            'icon' => 'bi bi-list-task',
+                            'can' => 'lab.result.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Specimens',
+                    'icon' => 'bi bi-droplet',
+                    'can' => 'lab.specimen.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Specimens',
+                            'url' => '/admin/lab/specimens',
+                            'icon' => 'bi bi-droplet',
+                            'can' => 'lab.specimen.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Results',
+                    'icon' => 'bi bi-clipboard-data',
+                    'can' => 'lab.result.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Critical Results',
+                            'url' => '/admin/lab/critical-results',
+                            'icon' => 'bi bi-exclamation-triangle',
+                            'can' => 'lab.critical_result.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-file-earmark-medical',
+                    'can' => 'lab.report.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Lab Reports',
+                            'url' => '/admin/lab/reports',
+                            'icon' => 'bi bi-file-earmark-medical',
+                            'can' => 'lab.report.view',
+                        ],
+                        [
+                            'text' => 'Daily Volume',
+                            'url' => '/admin/lab/reports-analytics/daily-volume',
+                            'icon' => 'bi bi-bar-chart',
+                            'can' => 'lab.report.view',
+                        ],
+                        [
+                            'text' => 'Sample Rejection',
+                            'url' => '/admin/lab/reports-analytics/sample-rejection',
+                            'icon' => 'bi bi-x-circle',
+                            'can' => 'lab.report.view',
+                        ],
+                        [
+                            'text' => 'Critical Result Report',
+                            'url' => '/admin/lab/reports-analytics/critical-results',
+                            'icon' => 'bi bi-exclamation-triangle',
+                            'can' => 'lab.report.view',
+                        ],
+                        [
+                            'text' => 'Amendments Report',
+                            'url' => '/admin/lab/reports-analytics/result-amendments',
+                            'icon' => 'bi bi-pencil-square',
+                            'can' => 'lab.report.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Test Catalog',
+                    'icon' => 'bi bi-journal-medical',
+                    'can' => 'lab.test.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Tests',
+                            'url' => '/admin/lab/tests',
+                            'icon' => 'bi bi-journal-medical',
+                            'can' => 'lab.test.view',
+                        ],
+                        [
+                            'text' => 'Panels',
+                            'url' => '/admin/lab/panels',
+                            'icon' => 'bi bi-collection',
+                            'can' => 'lab.test.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Quality Control',
+                    'url' => '/admin/lab/qc',
+                    'icon' => 'bi bi-patch-check',
+                    'can' => 'lab.qc.view',
+                ],
+                [
+                    'text' => 'Analyzers',
+                    'url' => '/admin/lab/analyzers',
+                    'icon' => 'bi bi-hdd-network',
+                    'can' => 'lab.analyzer.view',
+                ],
+                [
+                    'text' => 'Settings',
+                    'url' => '/admin/lab/settings',
+                    'icon' => 'bi bi-gear',
+                    'can' => 'lab.settings.manage',
+                ],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',
