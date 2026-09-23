@@ -18,6 +18,10 @@ use App\Events\Laboratory\CriticalResultDetected;
 use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
 use App\Events\Laboratory\SampleRejected;
+use App\Events\Radiology\CriticalFindingDetected;
+use App\Events\Radiology\RadiologyExamCompleted;
+use App\Events\Radiology\RadiologyReportAmended;
+use App\Events\Radiology\RadiologyReportFinalized;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
@@ -28,6 +32,11 @@ use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
 use App\Listeners\Laboratory\NotifyOnLabReportEvents;
 use App\Listeners\Laboratory\NotifyOnSampleRejected;
 use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
+use App\Listeners\Radiology\CreateRadiologyOrderOnClinicalOrderCreated;
+use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
+use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
+use App\Listeners\Radiology\NotifyOnRadiologyReportEvents;
+use App\Listeners\Radiology\RecordRadiologyReportOnPatientTimeline;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
@@ -79,5 +88,13 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LabReportAmended::class, [RecordLabReportOnPatientTimeline::class, 'handleAmended']);
         Event::listen(LabReportFinalized::class, [NotifyOnLabReportEvents::class, 'handleFinalized']);
         Event::listen(LabReportAmended::class, [NotifyOnLabReportEvents::class, 'handleAmended']);
+
+        Event::listen(ClinicalOrderCreated::class, CreateRadiologyOrderOnClinicalOrderCreated::class);
+        Event::listen(RadiologyExamCompleted::class, DispatchPacsSyncOnExamCompleted::class);
+        Event::listen(CriticalFindingDetected::class, NotifyOnCriticalFindingDetected::class);
+        Event::listen(RadiologyReportFinalized::class, [RecordRadiologyReportOnPatientTimeline::class, 'handleFinalized']);
+        Event::listen(RadiologyReportAmended::class, [RecordRadiologyReportOnPatientTimeline::class, 'handleAmended']);
+        Event::listen(RadiologyReportFinalized::class, [NotifyOnRadiologyReportEvents::class, 'handleFinalized']);
+        Event::listen(RadiologyReportAmended::class, [NotifyOnRadiologyReportEvents::class, 'handleAmended']);
     }
 }

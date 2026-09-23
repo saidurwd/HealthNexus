@@ -1303,6 +1303,125 @@ return [
             ],
         ],
         [
+            'text' => 'Radiology',
+            'icon' => 'bi bi-radioactive',
+            'can' => 'radiology.dashboard.view',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard',
+                    'url' => '/admin/radiology',
+                    'icon' => 'bi bi-speedometer',
+                    'can' => 'radiology.dashboard.view',
+                ],
+                [
+                    'text' => 'Orders',
+                    'icon' => 'bi bi-clipboard-check',
+                    'can' => 'radiology.order.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Radiology Orders',
+                            'url' => '/admin/radiology/orders',
+                            'icon' => 'bi bi-clipboard-check',
+                            'can' => 'radiology.order.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Scheduling',
+                    'icon' => 'bi bi-calendar-week',
+                    'can' => 'radiology.examination.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Examination Queue',
+                            'url' => '/admin/radiology/examinations',
+                            'icon' => 'bi bi-calendar-week',
+                            'can' => 'radiology.examination.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Studies',
+                    'url' => '/admin/radiology/studies',
+                    'icon' => 'bi bi-images',
+                    'can' => 'radiology.study.view',
+                ],
+                [
+                    'text' => 'Radiologist Worklist',
+                    'url' => '/admin/radiology/worklist',
+                    'icon' => 'bi bi-list-task',
+                    'can' => 'radiology.worklist.view',
+                ],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-file-earmark-medical',
+                    'can' => 'radiology.report.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Radiology Reports',
+                            'url' => '/admin/radiology/reports',
+                            'icon' => 'bi bi-file-earmark-medical',
+                            'can' => 'radiology.report.view',
+                        ],
+                        [
+                            'text' => 'Daily Volume',
+                            'url' => '/admin/radiology/analytics/daily-volume',
+                            'icon' => 'bi bi-bar-chart',
+                            'can' => 'radiology.report.view',
+                        ],
+                        [
+                            'text' => 'Modality Utilization',
+                            'url' => '/admin/radiology/analytics/modality-utilization',
+                            'icon' => 'bi bi-pie-chart',
+                            'can' => 'radiology.report.view',
+                        ],
+                        [
+                            'text' => 'Turnaround Time',
+                            'url' => '/admin/radiology/analytics/turnaround-time',
+                            'icon' => 'bi bi-stopwatch',
+                            'can' => 'radiology.report.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Critical Findings',
+                    'url' => '/admin/radiology/critical-findings',
+                    'icon' => 'bi bi-exclamation-triangle',
+                    'can' => 'radiology.critical_finding.view',
+                ],
+                [
+                    'text' => 'Catalog',
+                    'icon' => 'bi bi-journal-medical',
+                    'can' => 'radiology.procedure.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Procedures',
+                            'url' => '/admin/radiology/procedures',
+                            'icon' => 'bi bi-journal-medical',
+                            'can' => 'radiology.procedure.view',
+                        ],
+                        [
+                            'text' => 'Modalities',
+                            'url' => '/admin/radiology/modalities',
+                            'icon' => 'bi bi-cpu',
+                            'can' => 'radiology.modality.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'PACS',
+                    'url' => '/admin/radiology/pacs',
+                    'icon' => 'bi bi-hdd-network',
+                    'can' => 'radiology.pacs.view',
+                ],
+                [
+                    'text' => 'Settings',
+                    'url' => '/admin/radiology/settings',
+                    'icon' => 'bi bi-gear',
+                    'can' => 'radiology.settings.manage',
+                ],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

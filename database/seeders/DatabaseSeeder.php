@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CompanyWithTwoBranchesSeeder::class,
             BillingSeeder::class,
             LabSeeder::class,
+            RadiologySeeder::class,
             WorkflowSeeder::class,
             ClinicalMasterDataSeeder::class,
         ]);

@@ -101,6 +101,20 @@ class LabControllerSmokeTest extends LabTestCase
         $this->get('/admin/lab/critical-results')->assertOk();
     }
 
+    /**
+     * The setUp() fixture's item is already past 'received'/'processing' by the time these
+     * tests run, so a worklist hit with zero matching rows never actually executes the
+     * ORDER BY clause (Eloquent's paginate() skips the item query entirely when count is 0) —
+     * this is what let a MySQL-only FIELD() call sit undetected until a real row reached it.
+     * A second, still-'received' item closes that gap.
+     */
+    public function test_worklist_renders_a_real_pending_item(): void
+    {
+        $this->order->items()->first()->update(['status' => 'received']);
+
+        $this->get('/admin/lab/worklist')->assertOk();
+    }
+
     public function test_report_pages_load(): void
     {
         $report = $this->order->reports()->first();

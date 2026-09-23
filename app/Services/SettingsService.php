@@ -132,6 +132,15 @@ class SettingsService
             ['group' => 'laboratory', 'key' => 'laboratory.critical_notification_channels',      'value' => json_encode(['database', 'mail']), 'type' => 'json'],
             ['group' => 'laboratory', 'key' => 'laboratory.require_pathologist_approval_default', 'value' => '0',    'type' => 'boolean'],
 
+            ['group' => 'radiology', 'key' => 'radiology.order_prefix',                          'value' => 'RAD',   'type' => 'string'],
+            ['group' => 'radiology', 'key' => 'radiology.accession_prefix',                       'value' => 'RAD',   'type' => 'string'],
+            ['group' => 'radiology', 'key' => 'radiology.order_number_format',                    'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string'],
+            ['group' => 'radiology', 'key' => 'radiology.accession_number_format',                 'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string'],
+            ['group' => 'radiology', 'key' => 'radiology.default_turnaround_minutes',              'value' => '120',   'type' => 'integer'],
+            ['group' => 'radiology', 'key' => 'radiology.critical_finding_notification_channels',  'value' => json_encode(['database', 'mail']), 'type' => 'json'],
+            ['group' => 'radiology', 'key' => 'radiology.dicom_uid_root',                          'value' => '1.2.826.0.1.3680043.10.001', 'type' => 'string', 'description' => 'Org root OID used only if the app ever pre-assigns a Study Instance UID'],
+            ['group' => 'radiology', 'key' => 'radiology.default_pacs_server_id',                  'value' => null,    'type' => 'integer'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

@@ -34,6 +34,13 @@ use App\Models\Laboratory\LabTest;
 use App\Models\Notification;
 use App\Models\Patient;
 use App\Models\Prescription;
+use App\Models\Radiology\RadiologyCriticalFinding;
+use App\Models\Radiology\RadiologyExamination;
+use App\Models\Radiology\RadiologyOrder;
+use App\Models\Radiology\RadiologyPacsServer;
+use App\Models\Radiology\RadiologyProcedure;
+use App\Models\Radiology\RadiologyReport;
+use App\Models\Radiology\RadiologyStudy;
 use App\Models\State;
 use App\Policies\AppointmentPolicy;
 use App\Policies\BillingAdjustmentPolicy;
@@ -67,6 +74,13 @@ use App\Policies\LabTestPolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\PatientPolicy;
 use App\Policies\PrescriptionPolicy;
+use App\Policies\RadiologyCriticalFindingPolicy;
+use App\Policies\RadiologyExaminationPolicy;
+use App\Policies\RadiologyOrderPolicy;
+use App\Policies\RadiologyPacsPolicy;
+use App\Policies\RadiologyProcedurePolicy;
+use App\Policies\RadiologyReportPolicy;
+use App\Policies\RadiologyStudyPolicy;
 use App\Policies\StatePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -107,6 +121,13 @@ class AuthServiceProvider extends ServiceProvider
         LabCriticalResultAlert::class => LabCriticalResultPolicy::class,
         LabTest::class => LabTestPolicy::class,
         LabQcRun::class => LabQcPolicy::class,
+        RadiologyOrder::class => RadiologyOrderPolicy::class,
+        RadiologyExamination::class => RadiologyExaminationPolicy::class,
+        RadiologyStudy::class => RadiologyStudyPolicy::class,
+        RadiologyReport::class => RadiologyReportPolicy::class,
+        RadiologyCriticalFinding::class => RadiologyCriticalFindingPolicy::class,
+        RadiologyProcedure::class => RadiologyProcedurePolicy::class,
+        RadiologyPacsServer::class => RadiologyPacsPolicy::class,
     ];
 
     public function boot(): void

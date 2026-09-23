@@ -47,6 +47,18 @@ class NotificationService
             'title' => 'Lab Report Amended',
             'message' => 'Lab report :report_number for :patient has been amended. Reason: :reason.',
         ],
+        'radiology_critical_finding' => [
+            'title' => 'Critical Radiology Finding',
+            'message' => 'Critical finding on :procedure for :patient: :finding. Immediate review required.',
+        ],
+        'radiology_report_ready' => [
+            'title' => 'Radiology Report Ready',
+            'message' => 'Radiology report :report_number for :patient is ready.',
+        ],
+        'radiology_report_amended' => [
+            'title' => 'Radiology Report Amended',
+            'message' => 'Radiology report :report_number for :patient has been amended. Reason: :reason.',
+        ],
     ];
 
     /**

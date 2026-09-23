@@ -26,7 +26,10 @@ class WorklistService
             ->when($filters['priority'] ?? null, fn ($q, $v) => $q->where('priority', $v))
             ->when($filters['status'] ?? null, fn ($q, $v) => $q->where('status', $v))
             ->when($filters['date'] ?? null, fn ($q, $v) => $q->whereDate('requested_at', $v))
-            ->orderByRaw("field(priority, 'stat', 'urgent', 'routine')")
+            // Portable priority ordering (FIELD() is MySQL-only; CASE WHEN works on both MySQL
+            // and SQLite — this was untested against real matching rows until now, since
+            // Eloquent's paginate() skips the ORDER BY query entirely when the count is 0).
+            ->orderByRaw("case priority when 'stat' then 0 when 'urgent' then 1 else 2 end")
             ->orderBy('requested_at')
             ->paginate(30);
     }
