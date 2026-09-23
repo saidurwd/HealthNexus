@@ -91,6 +91,20 @@ class RefundServiceTest extends BillingTestCase
 
         $this->invoice->refresh();
         $this->assertSame('0.00', (string) $this->invoice->paid_amount);
+
+        $this->assertSame('voided', $this->payment->receipt->refresh()->status);
+    }
+
+    public function test_partial_refund_leaves_the_receipt_issued(): void
+    {
+        $approver = User::factory()->create();
+        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+
+        $refund = $this->refunds->request($this->payment, '400.00', 'Partial refund', $this->user);
+        $refund = $this->refunds->approve($refund, $approver);
+        $this->refunds->process($refund, $approver);
+
+        $this->assertSame('issued', $this->payment->receipt->refresh()->status);
     }
 
     public function test_refund_cannot_be_approved_by_the_user_who_requested_it(): void

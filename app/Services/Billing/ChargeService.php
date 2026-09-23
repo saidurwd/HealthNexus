@@ -2,6 +2,7 @@
 
 namespace App\Services\Billing;
 
+use App\Events\Billing\ChargeCreated;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
 use App\Models\User;
@@ -100,7 +101,7 @@ class ChargeService
             $taxInclusive,
         );
 
-        return BillingCharge::create([
+        $charge = BillingCharge::create([
             'company_id' => $context['company_id'],
             'branch_id' => $context['branch_id'],
             'patient_id' => $context['patient_id'],
@@ -123,5 +124,9 @@ class ChargeService
             'charged_at' => now(),
             'created_by' => $user?->id,
         ]);
+
+        event(new ChargeCreated($charge));
+
+        return $charge;
     }
 }

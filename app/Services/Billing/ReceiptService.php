@@ -44,11 +44,16 @@ class ReceiptService
      */
     public function void(BillingReceipt $receipt, string $reason, User $user): BillingReceipt
     {
-        if ($receipt->status === 'voided') {
+        if ($receipt->isVoided()) {
             return $receipt;
         }
 
-        $receipt->update(['status' => 'voided']);
+        $receipt->update([
+            'status' => 'voided',
+            'voided_at' => now(),
+            'voided_by' => $user->id,
+            'voided_reason' => $reason,
+        ]);
 
         return $receipt->refresh();
     }

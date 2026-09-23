@@ -22,6 +22,7 @@ class RefundService
         private readonly BillingNumberGenerator $numbers,
         private readonly SettingsService $settings,
         private readonly RevenuePostingInterface $revenuePoster,
+        private readonly ReceiptService $receipts,
     ) {}
 
     public function request(BillingPayment $payment, string $amount, string $reason, User $user): BillingRefund
@@ -98,6 +99,13 @@ class RefundService
 
             if (bccomp($refundedTotal, (string) $payment->amount, 2) >= 0) {
                 $payment->update(['status' => 'refunded']);
+
+                // The receipt says "we received this amount" — once the payment it documents has
+                // been fully returned, that claim is no longer true and must be voided, not left
+                // standing as a stale proof of payment.
+                if ($receipt = $payment->receipt) {
+                    $this->receipts->void($receipt, "Payment fully refunded via {$refund->refund_number}.", $processor);
+                }
             }
 
             if ($invoice = $refund->invoice) {
