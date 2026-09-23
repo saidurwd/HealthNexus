@@ -128,6 +128,13 @@ class AuthServiceProvider extends ServiceProvider
         RadiologyCriticalFinding::class => RadiologyCriticalFindingPolicy::class,
         RadiologyProcedure::class => RadiologyProcedurePolicy::class,
         RadiologyPacsServer::class => RadiologyPacsPolicy::class,
+        \App\Models\Pharmacy\PharmacyOrder::class => \App\Policies\PharmacyOrderPolicy::class,
+        \App\Models\Pharmacy\PharmacyDispensing::class => \App\Policies\PharmacyDispensingPolicy::class,
+        \App\Models\Pharmacy\PharmacyStore::class => \App\Policies\PharmacyStockPolicy::class,
+        \App\Models\Pharmacy\PharmacyBatch::class => \App\Policies\PharmacyBatchPolicy::class,
+        \App\Models\Pharmacy\PharmacyTransfer::class => \App\Policies\PharmacyTransferPolicy::class,
+        \App\Models\Pharmacy\PharmacySafetyAlert::class => \App\Policies\PharmacySafetyAlertPolicy::class,
+        \App\Models\Pharmacy\PharmacyMedication::class => \App\Policies\PharmacyMedicationPolicy::class,
     ];
 
     public function boot(): void

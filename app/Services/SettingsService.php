@@ -141,6 +141,16 @@ class SettingsService
             ['group' => 'radiology', 'key' => 'radiology.dicom_uid_root',                          'value' => '1.2.826.0.1.3680043.10.001', 'type' => 'string', 'description' => 'Org root OID used only if the app ever pre-assigns a Study Instance UID'],
             ['group' => 'radiology', 'key' => 'radiology.default_pacs_server_id',                  'value' => null,    'type' => 'integer'],
 
+            ['group' => 'pharmacy', 'key' => 'pharmacy.order_prefix',                        'value' => 'RX',    'type' => 'string'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.dispensing_prefix',                    'value' => 'DSP',   'type' => 'string'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.transfer_prefix',                       'value' => 'TRF',   'type' => 'string'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.return_prefix',                         'value' => 'RTN',   'type' => 'string'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.order_number_format',                    'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.near_expiry_threshold_days',             'value' => '90',    'type' => 'integer', 'description' => 'Batches expiring within this many days are flagged near-expiry'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.allow_negative_stock',                   'value' => '0',     'type' => 'boolean', 'description' => 'Reserved — no override path is wired in Phase 7; dispensing always refuses insufficient stock'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.controlled_drug_witness_required',        'value' => '0',     'type' => 'boolean'],
+            ['group' => 'pharmacy', 'key' => 'pharmacy.substitution_requires_approval',          'value' => '1',     'type' => 'boolean'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

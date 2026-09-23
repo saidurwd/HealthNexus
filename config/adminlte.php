@@ -1422,6 +1422,117 @@ return [
             ],
         ],
         [
+            'text' => 'Pharmacy',
+            'icon' => 'bi bi-capsule',
+            'can' => 'pharmacy.dashboard.view',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard',
+                    'url' => '/admin/pharmacy',
+                    'icon' => 'bi bi-speedometer',
+                    'can' => 'pharmacy.dashboard.view',
+                ],
+                [
+                    'text' => 'Orders',
+                    'url' => '/admin/pharmacy/orders',
+                    'icon' => 'bi bi-clipboard-check',
+                    'can' => 'pharmacy.prescription.view',
+                ],
+                [
+                    'text' => 'Dispensing',
+                    'url' => '/admin/pharmacy/dispensing',
+                    'icon' => 'bi bi-prescription2',
+                    'can' => 'pharmacy.dispensing.view',
+                ],
+                [
+                    'text' => 'Catalog',
+                    'icon' => 'bi bi-journal-medical',
+                    'can' => 'pharmacy.medication.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Medications',
+                            'url' => '/admin/pharmacy/medications',
+                            'icon' => 'bi bi-capsule',
+                            'can' => 'pharmacy.medication.view',
+                        ],
+                        [
+                            'text' => 'Generics',
+                            'url' => '/admin/pharmacy/generics',
+                            'icon' => 'bi bi-journal-medical',
+                            'can' => 'pharmacy.generic.view',
+                        ],
+                        [
+                            'text' => 'Brands',
+                            'url' => '/admin/pharmacy/brands',
+                            'icon' => 'bi bi-tag',
+                            'can' => 'pharmacy.brand.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Inventory',
+                    'icon' => 'bi bi-box-seam',
+                    'can' => 'pharmacy.stock.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Stock',
+                            'url' => '/admin/pharmacy/stock',
+                            'icon' => 'bi bi-box-seam',
+                            'can' => 'pharmacy.stock.view',
+                        ],
+                        [
+                            'text' => 'Batches',
+                            'url' => '/admin/pharmacy/batches',
+                            'icon' => 'bi bi-upc-scan',
+                            'can' => 'pharmacy.batch.view',
+                        ],
+                        [
+                            'text' => 'Transfers',
+                            'url' => '/admin/pharmacy/transfers',
+                            'icon' => 'bi bi-arrow-left-right',
+                            'can' => 'pharmacy.stock.transfer',
+                        ],
+                        [
+                            'text' => 'Stock Counts',
+                            'url' => '/admin/pharmacy/stock-counts',
+                            'icon' => 'bi bi-clipboard-data',
+                            'can' => 'pharmacy.stock.count',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Quarantine',
+                    'url' => '/admin/pharmacy/quarantine',
+                    'icon' => 'bi bi-exclamation-octagon',
+                    'can' => 'pharmacy.quarantine.manage',
+                ],
+                [
+                    'text' => 'Recalls',
+                    'url' => '/admin/pharmacy/recalls',
+                    'icon' => 'bi bi-arrow-counterclockwise',
+                    'can' => 'pharmacy.recall.view',
+                ],
+                [
+                    'text' => 'Safety Alerts',
+                    'url' => '/admin/pharmacy/safety-alerts',
+                    'icon' => 'bi bi-exclamation-triangle',
+                    'can' => 'pharmacy.safety_alert.view',
+                ],
+                [
+                    'text' => 'Controlled Drugs',
+                    'url' => '/admin/pharmacy/controlled-drugs',
+                    'icon' => 'bi bi-shield-lock',
+                    'can' => 'pharmacy.controlled_drug.view',
+                ],
+                [
+                    'text' => 'Settings',
+                    'url' => '/admin/pharmacy/settings',
+                    'icon' => 'bi bi-gear',
+                    'can' => 'pharmacy.settings.manage',
+                ],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

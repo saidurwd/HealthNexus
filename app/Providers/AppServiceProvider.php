@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
+use App\Contracts\Pharmacy\DrugInformationProviderInterface;
 use App\Events\Appointments\AppointmentCancelled;
 use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
@@ -18,6 +19,7 @@ use App\Events\Laboratory\CriticalResultDetected;
 use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
 use App\Events\Laboratory\SampleRejected;
+use App\Events\Pharmacy\DispensingCompleted;
 use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
@@ -32,6 +34,8 @@ use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
 use App\Listeners\Laboratory\NotifyOnLabReportEvents;
 use App\Listeners\Laboratory\NotifyOnSampleRejected;
 use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
+use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
+use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
 use App\Listeners\Radiology\CreateRadiologyOrderOnClinicalOrderCreated;
 use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
 use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
@@ -40,6 +44,7 @@ use App\Listeners\Radiology\RecordRadiologyReportOnPatientTimeline;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
+use App\Services\Pharmacy\NullDrugInformationProvider;
 use App\Services\SettingsService;
 use App\Services\TenantContextResolver;
 use Illuminate\Support\Facades\Event;
@@ -63,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(RevenuePostingInterface::class, NullRevenuePoster::class);
         $this->app->bind(LabAnalyzerAdapterInterface::class, NullLabAnalyzerAdapter::class);
+        $this->app->bind(DrugInformationProviderInterface::class, NullDrugInformationProvider::class);
     }
 
     public function boot(): void
@@ -74,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(EncounterCompleted::class, [RecordEncounterTimelineEvent::class, 'handleEncounterCompleted']);
         Event::listen(DiagnosisAdded::class, [RecordEncounterTimelineEvent::class, 'handleDiagnosisAdded']);
         Event::listen(PrescriptionIssued::class, [RecordEncounterTimelineEvent::class, 'handlePrescriptionIssued']);
+        Event::listen(PrescriptionIssued::class, CreatePharmacyOrderOnPrescriptionIssued::class);
         Event::listen(ReferralCreated::class, [RecordEncounterTimelineEvent::class, 'handleReferralCreated']);
 
         Event::listen(AppointmentCreated::class, [ScheduleAppointmentReminders::class, 'handleCreated']);
@@ -96,5 +103,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(RadiologyReportAmended::class, [RecordRadiologyReportOnPatientTimeline::class, 'handleAmended']);
         Event::listen(RadiologyReportFinalized::class, [NotifyOnRadiologyReportEvents::class, 'handleFinalized']);
         Event::listen(RadiologyReportAmended::class, [NotifyOnRadiologyReportEvents::class, 'handleAmended']);
+
+        Event::listen(DispensingCompleted::class, RecordDispensingOnPatientTimeline::class);
     }
 }

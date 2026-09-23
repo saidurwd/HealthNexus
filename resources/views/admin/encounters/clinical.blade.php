@@ -131,6 +131,7 @@
                             <li class="nav-item"><a class="nav-link" href="#orders" data-bs-toggle="tab">Orders</a></li>
                             <li class="nav-item"><a class="nav-link" href="#lab-results" data-bs-toggle="tab">Lab Results</a></li>
                             <li class="nav-item"><a class="nav-link" href="#imaging" data-bs-toggle="tab">Imaging</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#medications" data-bs-toggle="tab">Medications</a></li>
                             <li class="nav-item"><a class="nav-link" href="#prescription" data-bs-toggle="tab">Prescription</a></li>
                             <li class="nav-item"><a class="nav-link" href="#referral" data-bs-toggle="tab">Referral</a></li>
                             <li class="nav-item"><a class="nav-link" href="#instructions" data-bs-toggle="tab">Instructions</a></li>
@@ -148,6 +149,7 @@
                             @include('admin.encounters.partials.orders', compact('encounter'))
                             @include('admin.encounters.partials.lab-results', compact('encounter'))
                             @include('admin.encounters.partials.imaging', compact('encounter'))
+                            @include('admin.encounters.partials.medications', compact('encounter'))
                             @include('admin.encounters.partials.prescription', compact('encounter'))
                             @include('admin.encounters.partials.referral', compact('encounter'))
                             @include('admin.encounters.partials.instructions', compact('encounter'))

@@ -59,6 +59,14 @@ class NotificationService
             'title' => 'Radiology Report Amended',
             'message' => 'Radiology report :report_number for :patient has been amended. Reason: :reason.',
         ],
+        'pharmacy_expiry_alert' => [
+            'title' => 'Medication Nearing Expiry',
+            'message' => 'Batch :batch_number of :medication (store: :store) expires on :expiry_date.',
+        ],
+        'pharmacy_low_stock' => [
+            'title' => 'Low Pharmacy Stock',
+            'message' => ':medication is below its reorder level at :store (:quantity remaining, reorder at :reorder_level).',
+        ],
     ];
 
     /**
