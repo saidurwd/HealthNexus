@@ -1663,6 +1663,31 @@ return [
             ],
         ],
         [
+            'text' => 'Nursing',
+            'icon' => 'bi bi-clipboard2-pulse',
+            'can' => 'nursing.dashboard.view',
+            'submenu' => [
+                ['text' => 'Dashboard', 'url' => '/admin/nursing', 'icon' => 'bi bi-speedometer2', 'can' => 'nursing.dashboard.view'],
+                ['text' => 'Ward Patients', 'url' => '/admin/nursing/episodes', 'icon' => 'bi bi-people', 'can' => 'nursing.dashboard.view'],
+                ['text' => 'Tasks', 'url' => '/admin/nursing/tasks', 'icon' => 'bi bi-check2-square', 'can' => 'nursing.task.view'],
+                ['text' => 'Medication (MAR)', 'url' => '/admin/nursing/mar', 'icon' => 'bi bi-capsule', 'can' => 'nursing.mar.view'],
+                ['text' => 'Handover', 'url' => '/admin/nursing/handover', 'icon' => 'bi bi-arrow-left-right', 'can' => 'nursing.handover.view'],
+                ['text' => 'Escalations', 'url' => '/admin/nursing/escalations', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'nursing.escalation.view'],
+                ['text' => 'Shifts', 'url' => '/admin/nursing/shifts', 'icon' => 'bi bi-clock', 'can' => 'nursing.shift.view'],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-bar-chart',
+                    'can' => 'nursing.reports.view',
+                    'submenu' => [
+                        ['text' => 'Workload', 'url' => '/admin/nursing/reports/workload', 'icon' => 'bi bi-person-workspace', 'can' => 'nursing.reports.view'],
+                        ['text' => 'Medication', 'url' => '/admin/nursing/reports/medication', 'icon' => 'bi bi-capsule-pill', 'can' => 'nursing.reports.view'],
+                        ['text' => 'Quality', 'url' => '/admin/nursing/reports/quality', 'icon' => 'bi bi-award', 'can' => 'nursing.reports.view'],
+                    ],
+                ],
+                ['text' => 'Settings', 'url' => '/admin/nursing/settings', 'icon' => 'bi bi-gear', 'can' => 'nursing.settings.manage'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

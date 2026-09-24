@@ -37,6 +37,17 @@ class NursingSettingsController extends Controller
 
         foreach ($validated['settings'] ?? [] as $key => $value) {
             $fullKey = 'nursing.'.$key;
+
+            if (is_array($this->settings->get($fullKey))) {
+                $decoded = json_decode((string) $value, true);
+
+                if (! is_array($decoded)) {
+                    return back()->withErrors(["settings.$key" => "'$key' must be valid JSON."])->withInput();
+                }
+
+                $value = $decoded;
+            }
+
             $this->settings->set($fullKey, $value);
             $changes[$fullKey] = $value;
         }

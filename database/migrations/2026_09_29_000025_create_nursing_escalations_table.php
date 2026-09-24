@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['episode_id', 'severity']);
-            $table->index(['admission_id', 'acknowledged_at', 'resolved_at']);
+            $table->index(['admission_id', 'acknowledged_at', 'resolved_at'], 'nursing_esc_admission_state_idx');
         });
     }
 

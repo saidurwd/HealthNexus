@@ -46,9 +46,9 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['episode_id', 'status', 'scheduled_at']);
+            $table->index(['episode_id', 'status', 'scheduled_at'], 'nursing_mar_episode_status_sched_idx');
             $table->index(['admission_id', 'status']);
-            $table->index(['dispensing_item_id', 'scheduled_at']);
+            $table->index(['dispensing_item_id', 'scheduled_at'], 'nursing_mar_dispensing_sched_idx');
         });
     }
 

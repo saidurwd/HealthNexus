@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    // Every listener is registered explicitly in AppServiceProvider::boot(); auto-discovery would
+    // register each handle*() method a second time and fire every listener twice.
+    ->withEvents(discover: false)
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(prepend: [
             RequestIdMiddleware::class,

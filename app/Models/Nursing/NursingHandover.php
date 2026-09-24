@@ -16,6 +16,8 @@ class NursingHandover extends Model
 
     public const STATUS_ACKNOWLEDGED = 'acknowledged';
 
+    protected $table = 'nursing_handover';
+
     protected $fillable = [
         'company_id', 'branch_id', 'episode_id', 'admission_id', 'outgoing_nurse_id',
         'incoming_nurse_id', 'shift_id', 'status', 'prepared_at', 'acknowledged_at',

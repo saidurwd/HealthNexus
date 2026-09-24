@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
         require __DIR__.'/../modules/Radiology/Routes/web.php';
         require __DIR__.'/../modules/Pharmacy/Routes/web.php';
         require __DIR__.'/../modules/Ipd/Routes/web.php';
+        require __DIR__.'/../modules/Nursing/Routes/web.php';
         require __DIR__.'/../modules/Audit/Routes/web.php';
         require __DIR__.'/../modules/System/Routes/web.php';
         require __DIR__.'/../modules/Workflow/Routes/web.php';

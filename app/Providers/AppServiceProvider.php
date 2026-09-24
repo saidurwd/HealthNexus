@@ -145,9 +145,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(DischargeRequested::class, [NotifyOnDischargeEvents::class, 'handleRequested']);
         Event::listen(PatientDischarged::class, [NotifyOnDischargeEvents::class, 'handleCompleted']);
 
-        Event::listen(PatientAdmitted::class, StartEpisodeOnAdmission::class);
-        Event::listen(PatientTransferred::class, FlagHandoverOnTransfer::class);
-        Event::listen(PatientDischarged::class, CompleteEpisodeOnDischarge::class);
+        Event::listen(PatientAdmitted::class, [StartEpisodeOnAdmission::class, 'handle']);
+        Event::listen(PatientTransferred::class, [FlagHandoverOnTransfer::class, 'handle']);
+        Event::listen(PatientDischarged::class, [CompleteEpisodeOnDischarge::class, 'handle']);
 
         Event::listen(NursingEpisodeStarted::class, [RecordNursingEventsOnPatientTimeline::class, 'handleEpisodeStarted']);
         Event::listen(MedicationAdministrationRecorded::class, [RecordNursingEventsOnPatientTimeline::class, 'handleMedicationAdministered']);
@@ -155,12 +155,12 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(NursingEscalationCreated::class, [RecordNursingEventsOnPatientTimeline::class, 'handleEscalationCreated']);
         Event::listen(NursingDischargeChecklistCompleted::class, [RecordNursingEventsOnPatientTimeline::class, 'handleDischargeChecklistCompleted']);
 
-        Event::listen(CriticalObservationDetected::class, RaiseAlertOnCriticalObservation::class);
+        Event::listen(CriticalObservationDetected::class, [RaiseAlertOnCriticalObservation::class, 'handle']);
         Event::listen(MedicationRefused::class, [NotifyOnMarEvents::class, 'handleRefused']);
         Event::listen(MedicationOmitted::class, [NotifyOnMarEvents::class, 'handleOmitted']);
         Event::listen(NursingEscalationCreated::class, [NotifyOnEscalationEvents::class, 'handleCreated']);
         Event::listen(NursingEscalationResolved::class, [NotifyOnEscalationEvents::class, 'handleResolved']);
-        Event::listen(NurseAssigned::class, NotifyOnAssignmentEvents::class);
+        Event::listen(NurseAssigned::class, [NotifyOnAssignmentEvents::class, 'handle']);
         Event::listen(NursingHandoverCreated::class, [NotifyOnHandoverEvents::class, 'handleCreated']);
     }
 }

@@ -28,7 +28,7 @@ return new class extends Migration
             $table->foreignId('corrects_observation_id')->nullable()->constrained('nursing_observations')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['episode_id', 'observation_type', 'observed_at']);
+            $table->index(['episode_id', 'observation_type', 'observed_at'], 'nursing_obs_episode_type_observed_idx');
             $table->index(['patient_id', 'observed_at']);
         });
     }

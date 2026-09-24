@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('nursing_medication_administration_corrections', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('administration_id')->constrained('nursing_medication_administrations')->cascadeOnDelete();
+            $table->unsignedBigInteger('administration_id');
+            $table->foreign('administration_id', 'nursing_mar_corrections_admin_fk')->references('id')->on('nursing_medication_administrations')->cascadeOnDelete();
             $table->string('correction_type');
             $table->text('reason');
             $table->json('previous_values');

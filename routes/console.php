@@ -61,3 +61,7 @@ Schedule::command('ipd:reconcile-bed-states')
     ->hourly()
     ->name('ipd-reconcile-bed-states')
     ->withoutOverlapping();
+
+Schedule::command('nursing:detect-overdue-tasks')->everyFifteenMinutes()->name('nursing-detect-overdue-tasks')->withoutOverlapping();
+Schedule::command('nursing:detect-overdue-medication-administration')->everyFiveMinutes()->name('nursing-detect-overdue-medication')->withoutOverlapping();
+Schedule::command('nursing:generate-medication-schedule')->everyThirtyMinutes()->name('nursing-generate-medication-schedule')->withoutOverlapping();
