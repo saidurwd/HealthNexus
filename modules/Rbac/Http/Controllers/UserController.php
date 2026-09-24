@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -37,12 +39,41 @@ class UserController extends Controller
         return view('admin.users.index', compact('company', 'users'));
     }
 
-    public function create()
+    /**
+     * Roles the acting user may grant. super_admin is never grantable by anyone who is not
+     * already a super_admin, so this screen cannot be used for privilege escalation.
+     */
+    private function assignableRoles(Request $request)
+    {
+        return Role::query()
+            ->when(! $request->user()->hasRole('super_admin'), fn ($q) => $q->where('name', '!=', 'super_admin'))
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Syncs only the roles the actor is allowed to manage — a super_admin role already held by
+     * the target is preserved when the actor is not a super_admin.
+     */
+    private function syncUserRoles(Request $request, User $user, array $submitted): void
+    {
+        $assignable = $this->assignableRoles($request)->pluck('name')->all();
+        $granted = array_values(array_intersect($submitted, $assignable));
+
+        if ($user->hasRole('super_admin') && ! in_array('super_admin', $assignable, true)) {
+            $granted[] = 'super_admin';
+        }
+
+        $user->syncRoles($granted);
+    }
+
+    public function create(Request $request)
     {
         $companies = Company::all();
         $branches = Branch::all();
+        $roles = $this->assignableRoles($request);
 
-        return view('admin.users.create', compact('companies', 'branches'));
+        return view('admin.users.create', compact('companies', 'branches', 'roles'));
     }
 
     public function store(Request $request)
@@ -60,6 +91,8 @@ class UserController extends Controller
             'companies.*' => ['integer', 'exists:companies,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
+            'roles' => ['array'],
+            'roles.*' => ['string', Rule::in($this->assignableRoles($request)->pluck('name')->all())],
         ]);
 
         $userData = [
@@ -77,6 +110,8 @@ class UserController extends Controller
         }
 
         $user = User::create($userData);
+
+        $this->syncUserRoles($request, $user, $validated['roles'] ?? []);
 
         if (! empty($validated['companies'])) {
             foreach ($validated['companies'] as $companyId) {
@@ -99,15 +134,17 @@ class UserController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
         $companies = Company::all();
         $branches = Branch::all();
+        $roles = $this->assignableRoles($request);
+        $userRoles = $user->roles()->pluck('name')->toArray();
 
         $userCompanies = $user->companies()->pluck('companies.id')->toArray();
         $userBranches = $user->branches()->pluck('branches.id')->toArray();
 
-        return view('admin.users.edit', compact('user', 'companies', 'branches', 'userCompanies', 'userBranches'));
+        return view('admin.users.edit', compact('user', 'companies', 'branches', 'userCompanies', 'userBranches', 'roles', 'userRoles'));
     }
 
     public function update(Request $request, User $user)
@@ -125,6 +162,9 @@ class UserController extends Controller
             'companies.*' => ['integer', 'exists:companies,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
+            'roles_present' => ['nullable', 'boolean'],
+            'roles' => ['array'],
+            'roles.*' => ['string', Rule::in($this->assignableRoles($request)->pluck('name')->all())],
         ]);
 
         $userData = [
@@ -145,6 +185,10 @@ class UserController extends Controller
 
         $user->companies()->sync($validated['companies'] ?? []);
         $user->branches()->sync($validated['branches'] ?? []);
+
+        if ($request->boolean('roles_present')) {
+            $this->syncUserRoles($request, $user, $validated['roles'] ?? []);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }

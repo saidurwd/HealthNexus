@@ -77,6 +77,17 @@
                                 </div>
                             @endforeach
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Roles</label>
+                            <input type="hidden" name="roles_present" value="1">
+                            @foreach($roles as $role)
+                                <div class="form-check">
+                                    <input type="checkbox" name="roles[]" value="{{ $role->name }}" id="role_{{ $role->id }}" class="form-check-input" {{ in_array($role->name, old('roles', [])) ? 'checked' : '' }}>
+                                    <label for="role_{{ $role->id }}" class="form-check-label">{{ ucwords(str_replace('_', ' ', $role->name)) }}</label>
+                                </div>
+                            @endforeach
+                            @error('roles.*') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
                     </div>
                 </div>
             </div>

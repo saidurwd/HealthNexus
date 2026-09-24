@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class SettingsService
 {
-    public const CACHE_KEY = 'hms_settings_map';
+    // v2: the cache stores plain attribute arrays. Laravel's cache.serializable_classes=false turns cached
+    // Eloquent objects into __PHP_Incomplete_Class on read, and the old v1 key may still hold such an entry.
+    public const CACHE_KEY = 'hms_settings_map_v2';
 
     public function all(bool $refresh = false): array
     {
@@ -187,7 +189,9 @@ class SettingsService
             Cache::forget(self::CACHE_KEY);
         }
 
-        return Cache::remember(self::CACHE_KEY, 3600, fn () => Setting::all()->keyBy('key'));
+        $rows = Cache::remember(self::CACHE_KEY, 3600, fn () => Setting::all()->map(fn (Setting $s) => $s->getAttributes())->all());
+
+        return Setting::hydrate($rows)->keyBy('key');
     }
 
     protected function nonSensitive(Collection $collection): array
