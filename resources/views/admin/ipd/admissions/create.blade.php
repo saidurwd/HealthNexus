@@ -11,25 +11,6 @@
             <div class="card-body row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Company</label>
-                        <select name="company_id" class="form-control @error('company_id') is-invalid @enderror" required>
-                            <option value="">Select Company</option>
-                            @foreach(\App\Models\Company::all() as $company)
-                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('company_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Branch (optional)</label>
-                        <select name="branch_id" class="form-control">
-                            <option value="">-</option>
-                            @foreach(\App\Models\Branch::all() as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label class="form-label">Patient</label>
                         <input type="number" name="patient_id" value="{{ old('patient_id', $admissionRequest?->patient_id) }}" class="form-control @error('patient_id') is-invalid @enderror" placeholder="Patient ID" required>
                         @if($admissionRequest?->patient)<div class="form-text">{{ $admissionRequest->patient->full_name }}</div>@endif

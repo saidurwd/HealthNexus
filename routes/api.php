@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\TenantContextController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Middleware\ApplyTenantContextToInput;
 use App\Http\Middleware\EnsureBranchAccess;
 use App\Http\Middleware\EnsureCompanyAccess;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:sanctum', ApplyTenantContextToInput::class])->group(function () {
         Route::get('/tenant/context', [TenantContextController::class, 'show']);
         Route::post('/tenant/context', [TenantContextController::class, 'update']);
 

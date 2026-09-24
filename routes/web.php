@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/mfa/setup', [MfaController::class, 'setup'])->name('mfa.setup.store');
     Route::post('/mfa/disable', [MfaController::class, 'disable'])->name('mfa.disable');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware([\App\Http\Middleware\ApplyTenantContextToInput::class])->group(function () {
         require __DIR__.'/../modules/Core/Organization/Routes/web.php';
         require __DIR__.'/../modules/Rbac/Routes/web.php';
         require __DIR__.'/../modules/Patients/Routes/web.php';

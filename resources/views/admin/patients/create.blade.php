@@ -13,30 +13,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="company_id" class="form-label">Company</label>
-                            <select name="company_id" id="company_id" class="form-control @error('company_id') is-invalid @enderror" required>
-                                <option value="">Select Company</option>
-                                @foreach($companies as $company)
-                                    <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>
-                                        {{ $company->name }} ({{ $company->code }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('company_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="branch_id" class="form-label">Branch</label>
-                            <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
-                                <option value="">Select Branch</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
-                                        {{ $branch->name }} ({{ $branch->company->name ?? '' }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('branch_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
                             <label for="first_name" class="form-label">First Name</label>
                             <input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}" class="form-control @error('first_name') is-invalid @enderror" required>
                             @error('first_name') <div class="invalid-feedback">{{ $message }}</div> @enderror

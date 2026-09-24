@@ -12,16 +12,6 @@
             @csrf
             <div class="card-body">
                 <div class="mb-3">
-                    <label for="branch_id" class="form-label">Branch *</label>
-                    <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required>
-                        <option value="">Select Branch</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('branch_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                </div>
-                <div class="mb-3">
                     <label for="patient_id" class="form-label">Patient *</label>
                     <select name="patient_id" id="patient_id" class="form-control @error('patient_id') is-invalid @enderror" required>
                         <option value="">Select Patient</option>

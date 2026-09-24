@@ -2,16 +2,6 @@
 
 <div class="card-body">
     @unless($b)
-        <div class="mb-3">
-            <label class="form-label">Company</label>
-            <select name="company_id" class="form-control @error('company_id') is-invalid @enderror" required>
-                <option value="">Select Company</option>
-                @foreach(\App\Models\Company::all() as $company)
-                    <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
-                @endforeach
-            </select>
-            @error('company_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        </div>
     @endunless
     <div class="mb-3">
         <label class="form-label">Code</label>

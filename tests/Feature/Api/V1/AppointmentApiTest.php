@@ -34,6 +34,7 @@ class AppointmentApiTest extends TestCase
         }
 
         $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);

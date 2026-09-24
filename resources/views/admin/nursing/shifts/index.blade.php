@@ -27,7 +27,6 @@
         <div class="card-header"><h3 class="card-title">Add Shift</h3></div>
         <form action="{{ route('admin.nursing.shifts.store') }}" method="post">
             @csrf
-            <input type="hidden" name="company_id" value="{{ app(\App\Services\TenantContextResolver::class)->getCompanyId() }}">
             <div class="card-body row">
                 <div class="col-md-3"><input name="name" class="form-control" placeholder="Name" required></div>
                 <div class="col-md-3"><input type="time" name="start_time" class="form-control" required></div>
