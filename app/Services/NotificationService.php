@@ -67,6 +67,38 @@ class NotificationService
             'title' => 'Low Pharmacy Stock',
             'message' => ':medication is below its reorder level at :store (:quantity remaining, reorder at :reorder_level).',
         ],
+        'ipd_admission_approved' => [
+            'title' => 'Admission Approved',
+            'message' => 'Admission request for :patient has been approved.',
+        ],
+        'ipd_bed_allocated' => [
+            'title' => 'Bed Allocated',
+            'message' => ':patient has been allocated bed :bed_code (admission :admission_number).',
+        ],
+        'ipd_transfer_requested' => [
+            'title' => 'Patient Transfer Requested',
+            'message' => 'Transfer requested for :patient (admission :admission_number) to bed :bed_code.',
+        ],
+        'ipd_transfer_completed' => [
+            'title' => 'Patient Transfer Completed',
+            'message' => ':patient (admission :admission_number) has been transferred to bed :bed_code.',
+        ],
+        'ipd_discharge_requested' => [
+            'title' => 'Discharge Requested',
+            'message' => 'Discharge requested for :patient (admission :admission_number).',
+        ],
+        'ipd_discharge_completed' => [
+            'title' => 'Discharge Completed',
+            'message' => ':patient (admission :admission_number) has been discharged.',
+        ],
+        'ipd_delayed_discharge' => [
+            'title' => 'Delayed Discharge',
+            'message' => ':patient (admission :admission_number, :ward) is :days_overdue day(s) past the expected discharge date.',
+        ],
+        'ipd_bed_reservation_expiring' => [
+            'title' => 'Bed Reservation Expiring',
+            'message' => 'The reservation on bed :bed_code expires soon.',
+        ],
     ];
 
     /**

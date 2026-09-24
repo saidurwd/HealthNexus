@@ -135,6 +135,12 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Pharmacy\PharmacyTransfer::class => \App\Policies\PharmacyTransferPolicy::class,
         \App\Models\Pharmacy\PharmacySafetyAlert::class => \App\Policies\PharmacySafetyAlertPolicy::class,
         \App\Models\Pharmacy\PharmacyMedication::class => \App\Policies\PharmacyMedicationPolicy::class,
+        \App\Models\Ipd\IpdAdmission::class => \App\Policies\IpdAdmissionPolicy::class,
+        \App\Models\Ipd\IpdBed::class => \App\Policies\IpdBedPolicy::class,
+        \App\Models\Ipd\IpdBedMovement::class => \App\Policies\IpdTransferPolicy::class,
+        \App\Models\Ipd\IpdDischargeRequest::class => \App\Policies\IpdDischargePolicy::class,
+        \App\Models\Ipd\IpdPatientLeave::class => \App\Policies\IpdLeavePolicy::class,
+        \App\Models\Ipd\IpdWard::class => \App\Policies\IpdWardPolicy::class,
     ];
 
     public function boot(): void

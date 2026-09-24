@@ -151,6 +151,14 @@ class SettingsService
             ['group' => 'pharmacy', 'key' => 'pharmacy.controlled_drug_witness_required',        'value' => '0',     'type' => 'boolean'],
             ['group' => 'pharmacy', 'key' => 'pharmacy.substitution_requires_approval',          'value' => '1',     'type' => 'boolean'],
 
+            ['group' => 'ipd', 'key' => 'ipd.admission_prefix',                    'value' => 'ADM',   'type' => 'string'],
+            ['group' => 'ipd', 'key' => 'ipd.admission_number_format',              'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string'],
+            ['group' => 'ipd', 'key' => 'ipd.bed_reservation_expiry_minutes',       'value' => '120',   'type' => 'integer', 'description' => 'Minutes after which an unconverted bed reservation expires and the bed returns to Available'],
+            ['group' => 'ipd', 'key' => 'ipd.discharge_requires_cleaning',          'value' => '1',     'type' => 'boolean', 'description' => 'When true, a released bed goes to Cleaning rather than directly to Available'],
+            ['group' => 'ipd', 'key' => 'ipd.leave_default_bed_handling',           'value' => 'retain', 'type' => 'string', 'description' => 'retain keeps the bed allocation active during patient leave; release frees the bed'],
+            ['group' => 'ipd', 'key' => 'ipd.admission_requires_approval',          'value' => '1',     'type' => 'boolean'],
+            ['group' => 'ipd', 'key' => 'ipd.delayed_discharge_escalation_hours',   'value' => '24',    'type' => 'integer'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

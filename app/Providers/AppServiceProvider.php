@@ -15,6 +15,12 @@ use App\Events\Clinical\EncounterCompleted;
 use App\Events\Clinical\EncounterCreated;
 use App\Events\Clinical\PrescriptionIssued;
 use App\Events\Clinical\ReferralCreated;
+use App\Events\Ipd\AdmissionApproved;
+use App\Events\Ipd\BedAllocated;
+use App\Events\Ipd\DischargeRequested;
+use App\Events\Ipd\PatientAdmitted;
+use App\Events\Ipd\PatientDischarged;
+use App\Events\Ipd\PatientTransferred;
 use App\Events\Laboratory\CriticalResultDetected;
 use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
@@ -29,6 +35,10 @@ use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
+use App\Listeners\Ipd\NotifyOnAdmissionEvents;
+use App\Listeners\Ipd\NotifyOnDischargeEvents;
+use App\Listeners\Ipd\NotifyOnTransferEvents;
+use App\Listeners\Ipd\RecordAdmissionOnPatientTimeline;
 use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
 use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
 use App\Listeners\Laboratory\NotifyOnLabReportEvents;
@@ -105,5 +115,14 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(RadiologyReportAmended::class, [NotifyOnRadiologyReportEvents::class, 'handleAmended']);
 
         Event::listen(DispensingCompleted::class, RecordDispensingOnPatientTimeline::class);
+
+        Event::listen(PatientAdmitted::class, [RecordAdmissionOnPatientTimeline::class, 'handleAdmitted']);
+        Event::listen(PatientTransferred::class, [RecordAdmissionOnPatientTimeline::class, 'handleTransferred']);
+        Event::listen(PatientDischarged::class, [RecordAdmissionOnPatientTimeline::class, 'handleDischarged']);
+        Event::listen(AdmissionApproved::class, [NotifyOnAdmissionEvents::class, 'handleApproved']);
+        Event::listen(BedAllocated::class, [NotifyOnAdmissionEvents::class, 'handleBedAllocated']);
+        Event::listen(PatientTransferred::class, [NotifyOnTransferEvents::class, 'handleCompleted']);
+        Event::listen(DischargeRequested::class, [NotifyOnDischargeEvents::class, 'handleRequested']);
+        Event::listen(PatientDischarged::class, [NotifyOnDischargeEvents::class, 'handleCompleted']);
     }
 }

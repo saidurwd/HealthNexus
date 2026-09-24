@@ -41,3 +41,23 @@ Schedule::command('appointments:send-due-reminders')
     ->everyFiveMinutes()
     ->name('send-due-appointment-reminders')
     ->withoutOverlapping();
+
+Schedule::command('ipd:expire-bed-reservations')
+    ->everyFifteenMinutes()
+    ->name('ipd-expire-bed-reservations')
+    ->withoutOverlapping();
+
+Schedule::command('ipd:generate-bed-occupancy-charges')
+    ->dailyAt('00:30')
+    ->name('ipd-generate-bed-occupancy-charges')
+    ->withoutOverlapping();
+
+Schedule::command('ipd:detect-delayed-discharges')
+    ->dailyAt('08:00')
+    ->name('ipd-detect-delayed-discharges')
+    ->withoutOverlapping();
+
+Schedule::command('ipd:reconcile-bed-states')
+    ->hourly()
+    ->name('ipd-reconcile-bed-states')
+    ->withoutOverlapping();

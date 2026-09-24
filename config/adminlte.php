@@ -1533,6 +1533,136 @@ return [
             ],
         ],
         [
+            'text' => 'IPD / Inpatient',
+            'icon' => 'bi bi-hospital',
+            'can' => 'ipd.dashboard.view',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard',
+                    'url' => '/admin/ipd',
+                    'icon' => 'bi bi-speedometer',
+                    'can' => 'ipd.dashboard.view',
+                ],
+                [
+                    'text' => 'Admission',
+                    'icon' => 'bi bi-clipboard-check',
+                    'can' => 'ipd.admission.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Admission Requests',
+                            'url' => '/admin/ipd/admission-requests',
+                            'icon' => 'bi bi-file-earmark-text',
+                            'can' => 'ipd.admission.view',
+                        ],
+                        [
+                            'text' => 'Admissions',
+                            'url' => '/admin/ipd/admissions',
+                            'icon' => 'bi bi-clipboard-check',
+                            'can' => 'ipd.admission.view',
+                        ],
+                        [
+                            'text' => 'Current Inpatients',
+                            'url' => '/admin/ipd/admissions?current_only=1',
+                            'icon' => 'bi bi-people',
+                            'can' => 'ipd.admission.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Bed Management',
+                    'icon' => 'bi bi-grid-3x3-gap',
+                    'can' => 'ipd.bed.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Bed Board',
+                            'url' => '/admin/ipd/bed-board',
+                            'icon' => 'bi bi-grid-3x3-gap',
+                            'can' => 'ipd.bed.view',
+                        ],
+                        [
+                            'text' => 'Bed Availability',
+                            'url' => '/admin/ipd/bed-availability',
+                            'icon' => 'bi bi-search',
+                            'can' => 'ipd.bed.view',
+                        ],
+                        [
+                            'text' => 'Wards',
+                            'url' => '/admin/ipd/wards',
+                            'icon' => 'bi bi-building',
+                            'can' => 'ipd.ward.view',
+                        ],
+                        [
+                            'text' => 'Rooms',
+                            'url' => '/admin/ipd/rooms',
+                            'icon' => 'bi bi-door-closed',
+                            'can' => 'ipd.room.view',
+                        ],
+                        [
+                            'text' => 'Beds',
+                            'url' => '/admin/ipd/beds',
+                            'icon' => 'bi bi-hospital',
+                            'can' => 'ipd.bed.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Transfers',
+                    'url' => '/admin/ipd/transfers',
+                    'icon' => 'bi bi-arrow-left-right',
+                    'can' => 'ipd.transfer.view',
+                ],
+                [
+                    'text' => 'Patient Leave',
+                    'url' => '/admin/ipd/leave',
+                    'icon' => 'bi bi-box-arrow-right',
+                    'can' => 'ipd.leave.view',
+                ],
+                [
+                    'text' => 'Discharge',
+                    'url' => '/admin/ipd/discharge',
+                    'icon' => 'bi bi-house-check',
+                    'can' => 'ipd.discharge.view',
+                ],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-bar-chart',
+                    'can' => 'ipd.reports.view',
+                    'submenu' => [
+                        [
+                            'text' => 'Occupancy',
+                            'url' => '/admin/ipd/reports/occupancy',
+                            'icon' => 'bi bi-pie-chart',
+                            'can' => 'ipd.reports.view',
+                        ],
+                        [
+                            'text' => 'Admissions',
+                            'url' => '/admin/ipd/reports/admissions',
+                            'icon' => 'bi bi-clipboard-check',
+                            'can' => 'ipd.reports.view',
+                        ],
+                        [
+                            'text' => 'Discharges',
+                            'url' => '/admin/ipd/reports/discharges',
+                            'icon' => 'bi bi-house-check',
+                            'can' => 'ipd.reports.view',
+                        ],
+                        [
+                            'text' => 'Transfers',
+                            'url' => '/admin/ipd/reports/transfers',
+                            'icon' => 'bi bi-arrow-left-right',
+                            'can' => 'ipd.reports.view',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Settings',
+                    'url' => '/admin/ipd/settings',
+                    'icon' => 'bi bi-gear',
+                    'can' => 'ipd.settings.manage',
+                ],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',
