@@ -159,6 +159,15 @@ class SettingsService
             ['group' => 'ipd', 'key' => 'ipd.admission_requires_approval',          'value' => '1',     'type' => 'boolean'],
             ['group' => 'ipd', 'key' => 'ipd.delayed_discharge_escalation_hours',   'value' => '24',    'type' => 'integer'],
 
+            ['group' => 'nursing', 'key' => 'nursing.mar_frequency_intervals',      'value' => json_encode(['OD' => 24, 'BID' => 12, 'TID' => 8, 'QID' => 6, 'Q4H' => 4, 'Q6H' => 6, 'Q8H' => 8, 'Q12H' => 12]), 'type' => 'json', 'description' => 'Hospital-configurable map of recognized frequency codes to hour intervals, used only to auto-generate the next scheduled MAR dose — unrecognized codes and all PRN items fall back to nurse-initiated scheduling'],
+            ['group' => 'nursing', 'key' => 'nursing.vitals_default_frequency_minutes', 'value' => '240',  'type' => 'integer', 'description' => 'Default interval between routine vital-sign observations when no care plan/order specifies otherwise'],
+            ['group' => 'nursing', 'key' => 'nursing.handover_requires_acknowledgement', 'value' => '1',   'type' => 'boolean'],
+            ['group' => 'nursing', 'key' => 'nursing.high_alert_requires_witness',   'value' => '1',     'type' => 'boolean', 'description' => 'Requires a second-nurse witness for administration of medications flagged is_high_alert in Phase 7'],
+            ['group' => 'nursing', 'key' => 'nursing.controlled_requires_witness',   'value' => '1',     'type' => 'boolean', 'description' => 'Requires a second-nurse witness for administration of medications flagged is_controlled in Phase 7'],
+            ['group' => 'nursing', 'key' => 'nursing.prn_reassessment_minutes',      'value' => '60',    'type' => 'integer', 'description' => 'Minutes after a PRN administration by which a reassessment/response should be documented'],
+            ['group' => 'nursing', 'key' => 'nursing.escalation_default_recipient_role', 'value' => 'charge_nurse', 'type' => 'string'],
+            ['group' => 'nursing', 'key' => 'nursing.observation_thresholds', 'value' => json_encode(['blood_glucose' => ['low' => 70, 'high' => 200], 'pain' => ['low' => null, 'high' => 7]]), 'type' => 'json', 'description' => 'Hospital-configurable low/high alert thresholds per nursing_observations.observation_type — a breach raises a NursingAlert, never a diagnosis'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

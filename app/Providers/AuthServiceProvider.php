@@ -141,6 +141,15 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Ipd\IpdDischargeRequest::class => \App\Policies\IpdDischargePolicy::class,
         \App\Models\Ipd\IpdPatientLeave::class => \App\Policies\IpdLeavePolicy::class,
         \App\Models\Ipd\IpdWard::class => \App\Policies\IpdWardPolicy::class,
+        \App\Models\Nursing\NursingEpisode::class => \App\Policies\NursingEpisodePolicy::class,
+        \App\Models\Nursing\NursingAssignment::class => \App\Policies\NursingAssignmentPolicy::class,
+        \App\Models\Nursing\NursingAssessment::class => \App\Policies\NursingAssessmentPolicy::class,
+        \App\Models\Nursing\NursingCarePlan::class => \App\Policies\NursingCarePlanPolicy::class,
+        \App\Models\Nursing\NursingMedicationAdministration::class => \App\Policies\NursingMedicationAdministrationPolicy::class,
+        \App\Models\Nursing\NursingNote::class => \App\Policies\NursingNotePolicy::class,
+        \App\Models\Nursing\NursingHandover::class => \App\Policies\NursingHandoverPolicy::class,
+        \App\Models\Nursing\NursingEscalation::class => \App\Policies\NursingEscalationPolicy::class,
+        \App\Models\Nursing\NursingDischargeChecklist::class => \App\Policies\NursingDischargeChecklistPolicy::class,
     ];
 
     public function boot(): void

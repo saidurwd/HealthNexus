@@ -26,6 +26,17 @@ use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
 use App\Events\Laboratory\SampleRejected;
 use App\Events\Pharmacy\DispensingCompleted;
+use App\Events\Nursing\CarePlanCompleted;
+use App\Events\Nursing\CriticalObservationDetected;
+use App\Events\Nursing\MedicationAdministrationRecorded;
+use App\Events\Nursing\MedicationOmitted;
+use App\Events\Nursing\MedicationRefused;
+use App\Events\Nursing\NurseAssigned;
+use App\Events\Nursing\NursingDischargeChecklistCompleted;
+use App\Events\Nursing\NursingEpisodeStarted;
+use App\Events\Nursing\NursingEscalationCreated;
+use App\Events\Nursing\NursingEscalationResolved;
+use App\Events\Nursing\NursingHandoverCreated;
 use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
@@ -39,6 +50,15 @@ use App\Listeners\Ipd\NotifyOnAdmissionEvents;
 use App\Listeners\Ipd\NotifyOnDischargeEvents;
 use App\Listeners\Ipd\NotifyOnTransferEvents;
 use App\Listeners\Ipd\RecordAdmissionOnPatientTimeline;
+use App\Listeners\Nursing\CompleteEpisodeOnDischarge;
+use App\Listeners\Nursing\FlagHandoverOnTransfer;
+use App\Listeners\Nursing\NotifyOnAssignmentEvents;
+use App\Listeners\Nursing\NotifyOnEscalationEvents;
+use App\Listeners\Nursing\NotifyOnHandoverEvents;
+use App\Listeners\Nursing\NotifyOnMarEvents;
+use App\Listeners\Nursing\RaiseAlertOnCriticalObservation;
+use App\Listeners\Nursing\RecordNursingEventsOnPatientTimeline;
+use App\Listeners\Nursing\StartEpisodeOnAdmission;
 use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
 use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
 use App\Listeners\Laboratory\NotifyOnLabReportEvents;
@@ -124,5 +144,23 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(PatientTransferred::class, [NotifyOnTransferEvents::class, 'handleCompleted']);
         Event::listen(DischargeRequested::class, [NotifyOnDischargeEvents::class, 'handleRequested']);
         Event::listen(PatientDischarged::class, [NotifyOnDischargeEvents::class, 'handleCompleted']);
+
+        Event::listen(PatientAdmitted::class, StartEpisodeOnAdmission::class);
+        Event::listen(PatientTransferred::class, FlagHandoverOnTransfer::class);
+        Event::listen(PatientDischarged::class, CompleteEpisodeOnDischarge::class);
+
+        Event::listen(NursingEpisodeStarted::class, [RecordNursingEventsOnPatientTimeline::class, 'handleEpisodeStarted']);
+        Event::listen(MedicationAdministrationRecorded::class, [RecordNursingEventsOnPatientTimeline::class, 'handleMedicationAdministered']);
+        Event::listen(CarePlanCompleted::class, [RecordNursingEventsOnPatientTimeline::class, 'handleCarePlanCompleted']);
+        Event::listen(NursingEscalationCreated::class, [RecordNursingEventsOnPatientTimeline::class, 'handleEscalationCreated']);
+        Event::listen(NursingDischargeChecklistCompleted::class, [RecordNursingEventsOnPatientTimeline::class, 'handleDischargeChecklistCompleted']);
+
+        Event::listen(CriticalObservationDetected::class, RaiseAlertOnCriticalObservation::class);
+        Event::listen(MedicationRefused::class, [NotifyOnMarEvents::class, 'handleRefused']);
+        Event::listen(MedicationOmitted::class, [NotifyOnMarEvents::class, 'handleOmitted']);
+        Event::listen(NursingEscalationCreated::class, [NotifyOnEscalationEvents::class, 'handleCreated']);
+        Event::listen(NursingEscalationResolved::class, [NotifyOnEscalationEvents::class, 'handleResolved']);
+        Event::listen(NurseAssigned::class, NotifyOnAssignmentEvents::class);
+        Event::listen(NursingHandoverCreated::class, [NotifyOnHandoverEvents::class, 'handleCreated']);
     }
 }

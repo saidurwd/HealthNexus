@@ -99,6 +99,39 @@ class NotificationService
             'title' => 'Bed Reservation Expiring',
             'message' => 'The reservation on bed :bed_code expires soon.',
         ],
+
+        'nursing_patient_assigned' => [
+            'title' => 'New Patient Assignment',
+            'message' => 'You have been assigned to :patient (admission :admission_number).',
+        ],
+        'nursing_task_overdue' => [
+            'title' => 'Nursing Task Overdue',
+            'message' => ':task_type for :patient (admission :admission_number) was due :due_at.',
+        ],
+        'nursing_medication_due' => [
+            'title' => 'Medication Due',
+            'message' => ':medication for :patient (admission :admission_number) is due at :scheduled_at.',
+        ],
+        'nursing_medication_overdue' => [
+            'title' => 'Medication Overdue',
+            'message' => ':medication for :patient (admission :admission_number) was due at :scheduled_at.',
+        ],
+        'nursing_critical_observation' => [
+            'title' => 'Critical Observation',
+            'message' => ':observation_type for :patient (admission :admission_number) is :breach.',
+        ],
+        'nursing_handover_pending' => [
+            'title' => 'Handover Pending Acknowledgement',
+            'message' => 'A shift handover for :patient (admission :admission_number) is awaiting your acknowledgement.',
+        ],
+        'nursing_escalation_created' => [
+            'title' => 'Nursing Escalation',
+            'message' => ':concern for :patient (admission :admission_number) — severity :severity.',
+        ],
+        'nursing_escalation_resolved' => [
+            'title' => 'Escalation Resolved',
+            'message' => 'The escalation for :patient (admission :admission_number) has been resolved.',
+        ],
     ];
 
     /**
