@@ -132,6 +132,16 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        \App\Models\Patient::observe(\App\Observers\PatientSearchObserver::class);
+        foreach ([\App\Models\PatientIdentifier::class, \App\Models\PatientContact::class, \App\Models\PatientBranchRegistration::class] as $child) {
+            $reindex = function ($row) {
+                $patient = \App\Models\Patient::withoutGlobalScopes()->find($row->patient_id);
+                $patient && app(\App\Services\Search\PatientSearchIndexer::class)->reindex($patient);
+            };
+            $child::saved($reindex);
+            $child::deleted($reindex);
+        }
+
         Event::listen(\App\Events\Billing\ChargeReversalRequested::class, \App\Listeners\Billing\ReverseChargeOnReversalRequested::class);
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);

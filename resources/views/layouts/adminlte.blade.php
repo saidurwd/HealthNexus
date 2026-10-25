@@ -27,7 +27,26 @@
         </li>
     @endif
     {{-- @include('components.tenant-context-selector') --}}
+    <li class="nav-item d-none d-md-flex align-items-center">
+        <form method="GET" action="{{ route('admin.search') }}" class="mb-0">
+            <input type="search" name="q" id="global-search" class="form-control form-control-sm" style="width:260px"
+                   placeholder="Search or scan…  (Ctrl+K / F3)" autocomplete="off">
+        </form>
+    </li>
 @stop
+
+@push('js')
+<script>
+    // Ctrl+K or F3 jumps to the search box from anywhere; a barcode scanner types the code and presses Enter.
+    document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey && e.key.toLowerCase() === 'k') || e.key === 'F3') {
+            e.preventDefault();
+            var box = document.getElementById('global-search');
+            if (box) { box.focus(); box.select(); }
+        }
+    });
+</script>
+@endpush
 
 @section('footer')
     <strong>&copy; {{ date('Y') }} Health Nexus</strong>

@@ -45,7 +45,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_tax_categories`
 - `charge_event_log`
 
-## core (47)
+## core (48)
 
 - `activity_logs`
 - `audit_logs`
@@ -78,6 +78,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `organization_modules`
 - `organizations`
 - `password_reset_tokens`
+- `patient_search_index`
 - `personal_access_tokens`
 - `report_exports`
 - `security_events`
