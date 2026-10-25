@@ -72,8 +72,9 @@ class EdVisitController extends Controller
         $this->authorizeVisit($request, $visit, 'ed.visit.view');
 
         return view('admin.ed.visit', [
-            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries', 'consults.responder', 'observationStays']),
+            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries', 'consults.responder', 'observationStays', 'disposition']),
             'levels' => $this->scale->levels(),
+            'dispositionTypes' => array_keys(config('ed.dispositions')),
             'labOrders' => LabOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
             'radOrders' => RadiologyOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
             'urgencies' => array_keys(config('ed.consult_sla')),

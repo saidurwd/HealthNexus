@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Emergency\Http\Controllers\Web\EdBoardController;
+use Modules\Emergency\Http\Controllers\Web\EdDispositionController;
 use Modules\Emergency\Http\Controllers\Web\EdFollowUpController;
 use Modules\Emergency\Http\Controllers\Web\EdOrderController;
 use Modules\Emergency\Http\Controllers\Web\EdProtocolController;
@@ -42,6 +43,8 @@ Route::prefix('emergency')->name('ed.')->group(function () {
     Route::delete('consults/{consult}', [EdFollowUpController::class, 'cancelConsult'])->name('consults.cancel');
     Route::post('visits/{visit}/observation', [EdFollowUpController::class, 'startObservation'])->name('visits.observation');
     Route::post('observation/{stay}/end', [EdFollowUpController::class, 'endObservation'])->name('observation.end');
+
+    Route::post('visits/{visit}/disposition', [EdDispositionController::class, 'store'])->name('visits.disposition');
 
     Route::get('zones', [EdZoneController::class, 'index'])->name('zones.index');
     Route::post('zones', [EdZoneController::class, 'storeZone'])->name('zones.store');

@@ -293,6 +293,38 @@
                 </ul>
             </div>
 
+            @if($visit->disposition)
+            <div class="card border-secondary">
+                <div class="card-header"><h3 class="card-title">{{ __('Outcome') }}</h3></div>
+                <div class="card-body">{{ __(\Illuminate\Support\Str::headline($visit->disposition->type)) }} — {{ $visit->disposition->decided_at->format('d M H:i') }}
+                    @if($visit->disposition->destination)<div>{{ $visit->disposition->destination }}</div>@endif
+                    @if($visit->disposition->reason)<div class="text-muted">{{ $visit->disposition->reason }}</div>@endif</div>
+            </div>
+            @elseif($visit->isActive())
+            @can('ed.disposition.decide')
+            <div class="card border-danger">
+                <div class="card-header"><h3 class="card-title">{{ __('Leaving the department') }}</h3></div>
+                <form method="POST" action="{{ route('admin.ed.visits.disposition', $visit) }}" onsubmit="return confirm('{{ __('This closes the visit. Continue?') }}')">
+                    @csrf
+                    <div class="card-body row g-2">
+                        <div class="col-md-4"><label class="form-label">{{ __('Decision') }}</label>
+                            <select name="type" class="form-select" required>@foreach($dispositionTypes as $t)@continue($t === 'death' && ! auth()->user()->can('ed.death.declare'))<option value="{{ $t }}">{{ __(\Illuminate\Support\Str::headline($t)) }}</option>@endforeach</select></div>
+                        <div class="col-md-8"><label class="form-label">{{ __('Reason / summary') }}</label><input type="text" name="reason" class="form-control" maxlength="1000"></div>
+                        <div class="col-md-6"><label class="form-label">{{ __('Destination (transfer / referral)') }}</label><input type="text" name="destination" class="form-control" maxlength="200"></div>
+                        <div class="col-md-6"><label class="form-label">{{ __('Follow-up advice') }}</label><input type="text" name="follow_up" class="form-control" maxlength="500"></div>
+                        <div class="col-md-4"><label class="form-label">{{ __('Time of death') }}</label><input type="datetime-local" name="time_of_death" class="form-control"></div>
+                        <div class="col-md-8"><label class="form-label">{{ __('Cause of death') }}</label><input type="text" name="cause" class="form-control" maxlength="500"></div>
+                        <div class="col-12 d-flex gap-4">
+                            <label class="form-check"><input type="checkbox" name="ambulance_required" value="1" class="form-check-input"> {{ __('Ambulance needed') }}</label>
+                            <label class="form-check"><input type="checkbox" name="risks_explained" value="1" class="form-check-input"> {{ __('Risks explained to the patient (against advice)') }}</label>
+                        </div>
+                    </div>
+                    <div class="card-footer"><button class="btn btn-danger">{{ __('Close visit') }}</button></div>
+                </form>
+            </div>
+            @endcan
+            @endif
+
             <div class="card">
                 <div class="card-header"><h3 class="card-title">{{ __('Triage history') }}</h3></div>
                 <ul class="list-group list-group-flush">

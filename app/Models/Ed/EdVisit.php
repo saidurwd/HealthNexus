@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class EdVisit extends Model
 {
@@ -107,6 +108,12 @@ class EdVisit extends Model
     public function observationStays(): HasMany
     {
         return $this->hasMany(EdObservationStay::class, 'visit_id')->orderBy('started_at');
+    }
+
+    /** @return HasOne<EdDisposition, $this> */
+    public function disposition(): HasOne
+    {
+        return $this->hasOne(EdDisposition::class, 'visit_id');
     }
 
     public function triageRecords(): HasMany

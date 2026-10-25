@@ -41,4 +41,17 @@ return [
     // Observation unit billing rule (EXAMPLE values, OD-12): billed hours = max(minimum_hours, ceil((minutes - grace_minutes) / 60)).
     // An observation stay longer than long_stay_hours raises a review alert.
     'observation' => ['service_code' => 'ED-OBS-HR', 'grace_minutes' => 10, 'minimum_hours' => 1, 'long_stay_hours' => 24],
+
+    // How an emergency visit can end. `needs`: the details the decision must carry (all are checked by EdDispositionService).
+    'dispositions' => [
+        'discharge' => ['needs' => []],
+        'admit_ipd' => ['needs' => ['reason']],
+        'icu' => ['needs' => ['reason']],
+        'surgery' => ['needs' => ['reason']],
+        'transfer' => ['needs' => ['destination', 'reason']],
+        'referral' => ['needs' => ['destination', 'reason']],
+        'lwbs' => ['needs' => []],
+        'lama' => ['needs' => ['reason', 'risks_explained']],
+        'death' => ['needs' => ['time_of_death', 'cause']],
+    ],
 ];
