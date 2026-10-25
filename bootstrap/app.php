@@ -31,6 +31,10 @@ return Application::configure(basePath: dirname(__DIR__))
             SetTenantContext::class,
         ]);
 
+        $middleware->alias([
+            'module' => \App\Http\Middleware\EnsureModuleEnabled::class,
+        ]);
+
         $middleware->api(prepend: [
             RequestIdMiddleware::class,
             SetTenantContext::class,

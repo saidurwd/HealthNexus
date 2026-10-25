@@ -856,6 +856,7 @@ return [
         ],
         [
             'text' => 'Appointments',
+            'module' => 'appointment',
             'icon' => 'bi bi-calendar-check',
             'can' => 'appointments.view',
             'submenu' => [
@@ -1172,6 +1173,7 @@ return [
         ],
         [
             'text' => 'Laboratory',
+            'module' => 'lab',
             'icon' => 'bi bi-clipboard2-pulse',
             'can' => 'lab.dashboard.view',
             'submenu' => [
@@ -1304,6 +1306,7 @@ return [
         ],
         [
             'text' => 'Radiology',
+            'module' => 'radiology',
             'icon' => 'bi bi-radioactive',
             'can' => 'radiology.dashboard.view',
             'submenu' => [
@@ -1423,6 +1426,7 @@ return [
         ],
         [
             'text' => 'Pharmacy',
+            'module' => 'pharmacy',
             'icon' => 'bi bi-capsule',
             'can' => 'pharmacy.dashboard.view',
             'submenu' => [
@@ -1534,6 +1538,7 @@ return [
         ],
         [
             'text' => 'IPD / Inpatient',
+            'module' => 'ipd',
             'icon' => 'bi bi-hospital',
             'can' => 'ipd.dashboard.view',
             'submenu' => [
@@ -1664,6 +1669,7 @@ return [
         ],
         [
             'text' => 'Nursing',
+            'module' => 'nursing',
             'icon' => 'bi bi-clipboard2-pulse',
             'can' => 'nursing.dashboard.view',
             'submenu' => [
@@ -1689,6 +1695,7 @@ return [
         ],
         [
             'text' => 'OT / Surgery',
+            'module' => 'ot',
             'icon' => 'bi bi-scissors',
             'can' => 'ot.dashboard.view',
             'submenu' => [
@@ -1712,6 +1719,7 @@ return [
         ],
         [
             'text' => 'ICU / Critical Care',
+            'module' => 'icu',
             'icon' => 'bi bi-heart-pulse',
             'can' => 'icu.dashboard.view',
             'submenu' => [
@@ -1879,6 +1887,7 @@ return [
     */
 
     'filters' => [
+        App\Support\ModuleMenuFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,

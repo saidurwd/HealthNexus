@@ -26,12 +26,12 @@ Route::prefix('v1')->group(function () {
 
         require __DIR__.'/../modules/Settings/Routes/api.php';
         require __DIR__.'/../modules/Notifications/Routes/api.php';
-        require __DIR__.'/../modules/Radiology/Routes/api.php';
-        require __DIR__.'/../modules/Pharmacy/Routes/api.php';
-        require __DIR__.'/../modules/Ipd/Routes/api.php';
-        require __DIR__.'/../modules/Nursing/Routes/api.php';
-        require __DIR__.'/../modules/Ot/Routes/api.php';
-        require __DIR__.'/../modules/Icu/Routes/api.php';
+        Route::middleware('module:radiology')->group(fn () => require __DIR__.'/../modules/Radiology/Routes/api.php');
+        Route::middleware('module:pharmacy')->group(fn () => require __DIR__.'/../modules/Pharmacy/Routes/api.php');
+        Route::middleware('module:ipd')->group(fn () => require __DIR__.'/../modules/Ipd/Routes/api.php');
+        Route::middleware('module:nursing')->group(fn () => require __DIR__.'/../modules/Nursing/Routes/api.php');
+        Route::middleware('module:ot')->group(fn () => require __DIR__.'/../modules/Ot/Routes/api.php');
+        Route::middleware('module:icu')->group(fn () => require __DIR__.'/../modules/Icu/Routes/api.php');
 
         Route::get('/organizations', [OrganizationController::class, 'index']);
         Route::post('/organizations', [OrganizationController::class, 'store']);

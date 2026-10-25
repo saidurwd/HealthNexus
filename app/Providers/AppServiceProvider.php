@@ -109,6 +109,8 @@ class AppServiceProvider extends ServiceProvider
             return new TenantContextResolver;
         });
 
+        $this->app->singleton(\App\Services\ModuleManager::class);
+
         $this->app->singleton(Breadcrumbs::class, function ($app) {
             return new Breadcrumbs($app['request']);
         });
