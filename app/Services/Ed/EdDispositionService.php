@@ -32,6 +32,7 @@ class EdDispositionService
         private readonly EdBayService $bays,
         private readonly EdVisitService $visits,
         private readonly EdObservationService $observation,
+        private readonly EdBillingService $billing,
         private readonly EdProtocolService $protocols,
         private readonly EdConsultService $consults,
         private readonly EncounterLifecycleService $encounters,
@@ -81,6 +82,8 @@ class EdDispositionService
             $from = $locked->status;
             $locked->update(['status' => EdVisit::DISPOSITIONED, 'disposition_type' => $type, 'dispositioned_at' => now()]);
             $this->visits->recordStatus($locked, $from, EdVisit::DISPOSITIONED, $by, 'Disposition: '.$type);
+
+            $this->billing->publishVisitClosed($locked, $by, $type);
 
             EdVisitDispositioned::dispatch($locked->id, $locked->organization_id, $locked->patient_id);
 

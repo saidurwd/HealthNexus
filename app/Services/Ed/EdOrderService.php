@@ -20,7 +20,7 @@ class EdOrderService
 {
     public const ORDER_TYPES = ['laboratory', 'radiology'];
 
-    public function __construct(private readonly EncounterClinicalService $clinical) {}
+    public function __construct(private readonly EncounterClinicalService $clinical, private readonly EdBillingService $billing) {}
 
     /** @param  list<array<string, mixed>>  $items */
     public function placeOrder(EdVisit $visit, User $by, string $type, array $items, ?string $priority = null, ?string $notes = null): ClinicalOrder
@@ -81,7 +81,12 @@ class EdOrderService
     {
         $this->assertActive($visit);
 
-        return $this->clinical->addProcedure($visit->encounter, ['procedure_name' => $name, 'notes' => $notes, 'provider_id' => $by->id], $by);
+        return DB::transaction(function () use ($visit, $by, $name, $notes) {
+            $procedure = $this->clinical->addProcedure($visit->encounter, ['procedure_name' => $name, 'notes' => $notes, 'provider_id' => $by->id], $by);
+            $this->billing->publishProcedure($visit, $procedure, $by);
+
+            return $procedure;
+        });
     }
 
     /** Levels 1–2 are sent as stat; the rest as routine. */

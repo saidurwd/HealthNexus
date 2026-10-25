@@ -113,6 +113,7 @@ class BuildDemoOrganization extends Command
     {
         $rows = [['item_code', 'name', 'category_code', 'base_price']];
         foreach ([['OPD-CONS', 'OPD Consultation', 'CONSULT', 500], ['OPD-SPEC', 'Specialist Consultation', 'CONSULT', 1000], ['OPD-FUP', 'Follow-up Visit', 'CONSULT', 300], ['BED-GEN', 'General Bed (per day)', 'BED', 1200], ['BED-CAB', 'Cabin (per day)', 'BED', 3500],
+            ['ED-VISIT', 'Emergency Visit', 'CONSULT', 800], ['ED-RESUS', 'Resuscitation', 'CONSULT', 3000], ['ED-PROC', 'Emergency Procedure', 'CONSULT', 600], ['ED-OBS-HR', 'Observation Unit (per hour)', 'BED', 250],
             ['RAD-XR-CHEST', 'X-Ray Chest', 'RAD', 600], ['RAD-USG-ABD', 'Ultrasound Abdomen', 'RAD', 1200], ['RAD-CT-HEAD', 'CT Scan Head', 'RAD', 5500],
             ['LAB-CBC', 'Complete Blood Count', 'LAB', 450], ['LAB-RBS', 'Random Blood Sugar', 'LAB', 150], ['LAB-CREAT', 'Serum Creatinine', 'LAB', 400], ['LAB-LFT', 'Liver Function Test', 'LAB', 1100], ['LAB-URINE', 'Urine R/E', 'LAB', 200]] as $r) {
             $rows[] = $r;

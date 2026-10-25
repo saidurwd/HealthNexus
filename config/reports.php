@@ -1,5 +1,6 @@
 <?php
 
+use App\Reports\EdVisitsReport;
 use App\Reports\PatientListReport;
 
 /*
@@ -9,6 +10,7 @@ use App\Reports\PatientListReport;
 return [
     'definitions' => [
         PatientListReport::class,
+        EdVisitsReport::class,
     ],
 
     'formats' => ['csv', 'xlsx'],

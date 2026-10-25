@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Emergency\Http\Controllers\Web\EdBoardController;
+use Modules\Emergency\Http\Controllers\Web\EdDashboardController;
 use Modules\Emergency\Http\Controllers\Web\EdDispositionController;
 use Modules\Emergency\Http\Controllers\Web\EdFollowUpController;
 use Modules\Emergency\Http\Controllers\Web\EdOrderController;
@@ -12,6 +13,8 @@ use Modules\Emergency\Http\Controllers\Web\EdZoneController;
 
 Route::prefix('emergency')->name('ed.')->group(function () {
     Route::get('/', [EdBoardController::class, 'index'])->name('board');
+    Route::get('dashboard', [EdDashboardController::class, 'index'])->name('dashboard');
+    Route::get('workspace', [EdDashboardController::class, 'workspace'])->name('workspace');
     Route::get('board/data', [EdBoardController::class, 'data'])->name('board.data');
 
     Route::get('arrivals/create', [EdVisitController::class, 'create'])->name('arrivals.create');

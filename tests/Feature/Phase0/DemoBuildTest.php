@@ -23,7 +23,7 @@ class DemoBuildTest extends TestCase
         $this->assertSame(60, Patient::where('organization_id', $organization->id)->count());
         $this->assertGreaterThan(0, Patient::where('organization_id', $organization->id)->where('first_name', 'রহিম')->count(), 'Bangla names are present');
         $this->assertSame(20, IpdBed::where('organization_id', $organization->id)->count());
-        $this->assertSame(13, DB::table('billing_items')->where('organization_id', $organization->id)->count());
+        $this->assertSame(17, DB::table('billing_items')->where('organization_id', $organization->id)->count());
         $this->assertSame(8, DB::table('pharmacy_batches')->where('organization_id', $organization->id)->count());
         $this->assertSame(8, (int) DB::table('stock_ledger')->where('organization_id', $organization->id)->where('txn_type', 'opening_balance')->count());
         $this->assertSame(7, User::whereDoesntHave('roles', fn ($q) => $q->where('name', 'hospital_admin'))->where('email', 'like', 'training.staff%')->count());
