@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    name: Style, registry, tests (SQLite)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, pdo_sqlite, bcmath, zip, gd
+          coverage: none
+      - uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('composer.lock') }}
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: cp .env.example .env && php artisan key:generate
+      - name: Code style (Pint)
+        run: ./vendor/bin/pint --test
+      - name: Registry gate (every permission and table belongs to a module)
+        run: php artisan registry:export --check
+      - name: Dependency advisories
+        run: composer audit --no-interaction
+      - name: Tests
+        run: php artisan test --compact
+
+  mysql-migrate:
+    name: Fresh migrate + seed on MySQL
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: healthnexus
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: healthnexus
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, pdo_mysql, bcmath, zip, gd
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: cp .env.example .env && php artisan key:generate
+      # SQLite does not enforce MySQL's 64-character identifier limit, trigger syntax or view rules.
+      # This job is what catches an over-long index name or a broken trigger before a hospital does.
+      - name: Migrate from scratch on MySQL
+        run: php artisan migrate --force
+      - name: Seed
+        run: php artisan db:seed --force
+      - name: Build the training organization (exercises the importers on MySQL)
+        run: php artisan demo:build --patients=50 --password=ci-only-training
+      - name: Operations baseline commands run
+        run: |
+          php artisan ops:heartbeat
+          BACKUP_PASSPHRASE=ci-passphrase php artisan backup:run
+          BACKUP_PASSPHRASE=ci-passphrase php artisan backup:restore-drill --sign="CI"
+          php artisan ops:check || true
+      - name: MySQL-specific tests
+        run: php artisan test --compact tests/Feature/Icu/ObservationServiceTest.php tests/Feature/Pharmacy/StockLedgerTest.php tests/Feature/Phase0

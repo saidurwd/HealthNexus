@@ -88,6 +88,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('{batch}/errors', [\App\Http\Controllers\ImportController::class, 'errors'])->name('errors');
         });
 
+        Route::prefix('downtime')->name('downtime.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\DowntimeController::class, 'index'])->name('index');
+            Route::get('census', [\App\Http\Controllers\DowntimeController::class, 'census'])->name('census');
+            Route::get('forms/{form}', [\App\Http\Controllers\DowntimeController::class, 'form'])->name('form');
+        });
+
+        Route::get('help/quick-start', [\App\Http\Controllers\QuickStartController::class, 'index'])->name('help.quick-start');
+        Route::get('help/quick-start/{role}', [\App\Http\Controllers\QuickStartController::class, 'show'])->name('help.quick-start.show');
+
         Route::get('search', \App\Http\Controllers\GlobalSearchPageController::class)->name('search');
         Route::get('documents/{type}/{reference}', \App\Http\Controllers\DocumentPrintController::class)->name('documents.print');
 

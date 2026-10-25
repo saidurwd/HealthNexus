@@ -75,7 +75,7 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `38`
 - `39`
 
-## core (31)
+## core (32)
 
 - `0`
 - `1`
@@ -108,6 +108,7 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `28`
 - `29`
 - `30`
+- `31`
 
 ## ed (4)
 

@@ -187,6 +187,11 @@ class NotificationService
     {
         $users = $recipients instanceof User ? [$recipients] : $recipients;
 
+        // Training organizations never reach real inboxes (guideline 19.7).
+        if (app(\App\Services\Ops\TrainingMode::class)->active()) {
+            $channels = array_values(array_diff($channels, ['mail', 'sms']));
+        }
+
         foreach ($users as $user) {
             // Each person gets the message in their own language (Bangla SMS/in-app/e-mail text, guideline 19.4).
             $rendered = $this->render($template, $params, $user->locale ?? null);

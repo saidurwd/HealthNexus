@@ -80,3 +80,9 @@ Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-gen
 Schedule::job(new \App\Jobs\Clinical\EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
 
 Schedule::command('exports:prune')->hourly()->name('exports-prune')->withoutOverlapping();
+
+Schedule::command('ops:heartbeat')->everyMinute()->name('ops-heartbeat');
+Schedule::command('backup:run')->dailyAt('01:30')->name('backup-run')->withoutOverlapping();
+Schedule::command('backup:restore-drill')->monthlyOn(1, '03:30')->name('backup-restore-drill')->withoutOverlapping();
+
+Schedule::command('downtime:census')->cron('0 */'.max(1, (int) config('ops.downtime.census_hours', 6)).' * * *')->name('downtime-census')->withoutOverlapping();

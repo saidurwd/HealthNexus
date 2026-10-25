@@ -1780,6 +1780,17 @@ return [
             'can' => 'settings.view',
             'submenu' => [
                 [
+                    'text' => 'Quick-start cards',
+                    'url' => '/admin/help/quick-start',
+                    'icon' => 'bi bi-question-circle',
+                ],
+                [
+                    'text' => 'Downtime kit',
+                    'url' => '/admin/downtime',
+                    'icon' => 'bi bi-printer',
+                    'can' => 'downtime.view',
+                ],
+                [
                     'text' => 'Data import',
                     'url' => '/admin/imports',
                     'icon' => 'bi bi-upload',

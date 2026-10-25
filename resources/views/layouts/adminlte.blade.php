@@ -91,6 +91,12 @@
 @stop
 
 @section('content_header')
+    @if(app(\App\Services\Ops\TrainingMode::class)->active())
+        <div class="alert alert-warning text-center fw-bold mb-2 py-2" role="status" data-training-banner>
+            <i class="bi bi-mortarboard-fill" aria-hidden="true"></i>
+            {{ __('TRAINING — practice only. Nothing here is real, and nothing is sent to real people.') }}
+        </div>
+    @endif
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">

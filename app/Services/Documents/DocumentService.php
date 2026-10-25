@@ -6,6 +6,7 @@ use App\Contracts\Documents\DocumentProvider;
 use App\Models\Branch;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\Ops\TrainingMode;
 use App\Services\SettingsService;
 use App\Services\TenantContextResolver;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -83,6 +84,10 @@ class DocumentService
             'reprint_reason' => $reprintReason, 'printed_at' => now(),
         ]);
         $this->audit->log('PRINT', null, null, null, ['doc_type' => $type, 'ref' => $source->reference, 'copy' => $copy, 'reason' => $reprintReason]);
+
+        if (app(TrainingMode::class)->active()) {
+            $body = '<div class="stamp">TRAINING — NOT A REAL DOCUMENT</div>'.$body;
+        }
 
         return $this->layout($provider, $type, $body);
     }

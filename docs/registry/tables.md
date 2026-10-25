@@ -45,10 +45,11 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_tax_categories`
 - `charge_event_log`
 
-## core (50)
+## core (52)
 
 - `activity_logs`
 - `audit_logs`
+- `backup_runs`
 - `branches`
 - `break_glass_accesses`
 - `cache`
@@ -61,6 +62,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `departments`
 - `document_prints`
 - `document_templates`
+- `downtime_censuses`
 - `failed_jobs`
 - `file_versions`
 - `files`
