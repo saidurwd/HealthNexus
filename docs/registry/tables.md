@@ -196,9 +196,11 @@ _Generated from the Schema::create calls in database/migrations._
 - `nursing_tasks`
 - `nursing_wound_assessments`
 
-## opd (29)
+## opd (31)
 
 - `clinical_number_counters`
+- `clinical_observation_sets`
+- `clinical_observations`
 - `clinical_order_items`
 - `clinical_orders`
 - `diagnoses`
