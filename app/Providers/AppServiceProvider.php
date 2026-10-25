@@ -111,6 +111,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(\App\Services\ModuleManager::class);
 
+        foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
+            $this->app->bindIf($contract, $nullAdapter);
+        }
+
         $this->app->singleton(Breadcrumbs::class, function ($app) {
             return new Breadcrumbs($app['request']);
         });

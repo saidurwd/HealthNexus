@@ -37,3 +37,8 @@ Audit-table immutability, final-record immutability (lab results, signed notes, 
 1. `company_id` vs `organization_id` (finding 1).
 2. Code root: hybrid `app/` + `modules/` accepted, or consolidate (finding 13).
 3. Priority order for H-03…H-06 given the Blockers above.
+
+## Progress log
+- Rename company→organization, Hospital level, API authorization gaps: done (see git log).
+- H-01 done: `config/modules.php` registry, module enablement (`module:<key>` middleware, menu filter, `organization_modules`), Integration Stub Registry (`config/integrations.php`, null adapters), generated `docs/registry/*` and `docs/events.md` (`php artisan registry:export`), CI gate `RegistryConformanceTest`.
+- Findings: events carry Eloquent models, not ids (guideline 7.3) — fix when touched. Legacy permission prefixes (`laboratory`, `emr`, `bed`, `doctor`, …) are registered as aliases.
