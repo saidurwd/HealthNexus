@@ -87,3 +87,5 @@ Schedule::command('backup:run')->dailyAt('01:30')->name('backup-run')->withoutOv
 Schedule::command('backup:restore-drill')->monthlyOn(1, '03:30')->name('backup-restore-drill')->withoutOverlapping();
 
 Schedule::command('downtime:census')->cron('0 */'.max(1, (int) config('ops.downtime.census_hours', 6)).' * * *')->name('downtime-census')->withoutOverlapping();
+
+Schedule::command('ed:check-timers')->everyMinute()->name('ed-check-timers')->withoutOverlapping();

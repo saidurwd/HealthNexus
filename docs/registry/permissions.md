@@ -110,12 +110,18 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `30`
 - `31`
 
-## ed (4)
+## ed (10)
 
 - `0`
 - `1`
 - `2`
 - `3`
+- `4`
+- `5`
+- `6`
+- `7`
+- `8`
+- `9`
 
 ## finance (5)
 

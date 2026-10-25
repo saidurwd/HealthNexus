@@ -62,7 +62,7 @@ class BanglaParityTest extends TestCase
             }
         }
 
-        $this->assertSame([], array_slice($missing, 0, 40), count($missing).' string(s) have no Bangla translation in lang/bn.json (first 40 shown). Add them, then run this test again.');
+        $this->assertSame([], array_slice($missing, 0, 200), count($missing).' string(s) have no Bangla translation in lang/bn.json (first 200 shown). Add them, then run this test again.');
     }
 
     public function test_menu_and_notification_texts_are_translated(): void

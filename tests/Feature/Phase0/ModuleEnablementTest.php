@@ -22,7 +22,7 @@ class ModuleEnablementTest extends TestCase
         $modules = app(ModuleManager::class);
 
         $this->assertTrue($modules->isEnabled('icu', $organization->id));
-        $this->assertFalse($modules->isEnabled('ed', $organization->id));
+        $this->assertFalse($modules->isEnabled('bloodbank', $organization->id));
     }
 
     public function test_switching_off_is_per_organization(): void
@@ -63,7 +63,7 @@ class ModuleEnablementTest extends TestCase
         $organization = Organization::factory()->create();
         $modules = app(ModuleManager::class);
 
-        foreach ([['billing', false], ['ed', true]] as [$key, $enabled]) {
+        foreach ([['billing', false], ['bloodbank', true]] as [$key, $enabled]) {
             try {
                 $modules->set($key, $enabled, $organization->id);
                 $this->fail("$key toggle should be refused");

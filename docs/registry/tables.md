@@ -100,6 +100,15 @@ _Generated from the Schema::create calls in database/migrations._
 - `workflow_steps`
 - `workflows`
 
+## ed (6)
+
+- `ed_bay_assignments`
+- `ed_bays`
+- `ed_status_history`
+- `ed_triage_records`
+- `ed_visits`
+- `ed_zones`
+
 ## icu (26)
 
 - `icu_admission_requests`

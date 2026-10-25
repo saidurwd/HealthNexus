@@ -20,7 +20,7 @@ return [
     'nursing' => ['name' => 'Nursing & MAR', 'phase' => 9, 'built' => true, 'always_on' => false, 'depends_on' => ['ipd'], 'permissions' => ['nursing'], 'tables' => ['nursing'], 'api' => ['nursing']],
     'ot' => ['name' => 'OT / Surgery', 'phase' => 10, 'built' => true, 'always_on' => false, 'depends_on' => ['ipd', 'nursing'], 'permissions' => ['ot'], 'tables' => ['ot'], 'api' => ['ot']],
     'icu' => ['name' => 'ICU / Critical Care', 'phase' => 11, 'built' => true, 'always_on' => false, 'depends_on' => ['ipd', 'nursing'], 'permissions' => ['icu'], 'tables' => ['icu'], 'api' => ['icu']],
-    'ed' => ['name' => 'Emergency Department', 'phase' => 12, 'built' => false, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['ed', 'emergency'], 'tables' => ['ed'], 'api' => ['emergency']],
+    'ed' => ['name' => 'Emergency Department', 'phase' => 12, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['ed', 'emergency'], 'tables' => ['ed'], 'api' => ['emergency']],
     'bloodbank' => ['name' => 'Blood Bank', 'phase' => 13, 'built' => false, 'always_on' => false, 'depends_on' => ['patient'], 'permissions' => ['bloodbank'], 'tables' => ['blood'], 'api' => ['blood-bank']],
     'insurance' => ['name' => 'Insurance / Corporate', 'phase' => 14, 'built' => false, 'always_on' => false, 'depends_on' => ['billing'], 'permissions' => ['insurance'], 'tables' => ['insurance', 'corporate'], 'api' => ['insurance']],
     'inventory' => ['name' => 'Inventory / Procurement', 'phase' => 15, 'built' => false, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['inventory', 'procurement'], 'tables' => ['inventory', 'procurement'], 'api' => ['inventory', 'procurement']],

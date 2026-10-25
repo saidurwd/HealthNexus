@@ -1753,6 +1753,17 @@ return [
             ],
         ],
         [
+            'text' => 'Emergency',
+            'module' => 'ed',
+            'icon' => 'bi bi-hospital-fill',
+            'can' => 'ed.board.view',
+            'submenu' => [
+                ['text' => 'Tracking board', 'url' => '/admin/emergency', 'icon' => 'bi bi-grid-1x2', 'can' => 'ed.board.view'],
+                ['text' => 'New arrival', 'url' => '/admin/emergency/arrivals/create', 'icon' => 'bi bi-person-plus', 'can' => 'ed.visit.create'],
+                ['text' => 'Zones and bays', 'url' => '/admin/emergency/zones', 'icon' => 'bi bi-diagram-3', 'can' => 'ed.zone.manage'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware('module:nursing')->group(fn () => require __DIR__.'/../modules/Nursing/Routes/web.php');
         Route::middleware('module:ot')->group(fn () => require __DIR__.'/../modules/Ot/Routes/web.php');
         Route::middleware('module:icu')->group(fn () => require __DIR__.'/../modules/Icu/Routes/web.php');
+        Route::middleware('module:ed')->group(fn () => require __DIR__.'/../modules/Emergency/Routes/web.php');
         require __DIR__.'/../modules/Audit/Routes/web.php';
         require __DIR__.'/../modules/System/Routes/web.php';
         require __DIR__.'/../modules/Workflow/Routes/web.php';
