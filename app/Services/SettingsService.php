@@ -200,6 +200,26 @@ class SettingsService
             ]), 'type' => 'json', 'description' => 'Hospital-configurable WHO-style surgical safety checklist items per phase'],
             ['group' => 'ot', 'key' => 'ot.delay_categories', 'value' => json_encode(['patient', 'surgeon', 'anesthesia', 'equipment', 'blood', 'implant', 'theatre', 'cleaning', 'administrative', 'other']), 'type' => 'json'],
 
+            ['group' => 'icu', 'key' => 'icu.episode_number_prefix',           'value' => 'ICU',   'type' => 'string'],
+            ['group' => 'icu', 'key' => 'icu.episode_number_format',           'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string', 'description' => 'Document numbering format'],
+            ['group' => 'icu', 'key' => 'icu.admission_requires_approval',     'value' => '1',     'type' => 'boolean'],
+            ['group' => 'icu', 'key' => 'icu.discharge_destinations',         'value' => json_encode(['ward', 'hdu', 'another_icu', 'another_facility', 'discharge', 'death']), 'type' => 'json'],
+            ['group' => 'icu', 'key' => 'icu.scoring_definitions', 'value' => json_encode([
+                'gcs' => ['label' => 'Glasgow Coma Scale', 'version' => 1, 'variables' => ['eye_opening' => [1, 4], 'verbal_response' => [1, 5], 'motor_response' => [1, 6]], 'bands' => [['min' => 13, 'max' => 15, 'interpretation' => 'Mild'], ['min' => 9, 'max' => 12, 'interpretation' => 'Moderate'], ['min' => 3, 'max' => 8, 'interpretation' => 'Severe']]],
+                'qsofa' => ['label' => 'qSOFA', 'version' => 1, 'variables' => ['respiratory_rate_ge_22' => [0, 1], 'altered_mentation' => [0, 1], 'systolic_bp_le_100' => [0, 1]], 'bands' => [['min' => 0, 'max' => 1, 'interpretation' => 'Low risk'], ['min' => 2, 'max' => 3, 'interpretation' => 'High risk']]],
+                'news2' => ['label' => 'NEWS2', 'version' => 1, 'variables' => ['respiratory_rate' => [0, 3], 'spo2' => [0, 3], 'supplemental_oxygen' => [0, 2], 'temperature' => [0, 3], 'systolic_bp' => [0, 3], 'heart_rate' => [0, 3], 'consciousness' => [0, 3]], 'bands' => [['min' => 0, 'max' => 4, 'interpretation' => 'Low'], ['min' => 5, 'max' => 6, 'interpretation' => 'Medium'], ['min' => 7, 'max' => 20, 'interpretation' => 'High']]],
+                'rass' => ['label' => 'Richmond Agitation-Sedation Scale', 'version' => 1, 'variables' => ['score' => [-5, 4]], 'bands' => [['min' => -5, 'max' => -4, 'interpretation' => 'Deeply sedated'], ['min' => -3, 'max' => -1, 'interpretation' => 'Lightly sedated'], ['min' => 0, 'max' => 0, 'interpretation' => 'Alert and calm'], ['min' => 1, 'max' => 4, 'interpretation' => 'Agitated']]],
+                'braden' => ['label' => 'Braden Scale', 'version' => 1, 'variables' => ['sensory_perception' => [1, 4], 'moisture' => [1, 4], 'activity' => [1, 4], 'mobility' => [1, 4], 'nutrition' => [1, 4], 'friction_shear' => [1, 3]], 'bands' => [['min' => 19, 'max' => 23, 'interpretation' => 'No risk'], ['min' => 15, 'max' => 18, 'interpretation' => 'Mild risk'], ['min' => 13, 'max' => 14, 'interpretation' => 'Moderate risk'], ['min' => 10, 'max' => 12, 'interpretation' => 'High risk'], ['min' => 6, 'max' => 9, 'interpretation' => 'Severe risk']]],
+            ]), 'type' => 'json', 'description' => 'Hospital-configurable clinical score definitions (variables, ranges, interpretation bands) — never hardcoded in a controller'],
+            ['group' => 'icu', 'key' => 'icu.alert_threshold_rules', 'value' => json_encode([
+                'spo2' => ['low' => 90, 'high' => null, 'severity' => 'high'],
+                'systolic_bp' => ['low' => 90, 'high' => 180, 'severity' => 'high'],
+                'heart_rate' => ['low' => 50, 'high' => 130, 'severity' => 'moderate'],
+                'respiratory_rate' => ['low' => 8, 'high' => 30, 'severity' => 'high'],
+                'temperature' => ['low' => 35.0, 'high' => 39.0, 'severity' => 'moderate'],
+                'urine_output_ml_per_hr' => ['low' => 30, 'high' => null, 'severity' => 'moderate'],
+            ]), 'type' => 'json', 'description' => 'Hospital-configurable low/high alert thresholds per icu_observations.observation_type — a breach raises an IcuCriticalAlert, never a diagnosis'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

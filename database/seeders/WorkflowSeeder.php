@@ -44,6 +44,7 @@ class WorkflowSeeder extends Seeder
             $this->seedPatientAmendmentWorkflow($company);
             $this->seedIpdAdmissionWorkflow($company);
             $this->seedOtSurgeryRequestWorkflow($company);
+            $this->seedIcuAdmissionWorkflow($company);
         });
     }
 
@@ -120,6 +121,37 @@ class WorkflowSeeder extends Seeder
         ]);
         WorkflowApprover::create([
             'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'ot_coordinator',
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'hospital_admin',
+        ]);
+    }
+
+    /**
+     * Backs Phase 11's ICU admission request approval (App\Services\Icu\IcuAdmissionRequestService)
+     * — a single approval step, eligible to either an icu_coordinator, an intensivist, or a
+     * hospital_admin, honoring the same narrow reuse of the generic engine as IPD admission and
+     * OT surgery request approval.
+     */
+    private function seedIcuAdmissionWorkflow(Company $company): void
+    {
+        $workflow = Workflow::query()->firstOrCreate(
+            ['company_id' => $company->id, 'code' => 'icu_admission'],
+            ['name' => 'ICU Admission Approval', 'description' => 'Approval required before an ICU admission request becomes an active ICU episode.', 'is_active' => true],
+        );
+
+        if ($workflow->steps()->exists()) {
+            return;
+        }
+
+        $approval = WorkflowStep::create([
+            'workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'ICU Admission Approval', 'is_final' => true,
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'icu_coordinator',
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'intensivist',
         ]);
         WorkflowApprover::create([
             'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'hospital_admin',

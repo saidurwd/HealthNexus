@@ -37,6 +37,11 @@ use App\Events\Nursing\NursingEpisodeStarted;
 use App\Events\Nursing\NursingEscalationCreated;
 use App\Events\Nursing\NursingEscalationResolved;
 use App\Events\Nursing\NursingHandoverCreated;
+use App\Events\Icu\ICUCodeBlueStarted;
+use App\Events\Icu\ICUCriticalAlertTriggered;
+use App\Events\Icu\ICUDischarged;
+use App\Events\Icu\ICUPatientAdmitted;
+use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ot\PatientReceivedForSurgery;
 use App\Events\Ot\RecoveryCompleted;
 use App\Events\Ot\SurgeryCancelled;
@@ -74,6 +79,10 @@ use App\Listeners\Laboratory\NotifyOnSampleRejected;
 use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
 use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
 use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
+use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
+use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
+use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
+use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
 use App\Listeners\Ot\CreateSurgeryRequestOnClinicalOrderCreated;
 use App\Listeners\Ot\NotifyOnSurgeryScheduleEvents;
 use App\Listeners\Ot\NotifyOnSurgeryTeamEvents;
@@ -185,5 +194,14 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(SurgeryCancelled::class, [NotifyOnSurgeryScheduleEvents::class, 'handleCancelled']);
         Event::listen(PatientReceivedForSurgery::class, [NotifyOnSurgeryTeamEvents::class, 'handlePatientReceived']);
         Event::listen(SurgicalComplicationRecorded::class, [NotifyOnSurgeryTeamEvents::class, 'handleComplication']);
+
+        Event::listen(CriticalResultDetected::class, CreateIcuAlertOnLabCriticalResult::class);
+        Event::listen(ICUPatientAdmitted::class, [RecordIcuEventsOnPatientTimeline::class, 'handleAdmitted']);
+        Event::listen(ICUPatientTransferred::class, [RecordIcuEventsOnPatientTimeline::class, 'handleTransferred']);
+        Event::listen(ICUDischarged::class, [RecordIcuEventsOnPatientTimeline::class, 'handleDischarged']);
+        Event::listen(ICUPatientAdmitted::class, [NotifyOnIcuEpisodeEvents::class, 'handleAdmitted']);
+        Event::listen(ICUPatientTransferred::class, [NotifyOnIcuEpisodeEvents::class, 'handleTransferred']);
+        Event::listen(ICUCriticalAlertTriggered::class, [NotifyOnIcuCriticalAlerts::class, 'handleAlertTriggered']);
+        Event::listen(ICUCodeBlueStarted::class, [NotifyOnIcuCriticalAlerts::class, 'handleCodeBlueStarted']);
     }
 }

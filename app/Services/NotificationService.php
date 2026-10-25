@@ -149,6 +149,31 @@ class NotificationService
             'title' => 'Tomorrow\'s Operating List',
             'message' => ':count case(s) scheduled for :date.',
         ],
+
+        'icu_admission' => [
+            'title' => 'ICU Admission',
+            'message' => ':patient admitted to ICU, episode :episode_number.',
+        ],
+        'icu_critical_alert' => [
+            'title' => 'ICU Critical Alert',
+            'message' => ':patient — :rule triggered (:severity): :value.',
+        ],
+        'icu_alert_unacknowledged' => [
+            'title' => 'Unacknowledged ICU Alert',
+            'message' => ':patient — :rule has gone unacknowledged and is being escalated.',
+        ],
+        'icu_pending_transfer' => [
+            'title' => 'Pending ICU Transfer',
+            'message' => ':patient (episode :episode_number) has a pending transfer to :destination.',
+        ],
+        'icu_missing_documentation' => [
+            'title' => 'Missing ICU Documentation',
+            'message' => ':patient (episode :episode_number) is missing: :missing.',
+        ],
+        'icu_code_blue' => [
+            'title' => 'Code Blue',
+            'message' => 'Code Blue called for :patient in :location.',
+        ],
     ];
 
     /**

@@ -70,3 +70,9 @@ Schedule::command('ot:detect-schedule-conflicts')->everyFifteenMinutes()->name('
 Schedule::command('ot:detect-missing-preoperative-requirements')->hourly()->name('ot-detect-missing-preop')->withoutOverlapping();
 Schedule::command('ot:send-surgery-reminders')->dailyAt('08:00')->name('ot-send-surgery-reminders')->withoutOverlapping();
 Schedule::command('ot:generate-daily-list')->dailyAt('17:00')->name('ot-generate-daily-list')->withoutOverlapping();
+
+Schedule::command('icu:generate-alerts')->everyFiveMinutes()->name('icu-generate-alerts')->withoutOverlapping();
+Schedule::command('icu:escalate-unacknowledged-alerts')->everyFifteenMinutes()->name('icu-escalate-unacknowledged-alerts')->withoutOverlapping();
+Schedule::command('icu:detect-missing-documentation')->hourly()->name('icu-detect-missing-documentation')->withoutOverlapping();
+Schedule::command('icu:generate-daily-census')->dailyAt('00:05')->name('icu-generate-daily-census')->withoutOverlapping();
+Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-generate-charge-events')->withoutOverlapping();

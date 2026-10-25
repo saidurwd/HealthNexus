@@ -31,6 +31,7 @@ Route::prefix('v1')->group(function () {
         require __DIR__.'/../modules/Ipd/Routes/api.php';
         require __DIR__.'/../modules/Nursing/Routes/api.php';
         require __DIR__.'/../modules/Ot/Routes/api.php';
+        require __DIR__.'/../modules/Icu/Routes/api.php';
 
         Route::get('/companies', [CompanyController::class, 'index']);
         Route::post('/companies', [CompanyController::class, 'store']);

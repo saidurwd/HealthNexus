@@ -1711,6 +1711,31 @@ return [
             ],
         ],
         [
+            'text' => 'ICU / Critical Care',
+            'icon' => 'bi bi-heart-pulse',
+            'can' => 'icu.dashboard.view',
+            'submenu' => [
+                ['text' => 'Dashboard', 'url' => '/admin/icu', 'icon' => 'bi bi-speedometer2', 'can' => 'icu.dashboard.view'],
+                ['text' => 'Bed Board', 'url' => '/admin/icu/bed-board', 'icon' => 'bi bi-grid-3x3-gap', 'can' => 'icu.bed.view'],
+                ['text' => 'Admission Requests', 'url' => '/admin/icu/admission-requests', 'icon' => 'bi bi-file-medical', 'can' => 'icu.admission_request.view'],
+                ['text' => 'Patients / Episodes', 'url' => '/admin/icu/episodes', 'icon' => 'bi bi-clipboard2-pulse', 'can' => 'icu.episode.view'],
+                ['text' => 'Critical Alerts', 'url' => '/admin/icu/alerts', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'icu.alert.view'],
+                ['text' => 'Code Blue / Critical Events', 'url' => '/admin/icu/critical-events', 'icon' => 'bi bi-activity', 'can' => 'icu.critical_event.view'],
+                ['text' => 'Procedures', 'url' => '/admin/icu/procedures', 'icon' => 'bi bi-list-check', 'can' => 'icu.procedure.view'],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-bar-chart',
+                    'can' => 'icu.reports.view',
+                    'submenu' => [
+                        ['text' => 'Occupancy', 'url' => '/admin/icu/reports/occupancy', 'icon' => 'bi bi-clipboard-data', 'can' => 'icu.reports.view'],
+                        ['text' => 'Utilization', 'url' => '/admin/icu/reports/utilization', 'icon' => 'bi bi-speedometer', 'can' => 'icu.reports.view'],
+                        ['text' => 'Outcomes', 'url' => '/admin/icu/reports/outcomes', 'icon' => 'bi bi-graph-up', 'can' => 'icu.reports.view'],
+                    ],
+                ],
+                ['text' => 'Settings', 'url' => '/admin/icu/settings', 'icon' => 'bi bi-gear', 'can' => 'icu.settings.manage'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

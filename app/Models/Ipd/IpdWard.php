@@ -14,9 +14,21 @@ class IpdWard extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const WARD_TYPE_GENERAL = 'general';
+
+    public const WARD_TYPE_ICU = 'icu';
+
+    public const WARD_TYPE_HDU = 'hdu';
+
+    public const WARD_TYPE_PICU = 'picu';
+
+    public const WARD_TYPE_NICU = 'nicu';
+
+    public const WARD_TYPE_CCU = 'ccu';
+
     protected $fillable = [
         'company_id', 'branch_id', 'building_id', 'floor_id', 'department_id', 'specialty_id',
-        'code', 'name', 'gender_policy', 'capacity', 'isolation_capable', 'is_active',
+        'code', 'name', 'ward_type', 'gender_policy', 'capacity', 'isolation_capable', 'is_active',
     ];
 
     protected function casts(): array
@@ -39,5 +51,12 @@ class IpdWard extends Model
     public function scopeForTenant($query, int $companyId, ?int $branchId = null)
     {
         return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+    }
+
+    public function scopeIcuTypes($query)
+    {
+        return $query->whereIn('ward_type', [
+            self::WARD_TYPE_ICU, self::WARD_TYPE_HDU, self::WARD_TYPE_PICU, self::WARD_TYPE_NICU, self::WARD_TYPE_CCU,
+        ]);
     }
 }

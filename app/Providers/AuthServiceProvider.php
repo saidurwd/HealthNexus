@@ -156,6 +156,13 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Ot\OtSurgicalSafetyChecklist::class => \App\Policies\OtSafetyChecklistPolicy::class,
         \App\Models\Ot\OtOperativeNote::class => \App\Policies\OtOperativeNotePolicy::class,
         \App\Models\Ot\OtRecoveryRecord::class => \App\Policies\OtRecoveryPolicy::class,
+        \App\Models\Icu\IcuEpisode::class => \App\Policies\IcuEpisodePolicy::class,
+        \App\Models\Icu\IcuAdmissionRequest::class => \App\Policies\IcuAdmissionRequestPolicy::class,
+        \App\Models\Icu\IcuAssessment::class => \App\Policies\IcuAssessmentPolicy::class,
+        \App\Models\Icu\IcuProgressNote::class => \App\Policies\IcuProgressNotePolicy::class,
+        \App\Models\Icu\IcuCriticalAlert::class => \App\Policies\IcuAlertPolicy::class,
+        \App\Models\Icu\IcuCriticalEvent::class => \App\Policies\IcuCriticalEventPolicy::class,
+        \App\Models\Icu\IcuDischargeSummary::class => \App\Policies\IcuDischargePolicy::class,
     ];
 
     public function boot(): void
