@@ -1,0 +1,18 @@
+<div class="lh"><strong>{{ letterhead.name }}</strong><br>{{ letterhead.name_bn }}<br>{{ letterhead.address }}<br>{{ l.phone }}: {{ letterhead.phone }}
+{{#if letterhead.license_number}}<br>{{ l.license_no }}: {{ letterhead.license_number }}{{/if}}
+{{#if letterhead.vat_registration}}<br>{{ l.vat_reg_no }}: {{ letterhead.vat_registration }}{{/if}}</div>
+<h2>{{ l.receipt }}</h2>
+{{#if is_copy}}<div class="stamp">{{ l.duplicate_copy }} #{{ copy_number }}</div>{{/if}}
+{{#if is_void}}<div class="stamp">{{ l.voided }}</div>{{/if}}
+<table class="kv">
+<tr><td>{{ l.receipt_no }}</td><td>{{ receipt_number }}</td></tr>
+<tr><td>{{ l.date }}</td><td>{{ issued_at }}</td></tr>
+<tr><td>{{ l.patient }}</td><td>{{ patient.name }} ({{ patient.number }})</td></tr>
+{{#if invoice_number}}<tr><td>{{ l.invoice_no }}</td><td>{{ invoice_number }}</td></tr>{{/if}}
+<tr><td>{{ l.payment_method }}</td><td>{{ payment_method }}</td></tr>
+<tr><td><strong>{{ l.paid }}</strong></td><td><strong>{{ currency }} {{ amount }}</strong></td></tr>
+<tr><td>{{ l.received_by }}</td><td>{{ received_by }}</td></tr>
+</table>
+<div class="center">{{{ qr_svg }}}</div>
+<p class="center">{{ l.thank_you }}</p>
+<p class="foot">{{ l.printed_by }}: {{ printed_by }} · {{ l.printed_at }}: {{ printed_at }}</p>

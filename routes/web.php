@@ -78,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.notifications.index');
         })->name('notifications.index');
 
+        Route::get('documents/{type}/{reference}', \App\Http\Controllers\DocumentPrintController::class)->name('documents.print');
+
         Route::get('messages', function () {
             return view('admin.messages.index');
         })->name('messages.index');

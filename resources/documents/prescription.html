@@ -1,0 +1,14 @@
+<div class="lh"><strong>{{ letterhead.name }}</strong> · {{ letterhead.name_bn }}<br>{{ letterhead.address }} · {{ l.phone }}: {{ letterhead.phone }}</div>
+<h2>{{ l.prescription }}</h2>
+<table class="kv">
+<tr><td>{{ l.rx_no }}</td><td>{{ prescription_no }}</td><td>{{ l.date }}</td><td>{{ prescribed_at }}</td></tr>
+<tr><td>{{ l.patient }}</td><td>{{ patient.name }} ({{ patient.number }})</td><td>{{ l.dob }}</td><td>{{ patient.date_of_birth }}</td></tr>
+<tr><td>{{ l.doctor }}</td><td>{{ doctor.name }}</td><td>{{ l.bmdc_no }}</td><td>{{ doctor.registration_number }}</td></tr>
+</table>
+{{#if clinical_notes}}<p><strong>{{ l.clinical_notes }}:</strong> {{ clinical_notes }}</p>{{/if}}
+<table class="grid"><tr><th>#</th><th>{{ l.medicine }}</th><th>{{ l.dose }}</th><th>{{ l.frequency }}</th><th>{{ l.duration }}</th><th>{{ l.instructions }}</th></tr>
+{{#each items}}<tr><td>{{ no }}</td><td>{{ medicine_name }}</td><td>{{ strength }}</td><td>{{ frequency }}</td><td>{{ duration }}</td><td>{{ instructions }}</td></tr>{{/each}}
+</table>
+{{#if advice}}<p><strong>{{ l.advice }}:</strong> {{ advice }}</p>{{/if}}
+<div class="center">{{{ qr_svg }}}</div>
+<p class="foot">{{ l.printed_by }}: {{ printed_by }} · {{ l.printed_at }}: {{ printed_at }}</p>

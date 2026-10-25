@@ -45,7 +45,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_tax_categories`
 - `charge_event_log`
 
-## core (45)
+## core (47)
 
 - `activity_logs`
 - `audit_logs`
@@ -59,6 +59,8 @@ _Generated from the Schema::create calls in database/migrations._
 - `countries`
 - `currencies`
 - `departments`
+- `document_prints`
+- `document_templates`
 - `failed_jobs`
 - `file_versions`
 - `files`
