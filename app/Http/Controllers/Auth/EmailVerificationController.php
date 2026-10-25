@@ -25,7 +25,7 @@ class EmailVerificationController extends Controller
     public function verify(EmailVerificationRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended('/dashboard')->with('success', 'Email already verified.');
+            return redirect()->intended('/dashboard')->with('success', __('Email already verified.'));
         }
 
         $request->fulfill();
@@ -34,7 +34,7 @@ class EmailVerificationController extends Controller
 
         $this->activityLogger->log('EMAIL_VERIFIED', 'Verified email address', $request->user(), [], $request);
 
-        return redirect()->intended('/dashboard')->with('success', 'Email verified successfully.');
+        return redirect()->intended('/dashboard')->with('success', __('Email verified successfully.'));
     }
 
     public function resend(Request $request)
@@ -53,6 +53,6 @@ class EmailVerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('success', 'A new verification link has been sent to your email address.');
+        return back()->with('success', __('A new verification link has been sent to your email address.'));
     }
 }
