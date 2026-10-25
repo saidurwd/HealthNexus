@@ -33,6 +33,11 @@ class Organization extends Model
         'subscription_ends_at' => 'datetime',
     ];
 
+    public function hospitals(): HasMany
+    {
+        return $this->hasMany(Hospital::class);
+    }
+
     public function branches(): HasMany
     {
         return $this->hasMany(Branch::class);

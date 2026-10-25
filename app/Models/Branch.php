@@ -15,6 +15,7 @@ class Branch extends Model
 
     protected $fillable = [
         'organization_id',
+        'hospital_id',
         'name',
         'code',
         'slug',
@@ -30,9 +31,22 @@ class Branch extends Model
         'is_active' => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        // Organization → Hospital → Branch: a branch always belongs to a hospital.
+        static::creating(function (Branch $branch) {
+            $branch->hospital_id ??= Hospital::defaultFor($branch->organization_id)->id;
+        });
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class);
     }
 
     public function departments(): HasMany

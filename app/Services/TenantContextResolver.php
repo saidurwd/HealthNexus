@@ -108,6 +108,11 @@ class TenantContextResolver
         return $this->organization;
     }
 
+    public function getHospitalId(): ?int
+    {
+        return $this->getBranch()?->hospital_id;
+    }
+
     public function getBranch(): ?Branch
     {
         if ($this->branch === null && $this->branchId !== null) {
