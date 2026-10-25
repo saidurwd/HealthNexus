@@ -9,6 +9,8 @@ use App\Models\Icu\IcuAlertEscalation;
 use App\Models\Icu\IcuCriticalAlert;
 use App\Models\Icu\IcuEpisode;
 use App\Models\User;
+use App\Services\Clinical\Alerts\AlertRequest;
+use App\Services\Clinical\Alerts\AlertService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -19,6 +21,8 @@ use Illuminate\Validation\ValidationException;
  */
 class IcuAlertService
 {
+    public function __construct(private readonly AlertService $alerts) {}
+
     public function trigger(IcuEpisode $episode, string $rule, string $severity, ?string $triggeredValue = null, ?string $expectedRange = null, ?Model $source = null): IcuCriticalAlert
     {
         $alert = IcuCriticalAlert::create([
@@ -34,6 +38,13 @@ class IcuAlertService
             'triggered_at' => now(),
             'escalation_status' => IcuCriticalAlert::ESCALATION_NONE,
         ]);
+
+        // ICU keeps its own escalation command for now, so the unified alert is raised on a policy with no ladder.
+        $this->alerts->raise(new AlertRequest(
+            organizationId: $alert->organization_id, category: 'icu_deterioration', severity: in_array($severity, ['critical', 'high'], true) ? 'critical' : 'warning',
+            message: trim("ICU alert: {$rule} {$triggeredValue}"), sourceModule: 'icu', patientId: $episode->patient_id, branchId: $alert->branch_id,
+            sourceType: $alert->getMorphClass(), sourceId: $alert->id, escalationPolicy: 'icu',
+        ));
 
         event(new ICUCriticalAlertTriggered($alert));
 
@@ -53,6 +64,7 @@ class IcuAlertService
         });
 
         $alert->refresh();
+        $this->alerts->acknowledgeBySource('icu', $alert->getMorphClass(), $alert->id, $user, $action);
         event(new ICUCriticalAlertAcknowledged($alert));
 
         return $alert;

@@ -4,6 +4,8 @@ namespace App\Listeners\Laboratory;
 
 use App\Events\Laboratory\CriticalResultDetected;
 use App\Models\Laboratory\LabCriticalResultAlert;
+use App\Services\Clinical\Alerts\AlertRequest;
+use App\Services\Clinical\Alerts\AlertService;
 use App\Services\NotificationService;
 use App\Services\SettingsService;
 
@@ -17,6 +19,7 @@ class NotifyOnCriticalResultDetected
     public function __construct(
         private readonly NotificationService $notifications,
         private readonly SettingsService $settings,
+        private readonly AlertService $alerts,
     ) {}
 
     public function handle(CriticalResultDetected $event): void
@@ -28,7 +31,7 @@ class NotifyOnCriticalResultDetected
         $channels = $this->settings->get('laboratory.critical_notification_channels', ['database', 'mail']);
         $channels = is_array($channels) ? $channels : json_decode((string) $channels, true) ?? ['database'];
 
-        LabCriticalResultAlert::create([
+        $labAlert = LabCriticalResultAlert::create([
             'organization_id' => $result->organization_id,
             'branch_id' => $result->branch_id,
             'result_id' => $result->id,
@@ -36,6 +39,13 @@ class NotifyOnCriticalResultDetected
             'notified_to' => $provider?->id,
             'notification_method' => implode(',', $channels),
         ]);
+
+        $this->alerts->raise(new AlertRequest(
+            organizationId: $result->organization_id, category: 'critical_lab', severity: 'critical',
+            message: sprintf('Critical %s for %s: %s', $result->test->name, $order->patient?->full_name ?? $order->patient_id, $result->numeric_value ?? $result->qualitative_value ?? $result->text_value ?? ''),
+            sourceModule: 'lab', patientId: $order->patient_id, branchId: $result->branch_id,
+            sourceType: $labAlert->getMorphClass(), sourceId: $labAlert->id, recipientUserIds: array_filter([$provider?->id]),
+        ));
 
         if ($provider) {
             $this->notifications->send($provider, 'critical_result', [

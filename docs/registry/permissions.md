@@ -378,7 +378,7 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `62`
 - `63`
 
-## opd (43)
+## opd (48)
 
 - `0`
 - `1`
@@ -423,6 +423,11 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `40`
 - `41`
 - `42`
+- `43`
+- `44`
+- `45`
+- `46`
+- `47`
 
 ## ot (47)
 

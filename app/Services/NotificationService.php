@@ -35,6 +35,10 @@ class NotificationService
             'title' => 'Lab Sample Rejected',
             'message' => 'Specimen :accession_number for :patient was rejected (:reason). Recollection is required.',
         ],
+        'clinical_alert' => [
+            'title' => 'Clinical Alert',
+            'message' => ':message',
+        ],
         'critical_result' => [
             'title' => 'Critical Lab Result',
             'message' => ':test for :patient is critical: :value. Immediate review required.',

@@ -76,3 +76,5 @@ Schedule::command('icu:escalate-unacknowledged-alerts')->everyFifteenMinutes()->
 Schedule::command('icu:detect-missing-documentation')->hourly()->name('icu-detect-missing-documentation')->withoutOverlapping();
 Schedule::command('icu:generate-daily-census')->dailyAt('00:05')->name('icu-generate-daily-census')->withoutOverlapping();
 Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-generate-charge-events')->withoutOverlapping();
+
+Schedule::job(new \App\Jobs\Clinical\EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
