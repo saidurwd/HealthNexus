@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Phase0;
 
+use App\Jobs\Reports\GenerateReportExport;
 use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\Patient;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 /** H-07: queued, scoped, audited, masked, expiring exports. */
@@ -79,7 +81,7 @@ class ReportExportTest extends TestCase
         $export = app(ReportExportService::class)->request($this->user, 'patients.list', 'csv');
 
         $this->assertSame('queued', $export->status);
-        Queue::assertPushed(\App\Jobs\Reports\GenerateReportExport::class);
+        Queue::assertPushed(GenerateReportExport::class);
     }
 
     public function test_file_carries_a_watermark_and_never_includes_another_organizations_rows(): void
@@ -158,7 +160,7 @@ class ReportExportTest extends TestCase
         $this->assertSame('expired', $export->fresh()->status);
         Storage::disk('local')->assertMissing($export->path);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $service->download($export->fresh(), $this->user);
     }
 

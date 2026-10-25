@@ -1,12 +1,16 @@
 <?php
 
+use App\Services\Documents\Providers\PrescriptionDocument;
+use App\Services\Documents\Providers\ReceiptDocument;
+use App\Services\Documents\Providers\WristbandDocument;
+
 return [
     'timezone' => env('DOCUMENT_TIMEZONE', 'Asia/Dhaka'),
 
     'providers' => [
-        \App\Services\Documents\Providers\ReceiptDocument::class,
-        \App\Services\Documents\Providers\PrescriptionDocument::class,
-        \App\Services\Documents\Providers\WristbandDocument::class,
+        ReceiptDocument::class,
+        PrescriptionDocument::class,
+        WristbandDocument::class,
     ],
 
     'languages' => ['en', 'bn', 'en+bn'],

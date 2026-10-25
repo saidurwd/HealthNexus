@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\PatientDocument;
 use App\Models\User;
 use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -135,7 +136,7 @@ class PatientTenantIsolationTest extends TestCase
 
     public function test_cannot_download_another_organizations_patient_document(): void
     {
-        $document = \App\Models\PatientDocument::factory()->create([
+        $document = PatientDocument::factory()->create([
             'organization_id' => $this->otherOrganization->id,
             'patient_id' => $this->otherOrganizationPatient->id,
         ]);

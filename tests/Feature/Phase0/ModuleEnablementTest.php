@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Phase0;
 
+use App\Models\Branch;
+use App\Models\Hospital;
 use App\Models\Organization;
+use App\Models\User;
 use App\Services\ModuleManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class ModuleEnablementTest extends TestCase
@@ -72,7 +76,7 @@ class ModuleEnablementTest extends TestCase
     public function test_a_hospital_row_overrides_the_organization_row(): void
     {
         $organization = Organization::factory()->create();
-        $hospital = \App\Models\Hospital::factory()->create(['organization_id' => $organization->id]);
+        $hospital = Hospital::factory()->create(['organization_id' => $organization->id]);
         $modules = app(ModuleManager::class);
 
         $modules->set('icu', false, $organization->id);
@@ -85,11 +89,11 @@ class ModuleEnablementTest extends TestCase
     public function test_routes_of_a_switched_off_module_answer_404_and_menu_item_is_hidden(): void
     {
         $organization = Organization::factory()->create();
-        $branch = \App\Models\Branch::factory()->create(['organization_id' => $organization->id]);
-        $user = \App\Models\User::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $user = User::factory()->create();
         $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
         $user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);
-        \Spatie\Permission\Models\Permission::create(['name' => 'icu.dashboard.view', 'guard_name' => 'web']);
+        Permission::create(['name' => 'icu.dashboard.view', 'guard_name' => 'web']);
         $user->givePermissionTo('icu.dashboard.view');
 
         $before = $this->withHeader('X-Organization-Id', (string) $organization->id)

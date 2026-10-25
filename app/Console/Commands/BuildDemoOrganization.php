@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Branch;
 use App\Models\Billing\BillingCategory;
+use App\Models\Branch;
 use App\Models\Ipd\IpdRoom;
 use App\Models\Ipd\IpdWard;
 use App\Models\Organization;
@@ -15,6 +15,7 @@ use Database\Seeders\PermissionSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 /**
  * Builds a complete fake "training" hospital (guideline H-11): organization, branch, staff login, wards and beds, price list,
@@ -60,7 +61,7 @@ class BuildDemoOrganization extends Command
         $admin->organizations()->attach($organization->id, ['access_level' => 'admin']);
         $admin->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $organization->id]);
         $admin->assignRole('hospital_admin');
-        $admin->givePermissionTo(\Spatie\Permission\Models\Permission::where('name', 'like', 'import.%')->get());
+        $admin->givePermissionTo(Permission::where('name', 'like', 'import.%')->get());
 
         $context = new ImportContext($organization->id, $branch->id, $admin);
         $this->scaffold($organization, $branch);

@@ -2,7 +2,9 @@
 
 namespace App\Models\Ipd;
 
+use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Models\Specialty;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,13 +42,40 @@ class IpdWard extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function building(): BelongsTo { return $this->belongsTo(IpdBuilding::class, 'building_id'); }
-    public function floor(): BelongsTo { return $this->belongsTo(IpdFloor::class, 'floor_id'); }
-    public function department(): BelongsTo { return $this->belongsTo(Department::class); }
-    public function specialty(): BelongsTo { return $this->belongsTo(Specialty::class); }
-    public function rooms(): HasMany { return $this->hasMany(IpdRoom::class, 'ward_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function building(): BelongsTo
+    {
+        return $this->belongsTo(IpdBuilding::class, 'building_id');
+    }
+
+    public function floor(): BelongsTo
+    {
+        return $this->belongsTo(IpdFloor::class, 'floor_id');
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function specialty(): BelongsTo
+    {
+        return $this->belongsTo(Specialty::class);
+    }
+
+    public function rooms(): HasMany
+    {
+        return $this->hasMany(IpdRoom::class, 'ward_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

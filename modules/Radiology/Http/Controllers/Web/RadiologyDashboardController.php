@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Radiology\RadiologyCriticalFinding;
 use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyOrder;
+use App\Models\Radiology\RadiologyReport;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
 
@@ -29,8 +30,8 @@ class RadiologyDashboardController extends Controller
             'awaiting_reporting' => RadiologyOrder::query()->forTenant($organizationId, $branchId)->whereIn('status', ['completed', 'images_available'])->count(),
             'urgent_studies' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->whereHas('orderItem', fn ($q) => $q->whereIn('priority', ['urgent', 'stat']))->whereIn('status', ['completed', 'images_available'])->count(),
             'critical_unacknowledged' => RadiologyCriticalFinding::query()->forTenant($organizationId, $branchId)->whereNull('acknowledged_at')->count(),
-            'reports_pending_approval' => \App\Models\Radiology\RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'submitted')->count(),
-            'reports_completed_today' => \App\Models\Radiology\RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'final')->whereDate('approved_at', $today)->count(),
+            'reports_pending_approval' => RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'submitted')->count(),
+            'reports_completed_today' => RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'final')->whereDate('approved_at', $today)->count(),
         ];
 
         return view('admin.radiology.dashboard.index', compact('summary'));

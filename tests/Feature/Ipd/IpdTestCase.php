@@ -3,11 +3,11 @@
 namespace Tests\Feature\Ipd;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Ipd\IpdBed;
 use App\Models\Ipd\IpdBedType;
 use App\Models\Ipd\IpdRoom;
 use App\Models\Ipd\IpdWard;
+use App\Models\Organization;
 use App\Models\Provider;
 use App\Models\User;
 use App\Services\TenantContextResolver;

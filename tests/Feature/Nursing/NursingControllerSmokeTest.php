@@ -2,17 +2,24 @@
 
 namespace Tests\Feature\Nursing;
 
+use App\Services\Nursing\NursingCarePlanService;
+use App\Services\Nursing\NursingEscalationService;
+use App\Services\Nursing\NursingHandoverService;
+use App\Services\Nursing\NursingNoteService;
+use App\Services\Nursing\NursingTaskService;
+use App\Services\TenantContextResolver;
+
 class NursingControllerSmokeTest extends NursingTestCase
 {
     public function test_every_get_page_loads(): void
     {
         $episode = $this->makeEpisode();
         $mar = $this->makeMar($episode);
-        $carePlan = app(\App\Services\Nursing\NursingCarePlanService::class)->create($episode, $this->user);
-        $handover = app(\App\Services\Nursing\NursingHandoverService::class)->prepare($episode, $this->user);
-        app(\App\Services\Nursing\NursingEscalationService::class)->create($episode, ['concern' => 'x', 'recipient_type' => 'charge_nurse'], $this->user);
-        app(\App\Services\Nursing\NursingNoteService::class)->create($episode, ['note_type' => 'narrative', 'content' => 'hello'], $this->user);
-        app(\App\Services\Nursing\NursingTaskService::class)->create($episode, ['task_type' => 'Turn', 'due_at' => now()->addHour()]);
+        $carePlan = app(NursingCarePlanService::class)->create($episode, $this->user);
+        $handover = app(NursingHandoverService::class)->prepare($episode, $this->user);
+        app(NursingEscalationService::class)->create($episode, ['concern' => 'x', 'recipient_type' => 'charge_nurse'], $this->user);
+        app(NursingNoteService::class)->create($episode, ['note_type' => 'narrative', 'content' => 'hello'], $this->user);
+        app(NursingTaskService::class)->create($episode, ['task_type' => 'Turn', 'due_at' => now()->addHour()]);
 
         foreach ([
             '/admin/nursing', '/admin/nursing/episodes', '/admin/nursing/episodes/'.$episode->id,
@@ -53,8 +60,8 @@ class NursingControllerSmokeTest extends NursingTestCase
         $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertOk();
 
         // The tenant context is per-request state; re-establish it as a real client would via its session/header.
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
 
         $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertStatus(422);
     }

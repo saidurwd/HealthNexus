@@ -4,8 +4,8 @@ use App\Http\Middleware\EnsureBranchAccess;
 use App\Http\Middleware\EnsureOrganizationAccess;
 use Illuminate\Support\Facades\Route;
 use Modules\Core\Organization\Http\Controllers\BranchController;
-use Modules\Core\Organization\Http\Controllers\OrganizationController;
 use Modules\Core\Organization\Http\Controllers\DepartmentController;
+use Modules\Core\Organization\Http\Controllers\OrganizationController;
 
 Route::middleware('can:manage organizations')->group(function () {
     Route::resource('organizations', OrganizationController::class);

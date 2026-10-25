@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,12 +24,35 @@ class PharmacyStockCount extends Model
         return ['started_at' => 'datetime', 'completed_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
-    public function startedBy(): BelongsTo { return $this->belongsTo(User::class, 'started_by'); }
-    public function completedBy(): BelongsTo { return $this->belongsTo(User::class, 'completed_by'); }
-    public function items(): HasMany { return $this->hasMany(PharmacyStockCountItem::class, 'stock_count_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'store_id');
+    }
+
+    public function startedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
+    public function completedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(PharmacyStockCountItem::class, 'stock_count_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

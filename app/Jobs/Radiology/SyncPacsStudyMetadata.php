@@ -8,6 +8,7 @@ use App\Models\Radiology\RadiologyPacsServer;
 use App\Models\Radiology\RadiologySeries;
 use App\Models\Radiology\RadiologyStudy;
 use App\Services\Radiology\Pacs\PacsClientFactory;
+use App\Services\Radiology\RadiologyOrderLifecycleService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -103,7 +104,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
             }
 
             if (in_array($examination->status, ['completed'], true)) {
-                app(\App\Services\Radiology\RadiologyOrderLifecycleService::class)->transitionTo($order->fresh(), 'images_available');
+                app(RadiologyOrderLifecycleService::class)->transitionTo($order->fresh(), 'images_available');
             }
 
             $this->logEvent($examination, $server, 'success', "Reconciled study {$found['study_instance_uid']}.");

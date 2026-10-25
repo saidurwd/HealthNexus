@@ -2,19 +2,27 @@
 
 namespace App\Providers;
 
+use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
+use App\Contracts\Stock\StockLedger;
 use App\Events\Appointments\AppointmentCancelled;
 use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
 use App\Events\Appointments\AppointmentRescheduled;
+use App\Events\Billing\ChargeReversalRequested;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\EncounterCompleted;
 use App\Events\Clinical\EncounterCreated;
 use App\Events\Clinical\PrescriptionIssued;
 use App\Events\Clinical\ReferralCreated;
+use App\Events\Icu\ICUCodeBlueStarted;
+use App\Events\Icu\ICUCriticalAlertTriggered;
+use App\Events\Icu\ICUDischarged;
+use App\Events\Icu\ICUPatientAdmitted;
+use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ipd\AdmissionApproved;
 use App\Events\Ipd\BedAllocated;
 use App\Events\Ipd\DischargeRequested;
@@ -25,7 +33,6 @@ use App\Events\Laboratory\CriticalResultDetected;
 use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
 use App\Events\Laboratory\SampleRejected;
-use App\Events\Pharmacy\DispensingCompleted;
 use App\Events\Nursing\CarePlanCompleted;
 use App\Events\Nursing\CriticalObservationDetected;
 use App\Events\Nursing\MedicationAdministrationRecorded;
@@ -37,11 +44,6 @@ use App\Events\Nursing\NursingEpisodeStarted;
 use App\Events\Nursing\NursingEscalationCreated;
 use App\Events\Nursing\NursingEscalationResolved;
 use App\Events\Nursing\NursingHandoverCreated;
-use App\Events\Icu\ICUCodeBlueStarted;
-use App\Events\Icu\ICUCriticalAlertTriggered;
-use App\Events\Icu\ICUDischarged;
-use App\Events\Icu\ICUPatientAdmitted;
-use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ot\PatientReceivedForSurgery;
 use App\Events\Ot\RecoveryCompleted;
 use App\Events\Ot\SurgeryCancelled;
@@ -50,6 +52,7 @@ use App\Events\Ot\SurgeryPostponed;
 use App\Events\Ot\SurgeryScheduled;
 use App\Events\Ot\SurgeryStarted;
 use App\Events\Ot\SurgicalComplicationRecorded;
+use App\Events\Pharmacy\DispensingCompleted;
 use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
@@ -58,11 +61,21 @@ use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
+use App\Listeners\Billing\ReverseChargeOnReversalRequested;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
+use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
+use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
+use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
+use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
 use App\Listeners\Ipd\NotifyOnAdmissionEvents;
 use App\Listeners\Ipd\NotifyOnDischargeEvents;
 use App\Listeners\Ipd\NotifyOnTransferEvents;
 use App\Listeners\Ipd\RecordAdmissionOnPatientTimeline;
+use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
+use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
+use App\Listeners\Laboratory\NotifyOnLabReportEvents;
+use App\Listeners\Laboratory\NotifyOnSampleRejected;
+use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
 use App\Listeners\Nursing\CompleteEpisodeOnDischarge;
 use App\Listeners\Nursing\FlagHandoverOnTransfer;
 use App\Listeners\Nursing\NotifyOnAssignmentEvents;
@@ -72,31 +85,33 @@ use App\Listeners\Nursing\NotifyOnMarEvents;
 use App\Listeners\Nursing\RaiseAlertOnCriticalObservation;
 use App\Listeners\Nursing\RecordNursingEventsOnPatientTimeline;
 use App\Listeners\Nursing\StartEpisodeOnAdmission;
-use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
-use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
-use App\Listeners\Laboratory\NotifyOnLabReportEvents;
-use App\Listeners\Laboratory\NotifyOnSampleRejected;
-use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
-use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
-use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
-use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
-use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
-use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
-use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
 use App\Listeners\Ot\CreateSurgeryRequestOnClinicalOrderCreated;
 use App\Listeners\Ot\NotifyOnSurgeryScheduleEvents;
 use App\Listeners\Ot\NotifyOnSurgeryTeamEvents;
 use App\Listeners\Ot\RecordSurgeryEventsOnPatientTimeline;
+use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
+use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
 use App\Listeners\Radiology\CreateRadiologyOrderOnClinicalOrderCreated;
 use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
 use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
 use App\Listeners\Radiology\NotifyOnRadiologyReportEvents;
 use App\Listeners\Radiology\RecordRadiologyReportOnPatientTimeline;
+use App\Models\Patient;
+use App\Models\PatientBranchRegistration;
+use App\Models\PatientContact;
+use App\Models\PatientIdentifier;
+use App\Observers\PatientSearchObserver;
+use App\Services\Billing\Events\BillingChargeEventPublisher;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
+use App\Services\ModuleManager;
+use App\Services\Ops\ShellRunner;
+use App\Services\Ops\SymfonyShellRunner;
 use App\Services\Pharmacy\NullDrugInformationProvider;
+use App\Services\Search\PatientSearchIndexer;
 use App\Services\SettingsService;
+use App\Services\Stock\DatabaseStockLedger;
 use App\Services\TenantContextResolver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -109,10 +124,10 @@ class AppServiceProvider extends ServiceProvider
             return new TenantContextResolver;
         });
 
-        $this->app->singleton(\App\Services\ModuleManager::class);
-        $this->app->bind(\App\Services\Ops\ShellRunner::class, \App\Services\Ops\SymfonyShellRunner::class);
-        $this->app->bind(\App\Contracts\Stock\StockLedger::class, \App\Services\Stock\DatabaseStockLedger::class);
-        $this->app->bind(\App\Contracts\Billing\ChargeEventPublisher::class, \App\Services\Billing\Events\BillingChargeEventPublisher::class);
+        $this->app->singleton(ModuleManager::class);
+        $this->app->bind(ShellRunner::class, SymfonyShellRunner::class);
+        $this->app->bind(StockLedger::class, DatabaseStockLedger::class);
+        $this->app->bind(ChargeEventPublisher::class, BillingChargeEventPublisher::class);
 
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);
@@ -133,17 +148,17 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        \App\Models\Patient::observe(\App\Observers\PatientSearchObserver::class);
-        foreach ([\App\Models\PatientIdentifier::class, \App\Models\PatientContact::class, \App\Models\PatientBranchRegistration::class] as $child) {
+        Patient::observe(PatientSearchObserver::class);
+        foreach ([PatientIdentifier::class, PatientContact::class, PatientBranchRegistration::class] as $child) {
             $reindex = function ($row) {
-                $patient = \App\Models\Patient::withoutGlobalScopes()->find($row->patient_id);
-                $patient && app(\App\Services\Search\PatientSearchIndexer::class)->reindex($patient);
+                $patient = Patient::withoutGlobalScopes()->find($row->patient_id);
+                $patient && app(PatientSearchIndexer::class)->reindex($patient);
             };
             $child::saved($reindex);
             $child::deleted($reindex);
         }
 
-        Event::listen(\App\Events\Billing\ChargeReversalRequested::class, \App\Listeners\Billing\ReverseChargeOnReversalRequested::class);
+        Event::listen(ChargeReversalRequested::class, ReverseChargeOnReversalRequested::class);
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);
 

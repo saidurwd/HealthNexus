@@ -4,14 +4,13 @@ namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
+use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyModality;
-use App\Models\Radiology\RadiologyOrder;
 use App\Models\Radiology\RadiologyOrderItem;
 use App\Services\AuditLogger;
 use App\Services\Radiology\RadiologySchedulingService;
 use App\Services\TenantContextResolver;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Modules\Radiology\Http\Requests\Web\ScheduleExaminationRequest;
 
 class RadiologySchedulingController extends Controller
@@ -54,7 +53,7 @@ class RadiologySchedulingController extends Controller
             (int) ($request->validated('duration_minutes') ?? $item->procedure?->duration_minutes ?? 30),
         );
 
-        $this->auditLogger->log('SCHEDULE', \App\Models\Radiology\RadiologyExamination::class, $examination->id, null, $examination->toArray(), $request);
+        $this->auditLogger->log('SCHEDULE', RadiologyExamination::class, $examination->id, null, $examination->toArray(), $request);
 
         return redirect()->route('admin.radiology.orders.show', $item->radiologyOrder)->with('success', __('Examination scheduled.'));
     }

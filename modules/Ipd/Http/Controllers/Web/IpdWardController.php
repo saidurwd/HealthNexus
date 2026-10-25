@@ -3,9 +3,11 @@
 namespace Modules\Ipd\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\Ipd\IpdBuilding;
 use App\Models\Ipd\IpdFloor;
 use App\Models\Ipd\IpdWard;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Ipd\IpdWardService;
 use App\Services\TenantContextResolver;
@@ -43,8 +45,8 @@ class IpdWardController extends Controller
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $buildings = IpdBuilding::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
         $floors = IpdFloor::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
-        $organizations = \App\Models\Organization::all();
-        $branches = \App\Models\Branch::all();
+        $organizations = Organization::all();
+        $branches = Branch::all();
 
         return view('admin.ipd.wards.create', compact('buildings', 'floors', 'organizations', 'branches'));
     }

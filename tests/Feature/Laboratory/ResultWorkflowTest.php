@@ -5,6 +5,7 @@ namespace Tests\Feature\Laboratory;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Laboratory\LabContainerType;
+use App\Models\Laboratory\LabCriticalValue;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabOrderItem;
 use App\Models\Laboratory\LabReferenceRange;
@@ -92,7 +93,7 @@ class ResultWorkflowTest extends LabTestCase
 
     public function test_full_validation_workflow_moves_through_entered_technical_pathologist(): void
     {
-        \App\Models\Laboratory\LabTest::whereKey($this->test->id)->update(['requires_pathologist_approval' => true]);
+        LabTest::whereKey($this->test->id)->update(['requires_pathologist_approval' => true]);
 
         $result = app(ResultEntryService::class)->enter($this->item, ['numeric_value' => '14.0'], $this->user);
 
@@ -130,7 +131,7 @@ class ResultWorkflowTest extends LabTestCase
 
     public function test_critical_value_detection_sets_flag_and_creates_an_alert(): void
     {
-        \App\Models\Laboratory\LabCriticalValue::create(['test_id' => $this->test->id, 'low_threshold' => '5.0', 'high_threshold' => '20.0', 'is_active' => true]);
+        LabCriticalValue::create(['test_id' => $this->test->id, 'low_threshold' => '5.0', 'high_threshold' => '20.0', 'is_active' => true]);
 
         $result = app(ResultEntryService::class)->enter($this->item, ['numeric_value' => '3.0'], $this->user);
 

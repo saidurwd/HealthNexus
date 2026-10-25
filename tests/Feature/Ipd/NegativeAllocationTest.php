@@ -3,9 +3,9 @@
 namespace Tests\Feature\Ipd;
 
 use App\Models\Encounter;
+use App\Models\Gender;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdBed;
-use App\Models\Ipd\IpdBedReservation;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdBedBlockService;
@@ -76,7 +76,7 @@ class NegativeAllocationTest extends IpdTestCase
     {
         $bed = $this->makeBed(genderType: 'female');
         $malePatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
-        $gender = \App\Models\Gender::firstOrCreate(['code' => 'male'], ['name' => 'Male', 'sort_order' => 1]);
+        $gender = Gender::firstOrCreate(['code' => 'male'], ['name' => 'Male', 'sort_order' => 1]);
         $malePatient->update(['gender_id' => $gender->id]);
 
         $encounter = Encounter::factory()->create([

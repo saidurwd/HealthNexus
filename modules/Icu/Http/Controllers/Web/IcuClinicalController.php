@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Icu\IcuAssessment;
 use App\Models\Icu\IcuDevice;
 use App\Models\Icu\IcuEpisode;
+use App\Models\Icu\IcuHandoverRecord;
 use App\Models\Icu\IcuInfusion;
 use App\Models\Icu\IcuProgressNote;
 use App\Services\Icu\IcuAssessmentService;
@@ -151,7 +152,7 @@ class IcuClinicalController extends Controller
 
     public function acknowledgeHandover(Request $request, int $handover)
     {
-        $record = \App\Models\Icu\IcuHandoverRecord::findOrFail($handover);
+        $record = IcuHandoverRecord::findOrFail($handover);
         $this->authorize('view', $record->episode);
 
         try {

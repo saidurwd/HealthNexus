@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mail\SystemNotification;
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\Ops\TrainingMode;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 
@@ -188,7 +189,7 @@ class NotificationService
         $users = $recipients instanceof User ? [$recipients] : $recipients;
 
         // Training organizations never reach real inboxes (guideline 19.7).
-        if (app(\App\Services\Ops\TrainingMode::class)->active()) {
+        if (app(TrainingMode::class)->active()) {
             $channels = array_values(array_diff($channels, ['mail', 'sms']));
         }
 

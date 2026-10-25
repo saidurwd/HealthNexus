@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Clinical\Http\Controllers\EncounterController;
-use Modules\Clinical\Http\Controllers\EncounterClinicalController;
 use Modules\Clinical\Http\Controllers\BreakGlassController;
 use Modules\Clinical\Http\Controllers\ClinicalReportController;
+use Modules\Clinical\Http\Controllers\EncounterClinicalController;
+use Modules\Clinical\Http\Controllers\EncounterController;
 
 Route::middleware(['can:encounters.view'])->group(function () {
     Route::get('encounters', [EncounterController::class, 'index'])->name('encounters.index');

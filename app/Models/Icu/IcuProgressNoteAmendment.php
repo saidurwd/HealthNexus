@@ -14,6 +14,13 @@ class IcuProgressNoteAmendment extends Model
 
     protected $fillable = ['note_id', 'amendment_type', 'reason', 'content', 'created_by'];
 
-    public function note(): BelongsTo { return $this->belongsTo(IcuProgressNote::class, 'note_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
+    public function note(): BelongsTo
+    {
+        return $this->belongsTo(IcuProgressNote::class, 'note_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

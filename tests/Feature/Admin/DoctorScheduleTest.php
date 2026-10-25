@@ -3,10 +3,11 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\DoctorSchedule;
+use App\Models\Organization;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -44,8 +45,8 @@ class DoctorScheduleTest extends TestCase
 
         session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 
     public function test_user_can_view_schedules_index(): void

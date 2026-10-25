@@ -20,7 +20,9 @@ use Illuminate\Validation\ValidationException;
 class IpdDischargeService
 {
     public const CLEARANCE_CLINICAL = 'clinical';
+
     public const CLEARANCE_BILLING = 'billing';
+
     public const CLEARANCE_PHARMACY = 'pharmacy';
 
     public function __construct(

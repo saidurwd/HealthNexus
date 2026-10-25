@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Ot;
 
+use App\Models\Billing\BillingCharge;
+use App\Models\Encounter;
+use App\Models\Ipd\IpdAdmission;
 use App\Models\Ot\OtSurgery;
 use App\Models\Ot\OtSurgeryRequest;
 use App\Models\Ot\OtSurgicalSafetyChecklist;
 use App\Models\Ot\OtSurgicalTeam;
+use App\Models\Patient;
 use App\Services\Ot\OtChargeService;
 use App\Services\Ot\OtConsentService;
 use App\Services\Ot\OtImplantService;
@@ -21,16 +25,17 @@ use App\Services\Ot\OtSurgeryService;
 use App\Services\Ot\OtSurgicalCountService;
 use App\Services\Ot\OtSurgicalSafetyChecklistService;
 use App\Services\Ot\OtSurgicalTeamService;
+use App\Services\SettingsService;
 use Illuminate\Validation\ValidationException;
 
 class SurgeryWorkflowTest extends OtTestCase
 {
     public function test_surgery_request_direct_approve_fallback_when_no_workflow_configured(): void
     {
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
-        app(\App\Services\SettingsService::class)->set('ot.surgery_requires_approval', false);
+        app(SettingsService::class)->set('ot.surgery_requires_approval', false);
 
         $request = app(OtSurgeryRequestService::class)->create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
@@ -42,10 +47,10 @@ class SurgeryWorkflowTest extends OtTestCase
 
     public function test_surgery_request_requires_approval_when_configured_and_can_be_created_into_a_case(): void
     {
-        app(\App\Services\SettingsService::class)->set('ot.surgery_requires_approval', true);
+        app(SettingsService::class)->set('ot.surgery_requires_approval', true);
 
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
         $requests = app(OtSurgeryRequestService::class);
         $request = $requests->create([
@@ -253,7 +258,7 @@ class SurgeryWorkflowTest extends OtTestCase
         $charges->chargeImplant($implant, $this->user);
         $charges->chargeImplant($implant, $this->user);
 
-        $this->assertLessThanOrEqual(1, \App\Models\Billing\BillingCharge::where('source_id', $implant->id)->where('source_type', $implant->getMorphClass())->count());
+        $this->assertLessThanOrEqual(1, BillingCharge::where('source_id', $implant->id)->where('source_type', $implant->getMorphClass())->count());
     }
 
     public function test_day_surgery_recovery_discharges_without_any_ipd_involvement(): void
@@ -280,7 +285,7 @@ class SurgeryWorkflowTest extends OtTestCase
         app(OtRecoveryService::class)->markReadyForTransfer($recovery->fresh());
         app(OtRecoveryService::class)->completeTransfer($recovery->fresh(), 'ward', $this->user);
 
-        $this->assertSame('active', \App\Models\Ipd\IpdAdmission::find($admissionId)->status);
+        $this->assertSame('active', IpdAdmission::find($admissionId)->status);
     }
 
     public function test_recovery_cannot_be_marked_ready_without_discharge_criteria(): void

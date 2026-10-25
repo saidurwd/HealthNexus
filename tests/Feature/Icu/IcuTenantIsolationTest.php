@@ -5,8 +5,10 @@ namespace Tests\Feature\Icu;
 use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\User;
+use App\Services\Icu\IcuAlertService;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class IcuTenantIsolationTest extends IcuTestCase
 {
@@ -26,7 +28,7 @@ class IcuTenantIsolationTest extends IcuTestCase
         $role = Role::firstOrCreate(['name' => 'icu_test_role', 'guard_name' => 'web']);
         $role->syncPermissions($permissions);
         $user->assignRole($role);
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return $user->fresh();
     }
@@ -67,7 +69,7 @@ class IcuTenantIsolationTest extends IcuTestCase
     public function test_unauthorized_user_cannot_acknowledge_a_critical_alert(): void
     {
         $episode = $this->makeEpisode();
-        $alert = app(\App\Services\Icu\IcuAlertService::class)->trigger($episode, 'heart_rate', 'high', '160', 'above 130');
+        $alert = app(IcuAlertService::class)->trigger($episode, 'heart_rate', 'high', '160', 'above 130');
 
         $noPermsUser = $this->userWith([]);
 

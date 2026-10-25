@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Localization;
 
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -80,7 +82,7 @@ class BanglaParityTest extends TestCase
         };
         $walk(config('adminlte.menu'));
 
-        foreach (app(\App\Services\NotificationService::class)->templates() as $template) {
+        foreach (app(NotificationService::class)->templates() as $template) {
             array_push($texts, $template['title'], $template['message']);
         }
 
@@ -129,7 +131,7 @@ class BanglaParityTest extends TestCase
         $missing = [];
 
         foreach (array_keys(config('ux.statuses')) as $status) {
-            $label = \Illuminate\Support\Str::headline($status);
+            $label = Str::headline($status);
             if (($bangla[$label] ?? '') === '') {
                 $missing[] = $label;
             }

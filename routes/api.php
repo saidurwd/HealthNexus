@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\Api\V1\AppointmentController;
 use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\CodeSearchController;
 use App\Http\Controllers\Api\V1\BranchController;
-use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\CodeSearchController;
 use App\Http\Controllers\Api\V1\DepartmentController;
 use App\Http\Controllers\Api\V1\EncounterController;
 use App\Http\Controllers\Api\V1\GlobalSearchController;
+use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\ProviderController;
 use App\Http\Controllers\Api\V1\ReportExportController;

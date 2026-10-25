@@ -3,6 +3,7 @@
 namespace Modules\Appointments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Department;
 use App\Models\DoctorSchedule;
 use App\Models\Provider;
@@ -24,7 +25,7 @@ class DoctorScheduleController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
@@ -43,7 +44,7 @@ class DoctorScheduleController extends Controller
 
     public function create()
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
@@ -59,7 +60,7 @@ class DoctorScheduleController extends Controller
 
     public function store(StoreDoctorScheduleRequest $request)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validated();
         $schedule = DoctorSchedule::create($validated);
@@ -77,7 +78,7 @@ class DoctorScheduleController extends Controller
 
     public function show(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $schedule->load(['doctor', 'provider', 'department', 'specialty', 'room', 'slots' => fn ($q) => $q->orderBy('slot_datetime')]);
 
@@ -86,7 +87,7 @@ class DoctorScheduleController extends Controller
 
     public function edit(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
@@ -102,7 +103,7 @@ class DoctorScheduleController extends Controller
 
     public function update(Request $request, DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -132,7 +133,7 @@ class DoctorScheduleController extends Controller
 
     public function destroy(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $oldValues = $schedule->toArray();
         $schedule->delete();
@@ -144,7 +145,7 @@ class DoctorScheduleController extends Controller
 
     public function generateSlots(Request $request, DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validate([
             'from' => ['required', 'date'],

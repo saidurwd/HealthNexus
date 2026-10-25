@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Organization;
 use App\Models\EncounterType;
+use App\Models\Organization;
 use Illuminate\Database\Seeder;
 
 /**

@@ -6,6 +6,7 @@ use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPriceList;
 use App\Models\Billing\BillingPriceListItem;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Resolves the unit price + discount to use for a billing item, given a scope context.
@@ -77,7 +78,7 @@ class BillingPricingService
      * dimension always outranks any combination of less-specific ones, then ties break on the
      * owning price list's priority, then the row's own priority.
      */
-    private function pickBest(iterable $candidates, \Illuminate\Support\Collection $priceListIds): ?BillingPriceListItem
+    private function pickBest(iterable $candidates, Collection $priceListIds): ?BillingPriceListItem
     {
         $rankByPriceList = $priceListIds->flip();
 

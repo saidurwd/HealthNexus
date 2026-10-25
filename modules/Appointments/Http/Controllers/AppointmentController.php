@@ -4,11 +4,11 @@ namespace Modules\Appointments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\AppointmentDocument;
 use App\Models\AppointmentType;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
-use App\Models\AppointmentDocument;
 use App\Services\Appointments\AppointmentBookingService;
 use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\AuditLogger;

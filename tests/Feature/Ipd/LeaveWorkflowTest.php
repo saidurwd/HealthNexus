@@ -9,6 +9,7 @@ use App\Models\Ipd\IpdPatientLeave;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdLeaveService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves configurable bed handling during leave (spec §37): 'retain' keeps the allocation active
@@ -55,7 +56,7 @@ class LeaveWorkflowTest extends IpdTestCase
         $bed->refresh();
         $this->assertSame(IpdBed::STATUS_AVAILABLE, $bed->status, 'release bed_handling must free the bed directly to Available, never Cleaning, since the patient is expected back.');
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
         app(IpdLeaveService::class)->markReturned($leave->fresh(), $this->user, null);
     }
 

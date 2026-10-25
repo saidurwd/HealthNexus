@@ -19,8 +19,15 @@ class IcuFamilyCommunication extends Model
         return ['communicated_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function documentedBy(): BelongsTo { return $this->belongsTo(User::class, 'documented_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function documentedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'documented_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

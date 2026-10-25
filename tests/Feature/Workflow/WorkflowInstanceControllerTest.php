@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Models\Workflow;
 use App\Models\WorkflowApprover;
+use App\Models\WorkflowInstance;
 use App\Models\WorkflowStep;
 use App\Services\Workflow\WorkflowEngine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -46,7 +47,7 @@ class WorkflowInstanceControllerTest extends TestCase
         }
     }
 
-    private function makeOneStepInstance(): \App\Models\WorkflowInstance
+    private function makeOneStepInstance(): WorkflowInstance
     {
         $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'ctrl_test', 'name' => 'Controller Test']);
         $step = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Review', 'is_final' => true]);

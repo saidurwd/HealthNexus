@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Appointment;
 use App\Models\Branch;
+use App\Models\Diagnosis;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DiagnosisFactory extends Factory
 {
-    protected $model = \App\Models\Diagnosis::class;
+    protected $model = Diagnosis::class;
 
     public function definition(): array
     {

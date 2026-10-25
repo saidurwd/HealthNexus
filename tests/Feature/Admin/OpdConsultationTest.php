@@ -3,15 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Appointment;
+use App\Models\AppointmentToken;
 use App\Models\Branch;
 use App\Models\Organization;
-use App\Models\Diagnosis;
-use App\Models\InvestigationOrder;
 use App\Models\Patient;
-use App\Models\Prescription;
-use App\Models\PrescriptionItem;
 use App\Models\User;
-use App\Models\VitalSign;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -52,8 +49,8 @@ class OpdConsultationTest extends TestCase
 
         session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
 
         $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
@@ -74,7 +71,7 @@ class OpdConsultationTest extends TestCase
             'status' => 'confirmed',
         ]);
 
-        \App\Models\AppointmentToken::create([
+        AppointmentToken::create([
             'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'appointment_id' => $this->appointment->id,

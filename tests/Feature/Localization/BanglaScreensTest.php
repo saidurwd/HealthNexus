@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Localization;
 
+use App\Models\Notification;
 use App\Models\Organization;
 use App\Models\User;
 use App\Services\NotificationService;
@@ -65,6 +66,6 @@ class BanglaScreensTest extends TestCase
 
         $this->assertDatabaseHas('notifications', ['user_id' => $bangla->id, 'title' => 'জরুরি ল্যাব ফলাফল']);
         $this->assertDatabaseHas('notifications', ['user_id' => $english->id, 'title' => 'Critical Lab Result']);
-        $this->assertStringContainsString('Rahim এর Potassium জরুরি: 6.8', \App\Models\Notification::where('user_id', $bangla->id)->value('message'));
+        $this->assertStringContainsString('Rahim এর Potassium জরুরি: 6.8', Notification::where('user_id', $bangla->id)->value('message'));
     }
 }

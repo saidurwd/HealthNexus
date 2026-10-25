@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Models\User;
 use App\Services\AuditLogger;
 use Closure;

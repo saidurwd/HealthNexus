@@ -3,6 +3,7 @@
 namespace App\Services\Icu;
 
 use App\Models\Icu\IcuEpisode;
+use App\Models\Icu\IcuFluidBalanceEntry;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -32,7 +33,7 @@ class IcuFlowsheetService
         $ventilatorEvents = $episode->ventilatorEvents()->whereBetween('recorded_at', [$from, $to])->orderBy('recorded_at')->get();
         $infusions = $episode->infusions()->where('started_at', '<=', $to)->where(fn ($q) => $q->whereNull('stopped_at')->orWhere('stopped_at', '>=', $from))->get();
         $devices = $episode->devices()->where('insertion_date', '<=', $to)->get();
-        $fluidEntries = \App\Models\Icu\IcuFluidBalanceEntry::where('episode_id', $episode->id)->whereBetween('recorded_at', [$from, $to])->get();
+        $fluidEntries = IcuFluidBalanceEntry::where('episode_id', $episode->id)->whereBetween('recorded_at', [$from, $to])->get();
 
         $buckets = collect();
         $cursor = $from->copy();

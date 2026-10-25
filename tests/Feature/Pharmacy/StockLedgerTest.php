@@ -9,6 +9,7 @@ use App\Models\Stock\StockLedgerEntry;
 use App\Services\Pharmacy\PharmacyStockService;
 use App\Services\Stock\LedgerEntry;
 use App\Services\Stock\StockLedgerReconciler;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use LogicException;
@@ -73,7 +74,7 @@ class StockLedgerTest extends PharmacyTestCase
             try {
                 DB::statement($sql);
                 $this->fail("database must refuse: $sql");
-            } catch (\Illuminate\Database\QueryException $e) {
+            } catch (QueryException $e) {
                 $this->assertStringContainsString('append-only', $e->getMessage());
             }
         }

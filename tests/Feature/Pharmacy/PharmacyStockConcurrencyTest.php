@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Pharmacy;
 
+use App\Models\Pharmacy\PharmacyBatch;
+use App\Services\Pharmacy\PharmacyStockService;
+use Illuminate\Validation\ValidationException;
+
 /**
  * The mandatory "two pharmacists, same batch, concurrent dispensing" test (Phase 7 plan §10).
  * Mirrors RadiologyNumberGeneratorConcurrencyTest's raw two-PDO-connection technique, applied to
@@ -112,10 +116,10 @@ class PharmacyStockConcurrencyTest extends PharmacyTestCase
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 5);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        app(\App\Services\Pharmacy\PharmacyStockService::class)->debit(
-            $store, $medication, \App\Models\Pharmacy\PharmacyBatch::where('medication_id', $medication->id)->first(),
+        app(PharmacyStockService::class)->debit(
+            $store, $medication, PharmacyBatch::where('medication_id', $medication->id)->first(),
             10, 'dispensing', $this->user,
         );
     }

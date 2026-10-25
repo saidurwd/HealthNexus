@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
-use App\Models\Organization;
 use App\Models\Laboratory\LabContainerType;
 use App\Models\Laboratory\LabCriticalValue;
 use App\Models\Laboratory\LabPanel;
@@ -13,6 +12,7 @@ use App\Models\Laboratory\LabSection;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
 use App\Models\Laboratory\LabTestCategory;
+use App\Models\Organization;
 use Illuminate\Database\Seeder;
 
 /**

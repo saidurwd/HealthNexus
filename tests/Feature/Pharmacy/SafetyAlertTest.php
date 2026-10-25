@@ -5,6 +5,7 @@ namespace Tests\Feature\Pharmacy;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
 use App\Models\Pharmacy\PharmacySafetyAlert;
+use App\Services\Pharmacy\PharmacyDispensingSafetyService;
 use App\Services\Pharmacy\PharmacyDispensingService;
 use App\Services\Pharmacy\PharmacyOrderService;
 use Illuminate\Validation\ValidationException;
@@ -49,7 +50,7 @@ class SafetyAlertTest extends PharmacyTestCase
         $this->assertSame(PharmacySafetyAlert::TYPE_ALLERGY, $alert->alert_type);
         $this->assertFalse($alert->is_overridden);
 
-        app(\App\Services\Pharmacy\PharmacyDispensingSafetyService::class)->override($alert, 'Clinically justified, prescriber consulted.', $this->user);
+        app(PharmacyDispensingSafetyService::class)->override($alert, 'Clinically justified, prescriber consulted.', $this->user);
 
         $dispensing = app(PharmacyDispensingService::class)->dispense($order, $store, [
             ['order_item_id' => $orderItem->id, 'quantity' => 10],

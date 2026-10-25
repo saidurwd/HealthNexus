@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\ClinicalOrder;
+use App\Models\ClinicalOrderItem;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClinicalOrderItemFactory extends Factory
 {
-    protected $model = \App\Models\ClinicalOrderItem::class;
+    protected $model = ClinicalOrderItem::class;
 
     public function definition(): array
     {

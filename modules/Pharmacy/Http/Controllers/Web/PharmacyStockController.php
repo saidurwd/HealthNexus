@@ -12,6 +12,7 @@ use App\Services\AuditLogger;
 use App\Services\Pharmacy\PharmacyStockService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class PharmacyStockController extends Controller
@@ -63,7 +64,7 @@ class PharmacyStockController extends Controller
 
     public function receiveForm()
     {
-        \Illuminate\Support\Facades\Gate::authorize('pharmacy.stock.receive');
+        Gate::authorize('pharmacy.stock.receive');
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $stores = PharmacyStore::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();

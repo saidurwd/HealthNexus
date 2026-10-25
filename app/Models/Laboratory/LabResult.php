@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,22 +37,80 @@ class LabResult extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function orderItem(): BelongsTo { return $this->belongsTo(LabOrderItem::class, 'lab_order_item_id'); }
-    public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
-    public function specimen(): BelongsTo { return $this->belongsTo(LabSpecimen::class, 'specimen_id'); }
-    public function enteredBy(): BelongsTo { return $this->belongsTo(User::class, 'entered_by'); }
-    public function technicalValidatedBy(): BelongsTo { return $this->belongsTo(User::class, 'technical_validated_by'); }
-    public function pathologistApprovedBy(): BelongsTo { return $this->belongsTo(User::class, 'pathologist_approved_by'); }
-    public function amendedBy(): BelongsTo { return $this->belongsTo(User::class, 'amended_by'); }
-    public function amendedFrom(): BelongsTo { return $this->belongsTo(LabResult::class, 'amended_from_id'); }
-    public function amendments(): HasMany { return $this->hasMany(LabResult::class, 'amended_from_id'); }
-    public function criticalAlerts(): HasMany { return $this->hasMany(LabCriticalResultAlert::class, 'result_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isReported(): bool { return $this->result_status === 'reported'; }
-    public function isTechnicallyValidated(): bool { return in_array($this->result_status, ['technically_validated', 'pathologist_validated', 'reported'], true); }
-    public function isPathologistValidated(): bool { return in_array($this->result_status, ['pathologist_validated', 'reported'], true); }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function orderItem(): BelongsTo
+    {
+        return $this->belongsTo(LabOrderItem::class, 'lab_order_item_id');
+    }
+
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(LabTest::class, 'test_id');
+    }
+
+    public function specimen(): BelongsTo
+    {
+        return $this->belongsTo(LabSpecimen::class, 'specimen_id');
+    }
+
+    public function enteredBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'entered_by');
+    }
+
+    public function technicalValidatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'technical_validated_by');
+    }
+
+    public function pathologistApprovedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'pathologist_approved_by');
+    }
+
+    public function amendedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'amended_by');
+    }
+
+    public function amendedFrom(): BelongsTo
+    {
+        return $this->belongsTo(LabResult::class, 'amended_from_id');
+    }
+
+    public function amendments(): HasMany
+    {
+        return $this->hasMany(LabResult::class, 'amended_from_id');
+    }
+
+    public function criticalAlerts(): HasMany
+    {
+        return $this->hasMany(LabCriticalResultAlert::class, 'result_id');
+    }
+
+    public function isReported(): bool
+    {
+        return $this->result_status === 'reported';
+    }
+
+    public function isTechnicallyValidated(): bool
+    {
+        return in_array($this->result_status, ['technically_validated', 'pathologist_validated', 'reported'], true);
+    }
+
+    public function isPathologistValidated(): bool
+    {
+        return in_array($this->result_status, ['pathologist_validated', 'reported'], true);
+    }
 
     /**
      * Full version chain, oldest first, by walking amended_from_id back to the root

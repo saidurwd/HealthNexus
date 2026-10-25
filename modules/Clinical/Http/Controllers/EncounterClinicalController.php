@@ -3,28 +3,31 @@
 namespace Modules\Clinical\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClinicalOrder;
+use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\EncounterAmendment;
 use App\Models\Prescription;
+use App\Models\VitalSign;
 use App\Services\AuditLogger;
 use App\Services\Clinical\EncounterClinicalService;
 use App\Services\EncounterLifecycleService;
 use Illuminate\Http\Request;
-use Modules\Clinical\Http\Requests\StoreEncounterComplaintRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterHistoryRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterExaminationRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterReviewOfSystemRequest;
-use Modules\Clinical\Http\Requests\StorePatientProblemRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterProcedureRequest;
 use Modules\Clinical\Http\Requests\StoreClinicalOrderRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterReferralRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterAmendmentRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterComplaintRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterDiagnosisRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterDocumentRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterExaminationRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterHistoryRequest;
 use Modules\Clinical\Http\Requests\StoreEncounterInstructionRequest;
 use Modules\Clinical\Http\Requests\StoreEncounterNoteRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterDocumentRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterAmendmentRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterVitalRequest;
-use Modules\Clinical\Http\Requests\StoreEncounterDiagnosisRequest;
 use Modules\Clinical\Http\Requests\StoreEncounterPrescriptionRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterProcedureRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterReferralRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterReviewOfSystemRequest;
+use Modules\Clinical\Http\Requests\StoreEncounterVitalRequest;
+use Modules\Clinical\Http\Requests\StorePatientProblemRequest;
 
 class EncounterClinicalController extends Controller
 {
@@ -107,7 +110,7 @@ class EncounterClinicalController extends Controller
 
         $vital = $this->clinicalService->addVital($encounter, $request->validated(), $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
+        $this->auditLogger->log('CREATE', VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
         return back()->with('success', __('Vitals recorded successfully.'));
     }
@@ -118,7 +121,7 @@ class EncounterClinicalController extends Controller
 
         $diagnosis = $this->clinicalService->addDiagnosis($encounter, $request->validated(), $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Diagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
+        $this->auditLogger->log('CREATE', Diagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
         return back()->with('success', __('Diagnosis added successfully.'));
     }
@@ -218,7 +221,7 @@ class EncounterClinicalController extends Controller
 
         $order = $this->clinicalService->createOrder($encounter, $request->validated(), $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\ClinicalOrder::class, $order->id, null, $order->toArray(), $request);
+        $this->auditLogger->log('CREATE', ClinicalOrder::class, $order->id, null, $order->toArray(), $request);
 
         return back()->with('success', __('Clinical order created successfully.'));
     }

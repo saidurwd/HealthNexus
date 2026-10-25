@@ -35,12 +35,30 @@ class IcuCriticalAlert extends Model
         return ['triggered_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function acknowledgedBy(): BelongsTo { return $this->belongsTo(User::class, 'acknowledged_by'); }
-    public function source(): MorphTo { return $this->morphTo(); }
-    public function escalations(): HasMany { return $this->hasMany(IcuAlertEscalation::class, 'alert_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
 
-    public function isAcknowledged(): bool { return $this->acknowledged_at !== null; }
+    public function acknowledgedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'acknowledged_by');
+    }
+
+    public function source(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function escalations(): HasMany
+    {
+        return $this->hasMany(IcuAlertEscalation::class, 'alert_id');
+    }
+
+    public function isAcknowledged(): bool
+    {
+        return $this->acknowledged_at !== null;
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

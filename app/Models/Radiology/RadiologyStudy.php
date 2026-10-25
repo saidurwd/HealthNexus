@@ -2,6 +2,8 @@
 
 namespace App\Models\Radiology;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,15 +28,45 @@ class RadiologyStudy extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function examination(): BelongsTo { return $this->belongsTo(RadiologyExamination::class, 'radiology_examination_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function pacsServer(): BelongsTo { return $this->belongsTo(RadiologyPacsServer::class, 'pacs_server_id'); }
-    public function series(): HasMany { return $this->hasMany(RadiologySeries::class, 'study_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isReconciled(): bool { return $this->study_status === 'reconciled'; }
-    public function hasImages(): bool { return $this->study_instance_uid !== null; }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function examination(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyExamination::class, 'radiology_examination_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function pacsServer(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyPacsServer::class, 'pacs_server_id');
+    }
+
+    public function series(): HasMany
+    {
+        return $this->hasMany(RadiologySeries::class, 'study_id');
+    }
+
+    public function isReconciled(): bool
+    {
+        return $this->study_status === 'reconciled';
+    }
+
+    public function hasImages(): bool
+    {
+        return $this->study_instance_uid !== null;
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

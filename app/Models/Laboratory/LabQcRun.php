@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,15 +25,45 @@ class LabQcRun extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function qcMaterial(): BelongsTo { return $this->belongsTo(LabQcMaterial::class, 'qc_material_id'); }
-    public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
-    public function analyzer(): BelongsTo { return $this->belongsTo(LabAnalyzer::class, 'analyzer_id'); }
-    public function performedBy(): BelongsTo { return $this->belongsTo(User::class, 'performed_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isPass(): bool { return $this->status === 'pass'; }
-    public function isFail(): bool { return $this->status === 'fail'; }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function qcMaterial(): BelongsTo
+    {
+        return $this->belongsTo(LabQcMaterial::class, 'qc_material_id');
+    }
+
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(LabTest::class, 'test_id');
+    }
+
+    public function analyzer(): BelongsTo
+    {
+        return $this->belongsTo(LabAnalyzer::class, 'analyzer_id');
+    }
+
+    public function performedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'performed_by');
+    }
+
+    public function isPass(): bool
+    {
+        return $this->status === 'pass';
+    }
+
+    public function isFail(): bool
+    {
+        return $this->status === 'fail';
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

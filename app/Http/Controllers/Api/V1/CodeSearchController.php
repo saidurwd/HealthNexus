@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Services\Terminology\CodeSearch;
 use App\Http\Responses\ApiResponse;
+use App\Services\Terminology\CodeSearch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

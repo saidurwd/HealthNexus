@@ -29,11 +29,30 @@ class IcuProgressNote extends Model
         return ['signed_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
-    public function signedBy(): BelongsTo { return $this->belongsTo(User::class, 'signed_by'); }
-    public function amendments(): HasMany { return $this->hasMany(IcuProgressNoteAmendment::class, 'note_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function signedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'signed_by');
+    }
+
+    public function amendments(): HasMany
+    {
+        return $this->hasMany(IcuProgressNoteAmendment::class, 'note_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

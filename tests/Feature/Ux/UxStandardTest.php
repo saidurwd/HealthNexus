@@ -10,10 +10,12 @@ use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\User;
 use App\Services\ModuleManager;
+use App\Services\TenantContextResolver;
 use App\Services\Ux\PatientBannerData;
 use App\Services\Ux\RoleHome;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -93,7 +95,7 @@ class UxStandardTest extends TestCase
         PatientAllergy::create(['organization_id' => $this->organization->id, 'patient_id' => $patient->id, 'substance' => 'Sulfa', 'severity' => 'severe', 'is_active' => true]);
         $user = $this->user([], ['manage organizations', 'encounters.view']);
         $this->actingAs($user);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         session()->put('tenant_organization_id', $this->organization->id);
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
@@ -139,7 +141,7 @@ class UxStandardTest extends TestCase
     {
         $user = $this->user(['pharmacist'], ['pharmacy.dashboard.view']);
         app(ModuleManager::class)->set('pharmacy', false, $this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
         $this->assertSame(route('home'), app(RoleHome::class)->urlFor($user));
     }
@@ -147,14 +149,14 @@ class UxStandardTest extends TestCase
     public function test_every_configured_role_home_points_at_a_real_route(): void
     {
         foreach (config('ux.role_homes') as $role => $home) {
-            $this->assertTrue(\Illuminate\Support\Facades\Route::has($home['route']), "$role → {$home['route']}");
+            $this->assertTrue(Route::has($home['route']), "$role → {$home['route']}");
         }
     }
 
     public function test_screens_offer_keyboard_help_and_fast_entry(): void
     {
         $this->actingAs($this->user([], ['manage organizations', 'patients.view', 'patients.create']));
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         session()->put('tenant_organization_id', $this->organization->id);
 
         $this->get('/admin/patients/create')->assertOk()->assertSee('shortcut-help', false)->assertSee('data-enter-next', false)->assertSee('Keyboard shortcuts');

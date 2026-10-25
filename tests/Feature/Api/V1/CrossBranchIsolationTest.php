@@ -3,8 +3,8 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

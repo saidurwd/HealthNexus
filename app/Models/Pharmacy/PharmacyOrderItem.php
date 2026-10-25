@@ -10,9 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PharmacyOrderItem extends Model
 {
     public const STATUS_UNMATCHED = 'unmatched';
+
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_DISPENSED = 'dispensed';
+
     public const STATUS_PARTIALLY_DISPENSED = 'partially_dispensed';
+
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
@@ -28,11 +32,30 @@ class PharmacyOrderItem extends Model
         ];
     }
 
-    public function order(): BelongsTo { return $this->belongsTo(PharmacyOrder::class, 'order_id'); }
-    public function prescriptionItem(): BelongsTo { return $this->belongsTo(PrescriptionItem::class); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function dispensingItems(): HasMany { return $this->hasMany(PharmacyDispensingItem::class, 'order_item_id'); }
-    public function safetyAlerts(): HasMany { return $this->hasMany(PharmacySafetyAlert::class, 'order_item_id'); }
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyOrder::class, 'order_id');
+    }
+
+    public function prescriptionItem(): BelongsTo
+    {
+        return $this->belongsTo(PrescriptionItem::class);
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function dispensingItems(): HasMany
+    {
+        return $this->hasMany(PharmacyDispensingItem::class, 'order_item_id');
+    }
+
+    public function safetyAlerts(): HasMany
+    {
+        return $this->hasMany(PharmacySafetyAlert::class, 'order_item_id');
+    }
 
     public function remainingQuantity(): ?int
     {

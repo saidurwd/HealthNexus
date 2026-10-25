@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\File;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
 use App\Models\User;
@@ -48,7 +49,7 @@ class NursingWoundAssessment extends Model
      */
     public function files(): MorphMany
     {
-        return $this->morphMany(\App\Models\File::class, 'entity');
+        return $this->morphMany(File::class, 'entity');
     }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Billing\Events\ChargeEventLogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -75,7 +76,7 @@ class ChargeService
     public function createManual(BillingItem $item, int $quantity, array $context, User $user): BillingCharge
     {
         return DB::transaction(function () use ($item, $quantity, $context, $user) {
-            $idempotencyKey = hash('sha256', sprintf('manual:%d:%s', $user->id, (string) \Illuminate\Support\Str::uuid()));
+            $idempotencyKey = hash('sha256', sprintf('manual:%d:%s', $user->id, (string) Str::uuid()));
 
             return $this->create($item, null, $quantity, $context, $idempotencyKey, $user);
         });

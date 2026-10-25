@@ -2,9 +2,11 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Branch;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
@@ -45,18 +47,65 @@ class IcuAdmissionRequest extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
-    public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
-    public function requestingProvider(): BelongsTo { return $this->belongsTo(Provider::class, 'requesting_provider_id'); }
-    public function primaryDiagnosis(): BelongsTo { return $this->belongsTo(Diagnosis::class, 'primary_diagnosis_id'); }
-    public function workflowInstance(): BelongsTo { return $this->belongsTo(WorkflowInstance::class, 'workflow_instance_id'); }
-    public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
-    public function acceptedBy(): BelongsTo { return $this->belongsTo(User::class, 'accepted_by'); }
-    public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
-    public function episode(): HasOne { return $this->hasOne(IcuEpisode::class, 'admission_request_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
+    public function admission(): BelongsTo
+    {
+        return $this->belongsTo(IpdAdmission::class, 'admission_id');
+    }
+
+    public function requestingProvider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'requesting_provider_id');
+    }
+
+    public function primaryDiagnosis(): BelongsTo
+    {
+        return $this->belongsTo(Diagnosis::class, 'primary_diagnosis_id');
+    }
+
+    public function workflowInstance(): BelongsTo
+    {
+        return $this->belongsTo(WorkflowInstance::class, 'workflow_instance_id');
+    }
+
+    public function requestedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
+    }
+
+    public function acceptedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'accepted_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function episode(): HasOne
+    {
+        return $this->hasOne(IcuEpisode::class, 'admission_request_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

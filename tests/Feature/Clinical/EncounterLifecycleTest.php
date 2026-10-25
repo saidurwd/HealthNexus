@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Clinical;
 
+use App\Models\Branch;
 use App\Models\Encounter;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\User;
 use App\Services\EncounterLifecycleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,9 +24,9 @@ class EncounterLifecycleTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $organization = \App\Models\Organization::factory()->create();
-        $branch = \App\Models\Branch::factory()->create(['organization_id' => $organization->id]);
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $organization->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
 
         $this->user->organizations()->attach($organization->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);

@@ -2,6 +2,8 @@
 
 namespace App\Models\Radiology;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -27,22 +29,80 @@ class RadiologyReport extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function examination(): BelongsTo { return $this->belongsTo(RadiologyExamination::class, 'examination_id'); }
-    public function template(): BelongsTo { return $this->belongsTo(RadiologyReportTemplate::class, 'template_id'); }
-    public function radiologist(): BelongsTo { return $this->belongsTo(Provider::class, 'radiologist_id'); }
-    public function reviewedBy(): BelongsTo { return $this->belongsTo(Provider::class, 'reviewed_by'); }
-    public function approvedBy(): BelongsTo { return $this->belongsTo(Provider::class, 'approved_by'); }
-    public function amendedBy(): BelongsTo { return $this->belongsTo(User::class, 'amended_by'); }
-    public function amendedFrom(): BelongsTo { return $this->belongsTo(RadiologyReport::class, 'amended_from_id'); }
-    public function amendments(): HasMany { return $this->hasMany(RadiologyReport::class, 'amended_from_id'); }
-    public function findings(): HasMany { return $this->hasMany(RadiologyReportFinding::class, 'report_id'); }
-    public function criticalFindings(): HasMany { return $this->hasMany(RadiologyCriticalFinding::class, 'report_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isDraft(): bool { return $this->status === 'draft'; }
-    public function isFinal(): bool { return in_array($this->status, ['final', 'amended'], true); }
-    public function isMutable(): bool { return in_array($this->status, ['draft'], true); }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function examination(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyExamination::class, 'examination_id');
+    }
+
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyReportTemplate::class, 'template_id');
+    }
+
+    public function radiologist(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'radiologist_id');
+    }
+
+    public function reviewedBy(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'reviewed_by');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'approved_by');
+    }
+
+    public function amendedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'amended_by');
+    }
+
+    public function amendedFrom(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyReport::class, 'amended_from_id');
+    }
+
+    public function amendments(): HasMany
+    {
+        return $this->hasMany(RadiologyReport::class, 'amended_from_id');
+    }
+
+    public function findings(): HasMany
+    {
+        return $this->hasMany(RadiologyReportFinding::class, 'report_id');
+    }
+
+    public function criticalFindings(): HasMany
+    {
+        return $this->hasMany(RadiologyCriticalFinding::class, 'report_id');
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    public function isFinal(): bool
+    {
+        return in_array($this->status, ['final', 'amended'], true);
+    }
+
+    public function isMutable(): bool
+    {
+        return in_array($this->status, ['draft'], true);
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

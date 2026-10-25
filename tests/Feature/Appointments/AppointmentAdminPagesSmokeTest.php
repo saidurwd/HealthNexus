@@ -2,14 +2,17 @@
 
 namespace Tests\Feature\Appointments;
 
+use App\Models\Appointment;
 use App\Models\AppointmentRoom;
 use App\Models\AppointmentType;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\DoctorSchedule;
 use App\Models\HospitalHoliday;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -49,8 +52,8 @@ class AppointmentAdminPagesSmokeTest extends TestCase
         $this->actingAs($this->user);
         session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 
     public function test_provider_pages_render(): void
@@ -117,10 +120,10 @@ class AppointmentAdminPagesSmokeTest extends TestCase
 
     public function test_appointment_print_page_renders(): void
     {
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $doctor = User::factory()->create();
 
-        $appointment = \App\Models\Appointment::create([
+        $appointment = Appointment::create([
             'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,

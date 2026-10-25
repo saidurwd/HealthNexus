@@ -53,7 +53,7 @@ class ObservationService
             throw ValidationException::withMessages(['panel' => 'Missing panel values: '.implode(', ', $missing)]);
         }
 
-        return DB::transaction(function () use ($panelKey, $panel, $values, $context, $actor) {
+        return DB::transaction(function () use ($panel, $values, $context, $actor) {
             $this->assertPatientInOrganization($context);
             $effectiveAt = $context->effectiveAt ?? now();
 
@@ -76,7 +76,7 @@ class ObservationService
     /** Replaces a value: the new row (status `amended`) points at the old one, which stays untouched but is no longer current. */
     public function amend(ClinicalObservation $observation, float|string $newValue, string $reason, ?User $actor = null): ClinicalObservation
     {
-        return DB::transaction(function () use ($observation, $newValue, $reason, $actor) {
+        return DB::transaction(function () use ($observation, $newValue, $actor) {
             $locked = ClinicalObservation::query()->lockForUpdate()->findOrFail($observation->id);
 
             if (! in_array($locked->status, [ClinicalObservation::STATUS_FINAL, ClinicalObservation::STATUS_AMENDED], true) || $this->isSuperseded($locked)) {

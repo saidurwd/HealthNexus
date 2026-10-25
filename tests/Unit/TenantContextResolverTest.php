@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

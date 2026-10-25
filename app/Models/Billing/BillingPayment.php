@@ -2,6 +2,9 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,24 +23,78 @@ class BillingPayment extends Model
         return ['amount' => 'decimal:2', 'payment_date' => 'date', 'completed_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
-    public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
-    public function corporate(): BelongsTo { return $this->belongsTo(BillingCorporate::class); }
-    public function method(): BelongsTo { return $this->belongsTo(BillingPaymentMethod::class, 'payment_method_id'); }
-    public function cashierSession(): BelongsTo { return $this->belongsTo(BillingCashierSession::class, 'cashier_session_id'); }
-    public function receipt(): HasOne { return $this->hasOne(BillingReceipt::class, 'payment_id'); }
-    public function refunds(): HasMany { return $this->hasMany(BillingRefund::class, 'payment_id'); }
-    public function receivedBy(): BelongsTo { return $this->belongsTo(User::class, 'received_by'); }
-    public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(BillingInvoice::class);
+    }
+
+    public function corporate(): BelongsTo
+    {
+        return $this->belongsTo(BillingCorporate::class);
+    }
+
+    public function method(): BelongsTo
+    {
+        return $this->belongsTo(BillingPaymentMethod::class, 'payment_method_id');
+    }
+
+    public function cashierSession(): BelongsTo
+    {
+        return $this->belongsTo(BillingCashierSession::class, 'cashier_session_id');
+    }
+
+    public function receipt(): HasOne
+    {
+        return $this->hasOne(BillingReceipt::class, 'payment_id');
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(BillingRefund::class, 'payment_id');
+    }
+
+    public function receivedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'received_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
         return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
-    public function isMutable(): bool { return $this->status === 'pending'; }
-    public function isCompleted(): bool { return $this->status === 'completed'; }
-    public function isCancelled(): bool { return $this->status === 'cancelled'; }
+    public function isMutable(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === 'completed';
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
 }

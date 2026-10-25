@@ -4,6 +4,7 @@ namespace Tests\Feature\Pharmacy;
 
 use App\Models\Branch;
 use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\Pharmacy\PharmacyBatch;
 use App\Models\Pharmacy\PharmacyDosageForm;
 use App\Models\Pharmacy\PharmacyGeneric;
@@ -95,7 +96,7 @@ abstract class PharmacyTestCase extends TestCase
         ], $quantity, $this->user);
     }
 
-    protected function makePrescription(\App\Models\Patient $patient, array $items): Prescription
+    protected function makePrescription(Patient $patient, array $items): Prescription
     {
         $prescription = Prescription::create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,

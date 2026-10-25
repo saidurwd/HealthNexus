@@ -15,6 +15,13 @@ class IcuDeviceAssessment extends Model
         return ['assessed_at' => 'datetime'];
     }
 
-    public function device(): BelongsTo { return $this->belongsTo(IcuDevice::class, 'device_id'); }
-    public function assessedBy(): BelongsTo { return $this->belongsTo(User::class, 'assessed_by'); }
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(IcuDevice::class, 'device_id');
+    }
+
+    public function assessedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assessed_by');
+    }
 }

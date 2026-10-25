@@ -4,7 +4,6 @@ namespace App\Listeners\Icu;
 
 use App\Events\Icu\ICUCodeBlueStarted;
 use App\Events\Icu\ICUCriticalAlertTriggered;
-use App\Models\Icu\IcuCriticalAlert;
 use App\Models\Icu\IcuCriticalEvent;
 use App\Models\User;
 use App\Services\NotificationService;

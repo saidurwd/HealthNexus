@@ -6,10 +6,9 @@ use App\Events\Clinical\EncounterCompleted;
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
-use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 
 class ChargeFromClinicalEventTest extends BillingTestCase

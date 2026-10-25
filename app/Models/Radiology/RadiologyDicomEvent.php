@@ -2,6 +2,8 @@
 
 namespace App\Models\Radiology;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,10 +14,25 @@ class RadiologyDicomEvent extends Model
         'event_type', 'status', 'summary', 'error',
     ];
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function examination(): BelongsTo { return $this->belongsTo(RadiologyExamination::class, 'radiology_examination_id'); }
-    public function pacsServer(): BelongsTo { return $this->belongsTo(RadiologyPacsServer::class, 'pacs_server_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function examination(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyExamination::class, 'radiology_examination_id');
+    }
+
+    public function pacsServer(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyPacsServer::class, 'pacs_server_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

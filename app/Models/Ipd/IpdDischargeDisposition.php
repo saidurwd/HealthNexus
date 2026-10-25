@@ -2,6 +2,8 @@
 
 namespace App\Models\Ipd;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,8 +20,15 @@ class IpdDischargeDisposition extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

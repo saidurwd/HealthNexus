@@ -3,10 +3,11 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\Clinical\EncounterClinicalService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -204,7 +205,7 @@ class EncounterApiTest extends TestCase
             'locked_at' => now(),
         ]);
 
-        $amendment = app(\App\Services\Clinical\EncounterClinicalService::class)->createAmendment($encounter, [
+        $amendment = app(EncounterClinicalService::class)->createAmendment($encounter, [
             'amendment_type' => 'correction',
             'reason' => 'Corrected diagnosis code',
             'content' => 'Diagnosis code changed from I10 to I11.',

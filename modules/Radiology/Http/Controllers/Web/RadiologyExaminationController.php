@@ -60,7 +60,7 @@ class RadiologyExaminationController extends Controller
         $this->authorize('start', $examination);
 
         $oldValues = $examination->toArray();
-        app(\App\Services\Radiology\RadiologyExaminationService::class)->startPreparation($examination);
+        app(RadiologyExaminationService::class)->startPreparation($examination);
 
         $this->auditLogger->log('START_PREPARATION', RadiologyExamination::class, $examination->id, $oldValues, $examination->fresh()->toArray(), $request);
 

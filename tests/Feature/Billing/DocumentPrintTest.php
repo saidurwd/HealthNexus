@@ -6,8 +6,10 @@ use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPaymentMethod;
+use App\Models\Billing\BillingReceipt;
 use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\User;
 use App\Services\Billing\InvoiceLifecycleService;
 use App\Services\Billing\InvoiceService;
 use App\Services\Billing\PaymentService;
@@ -15,9 +17,11 @@ use App\Services\Documents\Code128Svg;
 use App\Services\Documents\DocumentService;
 use App\Services\Documents\SafeTemplate;
 use App\Services\SettingsService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /** H-08: receipt (80 mm), Bangla/English, QR, reprint control, editable templates. */
 class DocumentPrintTest extends BillingTestCase
@@ -100,10 +104,10 @@ class DocumentPrintTest extends BillingTestCase
 
     public function test_user_without_the_permission_cannot_print(): void
     {
-        $nobody = \App\Models\User::factory()->create();
+        $nobody = User::factory()->create();
         $nobody->organizations()->attach($this->organization->id, ['access_level' => 'staff']);
 
-        $this->expectException(\Illuminate\Auth\Access\AuthorizationException::class);
+        $this->expectException(AuthorizationException::class);
 
         app(DocumentService::class)->render('receipt', $this->receiptNumber, 'en', $nobody);
     }
@@ -111,9 +115,9 @@ class DocumentPrintTest extends BillingTestCase
     public function test_another_organizations_receipt_is_a_404(): void
     {
         $other = Organization::factory()->create();
-        \App\Models\Billing\BillingReceipt::query()->update(['organization_id' => $other->id]);
+        BillingReceipt::query()->update(['organization_id' => $other->id]);
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $this->print();
     }

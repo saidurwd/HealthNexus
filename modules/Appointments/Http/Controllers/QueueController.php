@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentSlot;
 use App\Models\AppointmentToken;
 use App\Models\Provider;
+use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\Appointments\QueueService;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
@@ -105,7 +106,7 @@ class QueueController extends Controller
     {
         $this->authorize('checkIn', $token->appointment);
 
-        app(\App\Services\Appointments\AppointmentLifecycleService::class)->startConsultation($token->appointment, $request->user());
+        app(AppointmentLifecycleService::class)->startConsultation($token->appointment, $request->user());
 
         return response()->json(['success' => true]);
     }
@@ -114,7 +115,7 @@ class QueueController extends Controller
     {
         $this->authorize('update', $token->appointment);
 
-        app(\App\Services\Appointments\AppointmentLifecycleService::class)->complete($token->appointment, $request->user());
+        app(AppointmentLifecycleService::class)->complete($token->appointment, $request->user());
 
         return response()->json(['success' => true]);
     }

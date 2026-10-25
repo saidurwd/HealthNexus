@@ -10,6 +10,7 @@ use App\Models\Pharmacy\PharmacyDosageForm;
 use App\Models\Pharmacy\PharmacyGeneric;
 use App\Models\Pharmacy\PharmacyMedication;
 use App\Models\Pharmacy\PharmacyRoute;
+use App\Models\Pharmacy\PharmacyStockTransaction;
 use App\Models\Pharmacy\PharmacyStore;
 use App\Models\User;
 use App\Services\Pharmacy\PharmacyStockService;
@@ -165,6 +166,6 @@ class PharmacySeeder extends Seeder
             'expiry_date' => now()->addYear()->toDateString(),
             'unit_cost' => '2.00',
             'selling_price' => '5.00',
-        ], 500, $user, \App\Models\Pharmacy\PharmacyStockTransaction::TYPE_OPENING);
+        ], 500, $user, PharmacyStockTransaction::TYPE_OPENING);
     }
 }

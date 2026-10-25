@@ -2,8 +2,8 @@
 
 namespace App\Integrations\Null;
 
-use App\Contracts\Integration\PayerGateway;
 use App\Contracts\Integration\IntegrationResult;
+use App\Contracts\Integration\PayerGateway;
 use Illuminate\Support\Facades\Log;
 
 class NullPayerGateway implements PayerGateway

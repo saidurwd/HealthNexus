@@ -30,12 +30,35 @@ class IcuInfusion extends Model
         ];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function prescriber(): BelongsTo { return $this->belongsTo(Provider::class, 'prescriber_id'); }
-    public function device(): BelongsTo { return $this->belongsTo(IcuDevice::class, 'device_id'); }
-    public function startedBy(): BelongsTo { return $this->belongsTo(User::class, 'started_by'); }
-    public function stoppedBy(): BelongsTo { return $this->belongsTo(User::class, 'stopped_by'); }
-    public function titrations(): HasMany { return $this->hasMany(IcuInfusionTitration::class, 'infusion_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function prescriber(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'prescriber_id');
+    }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(IcuDevice::class, 'device_id');
+    }
+
+    public function startedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
+    public function stoppedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'stopped_by');
+    }
+
+    public function titrations(): HasMany
+    {
+        return $this->hasMany(IcuInfusionTitration::class, 'infusion_id');
+    }
 
     public function currentRate(): ?float
     {

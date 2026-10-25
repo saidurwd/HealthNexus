@@ -17,6 +17,13 @@ class PharmacyReturnItem extends Model
         ];
     }
 
-    public function pharmacyReturn(): BelongsTo { return $this->belongsTo(PharmacyReturn::class, 'return_id'); }
-    public function dispensingItem(): BelongsTo { return $this->belongsTo(PharmacyDispensingItem::class, 'dispensing_item_id'); }
+    public function pharmacyReturn(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyReturn::class, 'return_id');
+    }
+
+    public function dispensingItem(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyDispensingItem::class, 'dispensing_item_id');
+    }
 }

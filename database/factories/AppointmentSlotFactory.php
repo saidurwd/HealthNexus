@@ -4,8 +4,8 @@ namespace Database\Factories;
 
 use App\Models\AppointmentSlot;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\DoctorSchedule;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

@@ -2,12 +2,15 @@
 
 namespace App\Services\Appointments;
 
+use App\Events\Clinical\DiagnosisAdded;
+use App\Events\Clinical\PrescriptionCreated;
 use App\Models\Appointment;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\InvestigationOrder;
 use App\Models\Prescription;
 use App\Models\User;
+use App\Models\VitalSign;
 use App\Services\Clinical\ClinicalNumberGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +25,7 @@ class OpdService
 {
     public function __construct(private ClinicalNumberGenerator $numberGenerator) {}
 
-    public function recordVitalSigns(Appointment $appointment, array $data, User $user, ?Encounter $encounter = null): \App\Models\VitalSign
+    public function recordVitalSigns(Appointment $appointment, array $data, User $user, ?Encounter $encounter = null): VitalSign
     {
         return DB::transaction(function () use ($appointment, $data, $user, $encounter) {
             $data['organization_id'] = $appointment->organization_id;
@@ -33,7 +36,7 @@ class OpdService
             $data['recorded_by'] = $user->id;
             $data['recorded_at'] = now();
 
-            return \App\Models\VitalSign::create($data);
+            return VitalSign::create($data);
         });
     }
 
@@ -53,7 +56,7 @@ class OpdService
             $diagnosis = Diagnosis::create($data);
 
             if ($encounter) {
-                \App\Events\Clinical\DiagnosisAdded::dispatch($encounter, $diagnosis);
+                DiagnosisAdded::dispatch($encounter, $diagnosis);
             }
 
             return $diagnosis;
@@ -97,7 +100,7 @@ class OpdService
             }
 
             if ($encounter) {
-                \App\Events\Clinical\PrescriptionCreated::dispatch($encounter, $prescription);
+                PrescriptionCreated::dispatch($encounter, $prescription);
             }
 
             return $prescription;

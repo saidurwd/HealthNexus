@@ -2,7 +2,9 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,11 +22,30 @@ class LabSection extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function department(): BelongsTo { return $this->belongsTo(Department::class); }
-    public function tests(): HasMany { return $this->hasMany(LabTest::class, 'section_id'); }
-    public function analyzers(): HasMany { return $this->hasMany(LabAnalyzer::class, 'section_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function tests(): HasMany
+    {
+        return $this->hasMany(LabTest::class, 'section_id');
+    }
+
+    public function analyzers(): HasMany
+    {
+        return $this->hasMany(LabAnalyzer::class, 'section_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

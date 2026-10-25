@@ -1,7 +1,7 @@
 <?php
 
-use App\Services\Search\PatientSearchIndexer;
 use App\Models\Patient;
+use App\Services\Search\PatientSearchIndexer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

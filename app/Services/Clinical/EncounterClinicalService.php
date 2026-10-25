@@ -2,29 +2,30 @@
 
 namespace App\Services\Clinical;
 
-use App\Models\Diagnosis;
-use App\Models\Encounter;
-use App\Models\EncounterComplaint;
-use App\Models\EncounterHistory;
-use App\Models\EncounterExamination;
-use App\Models\EncounterReviewOfSystem;
-use App\Models\PatientProblem;
-use App\Models\EncounterProcedure;
-use App\Models\ClinicalOrder;
-use App\Models\Prescription;
-use App\Models\EncounterReferral;
-use App\Models\EncounterInstruction;
-use App\Models\EncounterNote;
-use App\Models\EncounterDocument;
-use App\Models\EncounterAmendment;
-use App\Models\User;
-use App\Models\VitalSign;
+use App\Events\Clinical\ClinicalAmendmentCreated;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\PrescriptionCreated;
+use App\Events\Clinical\PrescriptionIssued;
 use App\Events\Clinical\ReferralCreated;
-use App\Events\Clinical\ClinicalAmendmentCreated;
 use App\Events\Clinical\VitalRecorded;
+use App\Models\ClinicalOrder;
+use App\Models\Diagnosis;
+use App\Models\Encounter;
+use App\Models\EncounterAmendment;
+use App\Models\EncounterComplaint;
+use App\Models\EncounterDocument;
+use App\Models\EncounterExamination;
+use App\Models\EncounterHistory;
+use App\Models\EncounterInstruction;
+use App\Models\EncounterNote;
+use App\Models\EncounterProcedure;
+use App\Models\EncounterReferral;
+use App\Models\EncounterReviewOfSystem;
+use App\Models\PatientProblem;
+use App\Models\Prescription;
+use App\Models\User;
+use App\Models\VitalSign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -139,9 +140,10 @@ class EncounterClinicalService
             return $prescription;
         });
     }
+
     public function addComplaint(Encounter $encounter, array $data, ?User $user = null): EncounterComplaint
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->complaints()->create([
                 'patient_id' => $encounter->patient_id,
                 'organization_id' => $encounter->organization_id,
@@ -159,7 +161,7 @@ class EncounterClinicalService
 
     public function addHistory(Encounter $encounter, array $data, ?User $user = null): EncounterHistory
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->histories()->create([
                 'patient_id' => $encounter->patient_id,
                 'organization_id' => $encounter->organization_id,
@@ -178,7 +180,7 @@ class EncounterClinicalService
 
     public function addExamination(Encounter $encounter, array $data, ?User $user = null): EncounterExamination
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->examinations()->create([
                 'patient_id' => $encounter->patient_id,
                 'organization_id' => $encounter->organization_id,
@@ -191,7 +193,7 @@ class EncounterClinicalService
 
     public function addReviewOfSystem(Encounter $encounter, array $data, ?User $user = null): EncounterReviewOfSystem
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->reviewOfSystems()->create([
                 'patient_id' => $encounter->patient_id,
                 'organization_id' => $encounter->organization_id,
@@ -351,7 +353,7 @@ class EncounterClinicalService
             'issued_by' => $user?->id ?? auth()->id(),
         ]);
 
-        \App\Events\Clinical\PrescriptionIssued::dispatch($encounter, $prescription);
+        PrescriptionIssued::dispatch($encounter, $prescription);
 
         return $prescription;
     }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
@@ -142,7 +143,7 @@ class Patient extends Model
         return $this->consents()->where('status', 'active');
     }
 
-    public function preference(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function preference(): HasOne
     {
         return $this->hasOne(PatientPreference::class);
     }
@@ -157,7 +158,7 @@ class Patient extends Model
         return $this->hasMany(PatientTimelineEvent::class);
     }
 
-    public function portalAccount(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function portalAccount(): HasOne
     {
         return $this->hasOne(PatientPortalAccount::class);
     }

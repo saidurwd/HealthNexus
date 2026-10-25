@@ -6,8 +6,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\Mfa\MfaController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DocumentPrintController;
+use App\Http\Controllers\DowntimeController;
+use App\Http\Controllers\GlobalSearchPageController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\QuickStartController;
+use App\Http\Middleware\ApplyTenantContextToInput;
 use App\Http\Middleware\EnsureTenantContext;
 use App\Http\Middleware\RequireMfa;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/mfa/setup', [MfaController::class, 'setup'])->name('mfa.setup.store');
     Route::post('/mfa/disable', [MfaController::class, 'disable'])->name('mfa.disable');
 
-    Route::prefix('admin')->name('admin.')->middleware([\App\Http\Middleware\ApplyTenantContextToInput::class])->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware([ApplyTenantContextToInput::class])->group(function () {
         require __DIR__.'/../modules/Core/Organization/Routes/web.php';
         require __DIR__.'/../modules/Rbac/Routes/web.php';
         require __DIR__.'/../modules/Patients/Routes/web.php';
@@ -79,26 +85,26 @@ Route::middleware(['auth'])->group(function () {
         })->name('notifications.index');
 
         Route::prefix('imports')->name('imports.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\ImportController::class, 'index'])->name('index');
-            Route::post('/', [\App\Http\Controllers\ImportController::class, 'store'])->name('store');
-            Route::get('template/{key}', [\App\Http\Controllers\ImportController::class, 'template'])->name('template');
-            Route::get('{batch}', [\App\Http\Controllers\ImportController::class, 'show'])->name('show');
-            Route::post('{batch}/commit', [\App\Http\Controllers\ImportController::class, 'commit'])->name('commit');
-            Route::post('{batch}/rollback', [\App\Http\Controllers\ImportController::class, 'rollback'])->name('rollback');
-            Route::get('{batch}/errors', [\App\Http\Controllers\ImportController::class, 'errors'])->name('errors');
+            Route::get('/', [ImportController::class, 'index'])->name('index');
+            Route::post('/', [ImportController::class, 'store'])->name('store');
+            Route::get('template/{key}', [ImportController::class, 'template'])->name('template');
+            Route::get('{batch}', [ImportController::class, 'show'])->name('show');
+            Route::post('{batch}/commit', [ImportController::class, 'commit'])->name('commit');
+            Route::post('{batch}/rollback', [ImportController::class, 'rollback'])->name('rollback');
+            Route::get('{batch}/errors', [ImportController::class, 'errors'])->name('errors');
         });
 
         Route::prefix('downtime')->name('downtime.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\DowntimeController::class, 'index'])->name('index');
-            Route::get('census', [\App\Http\Controllers\DowntimeController::class, 'census'])->name('census');
-            Route::get('forms/{form}', [\App\Http\Controllers\DowntimeController::class, 'form'])->name('form');
+            Route::get('/', [DowntimeController::class, 'index'])->name('index');
+            Route::get('census', [DowntimeController::class, 'census'])->name('census');
+            Route::get('forms/{form}', [DowntimeController::class, 'form'])->name('form');
         });
 
-        Route::get('help/quick-start', [\App\Http\Controllers\QuickStartController::class, 'index'])->name('help.quick-start');
-        Route::get('help/quick-start/{role}', [\App\Http\Controllers\QuickStartController::class, 'show'])->name('help.quick-start.show');
+        Route::get('help/quick-start', [QuickStartController::class, 'index'])->name('help.quick-start');
+        Route::get('help/quick-start/{role}', [QuickStartController::class, 'show'])->name('help.quick-start.show');
 
-        Route::get('search', \App\Http\Controllers\GlobalSearchPageController::class)->name('search');
-        Route::get('documents/{type}/{reference}', \App\Http\Controllers\DocumentPrintController::class)->name('documents.print');
+        Route::get('search', GlobalSearchPageController::class)->name('search');
+        Route::get('documents/{type}/{reference}', DocumentPrintController::class)->name('documents.print');
 
         Route::get('messages', function () {
             return view('admin.messages.index');

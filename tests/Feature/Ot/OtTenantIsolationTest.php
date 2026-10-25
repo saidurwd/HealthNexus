@@ -5,8 +5,11 @@ namespace Tests\Feature\Ot;
 use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\User;
+use App\Services\Ot\OtConsentService;
+use App\Services\Ot\OtOperativeNoteService;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class OtTenantIsolationTest extends OtTestCase
 {
@@ -26,7 +29,7 @@ class OtTenantIsolationTest extends OtTestCase
         $role = Role::firstOrCreate(['name' => 'surgeon_test', 'guard_name' => 'web']);
         $role->syncPermissions($permissions);
         $user->assignRole($role);
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return $user->fresh();
     }
@@ -47,8 +50,8 @@ class OtTenantIsolationTest extends OtTestCase
     public function test_unauthorized_user_cannot_view_operative_note_or_consent(): void
     {
         $surgery = $this->makeDaySurgery();
-        app(\App\Services\Ot\OtConsentService::class)->grant($surgery, $this->user);
-        $note = app(\App\Services\Ot\OtOperativeNoteService::class)->create($surgery, ['findings' => 'sensitive'], $this->user);
+        app(OtConsentService::class)->grant($surgery, $this->user);
+        $note = app(OtOperativeNoteService::class)->create($surgery, ['findings' => 'sensitive'], $this->user);
 
         $noPermsUser = $this->userWith([]);
 

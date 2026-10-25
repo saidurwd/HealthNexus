@@ -138,7 +138,7 @@ class TenantIsolationTest extends BillingTestCase
         $response->assertForbidden();
     }
 
-    public function test_forTenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
+    public function test_for_tenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
     {
         $ids = BillingInvoice::query()
             ->forTenant($this->organization->id)

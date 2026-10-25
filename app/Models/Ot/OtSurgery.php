@@ -2,8 +2,10 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Branch;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientConsent;
 use App\Models\Provider;
@@ -73,12 +75,12 @@ class OtSurgery extends Model
 
     public function organization(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Organization::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function patient(): BelongsTo

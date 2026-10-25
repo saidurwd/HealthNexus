@@ -3,17 +3,18 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Radiology\RadiologyModality;
 use App\Models\Radiology\RadiologyOrder;
 use App\Models\Radiology\RadiologyProcedure;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -46,7 +47,7 @@ class EncounterImagingAndLabPanelTest extends TestCase
 
         $this->actingAs($user);
         session()->put('tenant_organization_id', $organization->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
         $encounter = Encounter::factory()->create([
             'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'status' => 'in_progress',

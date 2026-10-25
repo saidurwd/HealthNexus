@@ -2,6 +2,10 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Encounter;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,31 +23,105 @@ class BillingInvoice extends Model
         return ['subtotal' => 'decimal:2', 'discount_amount' => 'decimal:2', 'tax_amount' => 'decimal:2', 'rounding_amount' => 'decimal:2', 'grand_total' => 'decimal:2', 'paid_amount' => 'decimal:2', 'due_amount' => 'decimal:2', 'invoice_date' => 'date', 'due_date' => 'date', 'version' => 'integer', 'finalized_at' => 'datetime', 'cancelled_at' => 'datetime', 'refunded_at' => 'datetime', 'written_off_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
-    public function encounter(): BelongsTo { return $this->belongsTo(\App\Models\Encounter::class); }
-    public function corporate(): BelongsTo { return $this->belongsTo(BillingCorporate::class); }
-    public function corporateContract(): BelongsTo { return $this->belongsTo(BillingCorporateContract::class); }
-    public function insurancePolicy(): BelongsTo { return $this->belongsTo(BillingInsurancePolicy::class); }
-    public function items(): HasMany { return $this->hasMany(BillingInvoiceItem::class, 'invoice_id'); }
-    public function payments(): HasMany { return $this->hasMany(BillingPayment::class, 'invoice_id'); }
-    public function refunds(): HasMany { return $this->hasMany(BillingRefund::class, 'invoice_id'); }
-    public function adjustments(): HasMany { return $this->hasMany(BillingAdjustment::class, 'invoice_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
-    public function finalizedBy(): BelongsTo { return $this->belongsTo(User::class, 'finalized_by'); }
-    public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
+    public function corporate(): BelongsTo
+    {
+        return $this->belongsTo(BillingCorporate::class);
+    }
+
+    public function corporateContract(): BelongsTo
+    {
+        return $this->belongsTo(BillingCorporateContract::class);
+    }
+
+    public function insurancePolicy(): BelongsTo
+    {
+        return $this->belongsTo(BillingInsurancePolicy::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(BillingInvoiceItem::class, 'invoice_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(BillingPayment::class, 'invoice_id');
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(BillingRefund::class, 'invoice_id');
+    }
+
+    public function adjustments(): HasMany
+    {
+        return $this->hasMany(BillingAdjustment::class, 'invoice_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function finalizedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'finalized_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
         return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
-    public function isMutable(): bool { return in_array($this->status, ['draft', 'pending'], true); }
-    public function isFinalized(): bool { return $this->finalized_at !== null; }
-    public function isPaid(): bool { return $this->status === 'paid'; }
-    public function isPartiallyPaid(): bool { return $this->status === 'partially_paid'; }
-    public function isCancelled(): bool { return $this->status === 'cancelled'; }
+    public function isMutable(): bool
+    {
+        return in_array($this->status, ['draft', 'pending'], true);
+    }
+
+    public function isFinalized(): bool
+    {
+        return $this->finalized_at !== null;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status === 'paid';
+    }
+
+    public function isPartiallyPaid(): bool
+    {
+        return $this->status === 'partially_paid';
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
 
     public function canTransitionTo(string $status): bool
     {

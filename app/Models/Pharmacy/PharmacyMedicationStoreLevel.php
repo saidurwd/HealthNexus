@@ -18,6 +18,13 @@ class PharmacyMedicationStoreLevel extends Model
         ];
     }
 
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'store_id');
+    }
 }

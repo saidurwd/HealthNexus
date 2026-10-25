@@ -118,7 +118,7 @@ class IpdTransferService
 
     public function cancel(IpdBedMovement $movement, User $user, ?string $reason = null): IpdBedMovement
     {
-        return DB::transaction(function () use ($movement, $user, $reason) {
+        return DB::transaction(function () use ($movement, $reason) {
             if (! in_array($movement->status, [IpdBedMovement::STATUS_REQUESTED, IpdBedMovement::STATUS_APPROVED], true)) {
                 throw ValidationException::withMessages(['movement' => "This transfer is already '{$movement->status}'."]);
             }

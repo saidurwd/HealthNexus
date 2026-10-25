@@ -9,6 +9,7 @@ use App\Services\Clinical\Alerts\AlertReport;
 use App\Services\Clinical\Alerts\AlertRequest;
 use App\Services\Clinical\Alerts\AlertService;
 use App\Services\Icu\IcuAlertService;
+use App\Services\SettingsService;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
@@ -128,7 +129,7 @@ class AlertServiceTest extends IcuTestCase
 
     public function test_hospital_setting_overrides_the_default_ladder(): void
     {
-        app(\App\Services\SettingsService::class)->set('alerts.escalation_policies', ['critical' => [['after_minutes' => 2, 'roles' => ['charge_nurse']]]]);
+        app(SettingsService::class)->set('alerts.escalation_policies', ['critical' => [['after_minutes' => 2, 'roles' => ['charge_nurse']]]]);
         $this->userWithRole('charge_nurse');
         $service = app(AlertService::class);
         $service->raise($this->request());

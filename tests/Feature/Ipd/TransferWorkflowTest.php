@@ -10,6 +10,7 @@ use App\Models\Ipd\IpdBedMovement;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdTransferService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves a transfer is atomic (spec §15/§83): the patient is never simultaneously occupying two
@@ -55,7 +56,7 @@ class TransferWorkflowTest extends IpdTestCase
         $movement = app(IpdTransferService::class)->request($admission, $destinationBed, $this->user);
         app(IpdTransferService::class)->complete($movement->fresh(), $this->user);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdTransferService::class)->complete($movement->fresh(), $this->user);
     }

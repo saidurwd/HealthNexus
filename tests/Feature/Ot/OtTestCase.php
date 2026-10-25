@@ -3,15 +3,14 @@
 namespace Tests\Feature\Ot;
 
 use App\Models\Encounter;
+use App\Models\Ipd\IpdAdmission;
 use App\Models\Ot\OtComplex;
 use App\Models\Ot\OtProcedure;
 use App\Models\Ot\OtSurgery;
-use App\Models\Ot\OtTheatre;
 use App\Models\Ot\OtSurgicalSafetyChecklist;
+use App\Models\Ot\OtTheatre;
 use App\Models\Patient;
 use App\Models\Provider;
-use App\Models\User;
-use App\Services\Ot\OtPreoperativeChecklistService;
 use App\Services\Ot\OtReceptionService;
 use App\Services\Ot\OtSchedulingService;
 use App\Services\Ot\OtSurgeryService;
@@ -82,7 +81,7 @@ abstract class OtTestCase extends IpdTestCase
         $admissionId = null;
 
         if ($withAdmission) {
-            $admission = \App\Models\Ipd\IpdAdmission::create([
+            $admission = IpdAdmission::create([
                 'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
                 'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
                 'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'transfer_requested',

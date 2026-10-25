@@ -3,6 +3,7 @@
 namespace App\Services\Ot;
 
 use App\Models\Ot\OtSurgery;
+use App\Models\Ot\OtSurgeryProcedure;
 use App\Models\Ot\OtSurgeryRequest;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -64,7 +65,7 @@ class OtSurgeryService
 
             $surgery->procedures()->create([
                 'procedure_id' => $surgery->primary_procedure_id,
-                'role' => \App\Models\Ot\OtSurgeryProcedure::ROLE_PRIMARY,
+                'role' => OtSurgeryProcedure::ROLE_PRIMARY,
                 'sequence' => 1,
             ]);
 

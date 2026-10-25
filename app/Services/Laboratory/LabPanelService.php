@@ -14,7 +14,7 @@ class LabPanelService
 {
     public function create(array $data, array $testIds, User $user): LabPanel
     {
-        return DB::transaction(function () use ($data, $testIds, $user) {
+        return DB::transaction(function () use ($data, $testIds) {
             $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             $panel = LabPanel::create($data);

@@ -5,8 +5,10 @@ namespace Tests\Feature\Nursing;
 use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\User;
+use App\Services\Nursing\NursingAssignmentService;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class NursingTenantIsolationTest extends NursingTestCase
 {
@@ -24,7 +26,7 @@ class NursingTenantIsolationTest extends NursingTestCase
         $role = Role::firstOrCreate(['name' => 'staff_nurse', 'guard_name' => 'web']);
         $role->syncPermissions($permissions);
         $nurse->assignRole($role);
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return $nurse->fresh();
     }
@@ -52,7 +54,7 @@ class NursingTenantIsolationTest extends NursingTestCase
 
         $this->assertFalse($nurse->can('view', $episode));
 
-        app(\App\Services\Nursing\NursingAssignmentService::class)->assign($episode, ['nurse_id' => $nurse->id], $this->user);
+        app(NursingAssignmentService::class)->assign($episode, ['nurse_id' => $nurse->id], $this->user);
 
         $this->assertTrue($nurse->fresh()->can('view', $episode->fresh()));
     }

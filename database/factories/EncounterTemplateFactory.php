@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\EncounterTemplate;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EncounterTemplateFactory extends Factory
 {
-    protected $model = \App\Models\EncounterTemplate::class;
+    protected $model = EncounterTemplate::class;
 
     public function definition(): array
     {

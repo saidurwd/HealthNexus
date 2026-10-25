@@ -3,7 +3,6 @@
 namespace App\Jobs\Ot;
 
 use App\Models\Ot\OtSurgery;
-use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

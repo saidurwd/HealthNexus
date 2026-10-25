@@ -2,19 +2,21 @@
 
 namespace Tests\Feature\Ot;
 
+use App\Models\Encounter;
 use App\Models\Ot\OtSurgery;
 use App\Services\Ot\OtReceptionService;
 use App\Services\Ot\OtSchedulingService;
 use App\Services\Ot\OtSurgeryService;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 
 class NegativeOtTest extends OtTestCase
 {
     public function test_cannot_create_surgery_without_a_patient(): void
     {
-        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
 
         app(OtSurgeryService::class)->create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,

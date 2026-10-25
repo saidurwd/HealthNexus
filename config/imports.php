@@ -1,14 +1,22 @@
 <?php
 
+use App\Services\Import\Definitions\BedImport;
+use App\Services\Import\Definitions\LabTestImport;
+use App\Services\Import\Definitions\MedicationImport;
+use App\Services\Import\Definitions\OpeningStockImport;
+use App\Services\Import\Definitions\PatientImport;
+use App\Services\Import\Definitions\ServiceImport;
+use App\Services\Import\Definitions\UserImport;
+
 return [
     'definitions' => [
-        \App\Services\Import\Definitions\PatientImport::class,
-        \App\Services\Import\Definitions\ServiceImport::class,
-        \App\Services\Import\Definitions\MedicationImport::class,
-        \App\Services\Import\Definitions\LabTestImport::class,
-        \App\Services\Import\Definitions\BedImport::class,
-        \App\Services\Import\Definitions\UserImport::class,
-        \App\Services\Import\Definitions\OpeningStockImport::class,
+        PatientImport::class,
+        ServiceImport::class,
+        MedicationImport::class,
+        LabTestImport::class,
+        BedImport::class,
+        UserImport::class,
+        OpeningStockImport::class,
     ],
 
     'max_rows' => 20000,

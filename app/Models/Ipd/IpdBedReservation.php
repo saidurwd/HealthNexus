@@ -2,6 +2,8 @@
 
 namespace App\Models\Ipd;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,8 +15,11 @@ class IpdBedReservation extends Model
     use HasFactory;
 
     public const STATUS_RESERVED = 'reserved';
+
     public const STATUS_EXPIRED = 'expired';
+
     public const STATUS_CONVERTED = 'converted';
+
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
@@ -27,12 +32,35 @@ class IpdBedReservation extends Model
         return ['reserved_at' => 'datetime', 'expires_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function admissionRequest(): BelongsTo { return $this->belongsTo(IpdAdmissionRequest::class, 'admission_request_id'); }
-    public function bed(): BelongsTo { return $this->belongsTo(IpdBed::class, 'bed_id'); }
-    public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function admissionRequest(): BelongsTo
+    {
+        return $this->belongsTo(IpdAdmissionRequest::class, 'admission_request_id');
+    }
+
+    public function bed(): BelongsTo
+    {
+        return $this->belongsTo(IpdBed::class, 'bed_id');
+    }
+
+    public function requestedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

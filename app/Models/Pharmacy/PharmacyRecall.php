@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +14,7 @@ class PharmacyRecall extends Model
     use HasFactory;
 
     public const STATUS_INITIATED = 'initiated';
+
     public const STATUS_CLOSED = 'closed';
 
     protected $fillable = [
@@ -24,12 +27,35 @@ class PharmacyRecall extends Model
         return ['initiated_at' => 'datetime', 'closed_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function batch(): BelongsTo { return $this->belongsTo(PharmacyBatch::class, 'batch_id'); }
-    public function initiatedBy(): BelongsTo { return $this->belongsTo(User::class, 'initiated_by'); }
-    public function closedBy(): BelongsTo { return $this->belongsTo(User::class, 'closed_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyBatch::class, 'batch_id');
+    }
+
+    public function initiatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'initiated_by');
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

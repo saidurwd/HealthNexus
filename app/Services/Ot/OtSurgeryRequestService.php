@@ -4,6 +4,7 @@ namespace App\Services\Ot;
 
 use App\Events\Ot\SurgeryApproved;
 use App\Events\Ot\SurgeryRequested;
+use App\Models\ClinicalOrder;
 use App\Models\Encounter;
 use App\Models\Ot\OtSurgeryRequest;
 use App\Models\User;
@@ -75,7 +76,7 @@ class OtSurgeryRequestService
      * Fans out from the existing ClinicalOrder mechanism, exactly like Lab/Radiology's
      * registerFromClinicalOrder() — called from CreateSurgeryRequestOnClinicalOrderCreated.
      */
-    public function createFromClinicalOrder(Encounter $encounter, \App\Models\ClinicalOrder $order, User $user): OtSurgeryRequest
+    public function createFromClinicalOrder(Encounter $encounter, ClinicalOrder $order, User $user): OtSurgeryRequest
     {
         return $this->create([
             'organization_id' => $encounter->organization_id,

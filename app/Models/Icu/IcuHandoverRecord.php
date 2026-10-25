@@ -32,9 +32,20 @@ class IcuHandoverRecord extends Model
         return ['sections' => 'array', 'prepared_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function outgoingUser(): BelongsTo { return $this->belongsTo(User::class, 'outgoing_user_id'); }
-    public function incomingUser(): BelongsTo { return $this->belongsTo(User::class, 'incoming_user_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function outgoingUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'outgoing_user_id');
+    }
+
+    public function incomingUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'incoming_user_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

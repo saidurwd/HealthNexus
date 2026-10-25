@@ -3,10 +3,11 @@
 namespace Tests\Feature\Ipd;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
+use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\User;
 use App\Services\TenantContextResolver;
 use Spatie\Permission\Models\Permission;
 
@@ -32,7 +33,7 @@ class TenantIsolationTest extends IpdTestCase
 
         $otherOrganization = Organization::factory()->create();
         $otherBranch = Branch::factory()->create(['organization_id' => $otherOrganization->id]);
-        $otherUser = \App\Models\User::factory()->create();
+        $otherUser = User::factory()->create();
         $otherUser->organizations()->attach($otherOrganization->id, ['access_level' => 'admin']);
         $otherUser->branches()->attach($otherBranch->id, ['access_level' => 'manager', 'organization_id' => $otherOrganization->id]);
         Permission::firstOrCreate(['name' => 'ipd.admission.view', 'guard_name' => 'web']);
@@ -73,7 +74,7 @@ class TenantIsolationTest extends IpdTestCase
 
         $otherOrganization = Organization::factory()->create();
         $otherBranch = Branch::factory()->create(['organization_id' => $otherOrganization->id]);
-        $otherUser = \App\Models\User::factory()->create();
+        $otherUser = User::factory()->create();
         $otherUser->organizations()->attach($otherOrganization->id, ['access_level' => 'admin']);
         $otherUser->branches()->attach($otherBranch->id, ['access_level' => 'manager', 'organization_id' => $otherOrganization->id]);
         Permission::firstOrCreate(['name' => 'ipd.bed.allocate', 'guard_name' => 'web']);

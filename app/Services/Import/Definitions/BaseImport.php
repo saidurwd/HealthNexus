@@ -38,7 +38,7 @@ abstract class BaseImport implements ImportDefinition
 
         $value = str_replace(',', '', Normalizer::latinDigits($value));
         if (! is_numeric($value) || ($min !== null && (float) $value < $min)) {
-            $errors[] = "$name must be a number".($min !== null ? " of at least $min" : '').". Example: 250 or 250.50.";
+            $errors[] = "$name must be a number".($min !== null ? " of at least $min" : '').'. Example: 250 or 250.50.';
 
             return null;
         }

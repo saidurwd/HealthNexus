@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureModuleEnabled;
 use App\Http\Middleware\RequestIdMiddleware;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetTenantContext;
 use Illuminate\Foundation\Application;
@@ -21,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Global, so even a 404 (no route matched, no web group) carries a request id for the error screen.
         $middleware->prepend(RequestIdMiddleware::class);
-        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        $middleware->append(SecurityHeaders::class);
 
         $middleware->web(prepend: [
             RequestIdMiddleware::class,
@@ -36,7 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'module' => \App\Http\Middleware\EnsureModuleEnabled::class,
+            'module' => EnsureModuleEnabled::class,
         ]);
 
         $middleware->api(prepend: [

@@ -8,6 +8,7 @@ use App\Models\Billing\BillingItem;
 use App\Models\Patient;
 use App\Services\Billing\InvoiceLifecycleService;
 use App\Services\Billing\InvoiceService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class InvoiceLifecycleServiceTest extends BillingTestCase
@@ -57,9 +58,9 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
      * addCharges() expects an Eloquent collection (as the controller produces via ->get()) —
      * this mirrors that rather than a plain Support collection.
      */
-    private function chargeCollection(BillingCharge ...$charges): \Illuminate\Database\Eloquent\Collection
+    private function chargeCollection(BillingCharge ...$charges): Collection
     {
-        return new \Illuminate\Database\Eloquent\Collection($charges);
+        return new Collection($charges);
     }
 
     public function test_finalize_assigns_invoice_number_and_transitions_status(): void

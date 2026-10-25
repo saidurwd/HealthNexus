@@ -3,8 +3,8 @@
 namespace Tests\Feature\Patients;
 
 use App\Models\Appointment;
-use App\Models\Organization;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAddress;
 use App\Models\PatientGuardian;

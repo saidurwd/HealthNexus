@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

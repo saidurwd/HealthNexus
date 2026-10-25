@@ -4,9 +4,11 @@ namespace App\Services\Billing;
 
 use App\Models\Billing\BillingCashierSession;
 use App\Models\Billing\BillingInvoice;
+use App\Models\Billing\BillingInvoiceItem;
 use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingRefund;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Read-only aggregation queries backing the Billing Dashboard and Reports screens. These are
@@ -63,9 +65,9 @@ class RevenueService
         ];
     }
 
-    public function revenueByCategory(int $organizationId, ?int $branchId, string $from, string $to): \Illuminate\Support\Collection
+    public function revenueByCategory(int $organizationId, ?int $branchId, string $from, string $to): Collection
     {
-        return \App\Models\Billing\BillingInvoiceItem::query()
+        return BillingInvoiceItem::query()
             ->join('billing_invoices', 'billing_invoices.id', '=', 'billing_invoice_items.invoice_id')
             ->join('billing_items', 'billing_items.id', '=', 'billing_invoice_items.billing_item_id')
             ->join('billing_categories', 'billing_categories.id', '=', 'billing_items.category_id')

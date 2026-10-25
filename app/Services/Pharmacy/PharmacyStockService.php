@@ -2,15 +2,16 @@
 
 namespace App\Services\Pharmacy;
 
+use App\Contracts\Stock\StockLedger;
 use App\Models\Pharmacy\PharmacyBatch;
 use App\Models\Pharmacy\PharmacyMedication;
 use App\Models\Pharmacy\PharmacyStock;
 use App\Models\Pharmacy\PharmacyStockTransaction;
 use App\Models\Pharmacy\PharmacyStore;
-use App\Contracts\Stock\StockLedger;
 use App\Models\User;
 use App\Services\Stock\LedgerEntry;
 use App\Services\Stock\PharmacyLedgerMapper;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -102,7 +103,7 @@ class PharmacyStockService
                 'medication_id' => $medication->id,
                 'batch_id' => $batch->id,
             ], ['quantity_available' => 0]);
-        } catch (\Illuminate\Database\QueryException) {
+        } catch (QueryException) {
             // Lost a race to create the stock row — another concurrent transaction already
             // inserted it; fall through to the locked read below, which will now find it.
         }

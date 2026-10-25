@@ -16,14 +16,26 @@ use App\Models\Billing\BillingPriceList;
 use App\Models\Billing\BillingReceipt;
 use App\Models\Billing\BillingRefund;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\File;
+use App\Models\Icu\IcuAdmissionRequest;
+use App\Models\Icu\IcuAssessment;
+use App\Models\Icu\IcuCriticalAlert;
+use App\Models\Icu\IcuCriticalEvent;
+use App\Models\Icu\IcuDischargeSummary;
+use App\Models\Icu\IcuEpisode;
+use App\Models\Icu\IcuProgressNote;
 use App\Models\IdentificationType;
 use App\Models\InvestigationOrder;
+use App\Models\Ipd\IpdAdmission;
+use App\Models\Ipd\IpdBed;
+use App\Models\Ipd\IpdBedMovement;
+use App\Models\Ipd\IpdDischargeRequest;
+use App\Models\Ipd\IpdPatientLeave;
+use App\Models\Ipd\IpdWard;
 use App\Models\Laboratory\LabCriticalResultAlert;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabQcRun;
@@ -32,7 +44,30 @@ use App\Models\Laboratory\LabResult;
 use App\Models\Laboratory\LabSpecimen;
 use App\Models\Laboratory\LabTest;
 use App\Models\Notification;
+use App\Models\Nursing\NursingAssessment;
+use App\Models\Nursing\NursingAssignment;
+use App\Models\Nursing\NursingCarePlan;
+use App\Models\Nursing\NursingDischargeChecklist;
+use App\Models\Nursing\NursingEpisode;
+use App\Models\Nursing\NursingEscalation;
+use App\Models\Nursing\NursingHandover;
+use App\Models\Nursing\NursingMedicationAdministration;
+use App\Models\Nursing\NursingNote;
+use App\Models\Organization;
+use App\Models\Ot\OtOperativeNote;
+use App\Models\Ot\OtPreoperativeAssessment;
+use App\Models\Ot\OtRecoveryRecord;
+use App\Models\Ot\OtSurgery;
+use App\Models\Ot\OtSurgeryRequest;
+use App\Models\Ot\OtSurgicalSafetyChecklist;
 use App\Models\Patient;
+use App\Models\Pharmacy\PharmacyBatch;
+use App\Models\Pharmacy\PharmacyDispensing;
+use App\Models\Pharmacy\PharmacyMedication;
+use App\Models\Pharmacy\PharmacyOrder;
+use App\Models\Pharmacy\PharmacySafetyAlert;
+use App\Models\Pharmacy\PharmacyStore;
+use App\Models\Pharmacy\PharmacyTransfer;
 use App\Models\Prescription;
 use App\Models\Radiology\RadiologyCriticalFinding;
 use App\Models\Radiology\RadiologyExamination;
@@ -56,14 +91,26 @@ use App\Policies\BillingPriceListPolicy;
 use App\Policies\BillingReceiptPolicy;
 use App\Policies\BillingRefundPolicy;
 use App\Policies\BranchPolicy;
-use App\Policies\OrganizationPolicy;
 use App\Policies\CountryPolicy;
 use App\Policies\CurrencyPolicy;
 use App\Policies\DiagnosisPolicy;
 use App\Policies\EncounterPolicy;
 use App\Policies\FilePolicy;
+use App\Policies\IcuAdmissionRequestPolicy;
+use App\Policies\IcuAlertPolicy;
+use App\Policies\IcuAssessmentPolicy;
+use App\Policies\IcuCriticalEventPolicy;
+use App\Policies\IcuDischargePolicy;
+use App\Policies\IcuEpisodePolicy;
+use App\Policies\IcuProgressNotePolicy;
 use App\Policies\IdentificationTypePolicy;
 use App\Policies\InvestigationOrderPolicy;
+use App\Policies\IpdAdmissionPolicy;
+use App\Policies\IpdBedPolicy;
+use App\Policies\IpdDischargePolicy;
+use App\Policies\IpdLeavePolicy;
+use App\Policies\IpdTransferPolicy;
+use App\Policies\IpdWardPolicy;
 use App\Policies\LabCriticalResultPolicy;
 use App\Policies\LabOrderPolicy;
 use App\Policies\LabQcPolicy;
@@ -72,7 +119,30 @@ use App\Policies\LabResultPolicy;
 use App\Policies\LabSpecimenPolicy;
 use App\Policies\LabTestPolicy;
 use App\Policies\NotificationPolicy;
+use App\Policies\NursingAssessmentPolicy;
+use App\Policies\NursingAssignmentPolicy;
+use App\Policies\NursingCarePlanPolicy;
+use App\Policies\NursingDischargeChecklistPolicy;
+use App\Policies\NursingEpisodePolicy;
+use App\Policies\NursingEscalationPolicy;
+use App\Policies\NursingHandoverPolicy;
+use App\Policies\NursingMedicationAdministrationPolicy;
+use App\Policies\NursingNotePolicy;
+use App\Policies\OrganizationPolicy;
+use App\Policies\OtOperativeNotePolicy;
+use App\Policies\OtPreoperativeAssessmentPolicy;
+use App\Policies\OtRecoveryPolicy;
+use App\Policies\OtSafetyChecklistPolicy;
+use App\Policies\OtSurgeryPolicy;
+use App\Policies\OtSurgeryRequestPolicy;
 use App\Policies\PatientPolicy;
+use App\Policies\PharmacyBatchPolicy;
+use App\Policies\PharmacyDispensingPolicy;
+use App\Policies\PharmacyMedicationPolicy;
+use App\Policies\PharmacyOrderPolicy;
+use App\Policies\PharmacySafetyAlertPolicy;
+use App\Policies\PharmacyStockPolicy;
+use App\Policies\PharmacyTransferPolicy;
 use App\Policies\PrescriptionPolicy;
 use App\Policies\RadiologyCriticalFindingPolicy;
 use App\Policies\RadiologyExaminationPolicy;
@@ -128,41 +198,41 @@ class AuthServiceProvider extends ServiceProvider
         RadiologyCriticalFinding::class => RadiologyCriticalFindingPolicy::class,
         RadiologyProcedure::class => RadiologyProcedurePolicy::class,
         RadiologyPacsServer::class => RadiologyPacsPolicy::class,
-        \App\Models\Pharmacy\PharmacyOrder::class => \App\Policies\PharmacyOrderPolicy::class,
-        \App\Models\Pharmacy\PharmacyDispensing::class => \App\Policies\PharmacyDispensingPolicy::class,
-        \App\Models\Pharmacy\PharmacyStore::class => \App\Policies\PharmacyStockPolicy::class,
-        \App\Models\Pharmacy\PharmacyBatch::class => \App\Policies\PharmacyBatchPolicy::class,
-        \App\Models\Pharmacy\PharmacyTransfer::class => \App\Policies\PharmacyTransferPolicy::class,
-        \App\Models\Pharmacy\PharmacySafetyAlert::class => \App\Policies\PharmacySafetyAlertPolicy::class,
-        \App\Models\Pharmacy\PharmacyMedication::class => \App\Policies\PharmacyMedicationPolicy::class,
-        \App\Models\Ipd\IpdAdmission::class => \App\Policies\IpdAdmissionPolicy::class,
-        \App\Models\Ipd\IpdBed::class => \App\Policies\IpdBedPolicy::class,
-        \App\Models\Ipd\IpdBedMovement::class => \App\Policies\IpdTransferPolicy::class,
-        \App\Models\Ipd\IpdDischargeRequest::class => \App\Policies\IpdDischargePolicy::class,
-        \App\Models\Ipd\IpdPatientLeave::class => \App\Policies\IpdLeavePolicy::class,
-        \App\Models\Ipd\IpdWard::class => \App\Policies\IpdWardPolicy::class,
-        \App\Models\Nursing\NursingEpisode::class => \App\Policies\NursingEpisodePolicy::class,
-        \App\Models\Nursing\NursingAssignment::class => \App\Policies\NursingAssignmentPolicy::class,
-        \App\Models\Nursing\NursingAssessment::class => \App\Policies\NursingAssessmentPolicy::class,
-        \App\Models\Nursing\NursingCarePlan::class => \App\Policies\NursingCarePlanPolicy::class,
-        \App\Models\Nursing\NursingMedicationAdministration::class => \App\Policies\NursingMedicationAdministrationPolicy::class,
-        \App\Models\Nursing\NursingNote::class => \App\Policies\NursingNotePolicy::class,
-        \App\Models\Nursing\NursingHandover::class => \App\Policies\NursingHandoverPolicy::class,
-        \App\Models\Nursing\NursingEscalation::class => \App\Policies\NursingEscalationPolicy::class,
-        \App\Models\Nursing\NursingDischargeChecklist::class => \App\Policies\NursingDischargeChecklistPolicy::class,
-        \App\Models\Ot\OtSurgeryRequest::class => \App\Policies\OtSurgeryRequestPolicy::class,
-        \App\Models\Ot\OtSurgery::class => \App\Policies\OtSurgeryPolicy::class,
-        \App\Models\Ot\OtPreoperativeAssessment::class => \App\Policies\OtPreoperativeAssessmentPolicy::class,
-        \App\Models\Ot\OtSurgicalSafetyChecklist::class => \App\Policies\OtSafetyChecklistPolicy::class,
-        \App\Models\Ot\OtOperativeNote::class => \App\Policies\OtOperativeNotePolicy::class,
-        \App\Models\Ot\OtRecoveryRecord::class => \App\Policies\OtRecoveryPolicy::class,
-        \App\Models\Icu\IcuEpisode::class => \App\Policies\IcuEpisodePolicy::class,
-        \App\Models\Icu\IcuAdmissionRequest::class => \App\Policies\IcuAdmissionRequestPolicy::class,
-        \App\Models\Icu\IcuAssessment::class => \App\Policies\IcuAssessmentPolicy::class,
-        \App\Models\Icu\IcuProgressNote::class => \App\Policies\IcuProgressNotePolicy::class,
-        \App\Models\Icu\IcuCriticalAlert::class => \App\Policies\IcuAlertPolicy::class,
-        \App\Models\Icu\IcuCriticalEvent::class => \App\Policies\IcuCriticalEventPolicy::class,
-        \App\Models\Icu\IcuDischargeSummary::class => \App\Policies\IcuDischargePolicy::class,
+        PharmacyOrder::class => PharmacyOrderPolicy::class,
+        PharmacyDispensing::class => PharmacyDispensingPolicy::class,
+        PharmacyStore::class => PharmacyStockPolicy::class,
+        PharmacyBatch::class => PharmacyBatchPolicy::class,
+        PharmacyTransfer::class => PharmacyTransferPolicy::class,
+        PharmacySafetyAlert::class => PharmacySafetyAlertPolicy::class,
+        PharmacyMedication::class => PharmacyMedicationPolicy::class,
+        IpdAdmission::class => IpdAdmissionPolicy::class,
+        IpdBed::class => IpdBedPolicy::class,
+        IpdBedMovement::class => IpdTransferPolicy::class,
+        IpdDischargeRequest::class => IpdDischargePolicy::class,
+        IpdPatientLeave::class => IpdLeavePolicy::class,
+        IpdWard::class => IpdWardPolicy::class,
+        NursingEpisode::class => NursingEpisodePolicy::class,
+        NursingAssignment::class => NursingAssignmentPolicy::class,
+        NursingAssessment::class => NursingAssessmentPolicy::class,
+        NursingCarePlan::class => NursingCarePlanPolicy::class,
+        NursingMedicationAdministration::class => NursingMedicationAdministrationPolicy::class,
+        NursingNote::class => NursingNotePolicy::class,
+        NursingHandover::class => NursingHandoverPolicy::class,
+        NursingEscalation::class => NursingEscalationPolicy::class,
+        NursingDischargeChecklist::class => NursingDischargeChecklistPolicy::class,
+        OtSurgeryRequest::class => OtSurgeryRequestPolicy::class,
+        OtSurgery::class => OtSurgeryPolicy::class,
+        OtPreoperativeAssessment::class => OtPreoperativeAssessmentPolicy::class,
+        OtSurgicalSafetyChecklist::class => OtSafetyChecklistPolicy::class,
+        OtOperativeNote::class => OtOperativeNotePolicy::class,
+        OtRecoveryRecord::class => OtRecoveryPolicy::class,
+        IcuEpisode::class => IcuEpisodePolicy::class,
+        IcuAdmissionRequest::class => IcuAdmissionRequestPolicy::class,
+        IcuAssessment::class => IcuAssessmentPolicy::class,
+        IcuProgressNote::class => IcuProgressNotePolicy::class,
+        IcuCriticalAlert::class => IcuAlertPolicy::class,
+        IcuCriticalEvent::class => IcuCriticalEventPolicy::class,
+        IcuDischargeSummary::class => IcuDischargePolicy::class,
     ];
 
     public function boot(): void

@@ -2,6 +2,9 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,21 +21,63 @@ class BillingRefund extends Model
         return ['amount' => 'decimal:2', 'requested_at' => 'datetime', 'approved_at' => 'datetime', 'processed_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function payment(): BelongsTo { return $this->belongsTo(BillingPayment::class); }
-    public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
-    public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
-    public function approvedBy(): BelongsTo { return $this->belongsTo(User::class, 'approved_by'); }
-    public function processedBy(): BelongsTo { return $this->belongsTo(User::class, 'processed_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function payment(): BelongsTo
+    {
+        return $this->belongsTo(BillingPayment::class);
+    }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(BillingInvoice::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function requestedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function processedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'processed_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
         return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
-    public function isApproved(): bool { return in_array($this->status, ['approved', 'processed'], true); }
-    public function isProcessed(): bool { return $this->status === 'processed'; }
-    public function canApprove(): bool { return $this->status === 'requested'; }
+    public function isApproved(): bool
+    {
+        return in_array($this->status, ['approved', 'processed'], true);
+    }
+
+    public function isProcessed(): bool
+    {
+        return $this->status === 'processed';
+    }
+
+    public function canApprove(): bool
+    {
+        return $this->status === 'requested';
+    }
 }

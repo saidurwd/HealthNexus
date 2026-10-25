@@ -2,15 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Models\Organization;
 use App\Models\Encounter;
+use App\Models\EncounterDocument;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EncounterDocumentFactory extends Factory
 {
-    protected $model = \App\Models\EncounterDocument::class;
+    protected $model = EncounterDocument::class;
 
     public function definition(): array
     {

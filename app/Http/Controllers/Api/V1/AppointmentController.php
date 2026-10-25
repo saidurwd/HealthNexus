@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Appointment;
 use App\Models\AppointmentSlot;
+use App\Models\Provider;
 use App\Services\Appointments\AppointmentBookingService;
 use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\Appointments\ProviderAvailabilityService;
@@ -185,7 +186,7 @@ class AppointmentController extends Controller
             'date' => ['required', 'date'],
         ]);
 
-        $provider = \App\Models\Provider::findOrFail($validated['provider_id']);
+        $provider = Provider::findOrFail($validated['provider_id']);
         $slots = app(ProviderAvailabilityService::class)->availableSlotsOn($provider, Carbon::parse($validated['date']));
 
         return ApiResponse::success($slots->map(fn (AppointmentSlot $slot) => [

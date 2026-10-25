@@ -3,8 +3,8 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Clinical\EncounterClinicalService;

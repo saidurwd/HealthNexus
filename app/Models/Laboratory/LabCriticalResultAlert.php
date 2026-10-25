@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,13 +20,35 @@ class LabCriticalResultAlert extends Model
         return ['detected_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function result(): BelongsTo { return $this->belongsTo(LabResult::class, 'result_id'); }
-    public function notifiedTo(): BelongsTo { return $this->belongsTo(User::class, 'notified_to'); }
-    public function acknowledgedBy(): BelongsTo { return $this->belongsTo(User::class, 'acknowledged_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isAcknowledged(): bool { return $this->acknowledged_at !== null; }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function result(): BelongsTo
+    {
+        return $this->belongsTo(LabResult::class, 'result_id');
+    }
+
+    public function notifiedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'notified_to');
+    }
+
+    public function acknowledgedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'acknowledged_by');
+    }
+
+    public function isAcknowledged(): bool
+    {
+        return $this->acknowledged_at !== null;
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

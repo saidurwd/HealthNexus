@@ -23,8 +23,23 @@ class IcuAssessment extends Model
         return ['sections' => 'array', 'finalized_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function assessedBy(): BelongsTo { return $this->belongsTo(User::class, 'assessed_by'); }
-    public function finalizedBy(): BelongsTo { return $this->belongsTo(User::class, 'finalized_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function assessedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assessed_by');
+    }
+
+    public function finalizedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'finalized_by');
+    }
 }

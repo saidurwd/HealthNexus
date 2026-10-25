@@ -7,7 +7,6 @@ use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingReceipt;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class ReceiptService
 {

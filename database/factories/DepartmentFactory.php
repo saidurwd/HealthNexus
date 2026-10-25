@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DepartmentFactory extends Factory

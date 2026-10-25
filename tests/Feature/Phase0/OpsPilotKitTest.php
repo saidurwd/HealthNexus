@@ -14,7 +14,10 @@ use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class FakeShell implements ShellRunner
@@ -198,7 +201,7 @@ class OpsPilotKitTest extends TestCase
         Cache::forever(OpsChecks::HEARTBEAT_KEY, time() - 600);
         $organization = Organization::factory()->create();
         DB::table('clinical_alerts')->insert([
-            'public_id' => (string) \Illuminate\Support\Str::ulid(), 'organization_id' => $organization->id, 'category' => 'critical_lab', 'severity' => 'critical',
+            'public_id' => (string) Str::ulid(), 'organization_id' => $organization->id, 'category' => 'critical_lab', 'severity' => 'critical',
             'message' => 'K 6.8', 'source_module' => 'lab', 'status' => 'open', 'ack_required' => true, 'raised_at' => now()->subMinutes(30), 'created_at' => now(), 'updated_at' => now(),
         ]);
 
@@ -220,10 +223,10 @@ class OpsPilotKitTest extends TestCase
         app(TenantContextResolver::class)->setOrganizationId($training->id);
         $this->assertTrue(app(TrainingMode::class)->active());
 
-        \Illuminate\Support\Facades\Mail::fake();
+        Mail::fake();
         $user = User::factory()->create(['email' => 'nurse@example.test']);
         app(NotificationService::class)->send($user, 'critical_result', ['test' => 'K', 'patient' => 'P', 'value' => '6.8'], ['database', 'mail']);
-        \Illuminate\Support\Facades\Mail::assertNothingQueued();
+        Mail::assertNothingQueued();
         $this->assertDatabaseHas('notifications', ['user_id' => $user->id]);
 
         app(TenantContextResolver::class)->setOrganizationId($real->id);
@@ -235,7 +238,7 @@ class OpsPilotKitTest extends TestCase
         $organization = Organization::factory()->create(['settings' => ['training' => true]]);
         $user = User::factory()->create();
         $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'downtime.view', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'downtime.view', 'guard_name' => 'web']);
         $user->givePermissionTo('downtime.view');
         $this->actingAs($user);
         session()->put('tenant_organization_id', $organization->id);
@@ -255,7 +258,7 @@ class OpsPilotKitTest extends TestCase
 
         $this->get('/admin/downtime/forms/mar')->assertForbidden();
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'downtime.view', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'downtime.view', 'guard_name' => 'web']);
         $user->givePermissionTo('downtime.view');
 
         $this->get('/admin/downtime/forms/mar?lang=bn')->assertOk()->assertSee('ঔষধ প্রদানের রেকর্ড')->assertSee('রোগীর নাম');

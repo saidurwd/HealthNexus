@@ -3,19 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Appointment;
-use App\Models\AppointmentSlot;
-use App\Models\AppointmentToken;
 use App\Models\Branch;
 use App\Models\Organization;
-use App\Models\Department;
-use App\Models\Diagnosis;
-use App\Models\DoctorSchedule;
 use App\Models\Patient;
-use App\Models\Prescription;
-use App\Models\PrescriptionItem;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -54,8 +47,8 @@ class AppointmentTest extends TestCase
 
         session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
 
         $this->patient = Patient::factory()->create([
             'organization_id' => $this->organization->id,

@@ -32,11 +32,30 @@ class IcuObservation extends Model
         ];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
-    public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
-    public function corrects(): BelongsTo { return $this->belongsTo(self::class, 'corrects_observation_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
+    public function recordedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function corrects(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'corrects_observation_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

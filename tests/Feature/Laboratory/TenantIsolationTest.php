@@ -3,15 +3,14 @@
 namespace Tests\Feature\Laboratory;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabSpecimen;
 use App\Models\Laboratory\LabSpecimenType;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
-use App\Services\TenantContextResolver;
 use Spatie\Permission\Models\Permission;
 
 /**
@@ -102,7 +101,7 @@ class TenantIsolationTest extends LabTestCase
         });
     }
 
-    public function test_forTenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
+    public function test_for_tenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
     {
         $ids = LabOrder::query()->forTenant($this->organization->id)->pluck('id');
 

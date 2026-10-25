@@ -14,5 +14,8 @@ class RadiologyReportFinding extends Model
         return ['measurement_value' => 'decimal:3', 'is_critical' => 'boolean'];
     }
 
-    public function report(): BelongsTo { return $this->belongsTo(RadiologyReport::class, 'report_id'); }
+    public function report(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyReport::class, 'report_id');
+    }
 }

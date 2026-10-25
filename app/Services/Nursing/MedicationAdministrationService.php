@@ -6,7 +6,6 @@ use App\Events\Nursing\MedicationAdministrationRecorded;
 use App\Events\Nursing\MedicationHeld;
 use App\Events\Nursing\MedicationOmitted;
 use App\Events\Nursing\MedicationRefused;
-use App\Models\Ipd\IpdAdmission;
 use App\Models\Nursing\NursingEpisode;
 use App\Models\Nursing\NursingMedicationAdministration;
 use App\Models\Nursing\NursingMedicationAdministrationCorrection;

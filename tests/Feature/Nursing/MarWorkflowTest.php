@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Nursing;
 
-use App\Models\Nursing\NursingMedicationAdministration;
+use App\Events\Ipd\PatientAdmitted;
 use App\Services\Nursing\MedicationAdministrationService;
 use Illuminate\Validation\ValidationException;
 
@@ -11,7 +11,7 @@ class MarWorkflowTest extends NursingTestCase
     public function test_episode_starts_automatically_when_a_patient_is_admitted(): void
     {
         $admission = $this->makeAdmission();
-        event(new \App\Events\Ipd\PatientAdmitted($admission));
+        event(new PatientAdmitted($admission));
 
         $this->assertDatabaseHas('nursing_episodes', ['admission_id' => $admission->id, 'status' => 'active']);
     }

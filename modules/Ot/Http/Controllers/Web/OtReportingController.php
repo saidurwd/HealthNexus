@@ -5,6 +5,7 @@ namespace Modules\Ot\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Ot\OtSurgery;
 use App\Models\Ot\OtSurgeryScheduleEvent;
+use App\Models\Ot\OtSurgicalComplication;
 use App\Services\TenantContextResolver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -51,7 +52,7 @@ class OtReportingController extends Controller
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $complications = \App\Models\Ot\OtSurgicalComplication::join('ot_surgeries', 'ot_surgeries.id', '=', 'ot_surgical_complications.surgery_id')
+        $complications = OtSurgicalComplication::join('ot_surgeries', 'ot_surgeries.id', '=', 'ot_surgical_complications.surgery_id')
             ->where('ot_surgeries.organization_id', $organizationId)
             ->select('severity', DB::raw('count(*) as total'))->groupBy('severity')->pluck('total', 'severity');
 

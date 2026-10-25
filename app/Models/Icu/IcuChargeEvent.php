@@ -14,5 +14,8 @@ class IcuChargeEvent extends Model
         return ['charge_date' => 'date'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
 }

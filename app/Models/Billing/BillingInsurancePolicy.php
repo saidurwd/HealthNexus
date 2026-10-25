@@ -2,6 +2,9 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Organization;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,11 +21,30 @@ class BillingInsurancePolicy extends Model
         return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function provider(): BelongsTo { return $this->belongsTo(BillingInsuranceProvider::class, 'insurance_provider_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
-    public function invoices(): HasMany { return $this->hasMany(BillingInvoice::class, 'insurance_policy_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(BillingInsuranceProvider::class, 'insurance_provider_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(BillingInvoice::class, 'insurance_policy_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

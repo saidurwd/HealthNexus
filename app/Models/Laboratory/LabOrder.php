@@ -2,9 +2,11 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
 use App\Models\ClinicalOrder;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,21 +35,75 @@ class LabOrder extends Model
         return ['ordered_at' => 'datetime', 'requested_collection_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function department(): BelongsTo { return $this->belongsTo(Department::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
-    public function clinicalOrder(): BelongsTo { return $this->belongsTo(ClinicalOrder::class, 'clinical_order_id'); }
-    public function orderedBy(): BelongsTo { return $this->belongsTo(User::class, 'ordered_by'); }
-    public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
-    public function items(): HasMany { return $this->hasMany(LabOrderItem::class, 'lab_order_id'); }
-    public function specimens(): HasMany { return $this->hasMany(LabSpecimen::class, 'lab_order_id'); }
-    public function reports(): HasMany { return $this->hasMany(LabReport::class, 'lab_order_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isActive(): bool { return in_array($this->status, self::ACTIVE_STATUSES, true); }
-    public function isCancelled(): bool { return $this->status === 'cancelled'; }
-    public function isReported(): bool { return $this->status === 'reported'; }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
+    public function clinicalOrder(): BelongsTo
+    {
+        return $this->belongsTo(ClinicalOrder::class, 'clinical_order_id');
+    }
+
+    public function orderedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'ordered_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(LabOrderItem::class, 'lab_order_id');
+    }
+
+    public function specimens(): HasMany
+    {
+        return $this->hasMany(LabSpecimen::class, 'lab_order_id');
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(LabReport::class, 'lab_order_id');
+    }
+
+    public function isActive(): bool
+    {
+        return in_array($this->status, self::ACTIVE_STATUSES, true);
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
+
+    public function isReported(): bool
+    {
+        return $this->status === 'reported';
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

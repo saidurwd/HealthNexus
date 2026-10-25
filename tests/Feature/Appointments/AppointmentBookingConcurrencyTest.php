@@ -5,8 +5,8 @@ namespace Tests\Feature\Appointments;
 use App\Models\Appointment;
 use App\Models\AppointmentSlot;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\DoctorSchedule;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Appointments\AppointmentBookingService;
@@ -116,7 +116,7 @@ class AppointmentBookingConcurrencyTest extends TestCase
         $pdoA->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdoB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $organizationId = (int) $pdoA->query("SELECT id FROM organizations LIMIT 1")->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
         if (! $organizationId) {
             $pdoA->exec("INSERT INTO organizations (name, code, slug, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', 'concurrency-test-co', NOW(), NOW())");

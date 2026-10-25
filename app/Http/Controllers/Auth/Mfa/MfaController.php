@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth\Mfa;
 
 use App\Http\Controllers\Controller;
 use App\Services\Google2faService;
+use App\Services\Ux\RoleHome;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class MfaController extends Controller
@@ -46,7 +46,7 @@ class MfaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'MFA verified successfully.',
-            'redirect' => app(\App\Services\Ux\RoleHome::class)->urlFor($user),
+            'redirect' => app(RoleHome::class)->urlFor($user),
         ]);
     }
 

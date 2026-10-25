@@ -3,8 +3,15 @@
 namespace Tests\Feature\Pharmacy;
 
 use App\Models\Patient;
+use App\Models\Pharmacy\PharmacyDispensing;
+use App\Models\Pharmacy\PharmacyMedication;
+use App\Models\Pharmacy\PharmacyOrder;
 use App\Models\Pharmacy\PharmacyQuarantine;
+use App\Models\Pharmacy\PharmacyRecall;
 use App\Models\Pharmacy\PharmacySafetyAlert;
+use App\Models\Pharmacy\PharmacyStockCount;
+use App\Models\Pharmacy\PharmacyStore;
+use App\Models\Pharmacy\PharmacyTransfer;
 use App\Services\Pharmacy\PharmacyDispensingService;
 use App\Services\Pharmacy\PharmacyOrderService;
 use App\Services\Pharmacy\PharmacyRecallService;
@@ -17,21 +24,21 @@ use App\Services\Pharmacy\PharmacyTransferService;
  */
 class PharmacyControllerSmokeTest extends PharmacyTestCase
 {
-    private \App\Models\Pharmacy\PharmacyMedication $medication;
+    private PharmacyMedication $medication;
 
-    private \App\Models\Pharmacy\PharmacyStore $store;
+    private PharmacyStore $store;
 
-    private \App\Models\Pharmacy\PharmacyStore $destinationStore;
+    private PharmacyStore $destinationStore;
 
-    private \App\Models\Pharmacy\PharmacyOrder $order;
+    private PharmacyOrder $order;
 
-    private \App\Models\Pharmacy\PharmacyDispensing $dispensing;
+    private PharmacyDispensing $dispensing;
 
-    private \App\Models\Pharmacy\PharmacyTransfer $transfer;
+    private PharmacyTransfer $transfer;
 
-    private \App\Models\Pharmacy\PharmacyStockCount $stockCount;
+    private PharmacyStockCount $stockCount;
 
-    private \App\Models\Pharmacy\PharmacyRecall $recall;
+    private PharmacyRecall $recall;
 
     private Patient $patient;
 

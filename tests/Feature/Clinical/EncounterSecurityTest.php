@@ -3,8 +3,8 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\BreakGlassService;
@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
 /**
@@ -218,7 +219,7 @@ class EncounterSecurityTest extends TestCase
 
     public function test_break_glass_cannot_be_requested_for_another_organizations_encounter(): void
     {
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
 
         app(BreakGlassService::class)->requestAccess(
             $this->otherOrganizationEncounter,

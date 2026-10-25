@@ -26,6 +26,13 @@ class LabReferenceRange extends Model
         ];
     }
 
-    public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
-    public function specimenType(): BelongsTo { return $this->belongsTo(LabSpecimenType::class, 'specimen_type_id'); }
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(LabTest::class, 'test_id');
+    }
+
+    public function specimenType(): BelongsTo
+    {
+        return $this->belongsTo(LabSpecimenType::class, 'specimen_type_id');
+    }
 }

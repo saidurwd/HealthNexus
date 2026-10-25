@@ -4,9 +4,10 @@ namespace Tests\Feature\Phase0;
 
 use App\Jobs\Import\CommitImportBatch;
 use App\Jobs\Import\ValidateImportBatch;
-use App\Models\Branch;
+use App\Models\Appointment;
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
+use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Pharmacy\PharmacyBatch;
@@ -19,8 +20,10 @@ use App\Services\Import\ImportService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
@@ -133,7 +136,7 @@ class ImportServiceTest extends TestCase
         $batch = $this->importFile('patients', ['first_name,last_name,phone', 'Aa,Bb,01711000001', 'Cc,Dd,01711000002']);
         $used = Patient::where('phone', '01711000002')->firstOrFail();
         DB::table('appointments')->count(); // table exists
-        \App\Models\Appointment::factory()->create(['organization_id' => $this->organization->id, 'patient_id' => $used->id]);
+        Appointment::factory()->create(['organization_id' => $this->organization->id, 'patient_id' => $used->id]);
 
         $rolled = app(ImportService::class)->rollback($batch, $this->user);
 
@@ -225,7 +228,7 @@ class ImportServiceTest extends TestCase
         $batch = $this->importFile('opening_stock', [
             'store_code,medication_code,batch_number,expiry_date,quantity,unit_cost',
             "PH-MAIN,NAPA-500,B1,$future,500,1.20",
-            "PH-MAIN,NAPA-500,B2,2020-01-01,5,1",
+            'PH-MAIN,NAPA-500,B2,2020-01-01,5,1',
             "PH-MAIN,NOPE,B3,$future,5,1",
         ]);
 
@@ -243,7 +246,7 @@ class ImportServiceTest extends TestCase
 
     public function test_users_import_creates_inactive_accounts_with_no_usable_password(): void
     {
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'nurse', 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => 'nurse', 'guard_name' => 'web']);
 
         $batch = $this->importFile('users', ['name,email,role', 'Nasrin Akter,nasrin@example.org,nurse', 'Bad Role,bad@example.org,wizard', 'Nasrin Again,NASRIN@example.org,nurse']);
         $user = User::where('email', 'nasrin@example.org')->firstOrFail();
@@ -252,7 +255,7 @@ class ImportServiceTest extends TestCase
         $this->assertFalse((bool) $user->is_active);
         $this->assertTrue($user->hasRole('nurse'));
         $this->assertTrue($user->organizations()->whereKey($this->organization->id)->exists());
-        $this->assertFalse(\Illuminate\Support\Facades\Hash::check('password', $user->password));
+        $this->assertFalse(Hash::check('password', $user->password));
     }
 
     /** Set IMPORT_LOAD_ROWS=5000 to run the guideline's 5,000-row acceptance size (about two minutes). */

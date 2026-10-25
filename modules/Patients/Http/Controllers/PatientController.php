@@ -3,21 +3,25 @@
 namespace Modules\Patients\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\AuditLog;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Country;
 use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\MaritalStatus;
+use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\PatientAddress;
 use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\PatientAmendment;
 use App\Models\PatientConsent;
 use App\Models\PatientDocument;
 use App\Models\PatientDuplicateCandidate;
+use App\Models\PatientGuardian;
 use App\Models\PatientHistory;
+use App\Models\PatientPortalAccount;
 use App\Models\PatientType;
 use App\Services\ActivityLogger;
 use App\Services\AuditLogger;
@@ -31,6 +35,7 @@ use App\Services\Patients\PatientTimelineService;
 use App\Services\TenantContextResolver;
 use App\Support\Fhir\PatientFhirMapper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Modules\Patients\Http\Requests\StorePatientRequest;
 use Modules\Patients\Http\Requests\UpdatePatientRequest;
@@ -200,7 +205,7 @@ class PatientController extends Controller
     {
         $current = $patient->{$field};
 
-        if ($current instanceof \Illuminate\Support\Carbon) {
+        if ($current instanceof Carbon) {
             $current = $current->format('Y-m-d');
         }
 
@@ -594,7 +599,7 @@ class PatientController extends Controller
 
         $address = $this->patientService->addAddress($patient, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientAddress::class, $address->id, null, $address->toArray(), $request);
+        $this->auditLogger->log('CREATE', PatientAddress::class, $address->id, null, $address->toArray(), $request);
 
         return redirect()->route('admin.patients.addresses', $patient)->with('success', __('Address added successfully.'));
     }
@@ -623,7 +628,7 @@ class PatientController extends Controller
 
         $guardian = $this->patientService->addGuardian($patient, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientGuardian::class, $guardian->id, null, $guardian->toArray(), $request);
+        $this->auditLogger->log('CREATE', PatientGuardian::class, $guardian->id, null, $guardian->toArray(), $request);
 
         return redirect()->route('admin.patients.guardians', $patient)->with('success', __('Guardian added successfully.'));
     }
@@ -776,7 +781,7 @@ class PatientController extends Controller
     {
         $this->authorize('view', $patient);
 
-        $appointments = \App\Models\Appointment::where('patient_id', $patient->id)
+        $appointments = Appointment::where('patient_id', $patient->id)
             ->with(['provider', 'doctor', 'appointmentType'])
             ->latest('appointment_date')
             ->paginate(20);
@@ -817,14 +822,14 @@ class PatientController extends Controller
             'email' => ['required', 'email', 'max:255'],
         ]);
 
-        $account = \App\Models\PatientPortalAccount::updateOrCreate(
+        $account = PatientPortalAccount::updateOrCreate(
             ['patient_id' => $patient->id],
             ['organization_id' => $patient->organization_id, 'email' => $validated['email'], 'is_active' => false, 'invited_at' => now()],
         );
 
         $patient->update(['portal_enabled' => true]);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientPortalAccount::class, $account->id, null, $account->toArray(), $request);
+        $this->auditLogger->log('CREATE', PatientPortalAccount::class, $account->id, null, $account->toArray(), $request);
 
         return redirect()->route('admin.patients.show', $patient)->with('success', __('Patient portal invitation created.'));
     }

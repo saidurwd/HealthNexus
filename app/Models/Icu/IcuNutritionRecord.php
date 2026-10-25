@@ -18,8 +18,15 @@ class IcuNutritionRecord extends Model
         return ['rate' => 'float', 'dietitian_reviewed' => 'boolean', 'recorded_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function recordedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recorded_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

@@ -3,6 +3,7 @@
 namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Radiology\RadiologyCriticalFinding;
 use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyOrder;
 use App\Services\TenantContextResolver;
@@ -78,7 +79,7 @@ class RadiologyReportingController extends Controller
 
         [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
-        $findings = \App\Models\Radiology\RadiologyCriticalFinding::query()
+        $findings = RadiologyCriticalFinding::query()
             ->forTenant($organizationId, $branchId)
             ->whereBetween('detected_at', [$from, $to])
             ->with(['report.examination.orderItem.radiologyOrder.patient'])

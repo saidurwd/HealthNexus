@@ -2,6 +2,8 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,9 +20,20 @@ class BillingPaymentMethod extends Model
         return ['metadata' => 'array', 'is_active' => 'boolean'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function payments(): HasMany { return $this->hasMany(BillingPayment::class, 'payment_method_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(BillingPayment::class, 'payment_method_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

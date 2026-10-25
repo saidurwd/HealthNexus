@@ -4,7 +4,6 @@ namespace Tests\Feature\Phase0;
 
 use App\Models\Branch;
 use App\Models\Organization;
-use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -16,7 +15,9 @@ class Phase0AcceptanceTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Organization $organization;
+
     private Branch $branch;
 
     protected function setUp(): void
@@ -189,7 +190,7 @@ class Phase0AcceptanceTest extends TestCase
 
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'CREATE',
-            'model_type' => \App\Models\Organization::class,
+            'model_type' => Organization::class,
         ]);
     }
 

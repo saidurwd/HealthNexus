@@ -4,6 +4,7 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laboratory\LabOrder;
+use App\Models\Laboratory\LabOrderItem;
 use App\Models\Laboratory\LabTest;
 use App\Services\AuditLogger;
 use App\Services\Laboratory\LabOrderLifecycleService;
@@ -62,7 +63,7 @@ class LabOrderController extends Controller
 
         $item->update(['test_id' => $validated['test_id'], 'status' => 'pending']);
 
-        $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', \App\Models\Laboratory\LabOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
+        $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', LabOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
         return redirect()->route('admin.lab.orders.show', $order)->with('success', __('Order item matched to a test.'));
     }

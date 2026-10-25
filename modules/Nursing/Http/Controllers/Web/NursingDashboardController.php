@@ -3,8 +3,11 @@
 namespace Modules\Nursing\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Nursing\NursingAlert;
+use App\Models\Nursing\NursingAssessment;
 use App\Models\Nursing\NursingAssignment;
 use App\Models\Nursing\NursingEpisode;
+use App\Models\Nursing\NursingHandover;
 use App\Models\Nursing\NursingMedicationAdministration;
 use App\Models\Nursing\NursingTask;
 use App\Services\TenantContextResolver;
@@ -28,13 +31,13 @@ class NursingDashboardController extends Controller
         $metrics = [
             'my_patients' => $myEpisodeIds->unique()->count(),
             'ward_patients' => NursingEpisode::forTenant($organizationId, $branchId)->where('status', NursingEpisode::STATUS_ACTIVE)->count(),
-            'pending_assessments' => \App\Models\Nursing\NursingAssessment::forTenant($organizationId, $branchId)->where('status', 'draft')->count(),
+            'pending_assessments' => NursingAssessment::forTenant($organizationId, $branchId)->where('status', 'draft')->count(),
             'due_medications' => NursingMedicationAdministration::forTenant($organizationId, $branchId)->whereIn('status', ['scheduled', 'due'])->count(),
             'overdue_medications' => NursingMedicationAdministration::forTenant($organizationId, $branchId)->where('status', 'due')->where('scheduled_at', '<', now())->count(),
             'pending_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', NursingTask::STATUS_PENDING)->count(),
             'overdue_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', NursingTask::STATUS_OVERDUE)->count(),
-            'critical_alerts' => \App\Models\Nursing\NursingAlert::forTenant($organizationId, $branchId)->whereNull('resolved_at')->whereIn('severity', ['high', 'critical'])->count(),
-            'pending_handover' => \App\Models\Nursing\NursingHandover::forTenant($organizationId, $branchId)->where('status', 'pending_acknowledgement')->count(),
+            'critical_alerts' => NursingAlert::forTenant($organizationId, $branchId)->whereNull('resolved_at')->whereIn('severity', ['high', 'critical'])->count(),
+            'pending_handover' => NursingHandover::forTenant($organizationId, $branchId)->where('status', 'pending_acknowledgement')->count(),
         ];
 
         $myPatients = NursingEpisode::query()

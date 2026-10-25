@@ -2,6 +2,8 @@
 
 namespace App\Models\Ipd;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
@@ -14,10 +16,15 @@ class IpdDischargeRequest extends Model
     use HasFactory;
 
     public const STATUS_REQUESTED = 'requested';
+
     public const STATUS_CLINICAL_CLEARANCE = 'clinical_clearance';
+
     public const STATUS_BILLING_CLEARANCE = 'billing_clearance';
+
     public const STATUS_PHARMACY_CLEARANCE = 'pharmacy_clearance';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_COMPLETED = 'completed';
 
     protected $fillable = [
@@ -43,17 +50,60 @@ class IpdDischargeRequest extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function disposition(): BelongsTo { return $this->belongsTo(IpdDischargeDisposition::class, 'disposition_id'); }
-    public function followUpProvider(): BelongsTo { return $this->belongsTo(Provider::class, 'follow_up_provider_id'); }
-    public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
-    public function approvedBy(): BelongsTo { return $this->belongsTo(User::class, 'approved_by'); }
-    public function clinicalClearedBy(): BelongsTo { return $this->belongsTo(User::class, 'clinical_cleared_by'); }
-    public function billingClearedBy(): BelongsTo { return $this->belongsTo(User::class, 'billing_cleared_by'); }
-    public function pharmacyClearedBy(): BelongsTo { return $this->belongsTo(User::class, 'pharmacy_cleared_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function admission(): BelongsTo
+    {
+        return $this->belongsTo(IpdAdmission::class, 'admission_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function disposition(): BelongsTo
+    {
+        return $this->belongsTo(IpdDischargeDisposition::class, 'disposition_id');
+    }
+
+    public function followUpProvider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'follow_up_provider_id');
+    }
+
+    public function requestedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function clinicalClearedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'clinical_cleared_by');
+    }
+
+    public function billingClearedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'billing_cleared_by');
+    }
+
+    public function pharmacyClearedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'pharmacy_cleared_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

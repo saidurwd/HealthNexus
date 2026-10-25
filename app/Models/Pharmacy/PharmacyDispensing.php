@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\User;
@@ -15,12 +17,19 @@ class PharmacyDispensing extends Model
     use HasFactory;
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_UNDER_REVIEW = 'under_review';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_PARTIALLY_DISPENSED = 'partially_dispensed';
+
     public const STATUS_FULLY_DISPENSED = 'fully_dispensed';
+
     public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUS_REJECTED = 'rejected';
+
     public const STATUS_RETURNED = 'returned';
 
     protected $fillable = [
@@ -34,15 +43,50 @@ class PharmacyDispensing extends Model
         return ['dispensed_at' => 'datetime', 'verified_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function order(): BelongsTo { return $this->belongsTo(PharmacyOrder::class, 'order_id'); }
-    public function prescription(): BelongsTo { return $this->belongsTo(Prescription::class); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
-    public function dispensedBy(): BelongsTo { return $this->belongsTo(User::class, 'dispensed_by'); }
-    public function verifiedBy(): BelongsTo { return $this->belongsTo(User::class, 'verified_by'); }
-    public function items(): HasMany { return $this->hasMany(PharmacyDispensingItem::class, 'dispensing_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyOrder::class, 'order_id');
+    }
+
+    public function prescription(): BelongsTo
+    {
+        return $this->belongsTo(Prescription::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'store_id');
+    }
+
+    public function dispensedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dispensed_by');
+    }
+
+    public function verifiedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(PharmacyDispensingItem::class, 'dispensing_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

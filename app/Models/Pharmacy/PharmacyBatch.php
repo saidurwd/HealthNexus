@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,11 +31,30 @@ class PharmacyBatch extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function stock(): HasMany { return $this->hasMany(PharmacyStock::class, 'batch_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function stock(): HasMany
+    {
+        return $this->hasMany(PharmacyStock::class, 'batch_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     public function isExpired(): bool
     {

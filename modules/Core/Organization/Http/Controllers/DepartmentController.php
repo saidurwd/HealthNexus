@@ -4,8 +4,8 @@ namespace Modules\Core\Organization\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller

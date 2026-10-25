@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class TenantContextResolver

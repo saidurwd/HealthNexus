@@ -11,6 +11,7 @@ use App\Models\Ipd\IpdBed;
 use App\Models\Patient;
 use App\Services\Ipd\IpdAdmissionRequestService;
 use App\Services\Ipd\IpdAdmissionService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves the full Admission Request -> Approval -> Admission -> Encounter -> Bed Allocation ->
@@ -80,7 +81,7 @@ class AdmissionWorkflowTest extends IpdTestCase
 
         $this->assertSame(IpdAdmissionRequest::STATUS_PENDING_APPROVAL, $request->status);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdAdmissionService::class)->admit([
             'organization_id' => $this->organization->id,
@@ -112,7 +113,7 @@ class AdmissionWorkflowTest extends IpdTestCase
             'bed_id' => $bed->id,
         ], $this->user, $request);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdAdmissionService::class)->admit([
             'organization_id' => $this->organization->id,

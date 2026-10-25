@@ -3,6 +3,8 @@
 namespace Tests\Feature\Pharmacy;
 
 use App\Events\Clinical\PrescriptionIssued;
+use App\Models\Department;
+use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\Pharmacy\PharmacyOrder;
 use App\Models\Pharmacy\PharmacyOrderItem;
@@ -55,14 +57,14 @@ class PharmacyOrderRegistrationTest extends PharmacyTestCase
         $this->assertSame('Some Unknown Drug', $item->requested_medicine_name);
     }
 
-    private function makeEncounterFor($prescription): \App\Models\Encounter
+    private function makeEncounterFor($prescription): Encounter
     {
-        $department = \App\Models\Department::create([
+        $department = Department::create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true,
         ]);
 
-        return \App\Models\Encounter::create([
+        return Encounter::create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $prescription->patient_id, 'encounter_no' => 'ENC-'.uniqid(),
             'encounter_type' => 'opd', 'provider_id' => $this->user->id,

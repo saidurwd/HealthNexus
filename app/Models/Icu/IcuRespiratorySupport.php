@@ -18,9 +18,20 @@ class IcuRespiratorySupport extends Model
         return ['flow_rate' => 'float', 'fio2' => 'float', 'started_at' => 'datetime', 'stopped_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function startedBy(): BelongsTo { return $this->belongsTo(User::class, 'started_by'); }
-    public function stoppedBy(): BelongsTo { return $this->belongsTo(User::class, 'stopped_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function startedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
+    public function stoppedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'stopped_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

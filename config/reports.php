@@ -1,5 +1,7 @@
 <?php
 
+use App\Reports\PatientListReport;
+
 /*
 | Report registry (guideline 14.4). Add a ReportDefinition class here and it can be exported through ReportExportService.
 | Formats: csv now; xlsx and pdf need packages that have not been approved yet (packages policy, guideline 5) and
@@ -7,7 +9,7 @@
 */
 return [
     'definitions' => [
-        \App\Reports\PatientListReport::class,
+        PatientListReport::class,
     ],
 
     'formats' => ['csv'],

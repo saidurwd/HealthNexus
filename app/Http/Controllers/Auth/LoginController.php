@@ -7,7 +7,9 @@ use App\Models\Branch;
 use App\Models\LoginHistory;
 use App\Models\User;
 use App\Services\SecurityLogger;
+use App\Services\Ux\RoleHome;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -87,7 +89,7 @@ class LoginController extends Controller
         $this->securityLogger->log('LOGIN_FAILED', ['attempts' => $attempts], SecurityLogger::WARNING, $user, $request);
     }
 
-    private function recordLoginAttempt(Request $request, ?User $user, string $status, ?string $failureReason, ?\Illuminate\Support\Carbon $loggedInAt = null): LoginHistory
+    private function recordLoginAttempt(Request $request, ?User $user, string $status, ?string $failureReason, ?Carbon $loggedInAt = null): LoginHistory
     {
         return LoginHistory::create([
             'user_id' => $user?->id,
@@ -160,7 +162,7 @@ class LoginController extends Controller
 
         $user->update(['last_login_at' => now()]);
 
-        return redirect()->intended(app(\App\Services\Ux\RoleHome::class)->urlFor($user));
+        return redirect()->intended(app(RoleHome::class)->urlFor($user));
     }
 
     public function logout(Request $request)

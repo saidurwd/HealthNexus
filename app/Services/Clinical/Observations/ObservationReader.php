@@ -4,6 +4,7 @@ namespace App\Services\Clinical\Observations;
 
 use Carbon\CarbonInterface;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,7 @@ class ObservationReader
             ->filter(fn ($r) => is_numeric($r->value) || $r->value_text !== null)
             ->map(function ($r) {
                 $r->value = is_numeric($r->value) ? (float) $r->value : $r->value_text;
-                $r->effective_at = \Illuminate\Support\Carbon::parse($r->effective_at, 'UTC');
+                $r->effective_at = Carbon::parse($r->effective_at, 'UTC');
 
                 return $r;
             })
@@ -66,7 +67,7 @@ class ObservationReader
             ->where('o.organization_id', $organizationId)->where('o.patient_id', $patientId)->where('o.code', $code)
             ->where('o.status', '!=', 'entered_in_error')
             ->whereNotExists(fn ($q) => $q->select(DB::raw(1))->from('clinical_observations as n')->whereColumn('n.supersedes_id', 'o.id'))
-            ->selectRaw("o.source_module as source_module, cast(o.id as char) as source_record_id, o.value_number as value, o.value_text as value_text, o.unit_code as unit_code, o.effective_at as effective_at, o.status as status");
+            ->selectRaw('o.source_module as source_module, cast(o.id as char) as source_record_id, o.value_number as value, o.value_text as value_text, o.unit_code as unit_code, o.effective_at as effective_at, o.status as status');
     }
 
     /** @return list<Builder> */

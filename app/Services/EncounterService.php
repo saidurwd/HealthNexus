@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Events\Clinical\EncounterCreated;
 use App\Models\Appointment;
-use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\EncounterType;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

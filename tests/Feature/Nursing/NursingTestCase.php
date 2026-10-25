@@ -12,6 +12,8 @@ use App\Models\Pharmacy\PharmacyGeneric;
 use App\Models\Pharmacy\PharmacyMedication;
 use App\Models\Pharmacy\PharmacyRoute;
 use App\Models\User;
+use App\Services\Nursing\NursingEpisodeService;
+use Spatie\Permission\Models\Role;
 use Tests\Feature\Ipd\IpdTestCase;
 
 abstract class NursingTestCase extends IpdTestCase
@@ -34,7 +36,7 @@ abstract class NursingTestCase extends IpdTestCase
     {
         $admission ??= $this->makeAdmission();
 
-        return app(\App\Services\Nursing\NursingEpisodeService::class)->startFromAdmission($admission, $this->user);
+        return app(NursingEpisodeService::class)->startFromAdmission($admission, $this->user);
     }
 
     protected function makeNurse(string $role = 'staff_nurse'): User
@@ -42,7 +44,7 @@ abstract class NursingTestCase extends IpdTestCase
         $nurse = User::factory()->create();
         $nurse->organizations()->attach($this->organization->id, ['access_level' => 'staff']);
         $nurse->branches()->attach($this->branch->id, ['access_level' => 'staff', 'organization_id' => $this->organization->id]);
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
+        Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         $nurse->assignRole($role);
 
         return $nurse;

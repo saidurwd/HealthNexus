@@ -9,6 +9,7 @@ use App\Models\PatientAllergy;
 use App\Models\PatientDocument;
 use App\Models\PatientHistory;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -54,7 +55,7 @@ class PatientControllerTest extends TestCase
         $this->actingAs($this->user);
 
         session()->put('tenant_organization_id', $this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
     }
 
     public function test_user_can_view_patients_index(): void

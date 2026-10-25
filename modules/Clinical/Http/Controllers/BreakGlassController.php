@@ -2,11 +2,11 @@
 
 namespace Modules\Clinical\Http\Controllers;
 
+use App\Events\Clinical\BreakGlassAccessGranted;
 use App\Http\Controllers\Controller;
 use App\Models\Encounter;
 use App\Services\BreakGlassService;
 use App\Services\SecurityLogger;
-use App\Events\Clinical\BreakGlassAccessGranted;
 use Illuminate\Http\Request;
 
 class BreakGlassController extends Controller
@@ -42,7 +42,7 @@ class BreakGlassController extends Controller
                 'scope' => $validated['scope'] ?? null,
                 'expires_at' => $access->expires_at,
             ],
-            \App\Services\SecurityLogger::WARNING,
+            SecurityLogger::WARNING,
             $request->user(),
             $request
         );

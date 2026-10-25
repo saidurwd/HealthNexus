@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +25,35 @@ class PharmacyGeneric extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function brands(): HasMany { return $this->hasMany(PharmacyBrand::class, 'generic_id'); }
-    public function medications(): HasMany { return $this->hasMany(PharmacyMedication::class, 'generic_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
-    public function updatedBy(): BelongsTo { return $this->belongsTo(User::class, 'updated_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function brands(): HasMany
+    {
+        return $this->hasMany(PharmacyBrand::class, 'generic_id');
+    }
+
+    public function medications(): HasMany
+    {
+        return $this->hasMany(PharmacyMedication::class, 'generic_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

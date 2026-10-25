@@ -4,6 +4,7 @@ namespace Tests\Feature\Appointments;
 
 use App\Events\Appointments\AppointmentCreated;
 use App\Jobs\Appointments\SendAppointmentReminderJob;
+use App\Mail\SystemNotification;
 use App\Models\Appointment;
 use App\Models\AppointmentReminder;
 use App\Models\AppointmentReminderRule;
@@ -11,8 +12,10 @@ use App\Models\Branch;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\Appointments\AppointmentReminderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -93,7 +96,7 @@ class AppointmentReminderTest extends TestCase
             'scheduled_for' => now()->addHours(2), 'status' => 'pending',
         ]);
 
-        app(\App\Services\Appointments\AppointmentLifecycleService::class)->cancel($appointment, 'Patient request');
+        app(AppointmentLifecycleService::class)->cancel($appointment, 'Patient request');
 
         $this->assertSame('cancelled', $reminder->fresh()->status);
     }
@@ -129,7 +132,7 @@ class AppointmentReminderTest extends TestCase
 
     public function test_send_reminder_job_marks_sent_and_emails_the_patient(): void
     {
-        \Illuminate\Support\Facades\Mail::fake();
+        Mail::fake();
 
         $organization = Organization::factory()->create();
         $branch = Branch::factory()->create(['organization_id' => $organization->id]);
@@ -151,6 +154,6 @@ class AppointmentReminderTest extends TestCase
 
         $this->assertSame('sent', $reminder->fresh()->status);
         $this->assertNotNull($reminder->fresh()->sent_at);
-        \Illuminate\Support\Facades\Mail::assertQueued(\App\Mail\SystemNotification::class);
+        Mail::assertQueued(SystemNotification::class);
     }
 }

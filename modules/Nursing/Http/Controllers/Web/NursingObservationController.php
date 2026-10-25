@@ -4,6 +4,11 @@ namespace Modules\Nursing\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Nursing\NursingEpisode;
+use App\Models\Nursing\NursingIntakeOutputRecord;
+use App\Models\Nursing\NursingObservation;
+use App\Models\Nursing\NursingPainAssessment;
+use App\Models\Nursing\NursingRiskAssessment;
+use App\Models\VitalSign;
 use App\Services\AuditLogger;
 use App\Services\Nursing\NursingFluidBalanceService;
 use App\Services\Nursing\NursingObservationService;
@@ -35,7 +40,7 @@ class NursingObservationController extends Controller
 
         $episode->load('encounter');
         $vitals = $episode->encounter?->vitals()->latest('recorded_at')->paginate(20) ?? collect();
-        $observations = \App\Models\Nursing\NursingObservation::where('episode_id', $episode->id)->latest('observed_at')->paginate(20, ['*'], 'observations_page');
+        $observations = NursingObservation::where('episode_id', $episode->id)->latest('observed_at')->paginate(20, ['*'], 'observations_page');
 
         return view('admin.nursing.observations.index', compact('episode', 'vitals', 'observations'));
     }
@@ -54,7 +59,7 @@ class NursingObservationController extends Controller
 
         $vital = $this->vitals->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
+        $this->auditLogger->log('CREATE', VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
         return back()->with('success', __('Vitals recorded.'));
     }
@@ -72,7 +77,7 @@ class NursingObservationController extends Controller
 
         $observation = $this->observations->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingObservation::class, $observation->id, null, $observation->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingObservation::class, $observation->id, null, $observation->toArray(), $request);
 
         return back()->with('success', __('Observation recorded.'));
     }
@@ -89,7 +94,7 @@ class NursingObservationController extends Controller
 
         $assessment = $this->pain->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingPainAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingPainAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
         return back()->with('success', __('Pain assessment recorded.'));
     }
@@ -106,7 +111,7 @@ class NursingObservationController extends Controller
 
         $assessment = $this->risk->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingRiskAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingRiskAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
         return back()->with('success', __('Risk assessment recorded.'));
     }
@@ -119,7 +124,7 @@ class NursingObservationController extends Controller
         $to = Carbon::parse($request->input('to', now()));
 
         $balance = $this->fluidBalance->netBalance($episode, $from, $to);
-        $records = \App\Models\Nursing\NursingIntakeOutputRecord::where('episode_id', $episode->id)
+        $records = NursingIntakeOutputRecord::where('episode_id', $episode->id)
             ->whereBetween('recorded_at', [$from, $to])->latest('recorded_at')->get();
 
         return view('admin.nursing.observations.intake-output', compact('episode', 'balance', 'records', 'from', 'to'));
@@ -142,7 +147,7 @@ class NursingObservationController extends Controller
             ? $this->fluidBalance->recordIntake($episode, $validated, $request->user())
             : $this->fluidBalance->recordOutput($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingIntakeOutputRecord::class, $record->id, null, $record->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingIntakeOutputRecord::class, $record->id, null, $record->toArray(), $request);
 
         return back()->with('success', __('Intake/output recorded.'));
     }

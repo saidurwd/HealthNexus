@@ -2,8 +2,8 @@
 
 namespace App\Integrations\Null;
 
-use App\Contracts\Integration\NationalExchangeGateway;
 use App\Contracts\Integration\IntegrationResult;
+use App\Contracts\Integration\NationalExchangeGateway;
 use Illuminate\Support\Facades\Log;
 
 class NullNationalExchangeGateway implements NationalExchangeGateway

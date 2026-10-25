@@ -28,8 +28,23 @@ class IcuEpisodeEvent extends Model
         'from_bed_id', 'to_bed_id', 'destination', 'reason', 'notes', 'created_by',
     ];
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function fromBed(): BelongsTo { return $this->belongsTo(IpdBed::class, 'from_bed_id'); }
-    public function toBed(): BelongsTo { return $this->belongsTo(IpdBed::class, 'to_bed_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function fromBed(): BelongsTo
+    {
+        return $this->belongsTo(IpdBed::class, 'from_bed_id');
+    }
+
+    public function toBed(): BelongsTo
+    {
+        return $this->belongsTo(IpdBed::class, 'to_bed_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

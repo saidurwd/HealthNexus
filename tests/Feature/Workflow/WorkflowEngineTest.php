@@ -3,8 +3,8 @@
 namespace Tests\Feature\Workflow;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Workflow;

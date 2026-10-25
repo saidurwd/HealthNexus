@@ -6,10 +6,12 @@ use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\Provider;
+use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyModality;
 use App\Models\Radiology\RadiologyOrder;
 use App\Models\Radiology\RadiologyPacsServer;
 use App\Models\Radiology\RadiologyProcedure;
+use App\Models\Radiology\RadiologyReport;
 use App\Models\User;
 use App\Services\Radiology\RadiologyExaminationService;
 use App\Services\Radiology\RadiologyReportService;
@@ -24,9 +26,9 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
 {
     private RadiologyOrder $order;
 
-    private \App\Models\Radiology\RadiologyExamination $examination;
+    private RadiologyExamination $examination;
 
-    private \App\Models\Radiology\RadiologyReport $report;
+    private RadiologyReport $report;
 
     protected function setUp(): void
     {

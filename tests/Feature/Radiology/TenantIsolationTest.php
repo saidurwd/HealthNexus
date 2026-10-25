@@ -3,13 +3,12 @@
 namespace Tests\Feature\Radiology;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Radiology\RadiologyOrder;
 use App\Models\User;
-use App\Services\TenantContextResolver;
 use Spatie\Permission\Models\Permission;
 
 /**
@@ -81,7 +80,7 @@ class TenantIsolationTest extends RadiologyTestCase
         });
     }
 
-    public function test_forTenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
+    public function test_for_tenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
     {
         $ids = RadiologyOrder::query()->forTenant($this->organization->id)->pluck('id');
 

@@ -2,6 +2,9 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Department;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,18 +22,48 @@ class BillingCashierSession extends Model
         return ['opening_balance' => 'decimal:2', 'expected_collections' => 'decimal:2', 'expected_refunds' => 'decimal:2', 'expected_closing' => 'decimal:2', 'actual_closing' => 'decimal:2', 'variance' => 'decimal:2', 'opened_at' => 'datetime', 'closed_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function counter(): BelongsTo { return $this->belongsTo(\App\Models\Department::class, 'counter_id'); }
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function payments(): HasMany { return $this->hasMany(BillingPayment::class, 'cashier_session_id'); }
-    public function closedBy(): BelongsTo { return $this->belongsTo(User::class, 'closed_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function counter(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'counter_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(BillingPayment::class, 'cashier_session_id');
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
         return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
-    public function isOpen(): bool { return $this->status === 'open'; }
-    public function isClosed(): bool { return $this->status === 'closed'; }
+    public function isOpen(): bool
+    {
+        return $this->status === 'open';
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->status === 'closed';
+    }
 }

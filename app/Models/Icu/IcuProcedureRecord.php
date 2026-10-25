@@ -19,10 +19,25 @@ class IcuProcedureRecord extends Model
         return ['parameters' => 'array', 'performed_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function procedure(): BelongsTo { return $this->belongsTo(IcuProcedure::class, 'procedure_id'); }
-    public function consent(): BelongsTo { return $this->belongsTo(PatientConsent::class, 'consent_id'); }
-    public function performedBy(): BelongsTo { return $this->belongsTo(User::class, 'performed_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function procedure(): BelongsTo
+    {
+        return $this->belongsTo(IcuProcedure::class, 'procedure_id');
+    }
+
+    public function consent(): BelongsTo
+    {
+        return $this->belongsTo(PatientConsent::class, 'consent_id');
+    }
+
+    public function performedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'performed_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

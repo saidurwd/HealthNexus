@@ -12,6 +12,7 @@ use App\Models\WorkflowStep;
 use App\Services\Patients\PatientAmendmentService;
 use App\Services\SettingsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
@@ -111,9 +112,9 @@ class PatientAmendmentTest extends TestCase
         $this->assertSame('F', $patient->fresh()->sex);
     }
 
-    private function hospitalAdminRole(): \Spatie\Permission\Models\Role
+    private function hospitalAdminRole(): Role
     {
-        return \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'hospital_admin', 'guard_name' => 'web']);
+        return Role::firstOrCreate(['name' => 'hospital_admin', 'guard_name' => 'web']);
     }
 
     private function seedAmendmentWorkflow(Organization $organization): Workflow

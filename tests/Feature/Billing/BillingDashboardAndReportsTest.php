@@ -4,7 +4,6 @@ namespace Tests\Feature\Billing;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
-use App\Models\Billing\BillingInvoice;
 use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPaymentMethod;
 use App\Models\Patient;

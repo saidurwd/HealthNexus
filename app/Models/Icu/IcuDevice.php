@@ -25,11 +25,30 @@ class IcuDevice extends Model
         return ['insertion_date' => 'date', 'last_assessment_at' => 'datetime', 'removal_date' => 'date'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function insertedBy(): BelongsTo { return $this->belongsTo(User::class, 'inserted_by'); }
-    public function removalBy(): BelongsTo { return $this->belongsTo(User::class, 'removal_by'); }
-    public function assessments(): HasMany { return $this->hasMany(IcuDeviceAssessment::class, 'device_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function insertedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'inserted_by');
+    }
+
+    public function removalBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'removal_by');
+    }
+
+    public function assessments(): HasMany
+    {
+        return $this->hasMany(IcuDeviceAssessment::class, 'device_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

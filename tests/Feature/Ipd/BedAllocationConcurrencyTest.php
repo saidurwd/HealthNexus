@@ -2,6 +2,13 @@
 
 namespace Tests\Feature\Ipd;
 
+use App\Models\Encounter;
+use App\Models\Ipd\IpdAdmission;
+use App\Models\Ipd\IpdBed;
+use App\Models\Patient;
+use App\Services\Ipd\IpdBedAllocationService;
+use Illuminate\Validation\ValidationException;
+
 /**
  * The mandatory "two simultaneous admission requests, same bed, exactly one succeeds" test
  * (spec §54/§86). Mirrors PharmacyStockConcurrencyTest's raw two-PDO-connection technique,
@@ -103,20 +110,20 @@ class BedAllocationConcurrencyTest extends IpdTestCase
     public function test_allocate_refuses_a_bed_that_is_no_longer_available(): void
     {
         $bed = $this->makeBed();
-        $bed->update(['status' => \App\Models\Ipd\IpdBed::STATUS_OCCUPIED]);
+        $bed->update(['status' => IpdBed::STATUS_OCCUPIED]);
 
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
-        $encounter = \App\Models\Encounter::factory()->create([
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = Encounter::factory()->create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
-        $admission = \App\Models\Ipd\IpdAdmission::create([
+        $admission = IpdAdmission::create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        app(\App\Services\Ipd\IpdBedAllocationService::class)->allocate($admission, $bed, $this->user);
+        app(IpdBedAllocationService::class)->allocate($admission, $bed, $this->user);
     }
 }

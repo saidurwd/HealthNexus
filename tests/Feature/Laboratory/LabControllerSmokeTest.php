@@ -12,6 +12,7 @@ use App\Models\Laboratory\LabSpecimen;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
 use App\Models\Patient;
+use App\Models\User;
 use App\Services\Laboratory\LabReportService;
 use App\Services\Laboratory\ResultEntryService;
 use App\Services\Laboratory\ResultValidationService;
@@ -67,7 +68,7 @@ class LabControllerSmokeTest extends LabTestCase
         ]);
 
         $result = app(ResultEntryService::class)->enter($item, ['numeric_value' => '3.0'], $this->user);
-        app(ResultValidationService::class)->technicalValidate($result, \App\Models\User::factory()->create());
+        app(ResultValidationService::class)->technicalValidate($result, User::factory()->create());
 
         LabQcMaterial::create(['organization_id' => $this->organization->id, 'branch_id' => null, 'code' => 'QC1', 'name' => 'Level 1 Control', 'level' => 'low', 'is_active' => true]);
 

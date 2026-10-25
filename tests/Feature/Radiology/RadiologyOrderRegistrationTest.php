@@ -3,7 +3,9 @@
 namespace Tests\Feature\Radiology;
 
 use App\Events\Clinical\ClinicalOrderCreated;
+use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
+use App\Models\Billing\BillingItem;
 use App\Models\ClinicalOrder;
 use App\Models\Department;
 use App\Models\Encounter;
@@ -84,12 +86,12 @@ class RadiologyOrderRegistrationTest extends RadiologyTestCase
             'code' => $code, 'name' => $name, 'modality_type' => 'CT', 'is_active' => true,
         ]);
 
-        $category = \App\Models\Billing\BillingCategory::create([
+        $category = BillingCategory::create([
             'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Diagnostics', 'code' => 'DIAG', 'is_active' => true,
         ]);
 
-        \App\Models\Billing\BillingItem::create([
+        BillingItem::create([
             'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'RAD-'.$code, 'item_type' => 'diagnostic',
             'name' => $name, 'base_price' => '4500.00', 'is_taxable' => false,

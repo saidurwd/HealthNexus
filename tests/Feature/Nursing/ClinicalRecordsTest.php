@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Nursing;
 
+use App\Jobs\Nursing\DetectOverdueNursingTasks;
 use App\Models\Diagnosis;
 use App\Models\Nursing\NursingNote;
 use App\Models\Nursing\NursingTask;
+use App\Models\VitalSign;
 use App\Services\Nursing\NursingAssessmentService;
 use App\Services\Nursing\NursingCarePlanService;
 use App\Services\Nursing\NursingDischargeChecklistService;
@@ -62,8 +64,8 @@ class ClinicalRecordsTest extends NursingTestCase
     {
         $task = app(NursingTaskService::class)->create($this->makeEpisode(), ['task_type' => 'Obs', 'due_at' => now()->subHour()]);
 
-        \App\Jobs\Nursing\DetectOverdueNursingTasks::dispatchSync();
-        \App\Jobs\Nursing\DetectOverdueNursingTasks::dispatchSync();
+        DetectOverdueNursingTasks::dispatchSync();
+        DetectOverdueNursingTasks::dispatchSync();
 
         $this->assertSame(NursingTask::STATUS_OVERDUE, $task->fresh()->status);
     }
@@ -152,7 +154,7 @@ class ClinicalRecordsTest extends NursingTestCase
         app(NursingVitalService::class)->record($episode, ['pulse_rate' => 80, 'systolic' => 120, 'diastolic' => 80], $this->user);
         app(NursingVitalService::class)->record($episode, ['pulse_rate' => 90], $this->user);
 
-        $this->assertSame(2, \App\Models\VitalSign::where('encounter_id', $episode->encounter_id)->count());
+        $this->assertSame(2, VitalSign::where('encounter_id', $episode->encounter_id)->count());
     }
 
     public function test_observation_threshold_breach_raises_an_alert_never_a_diagnosis(): void

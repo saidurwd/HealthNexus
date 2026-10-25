@@ -18,8 +18,23 @@ class IcuAlertEscalation extends Model
         return ['escalated_at' => 'datetime', 'resolved_at' => 'datetime'];
     }
 
-    public function alert(): BelongsTo { return $this->belongsTo(IcuCriticalAlert::class, 'alert_id'); }
-    public function escalatedToUser(): BelongsTo { return $this->belongsTo(User::class, 'escalated_to_user_id'); }
-    public function escalatedBy(): BelongsTo { return $this->belongsTo(User::class, 'escalated_by'); }
-    public function resolvedBy(): BelongsTo { return $this->belongsTo(User::class, 'resolved_by'); }
+    public function alert(): BelongsTo
+    {
+        return $this->belongsTo(IcuCriticalAlert::class, 'alert_id');
+    }
+
+    public function escalatedToUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'escalated_to_user_id');
+    }
+
+    public function escalatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'escalated_by');
+    }
+
+    public function resolvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'resolved_by');
+    }
 }

@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Localization;
 
+use App\Models\Organization;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class LocalizationTest extends TestCase
@@ -84,18 +87,18 @@ class LocalizationTest extends TestCase
 
     public function test_patients_index_renders_translated_strings_in_bangla(): void
     {
-        $organization = \App\Models\Organization::factory()->create();
+        $organization = Organization::factory()->create();
         $user = User::factory()->create(['locale' => 'bn']);
         $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage organizations', 'guard_name' => 'web']);
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'manage organizations', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
         $user->givePermissionTo('manage organizations');
         $user->givePermissionTo('patients.view');
 
         $this->actingAs($user);
         session()->put('tenant_organization_id', $organization->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
         $response = $this->get('/admin/patients');
 

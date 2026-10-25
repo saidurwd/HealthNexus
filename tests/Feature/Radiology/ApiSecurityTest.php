@@ -3,9 +3,9 @@
 namespace Tests\Feature\Radiology;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Radiology\RadiologyOrder;
 use App\Models\User;

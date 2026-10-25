@@ -18,10 +18,25 @@ class BillingAdvanceTransaction extends Model
         return ['amount' => 'decimal:2', 'balance_after' => 'decimal:2'];
     }
 
-    public function advanceAccount(): BelongsTo { return $this->belongsTo(BillingAdvanceAccount::class, 'advance_account_id'); }
-    public function payment(): BelongsTo { return $this->belongsTo(BillingPayment::class); }
-    public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
-    public function performedBy(): BelongsTo { return $this->belongsTo(User::class, 'performed_by'); }
+    public function advanceAccount(): BelongsTo
+    {
+        return $this->belongsTo(BillingAdvanceAccount::class, 'advance_account_id');
+    }
+
+    public function payment(): BelongsTo
+    {
+        return $this->belongsTo(BillingPayment::class);
+    }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(BillingInvoice::class);
+    }
+
+    public function performedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'performed_by');
+    }
 
     /**
      * This table carries no organization_id/branch_id columns of its own — tenant scope is inherited

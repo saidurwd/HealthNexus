@@ -7,9 +7,9 @@ use App\Http\Responses\ApiResponse;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdAdmissionRequest;
 use App\Models\Ipd\IpdBed;
-use Illuminate\Support\Facades\Gate;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class IpdDashboardController extends Controller
 {

@@ -9,6 +9,7 @@ use App\Models\Laboratory\LabSpecimen;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
 use App\Models\Patient;
+use App\Models\User;
 use App\Services\Laboratory\LabReportService;
 use App\Services\Laboratory\ResultAmendmentService;
 use App\Services\Laboratory\ResultEntryService;
@@ -59,7 +60,7 @@ class LabReportFinalizationTest extends LabTestCase
         ]);
 
         $result = app(ResultEntryService::class)->enter($item, ['numeric_value' => '14.0'], $this->user);
-        app(ResultValidationService::class)->technicalValidate($result, \App\Models\User::factory()->create());
+        app(ResultValidationService::class)->technicalValidate($result, User::factory()->create());
     }
 
     public function test_finalizing_a_report_locks_results_and_moves_order_to_reported(): void

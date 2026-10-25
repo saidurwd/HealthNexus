@@ -9,6 +9,7 @@ use App\Models\Nursing\NursingEscalation;
 use App\Models\Nursing\NursingHandover;
 use App\Models\Nursing\NursingNote;
 use App\Models\Nursing\NursingTask;
+use App\Models\VitalSign;
 use App\Services\AuditLogger;
 use App\Services\Nursing\NursingEscalationService;
 use App\Services\Nursing\NursingHandoverService;
@@ -80,7 +81,7 @@ class NursingCareController extends Controller
 
         $vital = $this->vitals->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
+        $this->auditLogger->log('CREATE', VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
         return ApiResponse::success($vital, 'Vitals recorded.', 201);
     }

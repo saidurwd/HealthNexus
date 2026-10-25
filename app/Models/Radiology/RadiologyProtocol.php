@@ -14,5 +14,8 @@ class RadiologyProtocol extends Model
         return ['contrast_required' => 'boolean', 'is_active' => 'boolean'];
     }
 
-    public function procedure(): BelongsTo { return $this->belongsTo(RadiologyProcedure::class, 'procedure_id'); }
+    public function procedure(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyProcedure::class, 'procedure_id');
+    }
 }

@@ -17,8 +17,7 @@ class SendNotificationJob implements ShouldQueue
     public function __construct(
         public User $user,
         public BaseNotification $notification,
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {

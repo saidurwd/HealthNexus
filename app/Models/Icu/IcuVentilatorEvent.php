@@ -35,8 +35,15 @@ class IcuVentilatorEvent extends Model
         ];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function recordedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recorded_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

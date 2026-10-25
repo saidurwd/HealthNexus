@@ -16,6 +16,7 @@ class MasterDataCrudTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Country $country;
 
     protected function setUp(): void

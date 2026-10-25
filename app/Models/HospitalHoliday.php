@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,7 +45,7 @@ class HospitalHoliday extends Model
      * True if this holiday record applies to the given date — either an exact match, or (for a
      * recurring holiday) the same month/day in any year.
      */
-    public function appliesTo(\Carbon\Carbon $date): bool
+    public function appliesTo(Carbon $date): bool
     {
         if ($this->is_recurring_annually) {
             return $this->date->format('m-d') === $date->format('m-d');

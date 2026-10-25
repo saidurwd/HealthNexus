@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\Clinical\EscalateUnacknowledgedAlerts;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -77,7 +78,7 @@ Schedule::command('icu:detect-missing-documentation')->hourly()->name('icu-detec
 Schedule::command('icu:generate-daily-census')->dailyAt('00:05')->name('icu-generate-daily-census')->withoutOverlapping();
 Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-generate-charge-events')->withoutOverlapping();
 
-Schedule::job(new \App\Jobs\Clinical\EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
+Schedule::job(new EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
 
 Schedule::command('exports:prune')->hourly()->name('exports-prune')->withoutOverlapping();
 

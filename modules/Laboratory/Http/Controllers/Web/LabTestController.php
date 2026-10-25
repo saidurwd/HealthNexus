@@ -4,12 +4,12 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Laboratory\LabContainerType;
 use App\Models\Laboratory\LabSection;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
 use App\Models\Laboratory\LabTestCategory;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Laboratory\LabTestService;
 use App\Services\TenantContextResolver;

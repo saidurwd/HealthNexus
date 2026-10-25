@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
-use App\Models\Organization;
 use App\Models\Ipd\IpdAdmissionSource;
 use App\Models\Ipd\IpdAdmissionType;
 use App\Models\Ipd\IpdBed;
@@ -14,6 +13,7 @@ use App\Models\Ipd\IpdDischargeDisposition;
 use App\Models\Ipd\IpdFloor;
 use App\Models\Ipd\IpdRoom;
 use App\Models\Ipd\IpdWard;
+use App\Models\Organization;
 use Illuminate\Database\Seeder;
 
 /**

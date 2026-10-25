@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,15 +30,50 @@ class PharmacyTransfer extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function sourceStore(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'source_store_id'); }
-    public function destinationStore(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'destination_store_id'); }
-    public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
-    public function approvedBy(): BelongsTo { return $this->belongsTo(User::class, 'approved_by'); }
-    public function dispatchedBy(): BelongsTo { return $this->belongsTo(User::class, 'dispatched_by'); }
-    public function receivedBy(): BelongsTo { return $this->belongsTo(User::class, 'received_by'); }
-    public function items(): HasMany { return $this->hasMany(PharmacyTransferItem::class, 'transfer_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function sourceStore(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'source_store_id');
+    }
+
+    public function destinationStore(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'destination_store_id');
+    }
+
+    public function requestedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function dispatchedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dispatched_by');
+    }
+
+    public function receivedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'received_by');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(PharmacyTransferItem::class, 'transfer_id');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

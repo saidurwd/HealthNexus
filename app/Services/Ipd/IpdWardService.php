@@ -15,7 +15,7 @@ class IpdWardService
 {
     public function create(array $data, User $user): IpdWard
     {
-        return DB::transaction(function () use ($data, $user) {
+        return DB::transaction(function () use ($data) {
             $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return IpdWard::create($data);

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Icu;
 
+use App\Models\Encounter;
 use App\Models\Icu\IcuAdmissionRequest;
+use App\Models\Patient;
 use App\Models\Workflow;
 use App\Models\WorkflowApprover;
 use App\Models\WorkflowStep;
@@ -55,8 +57,8 @@ class IcuAdmissionWorkflowTest extends IcuTestCase
 
         app(IcuAdmissionRequestService::class)->create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
-            'patient_id' => \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id])->id,
-            'encounter_id' => \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id])->id,
+            'patient_id' => Patient::factory()->create(['organization_id' => $this->organization->id])->id,
+            'encounter_id' => Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id])->id,
             'is_emergency' => true,
         ], $this->user);
     }

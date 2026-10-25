@@ -3,11 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -39,7 +40,7 @@ class ClinicalReportControllerTest extends TestCase
         $this->actingAs($this->user);
 
         session()->put('tenant_organization_id', $this->organization->id);
-        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
     }
 
     public function test_clinical_report_index_renders(): void

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StorePatientRequest;
 use App\Http\Requests\Api\UpdatePatientRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Branch;
 use App\Models\Patient;
+use App\Models\PatientDocument;
 use App\Models\PatientDuplicateCandidate;
 use App\Services\AuditLogger;
 use App\Services\FileUploadService;
@@ -84,7 +86,7 @@ class PatientController extends Controller
             'You do not have access to this organization.'
         );
 
-        $branch = ! empty($validated['branch_id']) ? \App\Models\Branch::findOrFail($validated['branch_id']) : null;
+        $branch = ! empty($validated['branch_id']) ? Branch::findOrFail($validated['branch_id']) : null;
 
         $patient = $this->patientService->createPatient($validated, $user, $branch);
 
@@ -235,7 +237,7 @@ class PatientController extends Controller
 
         $path = $file->store('patient-documents');
 
-        $document = \App\Models\PatientDocument::create([
+        $document = PatientDocument::create([
             'organization_id' => $patient->organization_id,
             'patient_id' => $patient->id,
             'file_name' => $file->getClientOriginalName(),

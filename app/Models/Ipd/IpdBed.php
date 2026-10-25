@@ -2,6 +2,8 @@
 
 namespace App\Models\Ipd;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,14 +16,23 @@ class IpdBed extends Model
     use HasFactory, SoftDeletes;
 
     public const STATUS_AVAILABLE = 'available';
+
     public const STATUS_RESERVED = 'reserved';
+
     public const STATUS_OCCUPIED = 'occupied';
+
     public const STATUS_CLEANING = 'cleaning';
+
     public const STATUS_BLOCKED = 'blocked';
+
     public const STATUS_MAINTENANCE = 'maintenance';
+
     public const STATUS_ISOLATION = 'isolation';
+
     public const STATUS_OUT_OF_SERVICE = 'out_of_service';
+
     public const STATUS_PENDING_TRANSFER = 'pending_transfer';
+
     public const STATUS_PENDING_DISCHARGE = 'pending_discharge';
 
     protected $fillable = [
@@ -48,13 +59,40 @@ class IpdBed extends Model
         ];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function room(): BelongsTo { return $this->belongsTo(IpdRoom::class, 'room_id'); }
-    public function bedType(): BelongsTo { return $this->belongsTo(IpdBedType::class, 'bed_type_id'); }
-    public function allocations(): HasMany { return $this->hasMany(IpdBedAllocation::class, 'bed_id'); }
-    public function reservations(): HasMany { return $this->hasMany(IpdBedReservation::class, 'bed_id'); }
-    public function blocks(): HasMany { return $this->hasMany(IpdBedBlock::class, 'bed_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(IpdRoom::class, 'room_id');
+    }
+
+    public function bedType(): BelongsTo
+    {
+        return $this->belongsTo(IpdBedType::class, 'bed_type_id');
+    }
+
+    public function allocations(): HasMany
+    {
+        return $this->hasMany(IpdBedAllocation::class, 'bed_id');
+    }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(IpdBedReservation::class, 'bed_id');
+    }
+
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(IpdBedBlock::class, 'bed_id');
+    }
 
     public function currentAllocation(): HasOne
     {

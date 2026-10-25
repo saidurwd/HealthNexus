@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Pharmacy\PharmacyDispensing;
 use App\Models\Pharmacy\PharmacyOrder;
+use App\Models\Pharmacy\PharmacyReturn;
 use App\Models\Pharmacy\PharmacyStore;
 use App\Services\AuditLogger;
 use App\Services\Pharmacy\PharmacyDispensingService;
@@ -99,7 +100,7 @@ class PharmacyDispensingController extends Controller
 
         $return = $this->returns->request($dispensing, $validated['items'], $validated['reason'], $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Pharmacy\PharmacyReturn::class, $return->id, null, $return->toArray(), $request);
+        $this->auditLogger->log('CREATE', PharmacyReturn::class, $return->id, null, $return->toArray(), $request);
 
         return ApiResponse::success($return, 'Return requested.', 201);
     }

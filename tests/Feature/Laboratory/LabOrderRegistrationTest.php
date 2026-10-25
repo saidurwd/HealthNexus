@@ -3,7 +3,9 @@
 namespace Tests\Feature\Laboratory;
 
 use App\Events\Clinical\ClinicalOrderCreated;
+use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
+use App\Models\Billing\BillingItem;
 use App\Models\ClinicalOrder;
 use App\Models\Department;
 use App\Models\Encounter;
@@ -90,12 +92,12 @@ class LabOrderRegistrationTest extends LabTestCase
             'unit' => 'g/dL', 'specimen_type_id' => $specimenType->id, 'is_active' => true,
         ]);
 
-        $category = \App\Models\Billing\BillingCategory::create([
+        $category = BillingCategory::create([
             'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Diagnostics', 'code' => 'DIAG', 'is_active' => true,
         ]);
 
-        \App\Models\Billing\BillingItem::create([
+        BillingItem::create([
             'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'LAB-'.$code, 'item_type' => 'diagnostic',
             'name' => $name, 'base_price' => '300.00', 'is_taxable' => false,

@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Department;
+use App\Models\Organization;
+use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Str;
 
 class Breadcrumbs
 {
@@ -59,13 +62,13 @@ class Breadcrumbs
         if (isset($params['user']) && str_contains($name, 'users')) {
             $user = $params['user'];
             if (in_array($name, ['admin.users.show', 'admin.users.edit', 'admin.users.update', 'admin.users.organization-show', 'admin.users.organization-edit', 'admin.users.organization-update'])) {
-                $crumbs[] = ['text' => $user instanceof \App\Models\User ? $user->name : 'User'];
+                $crumbs[] = ['text' => $user instanceof User ? $user->name : 'User'];
             }
         }
 
         if (isset($params['patient']) && str_contains($name, 'patients')) {
             $patient = $params['patient'];
-            $crumbs[] = ['text' => $patient instanceof \App\Models\Patient ? $patient->name : 'Patient'];
+            $crumbs[] = ['text' => $patient instanceof Patient ? $patient->name : 'Patient'];
         }
 
         if (isset($params['encounter']) && str_contains($name, 'encounters')) {
@@ -75,12 +78,12 @@ class Breadcrumbs
 
         if (isset($params['organization']) && str_contains($name, 'organizations')) {
             $organization = $params['organization'];
-            $crumbs[] = ['text' => $organization instanceof \App\Models\Organization ? $organization->name : 'Organization'];
+            $crumbs[] = ['text' => $organization instanceof Organization ? $organization->name : 'Organization'];
         }
 
         if (isset($params['department']) && str_contains($name, 'departments')) {
             $department = $params['department'];
-            $crumbs[] = ['text' => $department instanceof \App\Models\Department ? $department->name : 'Department'];
+            $crumbs[] = ['text' => $department instanceof Department ? $department->name : 'Department'];
         }
 
         if (isset($params['role']) && str_contains($name, 'roles')) {
@@ -250,10 +253,10 @@ class Breadcrumbs
             $isLast = $i === count($crumbs) - 1;
 
             if ($isLast) {
-                $html .= '<li class="breadcrumb-item active">' . e($crumb['text']) . '</li>';
+                $html .= '<li class="breadcrumb-item active">'.e($crumb['text']).'</li>';
             } else {
                 $url = $crumb['url'] ?? '#';
-                $html .= '<li class="breadcrumb-item"><a href="' . e($url) . '">' . e($crumb['text']) . '</a></li>';
+                $html .= '<li class="breadcrumb-item"><a href="'.e($url).'">'.e($crumb['text']).'</a></li>';
             }
         }
 

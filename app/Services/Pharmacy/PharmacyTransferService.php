@@ -2,7 +2,6 @@
 
 namespace App\Services\Pharmacy;
 
-use App\Models\Pharmacy\PharmacyBatch;
 use App\Models\Pharmacy\PharmacyStockTransaction;
 use App\Models\Pharmacy\PharmacyStore;
 use App\Models\Pharmacy\PharmacyTransfer;

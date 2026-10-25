@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Ot;
 
+use App\Models\Encounter;
+use App\Models\Patient;
 use App\Services\Ot\OtConsentService;
 use App\Services\Ot\OtOperativeNoteService;
 use App\Services\Ot\OtPreoperativeAssessmentService;
 use App\Services\Ot\OtRecoveryService;
 use App\Services\Ot\OtSurgeryRequestService;
+use App\Services\TenantContextResolver;
 
 class OtControllerSmokeTest extends OtTestCase
 {
@@ -19,8 +22,8 @@ class OtControllerSmokeTest extends OtTestCase
         $completedSurgery = $this->progressToCompleted($this->makeDaySurgery());
         app(OtRecoveryService::class)->admitToRecovery($completedSurgery);
 
-        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
         $surgeryRequest = app(OtSurgeryRequestService::class)->create([
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
@@ -54,8 +57,8 @@ class OtControllerSmokeTest extends OtTestCase
             '/api/v1/ot/surgeries/'.$surgery->id,
             '/api/v1/ot/surgery-requests',
         ] as $url) {
-            app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
-            app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+            app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+            app(TenantContextResolver::class)->setBranchId($this->branch->id);
             $this->getJson($url)->assertOk();
         }
     }

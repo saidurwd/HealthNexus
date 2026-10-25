@@ -3,7 +3,6 @@
 namespace Tests\Feature\Console;
 
 use App\Console\Commands\RefreshSystemStatistics;
-use App\Models\ActivityLog;
 use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

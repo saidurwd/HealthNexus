@@ -4,8 +4,9 @@ namespace Tests\Feature\Ipd;
 
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
-use App\Models\Ipd\IpdBed;
 use App\Models\Ipd\IpdBedMovement;
+use App\Models\Ipd\IpdDischargeRequest;
+use App\Models\Ipd\IpdPatientLeave;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdDischargeService;
@@ -22,9 +23,9 @@ class IpdControllerSmokeTest extends IpdTestCase
 
     private IpdBedMovement $transfer;
 
-    private \App\Models\Ipd\IpdDischargeRequest $dischargeRequest;
+    private IpdDischargeRequest $dischargeRequest;
 
-    private \App\Models\Ipd\IpdPatientLeave $leave;
+    private IpdPatientLeave $leave;
 
     private Patient $patient;
 

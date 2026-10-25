@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,16 +21,50 @@ class LabReport extends Model
         return ['generated_at' => 'datetime', 'amended_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function labOrder(): BelongsTo { return $this->belongsTo(LabOrder::class, 'lab_order_id'); }
-    public function generatedBy(): BelongsTo { return $this->belongsTo(User::class, 'generated_by'); }
-    public function amendedBy(): BelongsTo { return $this->belongsTo(User::class, 'amended_by'); }
-    public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isFinal(): bool { return in_array($this->status, ['final', 'amended'], true); }
-    public function isPreliminary(): bool { return $this->status === 'preliminary'; }
-    public function isCancelled(): bool { return $this->status === 'cancelled'; }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function labOrder(): BelongsTo
+    {
+        return $this->belongsTo(LabOrder::class, 'lab_order_id');
+    }
+
+    public function generatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'generated_by');
+    }
+
+    public function amendedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'amended_by');
+    }
+
+    public function cancelledBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function isFinal(): bool
+    {
+        return in_array($this->status, ['final', 'amended'], true);
+    }
+
+    public function isPreliminary(): bool
+    {
+        return $this->status === 'preliminary';
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled';
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

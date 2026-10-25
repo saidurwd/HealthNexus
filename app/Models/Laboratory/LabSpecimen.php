@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,19 +23,65 @@ class LabSpecimen extends Model
         return ['collected_at' => 'datetime', 'received_at' => 'datetime', 'rejected_at' => 'datetime'];
     }
 
-    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function labOrder(): BelongsTo { return $this->belongsTo(LabOrder::class, 'lab_order_id'); }
-    public function specimenType(): BelongsTo { return $this->belongsTo(LabSpecimenType::class, 'specimen_type_id'); }
-    public function containerType(): BelongsTo { return $this->belongsTo(LabContainerType::class, 'container_type_id'); }
-    public function collectedBy(): BelongsTo { return $this->belongsTo(User::class, 'collected_by'); }
-    public function receivedBy(): BelongsTo { return $this->belongsTo(User::class, 'received_by'); }
-    public function rejectedBy(): BelongsTo { return $this->belongsTo(User::class, 'rejected_by'); }
-    public function orderItems(): HasMany { return $this->hasMany(LabOrderItem::class, 'specimen_id'); }
-    public function results(): HasMany { return $this->hasMany(LabResult::class, 'specimen_id'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
-    public function isRejected(): bool { return $this->status === 'rejected'; }
-    public function isReceived(): bool { return in_array($this->status, ['received', 'accepted', 'processing', 'completed'], true); }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function labOrder(): BelongsTo
+    {
+        return $this->belongsTo(LabOrder::class, 'lab_order_id');
+    }
+
+    public function specimenType(): BelongsTo
+    {
+        return $this->belongsTo(LabSpecimenType::class, 'specimen_type_id');
+    }
+
+    public function containerType(): BelongsTo
+    {
+        return $this->belongsTo(LabContainerType::class, 'container_type_id');
+    }
+
+    public function collectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'collected_by');
+    }
+
+    public function receivedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'received_by');
+    }
+
+    public function rejectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(LabOrderItem::class, 'specimen_id');
+    }
+
+    public function results(): HasMany
+    {
+        return $this->hasMany(LabResult::class, 'specimen_id');
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    public function isReceived(): bool
+    {
+        return in_array($this->status, ['received', 'accepted', 'processing', 'completed'], true);
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

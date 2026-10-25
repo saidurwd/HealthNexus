@@ -18,8 +18,15 @@ class IcuClinicalScoreResult extends Model
         return ['input_values' => 'array', 'result_value' => 'float', 'calculated_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function calculatedBy(): BelongsTo { return $this->belongsTo(User::class, 'calculated_by'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function calculatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'calculated_by');
+    }
 
     public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {

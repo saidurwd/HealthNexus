@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,7 +46,7 @@ class ProviderUnavailability extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function overlaps(\Carbon\Carbon $start, \Carbon\Carbon $end): bool
+    public function overlaps(Carbon $start, Carbon $end): bool
     {
         return $this->start_at < $end && $this->end_at > $start;
     }

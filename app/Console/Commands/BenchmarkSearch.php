@@ -11,6 +11,7 @@ use App\Services\TenantContextResolver;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 /**
  * Measures the H-09 target (patient search p95 <= 500 ms on 100k patients). Seeds clearly fake patients into a throw-away
@@ -75,7 +76,7 @@ class BenchmarkSearch extends Command
 
         $user = User::factory()->create();
         $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
         $user->givePermissionTo('patients.view');
         $tenant->setOrganizationId($organization->id);
 

@@ -4,9 +4,9 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Organization;
 use App\Models\Laboratory\LabAnalyzer;
 use App\Models\Laboratory\LabSection;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
