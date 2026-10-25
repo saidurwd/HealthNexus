@@ -60,13 +60,13 @@ class PatientAlertsTest extends TestCase
 
     public function test_admin_can_view_alerts_page(): void
     {
-        $this->get('/admin/patients/'.$this->patient->id.'/alerts')->assertOk();
+        $this->get('/admin/patients/'.$this->patient->public_id.'/alerts')->assertOk();
     }
 
     public function test_admin_can_add_alert_and_it_is_audited(): void
     {
-        $this->post('/admin/patients/'.$this->patient->id.'/alerts', $this->alertPayload())
-            ->assertRedirect('/admin/patients/'.$this->patient->id.'/alerts');
+        $this->post('/admin/patients/'.$this->patient->public_id.'/alerts', $this->alertPayload())
+            ->assertRedirect('/admin/patients/'.$this->patient->public_id.'/alerts');
 
         $this->assertDatabaseHas('patient_alerts', [
             'patient_id' => $this->patient->id,
@@ -85,7 +85,7 @@ class PatientAlertsTest extends TestCase
     {
         app(PatientService::class)->addAlert($this->patient, $this->alertPayload());
 
-        $this->get('/admin/patients/'.$this->patient->id.'/alerts')
+        $this->get('/admin/patients/'.$this->patient->public_id.'/alerts')
             ->assertOk()
             ->assertSee('Penicillin Allergy');
     }
@@ -98,7 +98,7 @@ class PatientAlertsTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->put('/admin/patients/'.$this->patient->id.'/alerts/'.$alert->id.'/resolve', [
+        $this->put('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->id.'/resolve', [
             'resolution_note' => 'Confirmed via chart review.',
         ])->assertRedirect();
 
@@ -115,7 +115,7 @@ class PatientAlertsTest extends TestCase
             'organization_id' => $this->organization->id,
         ]);
 
-        $this->delete('/admin/patients/'.$this->patient->id.'/alerts/'.$alert->id)
+        $this->delete('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->id)
             ->assertRedirect();
 
         $this->assertSoftDeleted($alert);

@@ -132,6 +132,6 @@ class AppointmentAdminPagesSmokeTest extends TestCase
             'source' => 'online',
         ]);
 
-        $this->get("/admin/appointments/{$appointment->id}/print")->assertOk();
+        $this->get("/admin/appointments/{$appointment->public_id}/print")->assertOk();
     }
 }

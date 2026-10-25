@@ -48,6 +48,6 @@ class PatientDocument extends Model
      */
     public function getUrlAttribute(): string
     {
-        return route('admin.patients.documents.download', [$this->patient_id, $this->id]);
+        return route('admin.patients.documents.download', [$this->patient, $this->id]);
     }
 }

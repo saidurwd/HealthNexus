@@ -86,7 +86,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_view_consultation(): void
     {
-        $response = $this->get('/admin/appointments/'.$this->appointment->id.'/consultation');
+        $response = $this->get('/admin/appointments/'.$this->appointment->public_id.'/consultation');
 
         $response->assertStatus(200);
         $response->assertViewHas('appointment');
@@ -206,7 +206,7 @@ class OpdConsultationTest extends TestCase
     {
         $this->appointment->update(['status' => 'checked_in']);
 
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/status/in-progress');
+        $response = $this->post('/admin/appointments/'.$this->appointment->public_id.'/status/in-progress');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -219,7 +219,7 @@ class OpdConsultationTest extends TestCase
     {
         $this->appointment->update(['status' => 'in_progress']);
 
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/status/completed');
+        $response = $this->post('/admin/appointments/'.$this->appointment->public_id.'/status/completed');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -270,7 +270,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_check_in_appointment(): void
     {
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/check-in');
+        $response = $this->post('/admin/appointments/'.$this->appointment->public_id.'/check-in');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -285,7 +285,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_create_follow_up_appointment(): void
     {
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/follow-up', [
+        $response = $this->post('/admin/appointments/'.$this->appointment->public_id.'/follow-up', [
             'appointment_date' => '2025-02-01',
             'appointment_time' => '10:00',
             'reason' => 'Follow-up on treatment',

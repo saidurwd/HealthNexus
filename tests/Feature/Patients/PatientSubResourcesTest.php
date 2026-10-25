@@ -45,7 +45,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_add_an_address(): void
     {
-        $response = $this->post("/admin/patients/{$this->patient->id}/addresses", [
+        $response = $this->post("/admin/patients/{$this->patient->public_id}/addresses", [
             'address_type' => 'present',
             'line1' => '123 Main St',
             'city' => 'Dhaka',
@@ -60,8 +60,8 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_a_second_primary_address_of_the_same_type_demotes_the_first(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
-        $this->post("/admin/patients/{$this->patient->id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
+        $this->post("/admin/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
+        $this->post("/admin/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
 
         $this->assertSame(1, $this->patient->addresses()->where('address_type', 'present')->where('is_primary', true)->count());
         $this->assertSame(2, $this->patient->addresses()->where('address_type', 'present')->count());
@@ -69,7 +69,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_add_a_guardian(): void
     {
-        $response = $this->post("/admin/patients/{$this->patient->id}/guardians", [
+        $response = $this->post("/admin/patients/{$this->patient->public_id}/guardians", [
             'name' => 'John Guardian',
             'relationship' => 'Father',
         ]);
@@ -80,7 +80,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_set_preferences(): void
     {
-        $response = $this->put("/admin/patients/{$this->patient->id}/preferences", [
+        $response = $this->put("/admin/patients/{$this->patient->public_id}/preferences", [
             'preferred_language' => 'bn',
             'preferred_contact_method' => 'sms',
         ]);
@@ -93,7 +93,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_grant_and_withdraw_consent(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/admin/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
 
         $this->assertDatabaseHas('patient_consents', [
             'patient_id' => $this->patient->id, 'consent_type' => 'treatment', 'status' => 'active', 'version' => 1,
@@ -101,15 +101,15 @@ class PatientSubResourcesTest extends TestCase
 
         $consent = $this->patient->consents()->first();
 
-        $this->put("/admin/patients/{$this->patient->id}/consents/{$consent->id}/withdraw");
+        $this->put("/admin/patients/{$this->patient->public_id}/consents/{$consent->id}/withdraw");
 
         $this->assertDatabaseHas('patient_consents', ['id' => $consent->id, 'status' => 'withdrawn']);
     }
 
     public function test_granting_a_new_consent_of_the_same_type_versions_instead_of_overwriting(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/admin/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/admin/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
 
         $this->assertSame(2, $this->patient->consents()->where('consent_type', 'treatment')->count());
         $this->assertSame(1, $this->patient->consents()->where('status', 'active')->count());

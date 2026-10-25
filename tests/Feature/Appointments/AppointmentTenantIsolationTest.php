@@ -63,7 +63,7 @@ class AppointmentTenantIsolationTest extends TestCase
 
     public function test_cannot_confirm_another_organizations_appointment(): void
     {
-        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->id}/confirm")->assertForbidden();
+        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->public_id}/confirm")->assertForbidden();
         $this->assertSame('scheduled', $this->otherOrganizationAppointment->fresh()->status);
     }
 
@@ -71,13 +71,13 @@ class AppointmentTenantIsolationTest extends TestCase
     {
         $this->otherOrganizationAppointment->update(['status' => 'confirmed']);
 
-        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->id}/check-in")->assertForbidden();
+        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->public_id}/check-in")->assertForbidden();
         $this->assertSame('confirmed', $this->otherOrganizationAppointment->fresh()->status);
     }
 
     public function test_cannot_cancel_another_organizations_appointment(): void
     {
-        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->id}/cancel", [
+        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->public_id}/cancel", [
             'cancellation_reason' => 'Trying to interfere',
         ])->assertForbidden();
 
@@ -86,7 +86,7 @@ class AppointmentTenantIsolationTest extends TestCase
 
     public function test_cannot_reschedule_another_organizations_appointment(): void
     {
-        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->id}/reschedule", [
+        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->public_id}/reschedule", [
             'appointment_date' => now()->addDays(5)->toDateString(),
             'appointment_time' => '11:00',
         ])->assertForbidden();
@@ -94,20 +94,20 @@ class AppointmentTenantIsolationTest extends TestCase
 
     public function test_cannot_mark_another_organizations_appointment_no_show(): void
     {
-        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->id}/no-show")->assertForbidden();
+        $this->post("/admin/appointments/{$this->otherOrganizationAppointment->public_id}/no-show")->assertForbidden();
         $this->assertSame('scheduled', $this->otherOrganizationAppointment->fresh()->status);
     }
 
     public function test_cannot_update_another_organizations_appointment(): void
     {
-        $this->put("/admin/appointments/{$this->otherOrganizationAppointment->id}", [
+        $this->put("/admin/appointments/{$this->otherOrganizationAppointment->public_id}", [
             'reason' => 'Hacked reason',
         ])->assertForbidden();
     }
 
     public function test_cannot_delete_another_organizations_appointment(): void
     {
-        $this->delete("/admin/appointments/{$this->otherOrganizationAppointment->id}")->assertForbidden();
+        $this->delete("/admin/appointments/{$this->otherOrganizationAppointment->public_id}")->assertForbidden();
         $this->assertDatabaseHas('appointments', ['id' => $this->otherOrganizationAppointment->id, 'deleted_at' => null]);
     }
 
@@ -115,7 +115,7 @@ class AppointmentTenantIsolationTest extends TestCase
     {
         $appointment = Appointment::factory()->create(['organization_id' => $this->ownOrganization->id, 'status' => 'scheduled']);
 
-        $this->post("/admin/appointments/{$appointment->id}/confirm")->assertRedirect();
+        $this->post("/admin/appointments/{$appointment->public_id}/confirm")->assertRedirect();
         $this->assertSame('confirmed', $appointment->fresh()->status);
     }
 }

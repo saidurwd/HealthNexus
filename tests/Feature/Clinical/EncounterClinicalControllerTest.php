@@ -58,7 +58,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_record_vital_signs(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/vitals", [
+        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -79,7 +79,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_add_diagnosis(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/diagnoses", [
+        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
             'coding_system' => 'ICD-10',
             'code' => 'I10',
@@ -97,7 +97,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_create_prescription(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/prescriptions", [
+        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
             'clinical_notes' => 'Take after meals',
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15],
@@ -124,7 +124,7 @@ class EncounterClinicalControllerTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/vitals", [
+        $this->post("/admin/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -132,17 +132,17 @@ class EncounterClinicalControllerTest extends TestCase
             'oxygen_saturation' => 98,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/diagnoses", [
+        $this->post("/admin/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/prescriptions", [
+        $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days'],
             ],
         ]);
 
-        $response = $this->get("/admin/encounters/{$this->encounter->id}");
+        $response = $this->get("/admin/encounters/{$this->encounter->public_id}");
 
         $response->assertStatus(200);
         $response->assertSee('Penicillin');

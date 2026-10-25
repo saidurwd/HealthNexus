@@ -58,7 +58,7 @@ class PatientTenantIsolationTest extends TestCase
 
     public function test_cannot_update_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->put('/admin/patients/'.$this->otherOrganizationPatient->id, [
+        $response = $this->put('/admin/patients/'.$this->otherOrganizationPatient->public_id, [
             'organization_id' => $this->otherOrganization->id,
             'first_name' => 'Hacked',
             'last_name' => 'Name',
@@ -71,7 +71,7 @@ class PatientTenantIsolationTest extends TestCase
 
     public function test_cannot_delete_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->delete('/admin/patients/'.$this->otherOrganizationPatient->id);
+        $response = $this->delete('/admin/patients/'.$this->otherOrganizationPatient->public_id);
 
         $response->assertForbidden();
         $this->assertDatabaseHas('patients', ['id' => $this->otherOrganizationPatient->id, 'deleted_at' => null]);
@@ -81,7 +81,7 @@ class PatientTenantIsolationTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
 
-        $response = $this->put('/admin/patients/'.$patient->id, [
+        $response = $this->put('/admin/patients/'.$patient->public_id, [
             'organization_id' => $this->ownOrganization->id,
             'first_name' => 'Updated',
             'last_name' => 'Name',
@@ -140,7 +140,7 @@ class PatientTenantIsolationTest extends TestCase
             'patient_id' => $this->otherOrganizationPatient->id,
         ]);
 
-        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->id}/documents/{$document->id}/download");
+        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->public_id}/documents/{$document->id}/download");
 
         $response->assertForbidden();
     }

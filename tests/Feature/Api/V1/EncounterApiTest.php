@@ -77,7 +77,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->get('/api/v1/encounters/'.$encounter->id);
+        $response = $this->get('/api/v1/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.id', $encounter->id);
@@ -87,7 +87,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
-        $response = $this->put('/api/v1/encounters/'.$encounter->id, [
+        $response = $this->put('/api/v1/encounters/'.$encounter->public_id, [
             'status' => 'completed',
         ]);
 
@@ -99,7 +99,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->delete('/api/v1/encounters/'.$encounter->id);
+        $response = $this->delete('/api/v1/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200);
         $this->assertSoftDeleted('encounters', [
@@ -111,7 +111,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/vitals", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/vitals", [
             'systolic' => 118,
             'diastolic' => 76,
             'pulse_rate' => 70,
@@ -120,7 +120,7 @@ class EncounterApiTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('data.systolic', 118);
 
-        $this->get("/api/v1/encounters/{$encounter->id}/vitals")
+        $this->get("/api/v1/encounters/{$encounter->public_id}/vitals")
             ->assertStatus(200)
             ->assertJsonCount(1, 'data');
     }
@@ -129,7 +129,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/diagnoses", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/diagnoses", [
             'description' => 'Acute bronchitis',
             'diagnosis_type' => 'primary',
         ]);
@@ -142,7 +142,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/prescriptions", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/prescriptions", [
             'items' => [
                 ['medicine_name' => 'Amoxicillin', 'frequency' => 'TDS', 'duration' => '7 days'],
             ],
@@ -153,7 +153,7 @@ class EncounterApiTest extends TestCase
 
         $prescriptionId = $response->json('data.id');
 
-        $this->post("/api/v1/encounters/{$encounter->id}/prescriptions/{$prescriptionId}/issue")
+        $this->post("/api/v1/encounters/{$encounter->public_id}/prescriptions/{$prescriptionId}/issue")
             ->assertStatus(200)
             ->assertJsonPath('data.status', 'issued');
     }
@@ -162,7 +162,7 @@ class EncounterApiTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/orders", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/orders", [
             'order_type' => 'lab',
             'items' => [
                 ['item_name' => 'CBC'],
@@ -182,7 +182,7 @@ class EncounterApiTest extends TestCase
             'locked_at' => now(),
         ]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/amendments", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/amendments", [
             'amendment_type' => 'correction',
             'reason' => 'Corrected diagnosis code',
             'content' => 'Diagnosis code changed from I10 to I11.',
@@ -222,7 +222,7 @@ class EncounterApiTest extends TestCase
         $this->withHeader('Authorization', 'Bearer '.$token)
             ->withHeader('X-Organization-Id', (string) $this->organization->id)
             ->withHeader('X-Branch-Id', (string) $this->branch->id)
-            ->put("/api/v1/encounters/{$encounter->id}/amendments/{$amendment->id}/approve")
+            ->put("/api/v1/encounters/{$encounter->public_id}/amendments/{$amendment->id}/approve")
             ->assertStatus(200)
             ->assertJsonPath('data.approved_by', $approver->id);
     }

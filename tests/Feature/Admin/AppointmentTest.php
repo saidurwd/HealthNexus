@@ -110,7 +110,7 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
-        $response = $this->get('/admin/appointments/'.$appointment->id);
+        $response = $this->get('/admin/appointments/'.$appointment->public_id);
 
         $response->assertStatus(200);
         $response->assertViewHas('appointment');
@@ -127,7 +127,7 @@ class AppointmentTest extends TestCase
         // status is deliberately not accepted by this endpoint any more — it only changes
         // through the dedicated confirm/check-in/cancel/no-show actions, each enforced by
         // AppointmentStateMachine (see UpdateAppointmentRequest).
-        $response = $this->put('/admin/appointments/'.$appointment->id, [
+        $response = $this->put('/admin/appointments/'.$appointment->public_id, [
             'doctor_id' => $this->user->id,
             'appointment_date' => '2025-01-20',
             'appointment_time' => '14:00',
@@ -151,7 +151,7 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
-        $response = $this->delete('/admin/appointments/'.$appointment->id);
+        $response = $this->delete('/admin/appointments/'.$appointment->public_id);
 
         $response->assertRedirect('/admin/appointments');
         $this->assertSoftDeleted('appointments', ['id' => $appointment->id]);

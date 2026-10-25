@@ -83,7 +83,7 @@ class EncounterImagingAndLabPanelTest extends TestCase
             'procedure_id' => $procedure->id, 'requested_procedure_name' => 'Chest X-Ray', 'status' => 'pending', 'result_status' => 'pending', 'requested_at' => now(),
         ]);
 
-        $response = $this->get('/admin/encounters/'.$encounter->id);
+        $response = $this->get('/admin/encounters/'.$encounter->public_id);
 
         $response->assertOk();
         $response->assertSee('Lab Results');

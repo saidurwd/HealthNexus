@@ -69,7 +69,7 @@ class PatientApiTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->get('/api/v1/patients/'.$patient->id);
+        $response = $this->get('/api/v1/patients/'.$patient->public_id);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.id', $patient->id);
@@ -79,7 +79,7 @@ class PatientApiTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->put('/api/v1/patients/'.$patient->id, [
+        $response = $this->put('/api/v1/patients/'.$patient->public_id, [
             'first_name' => 'Jane',
         ]);
 
@@ -91,7 +91,7 @@ class PatientApiTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->delete('/api/v1/patients/'.$patient->id);
+        $response = $this->delete('/api/v1/patients/'.$patient->public_id);
 
         $response->assertStatus(200);
         $this->assertSoftDeleted('patients', [

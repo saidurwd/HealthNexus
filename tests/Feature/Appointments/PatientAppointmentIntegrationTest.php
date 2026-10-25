@@ -102,7 +102,7 @@ class PatientAppointmentIntegrationTest extends TestCase
             'appointment_no' => 'APT-HIST-1',
         ]);
 
-        $response = $this->get("/admin/patients/{$this->patient->id}/appointments");
+        $response = $this->get("/admin/patients/{$this->patient->public_id}/appointments");
 
         $response->assertOk();
         $response->assertSee($appointment->appointment_no);

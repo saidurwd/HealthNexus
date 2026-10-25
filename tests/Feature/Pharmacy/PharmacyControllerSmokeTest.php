@@ -151,6 +151,6 @@ class PharmacyControllerSmokeTest extends PharmacyTestCase
 
     public function test_patient_history_page_loads(): void
     {
-        $this->get('/admin/patients/'.$this->patient->id.'/pharmacy-history')->assertOk();
+        $this->get('/admin/patients/'.$this->patient->public_id.'/pharmacy-history')->assertOk();
     }
 }

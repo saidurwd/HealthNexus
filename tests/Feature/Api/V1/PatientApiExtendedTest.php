@@ -49,11 +49,11 @@ class PatientApiExtendedTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->post("/api/v1/patients/{$patient->id}/identifiers", [
+        $this->post("/api/v1/patients/{$patient->public_id}/identifiers", [
             'identifier_type' => 'passport', 'identifier_value' => 'X123',
         ])->assertStatus(201);
 
-        $response = $this->get("/api/v1/patients/{$patient->id}/identifiers");
+        $response = $this->get("/api/v1/patients/{$patient->public_id}/identifiers");
 
         $response->assertOk()->assertJsonCount(1, 'data');
     }
@@ -62,27 +62,27 @@ class PatientApiExtendedTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->post("/api/v1/patients/{$patient->id}/contacts", ['name' => 'Emergency Contact', 'phone' => '01700000000'])
+        $this->post("/api/v1/patients/{$patient->public_id}/contacts", ['name' => 'Emergency Contact', 'phone' => '01700000000'])
             ->assertStatus(201);
 
-        $this->get("/api/v1/patients/{$patient->id}/contacts")->assertOk()->assertJsonCount(1, 'data');
+        $this->get("/api/v1/patients/{$patient->public_id}/contacts")->assertOk()->assertJsonCount(1, 'data');
     }
 
     public function test_can_add_and_list_addresses(): void
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->post("/api/v1/patients/{$patient->id}/addresses", ['address_type' => 'present', 'city' => 'Dhaka'])
+        $this->post("/api/v1/patients/{$patient->public_id}/addresses", ['address_type' => 'present', 'city' => 'Dhaka'])
             ->assertStatus(201);
 
-        $this->get("/api/v1/patients/{$patient->id}/addresses")->assertOk()->assertJsonCount(1, 'data');
+        $this->get("/api/v1/patients/{$patient->public_id}/addresses")->assertOk()->assertJsonCount(1, 'data');
     }
 
     public function test_timeline_returns_events(): void
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->get("/api/v1/patients/{$patient->id}/timeline");
+        $response = $this->get("/api/v1/patients/{$patient->public_id}/timeline");
 
         $response->assertOk();
     }

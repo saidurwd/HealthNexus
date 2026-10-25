@@ -84,14 +84,14 @@ class EncounterControllerTest extends TestCase
         ]);
 
         $encounter = Encounter::where('patient_id', $this->patient->id)->firstOrFail();
-        $response->assertRedirect('/admin/encounters/'.$encounter->id);
+        $response->assertRedirect('/admin/encounters/'.$encounter->public_id);
     }
 
     public function test_user_can_view_encounter(): void
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->get('/admin/encounters/'.$encounter->id);
+        $response = $this->get('/admin/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200);
         $response->assertViewHas('encounter');
@@ -101,11 +101,11 @@ class EncounterControllerTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
-        $response = $this->put('/admin/encounters/'.$encounter->id, [
+        $response = $this->put('/admin/encounters/'.$encounter->public_id, [
             'status' => 'completed',
         ]);
 
-        $response->assertRedirect('/admin/encounters/'.$encounter->id);
+        $response->assertRedirect('/admin/encounters/'.$encounter->public_id);
         $this->assertDatabaseHas('encounters', [
             'id' => $encounter->id,
             'status' => 'completed',
@@ -116,7 +116,7 @@ class EncounterControllerTest extends TestCase
     {
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->delete('/admin/encounters/'.$encounter->id);
+        $response = $this->delete('/admin/encounters/'.$encounter->public_id);
 
         $response->assertRedirect('/admin/encounters');
         $this->assertSoftDeleted('encounters', [

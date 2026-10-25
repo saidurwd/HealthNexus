@@ -4,7 +4,7 @@
 
 @php
     $currentPath = request()->path();
-    $isOverview = $currentPath === 'admin/patients/'.$patient->id || $currentPath === 'admin/patients/'.$patient->id.'/';
+    $isOverview = $currentPath === 'admin/patients/'.$patient->getRouteKey() || $currentPath === 'admin/patients/'.$patient->getRouteKey().'/';
 @endphp
 
 @section('page_content')

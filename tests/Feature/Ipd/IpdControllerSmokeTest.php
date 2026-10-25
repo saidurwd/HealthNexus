@@ -149,6 +149,6 @@ class IpdControllerSmokeTest extends IpdTestCase
 
     public function test_patient_history_page_loads(): void
     {
-        $this->get('/admin/patients/'.$this->patient->id.'/ipd-history')->assertOk();
+        $this->get('/admin/patients/'.$this->patient->public_id.'/ipd-history')->assertOk();
     }
 }

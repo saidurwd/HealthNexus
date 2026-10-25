@@ -100,7 +100,7 @@ class PatientControllerTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->get('/admin/patients/'.$patient->id);
+        $response = $this->get('/admin/patients/'.$patient->public_id);
 
         $response->assertStatus(200);
         $response->assertViewHas('patient');
@@ -110,7 +110,7 @@ class PatientControllerTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->put('/admin/patients/'.$patient->id, [
+        $response = $this->put('/admin/patients/'.$patient->public_id, [
             'first_name' => 'Jane',
             'last_name' => 'Smith',
             'status' => 'active',
@@ -127,7 +127,7 @@ class PatientControllerTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->delete('/admin/patients/'.$patient->id);
+        $response = $this->delete('/admin/patients/'.$patient->public_id);
 
         $response->assertRedirect('/admin/patients');
         $this->assertSoftDeleted('patients', [
@@ -195,7 +195,7 @@ class PatientControllerTest extends TestCase
             'duplicate_patient_id' => $duplicate->id,
         ]);
 
-        $response->assertRedirect('/admin/patients/'.$master->id);
+        $response->assertRedirect('/admin/patients/'.$master->public_id);
         $this->assertSoftDeleted('patients', ['id' => $duplicate->id]);
         $this->assertDatabaseHas('patient_allergies', ['patient_id' => $master->id]);
     }
@@ -208,7 +208,7 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->get('/admin/patients/'.$patient->id.'/timeline');
+        $response = $this->get('/admin/patients/'.$patient->public_id.'/timeline');
 
         $response->assertStatus(200);
         $response->assertViewHas('timeline');
@@ -223,7 +223,7 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->get('/admin/patients/'.$patient->id.'/documents');
+        $response = $this->get('/admin/patients/'.$patient->public_id.'/documents');
 
         $response->assertStatus(200);
         $response->assertViewHas('documents');
@@ -233,7 +233,7 @@ class PatientControllerTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->post('/admin/patients/'.$patient->id.'/allergies', [
+        $response = $this->post('/admin/patients/'.$patient->public_id.'/allergies', [
             'substance' => 'Penicillin',
             'severity' => 'severe',
             'reaction' => 'rash',
@@ -241,7 +241,7 @@ class PatientControllerTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/patients/'.$patient->id.'/allergies');
+        $response->assertRedirect('/admin/patients/'.$patient->public_id.'/allergies');
         $this->assertDatabaseHas('patient_allergies', [
             'patient_id' => $patient->id,
             'substance' => 'Penicillin',
@@ -252,14 +252,14 @@ class PatientControllerTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->post('/admin/patients/'.$patient->id.'/history', [
+        $response = $this->post('/admin/patients/'.$patient->public_id.'/history', [
             'condition' => 'Hypertension',
             'description' => 'High blood pressure diagnosed in 2020',
             'diagnosed_at' => '2020-01-01',
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/patients/'.$patient->id.'/history');
+        $response->assertRedirect('/admin/patients/'.$patient->public_id.'/history');
         $this->assertDatabaseHas('patient_histories', [
             'patient_id' => $patient->id,
             'condition' => 'Hypertension',
@@ -274,9 +274,9 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->delete('/admin/patients/'.$patient->id.'/allergies/'.$allergy->id);
+        $response = $this->delete('/admin/patients/'.$patient->public_id.'/allergies/'.$allergy->id);
 
-        $response->assertRedirect('/admin/patients/'.$patient->id.'/allergies');
+        $response->assertRedirect('/admin/patients/'.$patient->public_id.'/allergies');
         $this->assertSoftDeleted('patient_allergies', ['id' => $allergy->id]);
     }
 
@@ -288,9 +288,9 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->delete('/admin/patients/'.$patient->id.'/history/'.$history->id);
+        $response = $this->delete('/admin/patients/'.$patient->public_id.'/history/'.$history->id);
 
-        $response->assertRedirect('/admin/patients/'.$patient->id.'/history');
+        $response->assertRedirect('/admin/patients/'.$patient->public_id.'/history');
         $this->assertSoftDeleted('patient_histories', ['id' => $history->id]);
     }
 }

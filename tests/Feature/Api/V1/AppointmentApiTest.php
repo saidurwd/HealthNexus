@@ -73,10 +73,10 @@ class AppointmentApiTest extends TestCase
     {
         $appointment = Appointment::factory()->create(['organization_id' => $this->organization->id, 'status' => 'scheduled']);
 
-        $this->post("/api/v1/appointments/{$appointment->id}/confirm")->assertOk();
+        $this->post("/api/v1/appointments/{$appointment->public_id}/confirm")->assertOk();
         $this->assertSame('confirmed', $appointment->fresh()->status);
 
-        $this->post("/api/v1/appointments/{$appointment->id}/check-in")->assertOk();
+        $this->post("/api/v1/appointments/{$appointment->public_id}/check-in")->assertOk();
         $this->assertSame('checked_in', $appointment->fresh()->status);
     }
 
