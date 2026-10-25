@@ -36,6 +36,8 @@ class PermissionSeeder extends Seeder
             'ed.visit.update',
             'ed.triage.perform',
             'ed.zone.manage',
+            'ed.resus.record',
+            'ed.monitor.record',
             'downtime.view',
             'import.view',
             'import.patients',
@@ -669,7 +671,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record',
                 'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
                 'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
@@ -802,7 +804,7 @@ class PermissionSeeder extends Seeder
                 'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record',
                 'patients.view', 'patients.create', 'patients.update',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.amend.request',
@@ -850,7 +852,7 @@ class PermissionSeeder extends Seeder
             // to the same permission set as 'staff_nurse' rather than left orphaned on the old
             // generic 'nursing.*' stub permissions (still granted below for backward compatibility).
             'nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.view', 'nursing.create', 'nursing.update', 'nursing.administer',
                 'nursing.dashboard.view',
@@ -1157,7 +1159,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'staff_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view',
@@ -1187,7 +1189,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'senior_staff_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1217,7 +1219,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'charge_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',

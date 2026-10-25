@@ -24,4 +24,14 @@ return [
     'closed_statuses' => ['dispositioned', 'closed', 'cancelled'],
 
     'alert_roles' => ['doctor', 'charge_nurse'],
+
+    // Resuscitation timeline event types (the clock starts at the first event of the record).
+    'resus_events' => ['arrival_resus', 'cpr_started', 'airway_secured', 'iv_access', 'defibrillation', 'adrenaline_given', 'rosc', 'intubation', 'code_blue_called', 'team_arrived', 'note', 'stopped'],
+
+    // Deterioration limits for monitoring (EXAMPLE values for clinical approval, OD-12). Outside a range raises an alert.
+    // key => [low, high] (null = no limit on that side).
+    'deterioration' => [
+        'heart_rate' => [40, 130], 'respiratory_rate' => [8, 30], 'oxygen_saturation' => [90, null],
+        'body_temperature' => [35.0, 39.5], 'systolic_bp' => [90, 220],
+    ],
 ];

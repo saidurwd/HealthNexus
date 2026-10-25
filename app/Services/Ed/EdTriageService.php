@@ -8,23 +8,15 @@ use App\Models\Ed\EdVisit;
 use App\Models\User;
 use App\Services\Clinical\Alerts\AlertRequest;
 use App\Services\Clinical\Alerts\AlertService;
-use App\Services\Clinical\Observations\ObservationData;
-use App\Services\Clinical\Observations\ObservationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /** Triage and re-triage. Vital signs are written ONLY through the Observation Service (guideline 26.1 override 1). */
 class EdTriageService
 {
-    /** form field => observation catalogue key */
-    private const VITALS = [
-        'temperature' => 'body_temperature', 'pulse' => 'heart_rate', 'respiratory_rate' => 'respiratory_rate',
-        'oxygen_saturation' => 'oxygen_saturation', 'weight' => 'body_weight',
-    ];
-
     public function __construct(
         private readonly TriageScale $scale,
-        private readonly ObservationService $observations,
+        private readonly EdVitalsRecorder $vitals,
         private readonly AlertService $alerts,
         private readonly EdVisitService $visits,
     ) {}
@@ -46,7 +38,7 @@ class EdTriageService
             $isRetriage = $locked->triaged_at !== null;
             $previousLevel = $locked->triage_level;
 
-            $setId = $this->recordVitals($locked, $nurse, $data['vitals'] ?? []);
+            $setId = $this->vitals->record($locked, $nurse, $data['vitals'] ?? []);
 
             $record = EdTriageRecord::create([
                 'organization_id' => $locked->organization_id, 'visit_id' => $locked->id, 'level' => $level, 'is_retriage' => $isRetriage,
@@ -78,32 +70,6 @@ class EdTriageService
 
             return $record;
         });
-    }
-
-    private function recordVitals(EdVisit $visit, User $nurse, array $vitals): ?int
-    {
-        $base = fn (array $o) => new ObservationData(...array_merge([
-            'organizationId' => $visit->organization_id, 'patientId' => $visit->patient_id, 'contextType' => 'ed', 'encounterId' => $visit->encounter_id,
-            'contextId' => $visit->id, 'branchId' => $visit->branch_id, 'sourceModule' => 'ed',
-        ], $o));
-
-        $setId = null;
-        $systolic = $vitals['systolic'] ?? null;
-        $diastolic = $vitals['diastolic'] ?? null;
-
-        if (filled($systolic) && filled($diastolic)) {
-            $setId = $this->observations->recordPanel('blood_pressure', ['systolic_bp' => (float) $systolic, 'diastolic_bp' => (float) $diastolic], $base([]), $nurse)['set']->id;
-        } elseif (filled($systolic) || filled($diastolic)) {
-            throw ValidationException::withMessages(['vitals' => 'Blood pressure needs both the upper (systolic) and lower (diastolic) number.']);
-        }
-
-        foreach (self::VITALS as $field => $key) {
-            if (filled($vitals[$field] ?? null)) {
-                $this->observations->record($base(['key' => $key, 'valueNumber' => (float) $vitals[$field]]), $nurse);
-            }
-        }
-
-        return $setId;
     }
 
     private function alertIfMoreUrgent(EdVisit $visit, User $nurse, int $level, ?int $previous): void

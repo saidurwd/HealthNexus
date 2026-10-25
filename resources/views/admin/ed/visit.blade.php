@@ -6,6 +6,7 @@
     <x-patient-banner :patient="$visit->patient" />
 
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+    @if(session('warning'))<div class="alert alert-warning">{{ session('warning') }}</div>@endif
     @if($errors->any())<div class="alert alert-danger">@foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>@endif
 
     <div class="row g-3">
@@ -81,6 +82,46 @@
             </div>
             @endif
             @endcan
+
+            @if($visit->isActive())
+            @can('ed.monitor.record')
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Record observations') }}</h3></div>
+                <form method="POST" action="{{ route('admin.ed.visits.monitor', $visit) }}" data-enter-next>
+                    @csrf
+                    <div class="card-body row g-2">
+                        @foreach([['temperature', 'Temperature (°C)'], ['pulse', 'Pulse Rate (bpm)'], ['respiratory_rate', 'Respiratory Rate'], ['oxygen_saturation', 'Oxygen Saturation (%)'], ['systolic', 'Systolic (mmHg)'], ['diastolic', 'Diastolic (mmHg)']] as [$field, $label])
+                            <div class="col-6 col-md-4"><label class="form-label">{{ __($label) }}</label><input type="number" step="0.1" name="vitals[{{ $field }}]" class="form-control"></div>
+                        @endforeach
+                    </div>
+                    <div class="card-footer"><button class="btn btn-outline-primary">{{ __('Save observations') }}</button></div>
+                </form>
+            </div>
+            @endcan
+            @endif
+
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Resuscitation record') }}</h3></div>
+                @if($visit->isActive())
+                @can('ed.resus.record')
+                <form method="POST" action="{{ route('admin.ed.visits.resus', $visit) }}" class="card-body d-flex flex-wrap gap-2">
+                    @csrf
+                    <select name="event_type" class="form-select w-auto" required>
+                        @foreach(config('ed.resus_events') as $type)<option value="{{ $type }}">{{ __(\Illuminate\Support\Str::headline($type)) }}</option>@endforeach
+                    </select>
+                    <input type="text" name="detail" class="form-control w-auto flex-grow-1" maxlength="500" placeholder="{{ __('Details (optional)') }}">
+                    <button class="btn btn-danger">{{ __('Add to record') }}</button>
+                </form>
+                @endcan
+                @endif
+                <ul class="list-group list-group-flush">
+                    @forelse($visit->resusEvents as $event)
+                        <li class="list-group-item small">{{ $event->occurred_at->format('H:i:s') }} — <strong>{{ __(\Illuminate\Support\Str::headline($event->event_type)) }}</strong> @if($event->detail)<span class="text-muted">· {{ $event->detail }}</span>@endif <small class="text-muted">{{ $event->recorder?->name }}</small></li>
+                    @empty
+                        <li class="list-group-item text-muted">{{ __('No resuscitation events recorded.') }}</li>
+                    @endforelse
+                </ul>
+            </div>
 
             <div class="card">
                 <div class="card-header"><h3 class="card-title">{{ __('Triage history') }}</h3></div>

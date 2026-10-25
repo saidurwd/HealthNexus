@@ -64,7 +64,7 @@ class EdVisitController extends Controller
         $this->authorizeVisit($request, $visit, 'ed.visit.view');
 
         return view('admin.ed.visit', [
-            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory']),
+            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder']),
             'levels' => $this->scale->levels(),
             'freeBays' => EdBay::query()->where('organization_id', $visit->organization_id)->where('status', EdBay::AVAILABLE)->where('is_active', true)->with('zone')->orderBy('zone_id')->orderBy('code')->get(),
         ]);

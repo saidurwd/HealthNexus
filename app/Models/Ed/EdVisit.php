@@ -79,6 +79,12 @@ class EdVisit extends Model
         return $this->belongsTo(User::class, 'nurse_id');
     }
 
+    /** @return HasMany<EdResusEvent, $this> */
+    public function resusEvents(): HasMany
+    {
+        return $this->hasMany(EdResusEvent::class, 'visit_id')->orderBy('occurred_at');
+    }
+
     public function triageRecords(): HasMany
     {
         return $this->hasMany(EdTriageRecord::class, 'visit_id');

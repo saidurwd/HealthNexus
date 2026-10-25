@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Emergency\Http\Controllers\Web\EdBoardController;
+use Modules\Emergency\Http\Controllers\Web\EdResusController;
 use Modules\Emergency\Http\Controllers\Web\EdVisitController;
 use Modules\Emergency\Http\Controllers\Web\EdZoneController;
 
@@ -18,6 +19,9 @@ Route::prefix('emergency')->name('ed.')->group(function () {
     Route::delete('visits/{visit}/bay', [EdVisitController::class, 'releaseBay'])->name('visits.bay.release');
     Route::post('visits/{visit}/start', [EdVisitController::class, 'startTreatment'])->name('visits.start');
     Route::put('visits/{visit}/team', [EdVisitController::class, 'team'])->name('visits.team');
+
+    Route::post('visits/{visit}/resus', [EdResusController::class, 'event'])->name('visits.resus');
+    Route::post('visits/{visit}/monitor', [EdResusController::class, 'monitor'])->name('visits.monitor');
 
     Route::get('zones', [EdZoneController::class, 'index'])->name('zones.index');
     Route::post('zones', [EdZoneController::class, 'storeZone'])->name('zones.store');
