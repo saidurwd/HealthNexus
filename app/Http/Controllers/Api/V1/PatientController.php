@@ -29,6 +29,8 @@ class PatientController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Patient::class);
+
         $user = $request->user();
 
         $patients = Patient::query()
@@ -46,6 +48,8 @@ class PatientController extends Controller
 
     public function search(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Patient::class);
+
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $search = $request->input('q', '');
 
@@ -255,6 +259,8 @@ class PatientController extends Controller
 
     public function duplicateCheck(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Patient::class);
+
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $duplicates = $this->patientService->detectDuplicates(
@@ -271,6 +277,8 @@ class PatientController extends Controller
 
     public function duplicates(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Patient::class);
+
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $candidates = PatientDuplicateCandidate::query()

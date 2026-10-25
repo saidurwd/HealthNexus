@@ -12,7 +12,7 @@ class AppointmentPolicy
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('appointments.view') || $user->hasRole('super_admin');
     }
 
     public function view(User $user, Appointment $appointment): bool

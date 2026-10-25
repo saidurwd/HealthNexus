@@ -12,7 +12,7 @@ class PatientPolicy
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('patients.view') || $user->hasRole('super_admin');
     }
 
     public function view(User $user, Patient $patient): bool

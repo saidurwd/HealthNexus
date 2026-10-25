@@ -26,9 +26,11 @@ class PatientApiTest extends TestCase
 
         $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
+        Permission::create(['name' => 'patients.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.delete', 'guard_name' => 'web']);
+        $this->user->givePermissionTo('patients.view');
         $this->user->givePermissionTo('patients.create');
         $this->user->givePermissionTo('patients.update');
         $this->user->givePermissionTo('patients.delete');

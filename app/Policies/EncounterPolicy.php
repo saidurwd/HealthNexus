@@ -13,7 +13,7 @@ class EncounterPolicy
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('encounters.view') || $user->hasRole('super_admin');
     }
 
     public function view(User $user, Encounter $encounter): bool

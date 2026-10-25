@@ -23,6 +23,8 @@ class OrganizationController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Organization::class);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:50', 'unique:organizations,code'],

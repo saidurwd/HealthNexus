@@ -27,6 +27,8 @@ class AppointmentController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $user = $request->user();
 
         $appointments = Appointment::query()
@@ -43,6 +45,8 @@ class AppointmentController extends Controller
 
     public function search(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $search = $request->input('q', '');
 
@@ -61,6 +65,8 @@ class AppointmentController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Appointment::class);
+
         $validated = $request->validate([
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'doctor_id' => ['nullable', 'integer', 'exists:users,id'],
@@ -172,6 +178,8 @@ class AppointmentController extends Controller
 
     public function availability(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $validated = $request->validate([
             'provider_id' => ['required', 'integer', 'exists:providers,id'],
             'date' => ['required', 'date'],
@@ -189,6 +197,8 @@ class AppointmentController extends Controller
 
     public function calendar(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $date = $request->input('date', today()->toDateString());
 

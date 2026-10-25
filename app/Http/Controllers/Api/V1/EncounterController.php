@@ -27,6 +27,8 @@ class EncounterController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Encounter::class);
+
         $user = $request->user();
 
         $encounters = Encounter::query()

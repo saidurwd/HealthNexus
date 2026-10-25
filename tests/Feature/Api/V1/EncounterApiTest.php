@@ -36,7 +36,7 @@ class EncounterApiTest extends TestCase
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'staff', 'organization_id' => $this->organization->id]);
 
         foreach ([
-            'encounters.create', 'encounters.update', 'encounters.delete',
+            'encounters.view', 'encounters.create', 'encounters.update', 'encounters.delete',
             'clinical.vitals.create', 'clinical.diagnosis.create', 'clinical.order.create',
             'prescription.create', 'prescription.issue', 'prescription.cancel', 'encounter.amend',
         ] as $permission) {

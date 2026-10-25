@@ -25,7 +25,7 @@ class PatientApiExtendedTest extends TestCase
         $this->organization = Organization::factory()->create();
         $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
-        foreach (['patients.create', 'patients.update', 'patients.merge'] as $permission) {
+        foreach (['patients.view', 'patients.create', 'patients.update', 'patients.merge'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
