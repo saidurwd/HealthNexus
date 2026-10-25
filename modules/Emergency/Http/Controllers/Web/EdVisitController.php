@@ -4,9 +4,14 @@ namespace Modules\Emergency\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
+use App\Models\ClinicalOrder;
 use App\Models\Ed\EdBay;
+use App\Models\Ed\EdMedicationAdministration;
 use App\Models\Ed\EdVisit;
+use App\Models\EncounterProcedure;
 use App\Models\Patient;
+use App\Models\Prescription;
+use App\Models\User;
 use App\Services\AuditLogger;
 use App\Services\Ed\EdBayService;
 use App\Services\Ed\EdTriageService;
@@ -66,6 +71,11 @@ class EdVisitController extends Controller
         return view('admin.ed.visit', [
             'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder']),
             'levels' => $this->scale->levels(),
+            'orders' => ClinicalOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
+            'prescriptions' => Prescription::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('prescribed_at')->get(),
+            'procedures' => EncounterProcedure::query()->where('encounter_id', $visit->encounter_id)->latest('recorded_at')->get(),
+            'medications' => EdMedicationAdministration::query()->where('visit_id', $visit->id)->with(['giver', 'orderer'])->latest('given_at')->get(),
+            'doctors' => User::query()->where('is_active', true)->whereHas('organizations', fn ($q) => $q->where('organizations.id', $visit->organization_id))->whereHas('roles', fn ($q) => $q->where('name', 'doctor'))->orderBy('name')->get(['id', 'name']),
             'freeBays' => EdBay::query()->where('organization_id', $visit->organization_id)->where('status', EdBay::AVAILABLE)->where('is_active', true)->with('zone')->orderBy('zone_id')->orderBy('code')->get(),
         ]);
     }

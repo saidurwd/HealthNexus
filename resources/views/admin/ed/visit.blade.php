@@ -124,6 +124,56 @@
             </div>
 
             <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Orders, medicines and procedures') }}</h3></div>
+                @if($visit->isActive())
+                <div class="card-body">
+                    @can('ed.order.place')
+                    <form method="POST" action="{{ route('admin.ed.visits.orders', $visit) }}" class="d-flex flex-wrap gap-2 mb-2">
+                        @csrf
+                        <select name="order_type" class="form-select w-auto"><option value="laboratory">{{ __('Laboratory') }}</option><option value="radiology">{{ __('Radiology') }}</option></select>
+                        <input type="text" name="items[0][name]" class="form-control w-auto flex-grow-1" placeholder="{{ __('Test or scan') }}" maxlength="200" required>
+                        <select name="priority" class="form-select w-auto"><option value="">{{ __('Automatic priority') }}</option><option value="routine">{{ __('Routine') }}</option><option value="urgent">{{ __('Urgent') }}</option><option value="stat">{{ __('Stat') }}</option></select>
+                        <button class="btn btn-outline-primary">{{ __('Send order') }}</button>
+                    </form>
+                    <form method="POST" action="{{ route('admin.ed.visits.prescriptions', $visit) }}" class="d-flex flex-wrap gap-2 mb-2">
+                        @csrf
+                        <input type="text" name="items[0][medicine_name]" class="form-control w-auto flex-grow-1" placeholder="{{ __('Medicine') }}" maxlength="200" required>
+                        <input type="text" name="items[0][strength]" class="form-control w-auto" placeholder="{{ __('Strength') }}" maxlength="100">
+                        <input type="text" name="items[0][frequency]" class="form-control w-auto" placeholder="{{ __('Frequency') }}" maxlength="100" required>
+                        <input type="text" name="items[0][duration]" class="form-control w-auto" placeholder="{{ __('Duration') }}" maxlength="50" required>
+                        <button class="btn btn-outline-primary">{{ __('Send to pharmacy') }}</button>
+                    </form>
+                    @endcan
+                    @can('ed.medication.administer')
+                    <form method="POST" action="{{ route('admin.ed.visits.medications', $visit) }}" class="d-flex flex-wrap gap-2 mb-2 align-items-center">
+                        @csrf
+                        <input type="text" name="drug_name" class="form-control w-auto flex-grow-1" placeholder="{{ __('Medicine given') }}" maxlength="200" required>
+                        <input type="text" name="dose" class="form-control w-auto" placeholder="{{ __('Dose') }}" maxlength="100" required>
+                        <input type="text" name="route" class="form-control w-auto" placeholder="{{ __('Route') }}" maxlength="50" required>
+                        <label class="form-check mb-0"><input type="checkbox" name="is_verbal_order" value="1" class="form-check-input"> {{ __('Verbal order') }}</label>
+                        <select name="ordered_by" class="form-select w-auto"><option value="">{{ __('Ordered by') }}</option>@foreach($doctors as $doctor)<option value="{{ $doctor->id }}">{{ $doctor->name }}</option>@endforeach</select>
+                        <button class="btn btn-outline-danger">{{ __('Record dose') }}</button>
+                    </form>
+                    @endcan
+                    @can('ed.procedure.record')
+                    <form method="POST" action="{{ route('admin.ed.visits.procedures', $visit) }}" class="d-flex flex-wrap gap-2">
+                        @csrf
+                        <input type="text" name="procedure_name" class="form-control w-auto flex-grow-1" placeholder="{{ __('Procedure done') }}" maxlength="200" required>
+                        <input type="text" name="notes" class="form-control w-auto" placeholder="{{ __('Notes') }}" maxlength="1000">
+                        <button class="btn btn-outline-secondary">{{ __('Record procedure') }}</button>
+                    </form>
+                    @endcan
+                </div>
+                @endif
+                <ul class="list-group list-group-flush small">
+                    @foreach($orders as $order)<li class="list-group-item">{{ $order->ordered_at?->format('H:i') }} — {{ __(\Illuminate\Support\Str::headline($order->order_type)) }}: {{ $order->items->pluck('item_name')->implode(', ') }} <span class="badge text-bg-secondary">{{ __(\Illuminate\Support\Str::headline($order->priority)) }}</span></li>@endforeach
+                    @foreach($prescriptions as $rx)<li class="list-group-item">{{ $rx->prescribed_at?->format('H:i') }} — {{ __('Prescription') }}: {{ $rx->items->pluck('medicine_name')->implode(', ') }}</li>@endforeach
+                    @foreach($medications as $m)<li class="list-group-item">{{ $m->given_at->format('H:i') }} — {{ __('Given') }}: <strong>{{ $m->drug_name }}</strong> {{ $m->dose }} {{ $m->route }} @if($m->is_verbal_order)<span class="badge text-bg-warning">{{ __('Verbal order') }}</span> {{ $m->orderer?->name }}@endif <small class="text-muted">{{ $m->giver?->name }}</small></li>@endforeach
+                    @foreach($procedures as $p)<li class="list-group-item">{{ $p->recorded_at?->format('H:i') }} — {{ __('Procedure') }}: {{ $p->procedure_name }}</li>@endforeach
+                </ul>
+            </div>
+
+            <div class="card">
                 <div class="card-header"><h3 class="card-title">{{ __('Triage history') }}</h3></div>
                 <ul class="list-group list-group-flush">
                     @forelse($visit->triageRecords->sortByDesc('assessed_at') as $record)
