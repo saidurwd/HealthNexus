@@ -174,6 +174,64 @@
             </div>
 
             <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Protocols') }}</h3></div>
+                @if($visit->isActive())
+                @can('ed.protocol.run')
+                <form method="POST" action="{{ route('admin.ed.visits.protocols', $visit) }}" class="card-body d-flex gap-2">
+                    @csrf
+                    <select name="protocol" class="form-select" required>@foreach($protocolList as $key => $protocol)<option value="{{ $key }}">{{ __($protocol['name']) }}</option>@endforeach</select>
+                    <button class="btn btn-outline-danger">{{ __('Start protocol') }}</button>
+                </form>
+                @endcan
+                @endif
+                @foreach($visit->protocolRuns as $run)
+                    <div class="card-body border-top">
+                        <div class="d-flex justify-content-between"><strong>{{ __($protocolList[$run->protocol]['name'] ?? $run->protocol) }}</strong>
+                            <span class="small text-muted">{{ $run->started_at->format('H:i') }} · {{ __(\Illuminate\Support\Str::headline($run->status)) }}</span></div>
+                        <ul class="list-unstyled mb-0 mt-2">
+                            @foreach($run->steps as $step)
+                                <li class="d-flex align-items-center gap-2 py-1">
+                                    @if($step->done_at)<i class="bi bi-check-circle-fill text-success" aria-hidden="true"></i>
+                                    @elseif($step->isOverdue())<i class="bi bi-exclamation-circle-fill text-danger" aria-hidden="true"></i>
+                                    @else<i class="bi bi-circle text-muted" aria-hidden="true"></i>@endif
+                                    <span class="flex-grow-1">{{ __($step->label) }} @if($step->due_at && ! $step->done_at)<small class="{{ $step->isOverdue() ? 'text-danger' : 'text-muted' }}">({{ __('due') }} {{ $step->due_at->format('H:i') }})</small>@endif @if($step->done_at)<small class="text-muted">{{ $step->done_at->format('H:i') }}</small>@endif</span>
+                                    @if(! $step->done_at && $run->status === 'active')
+                                        @can('ed.protocol.run')<form method="POST" action="{{ route('admin.ed.protocol-steps.done', $step) }}">@csrf<button class="btn btn-sm btn-outline-success">{{ __('Done') }}</button></form>@endcan
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                        @if($run->status === 'active')
+                            @can('ed.protocol.run')<form method="POST" action="{{ route('admin.ed.protocol-runs.cancel', $run) }}" class="mt-2">@csrf @method('DELETE')<button class="btn btn-sm btn-link text-muted">{{ __('Stop protocol') }}</button></form>@endcan
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Injuries (body map)') }}</h3></div>
+                @if($visit->isActive())
+                @can('ed.protocol.run')
+                <form method="POST" action="{{ route('admin.ed.visits.injuries', $visit) }}" class="card-body d-flex flex-wrap gap-2">
+                    @csrf
+                    <select name="body_region" class="form-select w-auto" required>@foreach($regions as $r)<option value="{{ $r }}">{{ __($regionLabels[$r] ?? \Illuminate\Support\Str::headline($r)) }}</option>@endforeach</select>
+                    <select name="injury_type" class="form-select w-auto" required>@foreach($injuryTypes as $t)<option value="{{ $t }}">{{ __(\Illuminate\Support\Str::headline($t)) }}</option>@endforeach</select>
+                    <select name="severity" class="form-select w-auto" required>@foreach($severities as $sv)<option value="{{ $sv }}">{{ __(\Illuminate\Support\Str::headline($sv)) }}</option>@endforeach</select>
+                    <input type="text" name="notes" class="form-control w-auto flex-grow-1" maxlength="500" placeholder="{{ __('Notes') }}">
+                    <button class="btn btn-outline-secondary">{{ __('Add injury') }}</button>
+                </form>
+                @endcan
+                @endif
+                <ul class="list-group list-group-flush small">
+                    @forelse($visit->injuries as $injury)
+                        <li class="list-group-item"><strong>{{ __($regionLabels[$injury->body_region] ?? \Illuminate\Support\Str::headline($injury->body_region)) }}</strong> — {{ __(\Illuminate\Support\Str::headline($injury->injury_type)) }} <span class="badge text-bg-{{ in_array($injury->severity, ['severe', 'critical']) ? 'danger' : 'secondary' }}">{{ __(\Illuminate\Support\Str::headline($injury->severity)) }}</span> {{ $injury->notes }}</li>
+                    @empty
+                        <li class="list-group-item text-muted">{{ __('No injuries recorded.') }}</li>
+                    @endforelse
+                </ul>
+            </div>
+
+            <div class="card">
                 <div class="card-header"><h3 class="card-title">{{ __('Triage history') }}</h3></div>
                 <ul class="list-group list-group-flush">
                     @forelse($visit->triageRecords->sortByDesc('assessed_at') as $record)

@@ -85,6 +85,18 @@ class EdVisit extends Model
         return $this->hasMany(EdResusEvent::class, 'visit_id')->orderBy('occurred_at');
     }
 
+    /** @return HasMany<EdProtocolRun, $this> */
+    public function protocolRuns(): HasMany
+    {
+        return $this->hasMany(EdProtocolRun::class, 'visit_id')->orderBy('started_at');
+    }
+
+    /** @return HasMany<EdInjury, $this> */
+    public function injuries(): HasMany
+    {
+        return $this->hasMany(EdInjury::class, 'visit_id')->orderBy('id');
+    }
+
     public function triageRecords(): HasMany
     {
         return $this->hasMany(EdTriageRecord::class, 'visit_id');

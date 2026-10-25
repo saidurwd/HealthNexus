@@ -10,6 +10,22 @@
         <span class="text-muted ms-auto small">{{ __('Updates every :n seconds', ['n' => $pollSeconds]) }} · <span id="ed-updated">—</span></span>
     </div>
 
+    @if($mci)
+        <div class="alert alert-danger d-flex flex-wrap gap-3 align-items-center" role="alert">
+            <strong><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> {{ __('Mass-casualty mode is on') }}</strong>
+            @foreach($mciCounts as $level => $total)<span class="badge text-bg-dark">{{ $level === 'untriaged' ? __('Not triaged') : __('Level').' '.$level }}: {{ $total }}</span>@endforeach
+            @can('ed.mci.manage')
+                <form method="POST" action="{{ route('admin.ed.mci') }}" class="ms-auto">@csrf<input type="hidden" name="action" value="deactivate"><button class="btn btn-sm btn-light">{{ __('Turn off') }}</button></form>
+            @endcan
+        </div>
+    @else
+        @can('ed.mci.manage')
+            <form method="POST" action="{{ route('admin.ed.mci') }}" class="d-flex gap-2 mb-3">@csrf<input type="hidden" name="action" value="activate">
+                <input type="text" name="reason" class="form-control w-auto" maxlength="300" placeholder="{{ __('Reason (optional)') }}">
+                <button class="btn btn-outline-danger">{{ __('Turn on mass-casualty mode') }}</button></form>
+        @endcan
+    @endif
+
     <div class="row mb-3" id="ed-counts"></div>
 
     <div class="card">

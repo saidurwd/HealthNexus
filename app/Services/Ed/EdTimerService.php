@@ -3,6 +3,8 @@
 namespace App\Services\Ed;
 
 use App\Models\Clinical\ClinicalAlert;
+use App\Models\Ed\EdProtocolRun;
+use App\Models\Ed\EdProtocolStep;
 use App\Models\Ed\EdVisit;
 use App\Services\Clinical\Alerts\AlertRequest;
 use App\Services\Clinical\Alerts\AlertService;
@@ -41,6 +43,24 @@ class EdTimerService
                 }
             }
         });
+
+        $raised += $this->checkProtocols();
+
+        return $raised;
+    }
+
+    /** A protocol step past its target and not done raises one alert per step. */
+    private function checkProtocols(): int
+    {
+        $raised = 0;
+
+        EdProtocolStep::query()->whereNull('done_at')->whereNotNull('due_at')->where('due_at', '<=', now())
+            ->whereHas('run', fn ($q) => $q->where('status', EdProtocolRun::ACTIVE))->with('run.visit')->orderBy('id')
+            ->each(function (EdProtocolStep $step) use (&$raised) {
+                $visit = $step->run->visit;
+                $name = config("ed_protocols.{$step->run->protocol}.name", $step->run->protocol);
+                $raised += $this->raise($visit, 'ed_protocol_overdue', 'critical', "{$visit->visit_number} — {$name}: \"{$step->label}\" is overdue.", "ed-protocol:{$step->id}");
+            });
 
         return $raised;
     }

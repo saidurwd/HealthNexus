@@ -14,6 +14,7 @@ use App\Models\Prescription;
 use App\Models\User;
 use App\Services\AuditLogger;
 use App\Services\Ed\EdBayService;
+use App\Services\Ed\EdProtocolService;
 use App\Services\Ed\EdTriageService;
 use App\Services\Ed\EdVisitService;
 use App\Services\Ed\TriageScale;
@@ -69,8 +70,10 @@ class EdVisitController extends Controller
         $this->authorizeVisit($request, $visit, 'ed.visit.view');
 
         return view('admin.ed.visit', [
-            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder']),
+            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries']),
             'levels' => $this->scale->levels(),
+            'protocolList' => app(EdProtocolService::class)->protocols(),
+            'regions' => config('ed_protocols.body_regions'), 'regionLabels' => ['head' => 'Head and scalp', 'back' => 'Back / spine'], 'injuryTypes' => config('ed_protocols.injury_types'), 'severities' => config('ed_protocols.injury_severities'),
             'orders' => ClinicalOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
             'prescriptions' => Prescription::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('prescribed_at')->get(),
             'procedures' => EncounterProcedure::query()->where('encounter_id', $visit->encounter_id)->latest('recorded_at')->get(),

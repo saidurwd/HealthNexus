@@ -52,7 +52,7 @@ class EdVisitService
                 'visit_number' => $this->numbers->next('ed.visit', $branch->organization_id, $branch->id, prefix: 'EDV', format: '{PREFIX}-{YEAR}-{SEQ:8}', userId: $user->id),
                 'arrival_at' => $arrival, 'arrival_mode' => $mode, 'chief_complaint' => $data['chief_complaint'] ?? null,
                 'status' => EdVisit::AWAITING_TRIAGE, 'triage_due_at' => $arrival->copy()->addMinutes($this->scale->doorToTriageMinutes()),
-                'is_unknown_patient' => $unknown, 'is_mass_casualty' => (bool) ($data['is_mass_casualty'] ?? false), 'created_by' => $user->id,
+                'is_unknown_patient' => $unknown, 'is_mass_casualty' => (bool) ($data['is_mass_casualty'] ?? false) || app(EdMciService::class)->active($branch->organization_id, $branch->id) !== null, 'created_by' => $user->id,
             ]);
 
             $this->recordStatus($visit, null, EdVisit::AWAITING_TRIAGE, $user, $unknown ? 'Unknown patient registered' : 'Arrived');

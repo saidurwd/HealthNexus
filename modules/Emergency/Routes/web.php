@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Emergency\Http\Controllers\Web\EdBoardController;
 use Modules\Emergency\Http\Controllers\Web\EdOrderController;
+use Modules\Emergency\Http\Controllers\Web\EdProtocolController;
 use Modules\Emergency\Http\Controllers\Web\EdResusController;
 use Modules\Emergency\Http\Controllers\Web\EdVisitController;
 use Modules\Emergency\Http\Controllers\Web\EdZoneController;
@@ -28,6 +29,12 @@ Route::prefix('emergency')->name('ed.')->group(function () {
     Route::post('visits/{visit}/prescriptions', [EdOrderController::class, 'prescribe'])->name('visits.prescriptions');
     Route::post('visits/{visit}/medications', [EdOrderController::class, 'medication'])->name('visits.medications');
     Route::post('visits/{visit}/procedures', [EdOrderController::class, 'procedure'])->name('visits.procedures');
+
+    Route::post('visits/{visit}/protocols', [EdProtocolController::class, 'start'])->name('visits.protocols');
+    Route::post('visits/{visit}/injuries', [EdProtocolController::class, 'injury'])->name('visits.injuries');
+    Route::post('protocol-steps/{step}/done', [EdProtocolController::class, 'completeStep'])->name('protocol-steps.done');
+    Route::delete('protocol-runs/{run}', [EdProtocolController::class, 'cancel'])->name('protocol-runs.cancel');
+    Route::post('mci', [EdProtocolController::class, 'mci'])->name('mci');
 
     Route::get('zones', [EdZoneController::class, 'index'])->name('zones.index');
     Route::post('zones', [EdZoneController::class, 'storeZone'])->name('zones.store');

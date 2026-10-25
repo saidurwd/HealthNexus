@@ -4,6 +4,7 @@ namespace Modules\Emergency\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Services\Ed\EdBoardQuery;
+use App\Services\Ed\EdMciService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class EdBoardController extends Controller
 {
-    public function __construct(private readonly EdBoardQuery $board, private readonly TenantContextResolver $tenant) {}
+    public function __construct(private readonly EdBoardQuery $board, private readonly TenantContextResolver $tenant, private readonly EdMciService $mci) {}
 
     public function index(Request $request)
     {
@@ -21,6 +22,8 @@ class EdBoardController extends Controller
             'board' => $this->board->forBranch($this->tenant->getOrganizationId(), $this->tenant->getBranchId()),
             'bays' => $this->board->bays($this->tenant->getOrganizationId(), $this->tenant->getBranchId()),
             'pollSeconds' => 8,
+            'mci' => $this->tenant->getBranchId() ? $this->mci->active($this->tenant->getOrganizationId(), $this->tenant->getBranchId()) : null,
+            'mciCounts' => $this->tenant->getBranchId() ? $this->mci->counts($this->tenant->getOrganizationId(), $this->tenant->getBranchId()) : [],
             'labels' => ['waiting' => __('min'), 'unknown' => __('Unknown'), 'late' => __('Over target'), 'retriage' => __('Re-triage due'), 'triage' => __('Triage overdue'), 'mci' => __('Mass casualty'), 'none' => __('Not triaged'), 'total' => __('Total'), 'lost' => __('Connection lost — retrying')],
             'statusText' => collect(['awaiting_triage', 'waiting', 'in_treatment', 'observation', 'awaiting_disposition'])->mapWithKeys(fn ($s) => [$s => __(Str::headline($s))])->all(),
         ]);
