@@ -97,6 +97,18 @@ class EdVisit extends Model
         return $this->hasMany(EdInjury::class, 'visit_id')->orderBy('id');
     }
 
+    /** @return HasMany<EdConsult, $this> */
+    public function consults(): HasMany
+    {
+        return $this->hasMany(EdConsult::class, 'visit_id')->orderBy('requested_at');
+    }
+
+    /** @return HasMany<EdObservationStay, $this> */
+    public function observationStays(): HasMany
+    {
+        return $this->hasMany(EdObservationStay::class, 'visit_id')->orderBy('started_at');
+    }
+
     public function triageRecords(): HasMany
     {
         return $this->hasMany(EdTriageRecord::class, 'visit_id');

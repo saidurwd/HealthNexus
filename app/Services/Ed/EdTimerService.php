@@ -3,6 +3,8 @@
 namespace App\Services\Ed;
 
 use App\Models\Clinical\ClinicalAlert;
+use App\Models\Ed\EdConsult;
+use App\Models\Ed\EdObservationStay;
 use App\Models\Ed\EdProtocolRun;
 use App\Models\Ed\EdProtocolStep;
 use App\Models\Ed\EdVisit;
@@ -45,6 +47,8 @@ class EdTimerService
         });
 
         $raised += $this->checkProtocols();
+        $raised += $this->checkConsults();
+        $raised += $this->checkObservation();
 
         return $raised;
     }
@@ -61,6 +65,34 @@ class EdTimerService
                 $name = config("ed_protocols.{$step->run->protocol}.name", $step->run->protocol);
                 $raised += $this->raise($visit, 'ed_protocol_overdue', 'critical', "{$visit->visit_number} — {$name}: \"{$step->label}\" is overdue.", "ed-protocol:{$step->id}");
             });
+
+        return $raised;
+    }
+
+    /** A specialist request not answered by its due time raises one alert. */
+    private function checkConsults(): int
+    {
+        $raised = 0;
+
+        EdConsult::query()->where('status', EdConsult::REQUESTED)->where('due_at', '<=', now())->with('visit')->orderBy('id')->each(function (EdConsult $consult) use (&$raised) {
+            $visit = $consult->visit;
+            if ($visit->isActive()) {
+                $raised += $this->raise($visit, 'ed_consult_overdue', $consult->urgency === 'emergent' ? 'critical' : 'warning', "{$visit->visit_number}: {$consult->specialty} consultation ({$consult->urgency}) has not been answered.", "ed-consult:{$consult->id}");
+            }
+        });
+
+        return $raised;
+    }
+
+    /** A stay longer than the review limit asks for a decision. */
+    private function checkObservation(): int
+    {
+        $raised = 0;
+        $limit = now()->subHours((int) config('ed.observation.long_stay_hours'));
+
+        EdObservationStay::query()->whereNull('ended_at')->where('started_at', '<=', $limit)->with('visit')->orderBy('id')->each(function (EdObservationStay $stay) use (&$raised) {
+            $raised += $this->raise($stay->visit, 'ed_observation_long', 'warning', "{$stay->visit->visit_number} has been in the observation unit since {$stay->started_at->format('d M H:i')}.", "ed-obs-long:{$stay->id}");
+        });
 
         return $raised;
     }

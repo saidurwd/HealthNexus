@@ -9,8 +9,10 @@ use App\Models\Ed\EdBay;
 use App\Models\Ed\EdMedicationAdministration;
 use App\Models\Ed\EdVisit;
 use App\Models\EncounterProcedure;
+use App\Models\Laboratory\LabOrder;
 use App\Models\Patient;
 use App\Models\Prescription;
+use App\Models\Radiology\RadiologyOrder;
 use App\Models\User;
 use App\Services\AuditLogger;
 use App\Services\Ed\EdBayService;
@@ -70,8 +72,11 @@ class EdVisitController extends Controller
         $this->authorizeVisit($request, $visit, 'ed.visit.view');
 
         return view('admin.ed.visit', [
-            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries']),
+            'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries', 'consults.responder', 'observationStays']),
             'levels' => $this->scale->levels(),
+            'labOrders' => LabOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
+            'radOrders' => RadiologyOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),
+            'urgencies' => array_keys(config('ed.consult_sla')),
             'protocolList' => app(EdProtocolService::class)->protocols(),
             'regions' => config('ed_protocols.body_regions'), 'regionLabels' => ['head' => 'Head and scalp', 'back' => 'Back / spine'], 'injuryTypes' => config('ed_protocols.injury_types'), 'severities' => config('ed_protocols.injury_severities'),
             'orders' => ClinicalOrder::query()->where('encounter_id', $visit->encounter_id)->with('items')->latest('ordered_at')->get(),

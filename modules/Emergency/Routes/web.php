@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Emergency\Http\Controllers\Web\EdBoardController;
+use Modules\Emergency\Http\Controllers\Web\EdFollowUpController;
 use Modules\Emergency\Http\Controllers\Web\EdOrderController;
 use Modules\Emergency\Http\Controllers\Web\EdProtocolController;
 use Modules\Emergency\Http\Controllers\Web\EdResusController;
@@ -35,6 +36,12 @@ Route::prefix('emergency')->name('ed.')->group(function () {
     Route::post('protocol-steps/{step}/done', [EdProtocolController::class, 'completeStep'])->name('protocol-steps.done');
     Route::delete('protocol-runs/{run}', [EdProtocolController::class, 'cancel'])->name('protocol-runs.cancel');
     Route::post('mci', [EdProtocolController::class, 'mci'])->name('mci');
+
+    Route::post('visits/{visit}/consults', [EdFollowUpController::class, 'requestConsult'])->name('visits.consults');
+    Route::post('consults/{consult}/respond', [EdFollowUpController::class, 'respond'])->name('consults.respond');
+    Route::delete('consults/{consult}', [EdFollowUpController::class, 'cancelConsult'])->name('consults.cancel');
+    Route::post('visits/{visit}/observation', [EdFollowUpController::class, 'startObservation'])->name('visits.observation');
+    Route::post('observation/{stay}/end', [EdFollowUpController::class, 'endObservation'])->name('observation.end');
 
     Route::get('zones', [EdZoneController::class, 'index'])->name('zones.index');
     Route::post('zones', [EdZoneController::class, 'storeZone'])->name('zones.store');

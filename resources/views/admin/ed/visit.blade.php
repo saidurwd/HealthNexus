@@ -232,6 +232,68 @@
             </div>
 
             <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Results') }}</h3></div>
+                <ul class="list-group list-group-flush small">
+                    @foreach($labOrders as $order)
+                        <li class="list-group-item"><strong>{{ $order->order_number }}</strong> — {{ __('Laboratory') }}: <span class="badge text-bg-secondary">{{ __(\Illuminate\Support\Str::headline($order->status)) }}</span>
+                            @foreach($order->items as $item)<div class="ms-3">{{ $item->requested_test_name }} — {{ __(\Illuminate\Support\Str::headline($item->result_status ?? 'pending')) }}</div>@endforeach</li>
+                    @endforeach
+                    @foreach($radOrders as $order)
+                        <li class="list-group-item"><strong>{{ $order->order_number }}</strong> — {{ __('Radiology') }}: <span class="badge text-bg-secondary">{{ __(\Illuminate\Support\Str::headline($order->status)) }}</span></li>
+                    @endforeach
+                    @if($labOrders->isEmpty() && $radOrders->isEmpty())<li class="list-group-item text-muted">{{ __('No tests or scans ordered.') }}</li>@endif
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Specialist consultations') }}</h3></div>
+                @if($visit->isActive())
+                @can('ed.consult.manage')
+                <form method="POST" action="{{ route('admin.ed.visits.consults', $visit) }}" class="card-body d-flex flex-wrap gap-2">
+                    @csrf
+                    <input type="text" name="specialty" class="form-control w-auto" maxlength="100" placeholder="{{ __('Specialty') }}" required>
+                    <select name="urgency" class="form-select w-auto">@foreach($urgencies as $u)<option value="{{ $u }}">{{ __(\Illuminate\Support\Str::headline($u)) }}</option>@endforeach</select>
+                    <input type="text" name="reason" class="form-control w-auto flex-grow-1" maxlength="500" placeholder="{{ __('Reason') }}">
+                    <button class="btn btn-outline-primary">{{ __('Request') }}</button>
+                </form>
+                @endcan
+                @endif
+                <ul class="list-group list-group-flush small">
+                    @forelse($visit->consults as $consult)
+                        <li class="list-group-item">
+                            <strong>{{ $consult->specialty }}</strong> ({{ __(\Illuminate\Support\Str::headline($consult->urgency)) }}) — {{ __(\Illuminate\Support\Str::headline($consult->status)) }}
+                            @if($consult->status === 'requested')<span class="{{ $consult->isOverdue() ? 'text-danger fw-bold' : 'text-muted' }}">· {{ __('answer by') }} {{ $consult->due_at->format('H:i') }}</span>
+                                @can('ed.consult.manage')
+                                <form method="POST" action="{{ route('admin.ed.consults.respond', $consult) }}" class="d-flex gap-2 mt-1">@csrf
+                                    <input type="text" name="response_note" class="form-control form-control-sm" maxlength="1000" placeholder="{{ __('Answer') }}"><button class="btn btn-sm btn-outline-success">{{ __('Answered') }}</button></form>
+                                @endcan
+                            @elseif($consult->response_note)<div class="text-muted">{{ $consult->response_note }}</div>@endif
+                        </li>
+                    @empty
+                        <li class="list-group-item text-muted">{{ __('No consultations requested.') }}</li>
+                    @endforelse
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">{{ __('Observation unit') }}</h3></div>
+                @php($openStay = $visit->observationStays->firstWhere('ended_at', null))
+                <div class="card-body d-flex align-items-center gap-2">
+                    @if($openStay)
+                        <span>{{ __('In observation since') }} {{ $openStay->started_at->format('d M H:i') }}</span>
+                        @can('ed.observation.manage')<form method="POST" action="{{ route('admin.ed.observation.end', $openStay) }}" class="ms-auto">@csrf<button class="btn btn-outline-secondary">{{ __('End observation') }}</button></form>@endcan
+                    @elseif($visit->isActive())
+                        @can('ed.observation.manage')<form method="POST" action="{{ route('admin.ed.visits.observation', $visit) }}">@csrf<button class="btn btn-outline-primary">{{ __('Move to observation unit') }}</button></form>@endcan
+                    @endif
+                </div>
+                <ul class="list-group list-group-flush small">
+                    @foreach($visit->observationStays->whereNotNull('ended_at') as $stay)
+                        <li class="list-group-item">{{ $stay->started_at->format('d M H:i') }} → {{ $stay->ended_at->format('d M H:i') }} · {{ $stay->billed_hours }} {{ __('hours billed') }}</li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div class="card">
                 <div class="card-header"><h3 class="card-title">{{ __('Triage history') }}</h3></div>
                 <ul class="list-group list-group-flush">
                     @forelse($visit->triageRecords->sortByDesc('assessed_at') as $record)

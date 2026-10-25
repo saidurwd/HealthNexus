@@ -34,4 +34,11 @@ return [
         'heart_rate' => [40, 130], 'respiratory_rate' => [8, 30], 'oxygen_saturation' => [90, null],
         'body_temperature' => [35.0, 39.5], 'systolic_bp' => [90, 220],
     ],
+
+    // Consultation answer targets in minutes by urgency (EXAMPLE values, OD-12).
+    'consult_sla' => ['emergent' => 15, 'urgent' => 30, 'routine' => 120],
+
+    // Observation unit billing rule (EXAMPLE values, OD-12): billed hours = max(minimum_hours, ceil((minutes - grace_minutes) / 60)).
+    // An observation stay longer than long_stay_hours raises a review alert.
+    'observation' => ['service_code' => 'ED-OBS-HR', 'grace_minutes' => 10, 'minimum_hours' => 1, 'long_stay_hours' => 24],
 ];
