@@ -40,7 +40,7 @@ class BedAllocationConcurrencyTest extends IpdTestCase
         $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
         if (! $organizationId) {
-            $pdoA->exec("INSERT INTO organizations (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
+            $pdoA->exec("INSERT INTO organizations (name, code, slug, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', 'concurrency-test-co', NOW(), NOW())");
             $organizationId = (int) $pdoA->lastInsertId();
         }
 
