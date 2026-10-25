@@ -170,6 +170,36 @@ class SettingsService
             ['group' => 'nursing', 'key' => 'nursing.escalation_default_recipient_role', 'value' => 'charge_nurse', 'type' => 'string'],
             ['group' => 'nursing', 'key' => 'nursing.observation_thresholds', 'value' => json_encode(['blood_glucose' => ['low' => 70, 'high' => 200], 'pain' => ['low' => null, 'high' => 7]]), 'type' => 'json', 'description' => 'Hospital-configurable low/high alert thresholds per nursing_observations.observation_type — a breach raises a NursingAlert, never a diagnosis'],
 
+            ['group' => 'ot', 'key' => 'ot.surgery_number_prefix',             'value' => 'OT',    'type' => 'string'],
+            ['group' => 'ot', 'key' => 'ot.surgery_number_format',             'value' => '{PREFIX}-{YEAR}-{SEQ:8}', 'type' => 'string', 'description' => 'Document numbering format'],
+            ['group' => 'ot', 'key' => 'ot.surgery_requires_approval',         'value' => '1',     'type' => 'boolean'],
+            ['group' => 'ot', 'key' => 'ot.default_turnover_minutes',          'value' => '30',    'type' => 'integer', 'description' => 'Default theatre cleaning/turnover time reserved between consecutive bookings'],
+            ['group' => 'ot', 'key' => 'ot.consent_requires_witness',          'value' => '0',     'type' => 'boolean'],
+            ['group' => 'ot', 'key' => 'ot.safety_checklist_required_phases',  'value' => json_encode(['sign_in', 'time_out', 'sign_out']), 'type' => 'json'],
+            ['group' => 'ot', 'key' => 'ot.preop_checklist_items',             'value' => json_encode([
+                ['category' => 'patient_identity', 'label' => 'Patient identity confirmed', 'is_required' => true],
+                ['category' => 'procedure', 'label' => 'Procedure confirmed', 'is_required' => true],
+                ['category' => 'site_side', 'label' => 'Site/side marked and confirmed', 'is_required' => true],
+                ['category' => 'consent', 'label' => 'Consent obtained', 'is_required' => true],
+                ['category' => 'allergies', 'label' => 'Allergies reviewed', 'is_required' => true],
+                ['category' => 'fasting', 'label' => 'Fasting status confirmed', 'is_required' => true],
+                ['category' => 'medication_review', 'label' => 'Medication review completed', 'is_required' => false],
+                ['category' => 'investigations', 'label' => 'Relevant investigations reviewed', 'is_required' => false],
+                ['category' => 'imaging', 'label' => 'Relevant imaging reviewed', 'is_required' => false],
+                ['category' => 'blood', 'label' => 'Blood availability confirmed', 'is_required' => false],
+                ['category' => 'implants', 'label' => 'Implant availability confirmed', 'is_required' => false],
+                ['category' => 'equipment', 'label' => 'Required equipment confirmed', 'is_required' => false],
+                ['category' => 'anesthesia_review', 'label' => 'Anesthesia review completed', 'is_required' => true],
+                ['category' => 'infection_control', 'label' => 'Infection control precautions confirmed', 'is_required' => false],
+                ['category' => 'documentation', 'label' => 'Documentation complete', 'is_required' => false],
+            ]), 'type' => 'json', 'description' => 'Hospital-configurable default preoperative checklist items — never hardcoded in a controller'],
+            ['group' => 'ot', 'key' => 'ot.safety_checklist_items', 'value' => json_encode([
+                'sign_in' => ['Patient identity, site, procedure and consent confirmed', 'Site marked where applicable', 'Anesthesia safety check completed', 'Pulse oximeter on patient and functioning', 'Known allergy reviewed', 'Difficult airway/aspiration risk assessed'],
+                'time_out' => ['Team members introduced by name and role', 'Surgeon, anesthetist and nurse verbally confirm patient, site and procedure', 'Anticipated critical events reviewed', 'Antibiotic prophylaxis given where indicated', 'Essential imaging displayed where needed'],
+                'sign_out' => ['Procedure recorded', 'Instrument, swab and needle counts correct', 'Specimen labelling confirmed', 'Equipment problems identified', 'Key concerns for recovery reviewed'],
+            ]), 'type' => 'json', 'description' => 'Hospital-configurable WHO-style surgical safety checklist items per phase'],
+            ['group' => 'ot', 'key' => 'ot.delay_categories', 'value' => json_encode(['patient', 'surgeon', 'anesthesia', 'equipment', 'blood', 'implant', 'theatre', 'cleaning', 'administrative', 'other']), 'type' => 'json'],
+
             ['group' => 'patients',   'key' => 'patients.duplicate_weights', 'value' => json_encode(['name' => 30, 'date_of_birth' => 25, 'phone' => 20, 'national_identifier' => 20, 'email' => 5]), 'type' => 'json', 'description' => 'Weighted duplicate-detection scoring per matched field'],
             // Deliberately excludes first_name/last_name — routine typo corrections are common
             // and would make the approval workflow a burden; only fields where a change is rare

@@ -14,6 +14,8 @@ class PatientConsent extends Model
         'version',
         'status',
         'notes',
+        'witness_name',
+        'language',
         'document_file_id',
         'granted_by',
         'granted_at',

@@ -150,6 +150,12 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Nursing\NursingHandover::class => \App\Policies\NursingHandoverPolicy::class,
         \App\Models\Nursing\NursingEscalation::class => \App\Policies\NursingEscalationPolicy::class,
         \App\Models\Nursing\NursingDischargeChecklist::class => \App\Policies\NursingDischargeChecklistPolicy::class,
+        \App\Models\Ot\OtSurgeryRequest::class => \App\Policies\OtSurgeryRequestPolicy::class,
+        \App\Models\Ot\OtSurgery::class => \App\Policies\OtSurgeryPolicy::class,
+        \App\Models\Ot\OtPreoperativeAssessment::class => \App\Policies\OtPreoperativeAssessmentPolicy::class,
+        \App\Models\Ot\OtSurgicalSafetyChecklist::class => \App\Policies\OtSafetyChecklistPolicy::class,
+        \App\Models\Ot\OtOperativeNote::class => \App\Policies\OtOperativeNotePolicy::class,
+        \App\Models\Ot\OtRecoveryRecord::class => \App\Policies\OtRecoveryPolicy::class,
     ];
 
     public function boot(): void

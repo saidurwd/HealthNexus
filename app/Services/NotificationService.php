@@ -132,6 +132,23 @@ class NotificationService
             'title' => 'Escalation Resolved',
             'message' => 'The escalation for :patient (admission :admission_number) has been resolved.',
         ],
+
+        'ot_schedule_conflict_detected' => [
+            'title' => 'OT Schedule Conflict Detected',
+            'message' => ':count overlapping theatre booking(s) detected — review the operating list.',
+        ],
+        'ot_missing_preoperative_requirement' => [
+            'title' => 'Missing Preoperative Requirement',
+            'message' => ':patient (surgery :surgery_number) is missing: :missing.',
+        ],
+        'ot_surgery_reminder' => [
+            'title' => 'Upcoming Surgery',
+            'message' => ':patient (surgery :surgery_number) is scheduled for :scheduled_start_at.',
+        ],
+        'ot_daily_list_ready' => [
+            'title' => 'Tomorrow\'s Operating List',
+            'message' => ':count case(s) scheduled for :date.',
+        ],
     ];
 
     /**

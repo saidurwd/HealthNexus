@@ -1688,6 +1688,29 @@ return [
             ],
         ],
         [
+            'text' => 'OT / Surgery',
+            'icon' => 'bi bi-scissors',
+            'can' => 'ot.dashboard.view',
+            'submenu' => [
+                ['text' => 'Dashboard', 'url' => '/admin/ot', 'icon' => 'bi bi-speedometer2', 'can' => 'ot.dashboard.view'],
+                ['text' => 'Surgery Requests', 'url' => '/admin/ot/surgery-requests', 'icon' => 'bi bi-file-medical', 'can' => 'ot.surgery.view'],
+                ['text' => 'Surgical Cases', 'url' => '/admin/ot/surgeries', 'icon' => 'bi bi-clipboard2-pulse', 'can' => 'ot.surgery.view'],
+                ['text' => 'Theatres', 'url' => '/admin/ot/theatres', 'icon' => 'bi bi-door-open', 'can' => 'ot.theatre.view'],
+                ['text' => 'Procedures', 'url' => '/admin/ot/procedures', 'icon' => 'bi bi-list-check', 'can' => 'ot.procedure.view'],
+                [
+                    'text' => 'Reports',
+                    'icon' => 'bi bi-bar-chart',
+                    'can' => 'ot.reports.view',
+                    'submenu' => [
+                        ['text' => 'Surgeries', 'url' => '/admin/ot/reports/surgeries', 'icon' => 'bi bi-clipboard-data', 'can' => 'ot.reports.view'],
+                        ['text' => 'Utilization', 'url' => '/admin/ot/reports/utilization', 'icon' => 'bi bi-speedometer', 'can' => 'ot.reports.view'],
+                        ['text' => 'Complications', 'url' => '/admin/ot/reports/complications', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'ot.reports.view'],
+                    ],
+                ],
+                ['text' => 'Settings', 'url' => '/admin/ot/settings', 'icon' => 'bi bi-gear', 'can' => 'ot.settings.manage'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',

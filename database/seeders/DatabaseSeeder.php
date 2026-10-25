@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             PharmacySeeder::class,
             IpdSeeder::class,
             NursingSeeder::class,
+            OtSeeder::class,
             WorkflowSeeder::class,
             ClinicalMasterDataSeeder::class,
         ]);

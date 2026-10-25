@@ -37,6 +37,14 @@ use App\Events\Nursing\NursingEpisodeStarted;
 use App\Events\Nursing\NursingEscalationCreated;
 use App\Events\Nursing\NursingEscalationResolved;
 use App\Events\Nursing\NursingHandoverCreated;
+use App\Events\Ot\PatientReceivedForSurgery;
+use App\Events\Ot\RecoveryCompleted;
+use App\Events\Ot\SurgeryCancelled;
+use App\Events\Ot\SurgeryCompleted;
+use App\Events\Ot\SurgeryPostponed;
+use App\Events\Ot\SurgeryScheduled;
+use App\Events\Ot\SurgeryStarted;
+use App\Events\Ot\SurgicalComplicationRecorded;
 use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
@@ -66,6 +74,10 @@ use App\Listeners\Laboratory\NotifyOnSampleRejected;
 use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
 use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
 use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
+use App\Listeners\Ot\CreateSurgeryRequestOnClinicalOrderCreated;
+use App\Listeners\Ot\NotifyOnSurgeryScheduleEvents;
+use App\Listeners\Ot\NotifyOnSurgeryTeamEvents;
+use App\Listeners\Ot\RecordSurgeryEventsOnPatientTimeline;
 use App\Listeners\Radiology\CreateRadiologyOrderOnClinicalOrderCreated;
 use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
 use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
@@ -127,6 +139,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LabReportAmended::class, [NotifyOnLabReportEvents::class, 'handleAmended']);
 
         Event::listen(ClinicalOrderCreated::class, CreateRadiologyOrderOnClinicalOrderCreated::class);
+        Event::listen(ClinicalOrderCreated::class, CreateSurgeryRequestOnClinicalOrderCreated::class);
         Event::listen(RadiologyExamCompleted::class, DispatchPacsSyncOnExamCompleted::class);
         Event::listen(CriticalFindingDetected::class, NotifyOnCriticalFindingDetected::class);
         Event::listen(RadiologyReportFinalized::class, [RecordRadiologyReportOnPatientTimeline::class, 'handleFinalized']);
@@ -162,5 +175,15 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(NursingEscalationResolved::class, [NotifyOnEscalationEvents::class, 'handleResolved']);
         Event::listen(NurseAssigned::class, [NotifyOnAssignmentEvents::class, 'handle']);
         Event::listen(NursingHandoverCreated::class, [NotifyOnHandoverEvents::class, 'handleCreated']);
+
+        Event::listen(SurgeryScheduled::class, [RecordSurgeryEventsOnPatientTimeline::class, 'handleScheduled']);
+        Event::listen(SurgeryStarted::class, [RecordSurgeryEventsOnPatientTimeline::class, 'handleStarted']);
+        Event::listen(SurgeryCompleted::class, [RecordSurgeryEventsOnPatientTimeline::class, 'handleCompleted']);
+        Event::listen(RecoveryCompleted::class, [RecordSurgeryEventsOnPatientTimeline::class, 'handleRecoveryCompleted']);
+        Event::listen(SurgeryScheduled::class, [NotifyOnSurgeryScheduleEvents::class, 'handleScheduled']);
+        Event::listen(SurgeryPostponed::class, [NotifyOnSurgeryScheduleEvents::class, 'handlePostponed']);
+        Event::listen(SurgeryCancelled::class, [NotifyOnSurgeryScheduleEvents::class, 'handleCancelled']);
+        Event::listen(PatientReceivedForSurgery::class, [NotifyOnSurgeryTeamEvents::class, 'handlePatientReceived']);
+        Event::listen(SurgicalComplicationRecorded::class, [NotifyOnSurgeryTeamEvents::class, 'handleComplication']);
     }
 }

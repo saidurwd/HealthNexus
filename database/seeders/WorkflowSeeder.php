@@ -43,6 +43,7 @@ class WorkflowSeeder extends Seeder
 
             $this->seedPatientAmendmentWorkflow($company);
             $this->seedIpdAdmissionWorkflow($company);
+            $this->seedOtSurgeryRequestWorkflow($company);
         });
     }
 
@@ -92,6 +93,33 @@ class WorkflowSeeder extends Seeder
         ]);
         WorkflowApprover::create([
             'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'ipd_coordinator',
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'hospital_admin',
+        ]);
+    }
+
+    /**
+     * Backs Phase 10's OT surgery request approval (App\Services\Ot\OtSurgeryRequestService) —
+     * a single approval step, eligible to either an ot_coordinator or a hospital_admin, honoring
+     * the same narrow reuse of the generic engine as IPD admission approval.
+     */
+    private function seedOtSurgeryRequestWorkflow(Company $company): void
+    {
+        $workflow = Workflow::query()->firstOrCreate(
+            ['company_id' => $company->id, 'code' => 'ot_surgery_request'],
+            ['name' => 'OT Surgery Request Approval', 'description' => 'Approval required before a surgery request can be scheduled.', 'is_active' => true],
+        );
+
+        if ($workflow->steps()->exists()) {
+            return;
+        }
+
+        $approval = WorkflowStep::create([
+            'workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Surgery Request Approval', 'is_final' => true,
+        ]);
+        WorkflowApprover::create([
+            'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'ot_coordinator',
         ]);
         WorkflowApprover::create([
             'workflow_step_id' => $approval->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'hospital_admin',

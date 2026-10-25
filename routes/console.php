@@ -65,3 +65,8 @@ Schedule::command('ipd:reconcile-bed-states')
 Schedule::command('nursing:detect-overdue-tasks')->everyFifteenMinutes()->name('nursing-detect-overdue-tasks')->withoutOverlapping();
 Schedule::command('nursing:detect-overdue-medication-administration')->everyFiveMinutes()->name('nursing-detect-overdue-medication')->withoutOverlapping();
 Schedule::command('nursing:generate-medication-schedule')->everyThirtyMinutes()->name('nursing-generate-medication-schedule')->withoutOverlapping();
+
+Schedule::command('ot:detect-schedule-conflicts')->everyFifteenMinutes()->name('ot-detect-schedule-conflicts')->withoutOverlapping();
+Schedule::command('ot:detect-missing-preoperative-requirements')->hourly()->name('ot-detect-missing-preop')->withoutOverlapping();
+Schedule::command('ot:send-surgery-reminders')->dailyAt('08:00')->name('ot-send-surgery-reminders')->withoutOverlapping();
+Schedule::command('ot:generate-daily-list')->dailyAt('17:00')->name('ot-generate-daily-list')->withoutOverlapping();

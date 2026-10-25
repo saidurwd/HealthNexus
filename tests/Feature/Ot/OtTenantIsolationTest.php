@@ -1,0 +1,83 @@
+<?php
+
+namespace Tests\Feature\Ot;
+
+use App\Models\Branch;
+use App\Models\Company;
+use App\Models\User;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+class OtTenantIsolationTest extends OtTestCase
+{
+    private function userWith(array $permissions, ?Company $company = null): User
+    {
+        $company ??= $this->company;
+        $branch = $company->id === $this->company->id ? $this->branch : Branch::factory()->create(['company_id' => $company->id]);
+
+        $user = User::factory()->create();
+        $user->companies()->attach($company->id, ['access_level' => 'staff']);
+        $user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $company->id]);
+
+        foreach ($permissions as $p) {
+            Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
+        }
+
+        $role = Role::firstOrCreate(['name' => 'surgeon_test', 'guard_name' => 'web']);
+        $role->syncPermissions($permissions);
+        $user->assignRole($role);
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+        return $user->fresh();
+    }
+
+    public function test_hospital_a_user_cannot_touch_hospital_b_surgery(): void
+    {
+        $surgery = $this->makeDaySurgery();
+        $otherCompany = Company::factory()->create();
+        $foreignUser = $this->userWith(['ot.surgery.view', 'ot.surgery.start', 'ot.surgery.complete'], $otherCompany);
+
+        $this->assertFalse($foreignUser->can('view', $surgery));
+        $this->assertFalse($foreignUser->can('start', $surgery));
+
+        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
+        $this->actingAs($foreignUser)->post('/admin/ot/surgeries/'.$surgery->id.'/start')->assertForbidden();
+    }
+
+    public function test_unauthorized_user_cannot_view_operative_note_or_consent(): void
+    {
+        $surgery = $this->makeDaySurgery();
+        app(\App\Services\Ot\OtConsentService::class)->grant($surgery, $this->user);
+        $note = app(\App\Services\Ot\OtOperativeNoteService::class)->create($surgery, ['findings' => 'sensitive'], $this->user);
+
+        $noPermsUser = $this->userWith([]);
+
+        $this->assertFalse($noPermsUser->can('view', $note));
+        $this->actingAs($noPermsUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
+    }
+
+    public function test_api_denies_cross_hospital_schedule_and_unauthorized_completion(): void
+    {
+        $surgery = $this->makeDaySurgery();
+        $theatre = $this->makeTheatre();
+        $otherCompany = Company::factory()->create();
+        $foreignUser = $this->userWith(['ot.schedule.create', 'ot.surgery.view'], $otherCompany);
+
+        $this->actingAs($foreignUser)->postJson('/api/v1/ot/surgeries/'.$surgery->id.'/schedule', [
+            'theatre_id' => $theatre->id,
+            'scheduled_start_at' => now()->toDateTimeString(),
+            'scheduled_end_at' => now()->addHours(2)->toDateTimeString(),
+        ])->assertStatus(403);
+
+        $this->assertNull($surgery->fresh()->theatre_id);
+    }
+
+    public function test_direct_url_manipulation_to_a_foreign_surgery_id_is_rejected(): void
+    {
+        $surgery = $this->makeDaySurgery();
+        $otherCompany = Company::factory()->create();
+        $foreignUser = $this->userWith(['ot.surgery.view'], $otherCompany);
+
+        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
+    }
+}
