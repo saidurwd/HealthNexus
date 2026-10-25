@@ -4,15 +4,14 @@ use App\Reports\PatientListReport;
 
 /*
 | Report registry (guideline 14.4). Add a ReportDefinition class here and it can be exported through ReportExportService.
-| Formats: csv now; xlsx and pdf need packages that have not been approved yet (packages policy, guideline 5) and
-| the Bangla PDF template work of H-08.
+| Formats: csv and xlsx. (PDF of a list report is not offered: documents print through the Document Service.)
 */
 return [
     'definitions' => [
         PatientListReport::class,
     ],
 
-    'formats' => ['csv'],
+    'formats' => ['csv', 'xlsx'],
 
     'disk' => env('REPORT_EXPORT_DISK', 'local'),
 

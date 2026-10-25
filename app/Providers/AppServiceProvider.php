@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
+use App\Contracts\Documents\PdfRenderer;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
 use App\Contracts\Stock\StockLedger;
@@ -104,6 +105,7 @@ use App\Observers\PatientSearchObserver;
 use App\Services\Billing\Events\BillingChargeEventPublisher;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
+use App\Services\Documents\BrowsershotPdfRenderer;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
 use App\Services\ModuleManager;
 use App\Services\Ops\ShellRunner;
@@ -126,6 +128,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ModuleManager::class);
         $this->app->bind(ShellRunner::class, SymfonyShellRunner::class);
+        $this->app->bind(PdfRenderer::class, BrowsershotPdfRenderer::class);
         $this->app->bind(StockLedger::class, DatabaseStockLedger::class);
         $this->app->bind(ChargeEventPublisher::class, BillingChargeEventPublisher::class);
 

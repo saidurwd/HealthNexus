@@ -24,6 +24,8 @@ jobs:
       - run: cp .env.example .env && php artisan key:generate
       - name: Code style (Pint)
         run: ./vendor/bin/pint --test
+      - name: Static analysis (Larastan, level 5, baseline of existing findings)
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G --no-progress
       - name: Registry gate (every permission and table belongs to a module)
         run: php artisan registry:export --check
       - name: Dependency advisories

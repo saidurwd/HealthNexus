@@ -1,0 +1,3541 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Support\\Collection\<int,array\<int, string\>\>\:\:where\(\) expects \(callable\(\)\: mixed\)\|string, 1 given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Console/Commands/Ops/PilotReadinessCommand.php
+
+		-
+			message: '#^Parameter \#2 \$operator of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Appointment\>\:\:whereDate\(\) expects DateTimeInterface\|string\|null, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/V1/AppointmentController.php
+
+		-
+			message: '#^Property App\\Http\\Controllers\\Api\\V1\\AppointmentController\:\:\$queueService is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Http/Controllers/Api/V1/AppointmentController.php
+
+		-
+			message: '#^Property App\\Http\\Controllers\\Api\\V1\\PatientController\:\:\$duplicateScoring is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Http/Controllers/Api/V1/PatientController.php
+
+		-
+			message: '#^Undefined variable\: \$request$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Http/Controllers/Api/V1/ProviderController.php
+
+		-
+			message: '#^Undefined variable\: \$request$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Http/Controllers/Auth/ResetPasswordController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Middleware/SetLocale.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$appointment_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Appointments/SendAppointmentReminderJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$appointment_time\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Appointments/SendAppointmentReminderJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Appointments/SendAppointmentReminderJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Appointments/SendAppointmentReminderJob.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Icu/DetectMissingIcuDocumentation.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Icu/DetectMissingIcuDocumentation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Icu/EscalateUnacknowledgedCriticalAlerts.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Icu/EscalateUnacknowledgedCriticalAlerts.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>user" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Icu/EscalateUnacknowledgedCriticalAlerts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ipd/DetectDelayedDischarges.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ipd/DetectDelayedDischarges.php
+
+		-
+			message: '#^Cannot call method startOfDay\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Ipd/DetectDelayedDischarges.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Ipd/DetectDelayedDischarges.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Ipd/DetectDelayedDischarges.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$actual_discharge_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ipd/GenerateBedOccupancyCharges.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ipd/GenerateBedOccupancyCharges.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Ipd\\IpdChargeService\:\:chargeBedDay\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/Ipd/GenerateBedOccupancyCharges.php
+
+		-
+			message: '#^Parameter \#2 \$bed of method App\\Services\\Ipd\\IpdChargeService\:\:chargeBedDay\(\) expects App\\Models\\Ipd\\IpdBed, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/Ipd/GenerateBedOccupancyCharges.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueMedicationAdministration.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$values of method Illuminate\\Support\\Collection\<int,App\\Models\\User\>\:\:push\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Nursing/DetectOverdueNursingTasks.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$frequency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Nursing/GenerateMedicationAdministrationSchedule.php
+
+		-
+			message: '#^Cannot call method copy\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Nursing/GenerateMedicationAdministrationSchedule.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ot/DetectMissingPreoperativeRequirements.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Jobs/Ot/DetectMissingPreoperativeRequirements.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Ot/DetectMissingPreoperativeRequirements.php
+
+		-
+			message: '#^Cannot call method gt\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Ot/DetectScheduleConflicts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ot/SendSurgeryReminder.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$provider\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Ot/SendSurgeryReminder.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Ot/SendSurgeryReminder.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/Ot/SendSurgeryReminder.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Jobs/Pharmacy/CheckLowStock.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Pharmacy/CheckLowStock.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Pharmacy/GenerateExpiryAlerts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$store\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Pharmacy/GenerateExpiryAlerts.php
+
+		-
+			message: '#^Cannot call method toDateString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Jobs/Pharmacy/GenerateExpiryAlerts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$radiologyOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/Radiology/SyncPacsStudyMetadata.php
+
+		-
+			message: '#^Offset ''number_of_instances'' on array\{study_instance_uid\: string, study_date\: string\|null, modality\: string\|null, study_description\: string\|null, number_of_series\: int, number_of_instances\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Jobs/Radiology/SyncPacsStudyMetadata.php
+
+		-
+			message: '#^Offset ''number_of_series'' on array\{study_instance_uid\: string, study_date\: string\|null, modality\: string\|null, study_description\: string\|null, number_of_series\: int, number_of_instances\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Jobs/Radiology/SyncPacsStudyMetadata.php
+
+		-
+			message: '#^Undefined variable\: \$client$#'
+			identifier: variable.undefined
+			count: 1
+			path: app/Jobs/Radiology/SyncPacsStudyMetadata.php
+
+		-
+			message: '#^Parameter \#1 \$user of class App\\Services\\Reports\\ReportContext constructor expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/Reports/GenerateReportExport.php
+
+		-
+			message: '#^Parameter \#1 \$user of static method Illuminate\\Support\\Facades\\Auth\:\:setUser\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Jobs/Reports/GenerateReportExport.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 5
+			path: app/Listeners/Clinical/RecordEncounterTimelineEvent.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Icu/CreateIcuAlertOnLabCriticalResult.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Icu/NotifyOnIcuCriticalAlerts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Icu/NotifyOnIcuCriticalAlerts.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Icu/NotifyOnIcuCriticalAlerts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$destination\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Icu/NotifyOnIcuEpisodeEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Icu/NotifyOnIcuEpisodeEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>destination" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Icu/NotifyOnIcuEpisodeEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Icu/NotifyOnIcuEpisodeEvents.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Listeners/Icu/RecordIcuEventsOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>bed_code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Ipd/NotifyOnAdmissionEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnDischargeEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Ipd/NotifyOnDischargeEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnDischargeEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Ipd/NotifyOnDischargeEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnTransferEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnTransferEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnTransferEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>bed_code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnTransferEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Ipd/NotifyOnTransferEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ipd/RecordAdmissionOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Listeners/Ipd/RecordAdmissionOnPatientTimeline.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>bed_code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Ipd/RecordAdmissionOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnCriticalResultDetected.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnCriticalResultDetected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnCriticalResultDetected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>provider" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnCriticalResultDetected.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$orderedBy\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnLabReportEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnLabReportEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnLabReportEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>provider" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Laboratory/NotifyOnLabReportEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$orderedBy\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnSampleRejected.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnSampleRejected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnSampleRejected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>provider" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Laboratory/NotifyOnSampleRejected.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$order_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Laboratory/RecordLabReportOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Laboratory/RecordLabReportOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#2 \$outgoingNurse of method App\\Services\\Nursing\\NursingHandoverService\:\:prepare\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Listeners/Nursing/FlagHandoverOnTransfer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnAssignmentEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnAssignmentEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnAssignmentEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnAssignmentEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Nursing/NotifyOnEscalationEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Nursing/NotifyOnEscalationEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Nursing/NotifyOnEscalationEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Nursing/NotifyOnEscalationEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnHandoverEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnHandoverEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnHandoverEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnHandoverEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnMarEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnMarEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/NotifyOnMarEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/RaiseAlertOnCriticalObservation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/RaiseAlertOnCriticalObservation.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>admission_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/RaiseAlertOnCriticalObservation.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/RaiseAlertOnCriticalObservation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/RecordNursingEventsOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Nursing/RecordNursingEventsOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 5
+			path: app/Listeners/Nursing/RecordNursingEventsOnPatientTimeline.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Nursing/RecordNursingEventsOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#3 \$user of method App\\Services\\Ot\\OtSurgeryRequestService\:\:createFromClinicalOrder\(\) expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Listeners/Ot/CreateSurgeryRequestOnClinicalOrderCreated.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Listeners/Ot/NotifyOnSurgeryScheduleEvents.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryScheduleEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Listeners/Ot/NotifyOnSurgeryScheduleEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$provider\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$surgery_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Ot/NotifyOnSurgeryTeamEvents.php
+
+		-
+			message: '#^Cannot call method toDateTimeString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Listeners/Ot/RecordSurgeryEventsOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Listeners/Ot/RecordSurgeryEventsOnPatientTimeline.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Listeners/Pharmacy/RecordDispensingOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$examination\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/Radiology/NotifyOnCriticalFindingDetected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Radiology/NotifyOnCriticalFindingDetected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Radiology/NotifyOnCriticalFindingDetected.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>provider" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/Radiology/NotifyOnCriticalFindingDetected.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$orderItem\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Radiology/NotifyOnRadiologyReportEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Radiology/NotifyOnRadiologyReportEvents.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>provider" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Listeners/Radiology/NotifyOnRadiologyReportEvents.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$orderItem\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Listeners/Radiology/RecordRadiologyReportOnPatientTimeline.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$schedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/AppointmentReminderRule.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$overbooking_limit\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/AppointmentSlot.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>overbooking_limit" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Models/AppointmentSlot.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$new_rate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Icu/IcuInfusion.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>new_rate" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Icu/IcuInfusion.php
+
+		-
+			message: '#^Cannot call method isPast\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/Pharmacy/PharmacyBatch.php
+
+		-
+			message: '#^Cannot call method isFuture\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\Workflow\:\:firstStep\(\) should return App\\Models\\WorkflowStep\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Workflow.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:\$access_level\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Policies/BranchPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/NursingAssignmentPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:\$access_level\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Policies/OrganizationPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtOperativeNotePolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtOperativeNotePolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtRecoveryPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtRecoveryPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtSafetyChecklistPolicy.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Policies/OtSafetyChecklistPolicy.php
+
+		-
+			message: '#^Method App\\Reports\\PatientListReport\:\:rows\(\) should return Illuminate\\Support\\LazyCollection\<int, array\<string, bool\|float\|int\|string\|null\>\> but returns Illuminate\\Support\\LazyCollection\<int, array\{enterprise_patient_no\: string\|null, name\: string, date_of_birth\: string\|null, sex\: string\|null, phone\: string\|null, national_identifier\: string\|null, registered_at\: string\|null, status\: string\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Reports/PatientListReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\)\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Appointments/AppointmentBookingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$provider_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Appointments/AppointmentBookingService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Appointments\\AppointmentNumberGenerator\:\:generateAppointmentNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Appointments/AppointmentBookingService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Appointments\\AppointmentNumberGenerator\:\:generateTokenNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Appointments/AppointmentBookingService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Appointments/AppointmentBookingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Appointments/AppointmentLifecycleService.php
+
+		-
+			message: '#^Method App\\Services\\Appointments\\AppointmentLifecycleService\:\:addNote\(\) should return App\\Models\\AppointmentNote but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Appointments/AppointmentLifecycleService.php
+
+		-
+			message: '#^Method App\\Services\\Appointments\\AppointmentLifecycleService\:\:recordHistory\(\) should return App\\Models\\AppointmentStatusHistory but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Appointments/AppointmentLifecycleService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 6
+			path: app/Services/Appointments/AppointmentLifecycleService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Appointments/AppointmentNumberGenerator.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: app/Services/Appointments/AppointmentReminderService.php
+
+		-
+			message: '#^Result of \|\| is always false\.$#'
+			identifier: booleanOr.alwaysFalse
+			count: 1
+			path: app/Services/Appointments/AppointmentReminderService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Clinical\\ClinicalNumberGenerator\:\:generatePrescriptionNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Appointments/OpdService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$grand_total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/AdjustmentService.php
+
+		-
+			message: '#^Parameter \#1 \$invoice of method App\\Services\\Billing\\AdjustmentService\:\:applyToInvoice\(\) expects App\\Models\\Billing\\BillingInvoice, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Billing/AdjustmentService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>grand_total" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Billing/AdjustmentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_inclusive\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/ChargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$rate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/ChargeService.php
+
+		-
+			message: '#^Offset ''branch_id'' on array\{organization_id\: int, branch_id\: int, patient_id\: int, encounter_id\?\: int\|null, department_id\?\: int\|null, provider_id\?\: int\|null, patient_category\?\: string\|null, corporate_id\?\: int\|null, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Services/Billing/ChargeService.php
+
+		-
+			message: '#^Method App\\Services\\Billing\\CorporateBillingService\:\:resolveContract\(\) should return App\\Models\\Billing\\BillingCorporateContract\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Billing/CorporateBillingService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between float and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Services/Billing/InsuranceBillingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$discount_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gross_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$net_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$taxCategory\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$tax_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>rate" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Billing/InvoiceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$grand_total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$paid_amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$receipt\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$refunded_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$refunded_by\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Parameter \#1 \$payment of method App\\Services\\Billing\\RefundService\:\:refundedAmountFor\(\) expects App\\Models\\Billing\\BillingPayment, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Property App\\Services\\Billing\\RefundService\:\:\$settings is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Services/Billing/RefundService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Breadcrumbs.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addComplaint\(\) should return App\\Models\\EncounterComplaint but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addDocument\(\) should return App\\Models\\EncounterDocument but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addExamination\(\) should return App\\Models\\EncounterExamination but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addHistory\(\) should return App\\Models\\EncounterHistory but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addInstruction\(\) should return App\\Models\\EncounterInstruction but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addNote\(\) should return App\\Models\\EncounterNote but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addProcedure\(\) should return App\\Models\\EncounterProcedure but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addReferral\(\) should return App\\Models\\EncounterReferral but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addReviewOfSystem\(\) should return App\\Models\\EncounterReviewOfSystem but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:createAmendment\(\) should return App\\Models\\EncounterAmendment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Clinical\\ClinicalNumberGenerator\:\:generateOrderNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Clinical\\ClinicalNumberGenerator\:\:generatePrescriptionNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Parameter \#2 \$amendment of class App\\Events\\Clinical\\ClinicalAmendmentCreated constructor expects App\\Models\\EncounterAmendment, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Parameter \#2 \$referral of class App\\Events\\Clinical\\ReferralCreated constructor expects App\\Models\\EncounterReferral, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 15
+			path: app/Services/Clinical/EncounterClinicalService.php
+
+		-
+			message: '#^Method App\\Services\\Clinical\\Observations\\ObservationReader\:\:series\(\) should return Illuminate\\Support\\Collection\<int, object\> but returns Illuminate\\Support\\Collection\<int, stdClass\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Clinical/Observations/ObservationReader.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$license_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>address" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>license_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>phone" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Services/Documents/Letterhead.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$date_of_birth\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$dosage_form\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$duration\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$enterprise_patient_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$frequency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$instructions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicine_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$strength\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Documents/Providers/PrescriptionDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$amount\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$currency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$invoice_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$method\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$receivedBy\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Cannot call method timezone\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Documents/Providers/ReceiptDocument.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$public_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Documents/Providers/WristbandDocument.php
+
+		-
+			message: '#^Method App\\Services\\Documents\\SafeTemplate\:\:parse\(\) should return list\<array\> but returns array\<mixed\>\|string\|false\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Documents/SafeTemplate.php
+
+		-
+			message: '#^Ternary operator condition is always false\.$#'
+			identifier: ternary.alwaysFalse
+			count: 1
+			path: app/Services/Documents/SafeTemplate.php
+
+		-
+			message: '#^Method App\\Services\\EncounterLifecycleService\:\:recordHistory\(\) should return App\\Models\\EncounterStatusHistory but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/EncounterLifecycleService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Services/EncounterLifecycleService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\)\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/EncounterService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$department_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/EncounterService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\EncounterService\:\:generateEncounterNo\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/EncounterService.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Carbon\\Carbon\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/EncounterService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/EncounterService.php
+
+		-
+			message: '#^Method App\\Services\\FileService\:\:addVersion\(\) should return App\\Models\\FileVersion but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/FileService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Google2faService.php
+
+		-
+			message: '#^Call to static method generateSecretKey\(\) on an unknown class PragmaRX\\Google2FALaravel\\Facades\\Google2FA\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Google2faService.php
+
+		-
+			message: '#^Call to static method getQRCodeUrl\(\) on an unknown class PragmaRX\\Google2FALaravel\\Facades\\Google2FA\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Google2faService.php
+
+		-
+			message: '#^Call to static method verifyKey\(\) on an unknown class PragmaRX\\Google2FALaravel\\Facades\\Google2FA\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Google2faService.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Icu/Fhir/AssessmentFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Icu/Fhir/EpisodeFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Icu/Fhir/ObservationFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Icu/Fhir/ObservationFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$encounter_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Icu/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Icu/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/Fhir/VentilatorDeviceFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Icu/Fhir/VentilatorDeviceFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Icu/Fhir/VentilatorDeviceFhirMapper.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTerminal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Icu/IcuAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:approve\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:cancel\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:reject\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuAdmissionRequestService.php
+
+		-
+			message: '#^Method App\\Services\\Icu\\IcuAlertService\:\:escalate\(\) should return App\\Models\\Icu\\IcuAlertEscalation but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Icu/IcuAlertService.php
+
+		-
+			message: '#^Parameter \#1 \$escalation of class App\\Events\\Icu\\ICUCriticalAlertEscalated constructor expects App\\Models\\Icu\\IcuAlertEscalation, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuAlertService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuBedAllocationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ward_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuBedAllocationService.php
+
+		-
+			message: '#^Method App\\Services\\Icu\\IcuBedAllocationService\:\:assign\(\) should return App\\Models\\Ipd\\IpdBedAllocation but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Icu/IcuBedAllocationService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Icu\\IcuBedAllocationService\:\:assign\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuBedAllocationService.php
+
+		-
+			message: '#^Parameter \#1 \$allocation of method App\\Services\\Ipd\\IpdBedAllocationService\:\:release\(\) expects App\\Models\\Ipd\\IpdBedAllocation, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuBedAllocationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ward\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuBedBoardService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Ipd\\IpdBed\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Icu/IcuBedBoardService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuChargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$encounter_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuChargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuChargeService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Icu/IcuChargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$assessed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDeviceService.php
+
+		-
+			message: '#^Method App\\Services\\Icu\\IcuDeviceService\:\:assess\(\) should return App\\Models\\Icu\\IcuDeviceAssessment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Icu/IcuDeviceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$icu_bed_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Parameter \#1 \$episode of class App\\Events\\Icu\\ICUDischarged constructor expects App\\Models\\Icu\\IcuEpisode, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Parameter \#1 \$episode of method App\\Services\\Icu\\IcuEpisodeLifecycleService\:\:transitionTo\(\) expects App\\Models\\Icu\\IcuEpisode, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$ward_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuEpisodeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$observed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuFlowsheetService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$recorded_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuFlowsheetService.php
+
+		-
+			message: '#^Cannot call method between\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Icu/IcuFlowsheetService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuHandoverService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuHandoverService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$observed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Icu/IcuHandoverService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Icu/IcuHandoverService.php
+
+		-
+			message: '#^Method App\\Services\\Icu\\IcuInfusionService\:\:titrate\(\) should return App\\Models\\Icu\\IcuInfusionTitration but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Icu/IcuInfusionService.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Icu/IcuNumberGenerator.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientService\:\:grantConsent\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Icu/IcuProcedureService.php
+
+		-
+			message: '#^Method App\\Services\\Icu\\IcuProgressNoteService\:\:addAddendum\(\) should return App\\Models\\Icu\\IcuProgressNoteAmendment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Icu/IcuProgressNoteService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentAllocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Icu/IcuTransferService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between Carbon\\Carbon\|null and false will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Services/Import/Definitions/BaseImport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Import/Definitions/BedImport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Import/Definitions/LabTestImport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Import/Definitions/MedicationImport.php
+
+		-
+			message: '#^Parameter \#4 \$inUse of method App\\Services\\Import\\Definitions\\BaseImport\:\:removeOrDeactivate\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model\)\: bool, Closure\(App\\Models\\Patient\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Import/Definitions/PatientImport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Import/Definitions/ServiceImport.php
+
+		-
+			message: '#^Parameter \#3 \$user of class App\\Services\\Import\\ImportContext constructor expects App\\Models\\User, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Import/ImportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ipd/Fhir/AdmissionFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/Fhir/AdmissionFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Ipd/Fhir/AdmissionFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ipd/Fhir/AdmissionFhirMapper.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTerminal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ipd/IpdAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:approve\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:cancel\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdAdmissionRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:reject\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdAdmissionRequestService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>priority" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ipd/IpdAdmissionService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gender\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ipd/IpdBedAllocationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdChargeService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Ipd/IpdChargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ipd/IpdDischargeService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentAllocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ipd/IpdDischargeService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of class App\\Events\\Ipd\\PatientDischarged constructor expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdDischargeService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Ipd\\IpdAdmissionLifecycleService\:\:transitionTo\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Ipd/IpdDischargeService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentAllocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Ipd\\IpdBedAllocationService\:\:allocate\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdLeaveService.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Ipd/IpdNumberGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ipd/IpdTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ipd/IpdTransferService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentAllocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ipd/IpdTransferService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Ipd\\IpdAdmissionLifecycleService\:\:transitionTo\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Services/Ipd/IpdTransferService.php
+
+		-
+			message: '#^Parameter \#1 \$admission of method App\\Services\\Ipd\\IpdBedAllocationService\:\:allocate\(\) expects App\\Models\\Ipd\\IpdAdmission, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ipd/IpdTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$encounter_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabReportFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Laboratory/Fhir/LabReportFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$order_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabReportFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabReportFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabReportFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabResultFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabResultFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/Fhir/LabResultFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Laboratory/Fhir/LabResultFhirMapper.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Laboratory/LabNumberGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$item_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/LabRegistrationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$item_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Laboratory/LabRegistrationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentResult\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Laboratory/LabReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultAmendmentService.php
+
+		-
+			message: '#^Property App\\Services\\Laboratory\\ResultAmendmentService\:\:\$lifecycle is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Services/Laboratory/ResultAmendmentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$test_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$unit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Parameter \#1 \$test of method App\\Services\\Laboratory\\LabReferenceRangeResolver\:\:resolve\(\) expects App\\Models\\Laboratory\\LabTest, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Laboratory/ResultEntryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultValidationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$requires_pathologist_approval\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/ResultValidationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Laboratory/SpecimenService.php
+
+		-
+			message: '#^Parameter \#1 \$order of method App\\Services\\Laboratory\\LabOrderLifecycleService\:\:transitionTo\(\) expects App\\Models\\Laboratory\\LabOrder, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Laboratory/SpecimenService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:forTenant\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Laboratory/WorklistService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$goal_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/Fhir/CarePlanFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$intervention_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/Fhir/CarePlanFhirMapper.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 2
+			path: app/Services/Nursing/Fhir/CarePlanFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/Fhir/MedicationAdministrationFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Nursing/Fhir/MedicationAdministrationFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Nursing/Fhir/ObservationFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Nursing/Fhir/ObservationFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Nursing/Fhir/TaskFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Nursing/Fhir/TaskFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_controlled\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/MedicationAdministrationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_high_alert\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/MedicationAdministrationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$prescriptionItem\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/MedicationAdministrationService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingCarePlanService\:\:addDiagnosis\(\) should return App\\Models\\Nursing\\NursingDiagnosis but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingCarePlanService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingCarePlanService\:\:addGoal\(\) should return App\\Models\\Nursing\\NursingCarePlanGoal but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingCarePlanService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingCarePlanService\:\:addIntervention\(\) should return App\\Models\\Nursing\\NursingCarePlanIntervention but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingCarePlanService.php
+
+		-
+			message: '#^Parameter \#1 \$carePlan of class App\\Events\\Nursing\\CarePlanUpdated constructor expects App\\Models\\Nursing\\NursingCarePlan, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Nursing/NursingCarePlanService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$assessed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/NursingDeviceService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingDeviceService\:\:assess\(\) should return App\\Models\\Nursing\\NursingDeviceAssessment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingDeviceService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:vitals\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingHandoverService\:\:addItem\(\) should return App\\Models\\Nursing\\NursingHandoverItem but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>full_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Nursing/NursingHandoverService.php
+
+		-
+			message: '#^Method App\\Services\\Nursing\\NursingNoteService\:\:addAddendum\(\) should return App\\Models\\Nursing\\NursingNoteAmendment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Nursing/NursingNoteService.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between mixed and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 2
+			path: app/Services/Nursing/NursingObservationService.php
+
+		-
+			message: '#^Parameter \#1 \$encounter of method App\\Services\\Clinical\\EncounterClinicalService\:\:addVital\(\) expects App\\Models\\Encounter, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Nursing/NursingVitalService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Ipd\\IpdAdmission\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,array\<string, mixed\>\>\:\:sortBy\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Ux\\PatientBannerData\:\:for\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>bed_code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/Ops/DowntimeCensus.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Carbon\\Carbon\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ot/Fhir/ConsentFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/Fhir/DeviceFhirMapper.php
+
+		-
+			message: '#^Cannot call method toDateString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Ot/Fhir/DeviceFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Services/Ot/Fhir/ProcedureFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/Fhir/ServiceRequestFhirMapper.php
+
+		-
+			message: '#^Cannot call method toAtomString\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/Ot/Fhir/SpecimenFhirMapper.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type string\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ot/Fhir/SpecimenFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/OtChargeService.php
+
+		-
+			message: '#^Parameter \#1 \$surgery of method App\\Services\\Ot\\OtChargeService\:\:context\(\) expects App\\Models\\Ot\\OtSurgery, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtChargeService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Ot/OtChargeService.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientService\:\:grantConsent\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtConsentService.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Ot/OtNumberGenerator.php
+
+		-
+			message: '#^Method App\\Services\\Ot\\OtOperativeNoteService\:\:addAddendum\(\) should return App\\Models\\Ot\\OtOperativeNoteAmendment but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Ot/OtOperativeNoteService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$admission\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/OtRecoveryService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$encounter\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/OtRecoveryService.php
+
+		-
+			message: '#^Parameter \#1 \$surgery of method App\\Services\\Ot\\OtSurgeryLifecycleService\:\:transitionTo\(\) expects App\\Models\\Ot\\OtSurgery, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtRecoveryService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Clinical\\ClinicalNumberGenerator\:\:generateOrderNumber\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtSpecimenService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTerminal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ot/OtSurgeryRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:approve\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtSurgeryRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:cancel\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtSurgeryRequestService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:reject\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Ot/OtSurgeryRequestService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$laterality\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/OtVerificationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$site\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ot/OtVerificationService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isActive\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Ot/OtVerificationService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:approve\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Patients/PatientAmendmentService.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method App\\Services\\Workflow\\WorkflowEngine\:\:reject\(\) expects App\\Models\\WorkflowInstance, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Patients/PatientAmendmentService.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Patients/PatientAmendmentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\)\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addAddress\(\) should return App\\Models\\PatientAddress but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addAlert\(\) should return App\\Models\\PatientAlert but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addAllergy\(\) should return App\\Models\\PatientAllergy but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addContact\(\) should return App\\Models\\PatientContact but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addGuardian\(\) should return App\\Models\\PatientGuardian but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:addHistory\(\) should return App\\Models\\PatientHistory but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:grantConsent\(\) should return App\\Models\\PatientConsent but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Method App\\Services\\Patients\\PatientService\:\:setPreferences\(\) should return App\\Models\\PatientPreference but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Patients\\PatientNumberGenerator\:\:generateEnterprisePatientNo\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|\(Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Parameter \#1 \$organization of method App\\Services\\Patients\\PatientNumberGenerator\:\:generateLocalPatientNo\(\) expects App\\Models\\Organization, Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Parameter \#1 \$patient of method App\\Services\\Patients\\PatientTimelineService\:\:record\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Patients/PatientService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Patients/PatientTimelineService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$dispensed_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$dispensed_by\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$prescription_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationDispenseFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$generic_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/Fhir/MedicationFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Pharmacy\\PharmacyBatch\>\|Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyDispensingService.php
+
+		-
+			message: '#^Parameter \#1 \$item of class App\\Events\\Pharmacy\\MedicationDispensed constructor expects App\\Models\\Pharmacy\\PharmacyDispensingItem, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyDispensingService.php
+
+		-
+			message: '#^Parameter \#2 \$patient of method App\\Services\\Pharmacy\\PharmacyDispensingSafetyService\:\:runFor\(\) expects App\\Models\\Patient, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyDispensingService.php
+
+		-
+			message: '#^Parameter \#3 \$batch of method App\\Services\\Pharmacy\\PharmacyControlledDrugService\:\:record\(\) expects App\\Models\\Pharmacy\\PharmacyBatch\|null, Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Pharmacy\\PharmacyBatch\>\|Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyDispensingService.php
+
+		-
+			message: '#^Parameter \#3 \$batch of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyBatch, Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Pharmacy\\PharmacyBatch\>\|Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyDispensingService.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Pharmacy/PharmacyNumberGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity_dispensed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyOrderLifecycleService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyOrderLifecycleService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:remainingQuantity\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacyOrderLifecycleService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyOrderService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicine_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacyOrderService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyOrderService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyQuarantineService.php
+
+		-
+			message: '#^Parameter \#2 \$medication of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyMedication, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyQuarantineService.php
+
+		-
+			message: '#^Parameter \#3 \$batch of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyBatch, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyQuarantineService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyQuarantineService\:\:quarantine\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyRecallService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$dispensingItem\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyReturnService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity_returned\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyReturnService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$returnable_to_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyReturnService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyStockService\:\:credit\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyReturnService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$generic_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacySafetyCheckService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacySafetyCheckService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$substance\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacySafetyCheckService.php
+
+		-
+			message: '#^Offset ''interacting…'' on array\{severity\: string, interacting_reference\: string, explanation\: string, recommended_action\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Services/Pharmacy/PharmacySafetyCheckService.php
+
+		-
+			message: '#^Offset ''severity'' on array\{severity\: string, interacting_reference\: string, explanation\: string, recommended_action\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Services/Pharmacy/PharmacySafetyCheckService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$batch\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$counted_quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$expected_quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockCountService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$variance\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockCountService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyStockService\:\:adjust\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockCountService.php
+
+		-
+			message: '#^Parameter \#2 \$medication of method App\\Services\\Pharmacy\\PharmacyStockService\:\:credit\(\) expects App\\Models\\Pharmacy\\PharmacyMedication, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Services/Pharmacy/PharmacyStockService.php
+
+		-
+			message: '#^Parameter \#2 \$medication of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyMedication, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyStockService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$batch\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medication\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity_dispatched\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity_requested\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyStockService\:\:debit\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Parameter \#1 \$store of method App\\Services\\Pharmacy\\PharmacyStockService\:\:receiveIntoBatch\(\) expects App\\Models\\Pharmacy\\PharmacyStore, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Pharmacy/PharmacyTransferService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$radiologyOrder\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Radiology/RadiologyExaminationService.php
+
+		-
+			message: '#^Match arm comparison between ''SEQ'' and ''SEQ'' is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Services/Radiology/RadiologyNumberGenerator.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$item_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Radiology/RadiologyRegistrationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$item_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Radiology/RadiologyRegistrationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$orderItem\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Radiology/RadiologyReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$radiologyOrder\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Radiology/RadiologyReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$encounter_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Parameter \#1 \$order of method App\\Services\\Radiology\\RadiologyOrderLifecycleService\:\:transitionTo\(\) expects App\\Models\\Radiology\\RadiologyOrder, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Radiology/RadiologySchedulingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Radiology/RadiologyStudyService.php
+
+		-
+			message: '#^Parameter \#1 \$server of method App\\Services\\Radiology\\Pacs\\PacsClientFactory\:\:for\(\) expects App\\Models\\Radiology\\RadiologyPacsServer, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Radiology/RadiologyStudyService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$public_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Search/GlobalSearchService.php
+
+		-
+			message: '#^Method App\\Services\\Search\\GlobalSearchService\:\:search\(\) should return Illuminate\\Support\\Collection\<int, array\{type\: string, id\: string, label\: string, number\: string\|null, matched_on\: string, url\: string\}\> but returns Illuminate\\Support\\Collection\<int, array\{type\: string, id\: mixed, label\: string, number\: string\|null, matched_on\: string, url\: string\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Search/GlobalSearchService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,array\<string, int\|string\>\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Search/GlobalSearchService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Search/ScanResolver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>group" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/SettingsService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>is_locked" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/SettingsService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>is_sensitive" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/SettingsService.php
+
+		-
+			message: '#^Method App\\Services\\Stock\\StockLedgerReconciler\:\:pharmacyDrift\(\) should return Illuminate\\Support\\Collection\<int, object\{store_id\: int, item_id\: int, batch_id\: int, on_hand\: int, ledger\: float\}\> but returns Illuminate\\Support\\Collection\<int, stdClass\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Stock/StockLedgerReconciler.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 2
+			path: app/Services/TenantContextResolver.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: app/Services/Terminology/CodeImporter.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$bed\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ux/PatientBannerData.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$severity\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Ux/PatientBannerData.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$substance\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ux/PatientBannerData.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Ux/PatientBannerData.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 2
+			path: app/Services/Ux/PatientBannerData.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$approvers\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Workflow/WorkflowEngine.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:firstStep\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Workflow/WorkflowEngine.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:nextStep\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Workflow/WorkflowEngine.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$city\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$country\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$district\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$identifier_type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$identifier_value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$issuing_authority\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$line1\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$line2\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$postal_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$relationship\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$state\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Method App\\Support\\Fhir\\PatientFhirMapper\:\:gender\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_values contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 2
+			path: app/Support/Fhir/PatientFhirMapper.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Support/ModuleMenuFilter.php
+
+		-
+			message: '#^Method App\\Support\\ModuleMenuFilter\:\:transform\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Support/ModuleMenuFilter.php
+
+		-
+			message: '#^Method App\\Support\\RegistryInspector\:\:permissions\(\) should return array\<string, list\<string\>\> but returns array\<non\-falsy\-string, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Support/RegistryInspector.php
+
+		-
+			message: '#^Parameter \#1 \$prefix of method App\\Support\\RegistryInspector\:\:ownerOfPermissionPrefix\(\) expects string, list\<string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Support/RegistryInspector.php
+
+		-
+			message: '#^Part \$prefix \(list\<string\>\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Support/RegistryInspector.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$disk\.$#'
+			identifier: property.notFound
+			count: 2
+			path: modules/Appointments/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$original_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Appointments/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$path\.$#'
+			identifier: property.notFound
+			count: 2
+			path: modules/Appointments/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Parameter \#2 \$operator of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Appointment\>\:\:whereDate\(\) expects DateTimeInterface\|string\|null, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Appointments/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Parameter \#3 \$value of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Appointment\>\:\:whereDate\(\) expects DateTimeInterface\|string\|null, bool given\.$#'
+			identifier: argument.type
+			count: 2
+			path: modules/Appointments/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$appointment_time\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Appointments/Http/Controllers/QueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Appointments/Http/Controllers/QueueController.php
+
+		-
+			message: '#^Parameter \#1 \$appointment of method App\\Services\\Appointments\\AppointmentLifecycleService\:\:complete\(\) expects App\\Models\\Appointment, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Appointments/Http/Controllers/QueueController.php
+
+		-
+			message: '#^Parameter \#1 \$appointment of method App\\Services\\Appointments\\AppointmentLifecycleService\:\:startConsultation\(\) expects App\\Models\\Appointment, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Appointments/Http/Controllers/QueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: modules/Billing/Http/Controllers/Web/BillingCorporateController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Billing/Http/Controllers/Web/BillingPriceListController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between bool and ''active'' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: modules/Core/Organization/Http/Controllers/OrganizationController.php
+
+		-
+			message: '#^Undefined variable\: \$request$#'
+			identifier: variable.undefined
+			count: 1
+			path: modules/Core/Organization/Http/Controllers/OrganizationController.php
+
+		-
+			message: '#^Property Modules\\Icu\\Http\\Controllers\\Api\\V1\\IcuCareController\:\:\$episodes is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: modules/Icu/Http/Controllers/Api/V1/IcuCareController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Ipd/Http/Controllers/Api/V1/IpdBedController.php
+
+		-
+			message: '#^Parameter \#1 \$allocation of method App\\Services\\Ipd\\IpdBedAllocationService\:\:release\(\) expects App\\Models\\Ipd\\IpdBedAllocation, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Ipd/Http/Controllers/Api/V1/IpdBedController.php
+
+		-
+			message: '#^Parameter \#1 \$paginator of static method App\\Http\\Responses\\ApiResponse\:\:paginated\(\) expects Illuminate\\Pagination\\LengthAwarePaginator, Illuminate\\Contracts\\Pagination\\LengthAwarePaginator given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Ipd/Http/Controllers/Api/V1/IpdCatalogController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator\:\:getCollection\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: modules/Ipd/Http/Controllers/Web/IpdBedBoardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Laboratory/Http/Controllers/Web/LabOrderController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$labOrder\.$#'
+			identifier: property.notFound
+			count: 3
+			path: modules/Laboratory/Http/Controllers/Web/LabResultController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:dischargeRequests\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: modules/Nursing/Http/Controllers/Web/NursingDischargeChecklistController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:vitals\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: modules/Nursing/Http/Controllers/Web/NursingObservationController.php
+
+		-
+			message: '#^Property Modules\\Ot\\Http\\Controllers\\Api\\V1\\OtCareController\:\:\$surgeries is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: modules/Ot/Http/Controllers/Api/V1/OtCareController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$surgery\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Ot/Http/Controllers/Api/V1/OtClinicalController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$surgery\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Ot/Http/Controllers/Web/OtPreoperativeController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Pharmacy/Http/Controllers/Web/PharmacyOrderController.php
+
+		-
+			message: '#^Parameter \#1 \$batch of method App\\Services\\Pharmacy\\PharmacyRecallService\:\:affectedDispensingItems\(\) expects App\\Models\\Pharmacy\\PharmacyBatch, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Pharmacy/Http/Controllers/Web/PharmacyRecallController.php
+
+		-
+			message: '#^Parameter \#1 \$paginator of static method App\\Http\\Responses\\ApiResponse\:\:paginated\(\) expects Illuminate\\Pagination\\LengthAwarePaginator, Illuminate\\Contracts\\Pagination\\LengthAwarePaginator given\.$#'
+			identifier: argument.type
+			count: 1
+			path: modules/Radiology/Http/Controllers/Api/V1/RadiologyWorklistController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologyOrderController.php
+
+		-
+			message: '#^Cannot call method diffInMinutes\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologyReportingController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Radiology\\RadiologyExamination\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologyReportingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$duration_minutes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologySchedulingController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>duration_minutes" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologySchedulingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Radiology\\RadiologyStudy\:\:\$examination_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: modules/Radiology/Http/Controllers/Web/RadiologyStudyController.php

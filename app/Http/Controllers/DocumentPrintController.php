@@ -13,9 +13,17 @@ class DocumentPrintController extends Controller
         $validated = $request->validate([
             'lang' => ['nullable', 'string', 'max:8'],
             'reason' => ['nullable', 'string', 'max:255'],
+            'format' => ['nullable', 'in:html,pdf'],
         ]);
 
         $language = $validated['lang'] ?? (app()->getLocale() === 'bn' ? 'bn' : 'en');
+
+        if (($validated['format'] ?? 'html') === 'pdf') {
+            return response($documents->renderPdf($type, $reference, $language, $request->user(), $validated['reason'] ?? null))
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="'.preg_replace('/[^A-Za-z0-9._-]/', '_', $type.'-'.$reference).'.pdf"')
+                ->header('Cache-Control', 'no-store, private');
+        }
 
         return response($documents->render($type, $reference, $language, $request->user(), $validated['reason'] ?? null))
             ->header('Content-Type', 'text/html; charset=UTF-8')

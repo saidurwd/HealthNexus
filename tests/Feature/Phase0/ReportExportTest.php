@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use OpenSpout\Reader\XLSX\Reader;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -173,5 +174,30 @@ class ReportExportTest extends TestCase
 
         $this->actingAs($outsider, 'sanctum')->withHeader('X-Organization-Id', (string) $otherOrg->id)
             ->getJson("/api/v1/exports/{$export->public_id}")->assertNotFound();
+    }
+
+    public function test_xlsx_export_has_the_watermark_masks_sensitive_columns_and_keeps_text_as_text(): void
+    {
+        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => '=SUM(A1)', 'last_name' => 'Test', 'phone' => '01711000111']);
+
+        $export = app(ReportExportService::class)->request($this->user, 'patients.list', 'xlsx')->refresh();
+
+        $this->assertSame('completed', $export->status);
+        $reader = new Reader;
+        $reader->open(Storage::disk('local')->path($export->path));
+        $cells = [];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+                $cells[] = array_map(fn ($c) => $c->getValue(), $row->cells);
+            }
+        }
+        $reader->close();
+
+        $flat = json_encode($cells, JSON_UNESCAPED_UNICODE);
+        $this->assertStringContainsString('exported by Rahim Uddin', $flat);
+        $this->assertStringContainsString('=SUM(A1) Test', $flat);
+        $this->assertStringNotContainsString('FormulaCell', $flat);
+        $this->assertStringNotContainsString('01711000111', $flat);
+        $this->assertStringContainsString('***', $flat);
     }
 }

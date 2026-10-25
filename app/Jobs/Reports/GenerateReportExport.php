@@ -7,6 +7,7 @@ use App\Services\AuditLogger;
 use App\Services\Reports\CsvExportWriter;
 use App\Services\Reports\ReportContext;
 use App\Services\Reports\ReportRegistry;
+use App\Services\Reports\XlsxExportWriter;
 use App\Services\TenantContextResolver;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -41,7 +42,7 @@ class GenerateReportExport implements ShouldQueue
             $path = sprintf('exports/%d/%s.%s', $export->organization_id, $export->public_id, $export->format);
             $disk = config('reports.disk');
 
-            $result = $writer->write(
+            $result = ($export->format === 'xlsx' ? app(XlsxExportWriter::class) : $writer)->write(
                 $registry->find($export->report_key),
                 new ReportContext($export->user, $export->organization_id, $export->branch_id, $export->filters ?? []),
                 $disk,

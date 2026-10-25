@@ -3,6 +3,7 @@
 namespace App\Services\Documents;
 
 use App\Contracts\Documents\DocumentProvider;
+use App\Contracts\Documents\PdfRenderer;
 use App\Models\Branch;
 use App\Models\User;
 use App\Services\AuditLogger;
@@ -90,6 +91,14 @@ class DocumentService
         }
 
         return $this->layout($provider, $type, $body);
+    }
+
+    /** The same document as a PDF (print audit is written once, by render()). */
+    public function renderPdf(string $type, string $reference, string $language, User $user, ?string $reprintReason = null): string
+    {
+        $html = $this->render($type, $reference, $language, $user, $reprintReason);
+
+        return app(PdfRenderer::class)->render($html, $this->provider($type)->paper());
     }
 
     /** Stores an administrator-edited template as a new version. Invalid or unsafe templates are refused. */

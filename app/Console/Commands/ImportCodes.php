@@ -12,7 +12,7 @@ class ImportCodes extends Command
         {file : CSV converted from the official distribution}
         {--delimiter=, : Field delimiter}
         {--code-col=code} {--display-col=display_en} {--display-bn-col=display_bn} {--parent-col=parent_code}
-        {--version= : Release version of the file}
+        {--release= : Release version of the file}
         {--map-to= : Treat the file as a map (from_code,to_code[,relationship]) from {system} to this system key}';
 
     protected $description = 'Load concepts (or code maps) from an official code-system file into the Code System Registry';
@@ -37,7 +37,7 @@ class ImportCodes extends Command
                     'display_en' => $this->option('display-col'),
                     'display_bn' => $this->option('display-bn-col'),
                     'parent_code' => $this->option('parent-col'),
-                ], $this->option('delimiter'), $this->option('version'));
+                ], $this->option('delimiter'), $this->option('release'));
             }
         } catch (\InvalidArgumentException $e) {
             $this->error($e->getMessage());

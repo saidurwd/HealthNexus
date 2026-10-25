@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Billing;
 
+use App\Contracts\Documents\PdfRenderer;
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
@@ -172,5 +173,47 @@ class DocumentPrintTest extends BillingTestCase
         $response->assertHeader('Content-Type', 'text/html; charset=UTF-8');
         $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
         $this->assertStringContainsString('পেমেন্ট রসিদ', $response->getContent());
+    }
+
+    public function test_pdf_route_returns_a_pdf_made_from_the_same_audited_document(): void
+    {
+        $this->app->instance(PdfRenderer::class, new class implements PdfRenderer
+        {
+            public string $seen = '';
+
+            public function render(string $html, string $paper): string
+            {
+                $this->seen = $paper.'|'.$html;
+
+                return '%PDF-1.7 fake';
+            }
+        });
+
+        $response = $this->get('/admin/documents/receipt/'.$this->receiptNumber.'?lang=bn&format=pdf');
+
+        $response->assertOk()->assertHeader('Content-Type', 'application/pdf');
+        $this->assertSame('%PDF-1.7 fake', $response->getContent());
+        $this->assertStringStartsWith('thermal80|', app(PdfRenderer::class)->seen);
+        $this->assertStringContainsString('পেমেন্ট রসিদ', app(PdfRenderer::class)->seen);
+        $this->assertSame(1, DB::table('document_prints')->where('document_ref', $this->receiptNumber)->count());
+    }
+
+    /** The guideline's "Bangla PDF test": real headless Chromium, conjunct letters, Bangla numerals, long names. Skipped where no Chrome exists. */
+    public function test_real_chromium_prints_a_bangla_receipt_to_pdf(): void
+    {
+        $chrome = config('documents.pdf.chrome_path') ?: collect(['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'])->first(fn ($p) => is_executable($p));
+        if (! $chrome || ! is_dir(base_path('node_modules/puppeteer'))) {
+            $this->markTestSkipped('Chromium or the puppeteer package is not installed here.');
+        }
+
+        config(['documents.pdf.chrome_path' => $chrome, 'documents.pdf.no_sandbox' => true]);
+        $this->patient->update(['first_name' => 'মোহাম্মদ আব্দুর রহিম উদ্দিন', 'last_name' => 'চৌধুরী শ্রীমতি']);
+        app(SettingsService::class)->set('documents.bangla_numerals', true);
+
+        $pdf = app(DocumentService::class)->renderPdf('receipt', $this->receiptNumber, 'bn', $this->user);
+
+        $this->assertStringStartsWith('%PDF-', $pdf);
+        $this->assertGreaterThan(8000, strlen($pdf));
+        file_put_contents(sys_get_temp_dir().'/healthnexus-bangla-receipt.pdf', $pdf);
     }
 }

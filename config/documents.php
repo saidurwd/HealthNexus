@@ -13,6 +13,14 @@ return [
         WristbandDocument::class,
     ],
 
+    // PDF printing through headless Chromium (Browsershot). Install: `npm install puppeteer`, and Chromium/Chrome on the server.
+    'pdf' => [
+        'chrome_path' => env('BROWSERSHOT_CHROME_PATH'),
+        'node_binary' => env('BROWSERSHOT_NODE_BINARY'),
+        'npm_binary' => env('BROWSERSHOT_NPM_BINARY'),
+        'no_sandbox' => (bool) env('BROWSERSHOT_NO_SANDBOX', false),   // true inside Docker/CI containers
+    ],
+
     'languages' => ['en', 'bn', 'en+bn'],
 
     // Page rules per paper type. Output is HTML with @page rules: the browser prints it (Bangla shaped by the
