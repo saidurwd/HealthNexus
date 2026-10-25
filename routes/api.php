@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\DepartmentController;
 use App\Http\Controllers\Api\V1\EncounterController;
 use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\ProviderController;
+use App\Http\Controllers\Api\V1\ReportExportController;
 use App\Http\Controllers\Api\V1\TenantContextController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Middleware\ApplyTenantContextToInput;
@@ -24,6 +25,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', ApplyTenantContextToInput::class])->group(function () {
         Route::get('/tenant/context', [TenantContextController::class, 'show']);
         Route::get('/codes/search', CodeSearchController::class);
+        Route::post('/exports', [ReportExportController::class, 'store']);
+        Route::get('/exports/{export}', [ReportExportController::class, 'show']);
+        Route::get('/exports/{export}/download', [ReportExportController::class, 'download']);
         Route::post('/tenant/context', [TenantContextController::class, 'update']);
 
         require __DIR__.'/../modules/Settings/Routes/api.php';

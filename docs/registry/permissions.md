@@ -479,7 +479,7 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `45`
 - `46`
 
-## patient (16)
+## patient (17)
 
 - `0`
 - `1`
@@ -497,6 +497,7 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `13`
 - `14`
 - `15`
+- `16`
 
 ## pharmacy (43)
 

@@ -78,3 +78,5 @@ Schedule::command('icu:generate-daily-census')->dailyAt('00:05')->name('icu-gene
 Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-generate-charge-events')->withoutOverlapping();
 
 Schedule::job(new \App\Jobs\Clinical\EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
+
+Schedule::command('exports:prune')->hourly()->name('exports-prune')->withoutOverlapping();
