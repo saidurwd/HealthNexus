@@ -45,7 +45,7 @@ class OrganizationController extends Controller
 
         $this->auditLogger->log('CREATE', Organization::class, $organization->id, null, $organization->toArray(), $request);
 
-        return redirect()->route('admin.organizations.index')->with('success', 'Organization created successfully.');
+        return redirect()->route('admin.organizations.index')->with('success', __('Organization created successfully.'));
     }
 
     public function show(Organization $organization)
@@ -75,7 +75,7 @@ class OrganizationController extends Controller
 
         $this->auditLogger->log('UPDATE', Organization::class, $organization->id, $oldValues, $organization->toArray(), $request);
 
-        return redirect()->route('admin.organizations.index')->with('success', 'Organization updated successfully.');
+        return redirect()->route('admin.organizations.index')->with('success', __('Organization updated successfully.'));
     }
 
     public function destroy(Organization $organization)
@@ -85,6 +85,6 @@ class OrganizationController extends Controller
 
         $this->auditLogger->log('DELETE', Organization::class, $organization->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.organizations.index')->with('success', 'Organization deleted successfully.');
+        return redirect()->route('admin.organizations.index')->with('success', __('Organization deleted successfully.'));
     }
 }

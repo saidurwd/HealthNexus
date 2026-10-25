@@ -40,6 +40,6 @@ class OtSpecimenController extends Controller
 
         $this->auditLogger->log('CREATE', OtSpecimen::class, $specimen->id, null, $specimen->toArray(), $request);
 
-        return back()->with('success', 'Specimen recorded.');
+        return back()->with('success', __('Specimen recorded.'));
     }
 }

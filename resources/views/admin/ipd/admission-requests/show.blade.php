@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Admission Request — {{ $admissionRequest->patient?->full_name }} <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admissionRequest->status)) }}</span></h3>
+        <h3>Admission Request — {{ $admissionRequest->patient?->full_name }} <x-ui.status-badge :status="$admissionRequest->status" /></h3>
         <div>
             @can('ipd.admission.approve')
                 @if(in_array($admissionRequest->status, ['requested', 'pending_approval']))

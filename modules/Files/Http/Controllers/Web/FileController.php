@@ -43,6 +43,6 @@ class FileController extends Controller
 
         $this->files->delete($file);
 
-        return back()->with('success', 'File deleted successfully.');
+        return back()->with('success', __('File deleted successfully.'));
     }
 }

@@ -52,7 +52,7 @@
                                         @if($alert->isActive())
                                             <span class="badge bg-success">{{ __('Active') }}</span>
                                         @else
-                                            <span class="badge bg-secondary">{{ ucfirst($alert->status) }}</span>
+                                            <x-ui.status-badge :status="$alert->status" />
                                         @endif
                                     </td>
                                     <td>{{ $alert->start_at?->format('Y-m-d') ?? '-' }}</td>

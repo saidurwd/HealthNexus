@@ -39,7 +39,7 @@ class NursingNoteController extends Controller
 
         $this->auditLogger->log('CREATE', NursingNote::class, $note->id, null, $note->toArray(), $request);
 
-        return back()->with('success', 'Note saved as draft.');
+        return back()->with('success', __('Note saved as draft.'));
     }
 
     public function update(Request $request, NursingNote $note)
@@ -56,7 +56,7 @@ class NursingNoteController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingNote::class, $note->id, null, $validated, $request);
 
-        return back()->with('success', 'Note updated.');
+        return back()->with('success', __('Note updated.'));
     }
 
     public function finalize(Request $request, NursingNote $note)
@@ -71,7 +71,7 @@ class NursingNoteController extends Controller
 
         $this->auditLogger->log('FINALIZE', NursingNote::class, $note->id, null, ['status' => 'final'], $request);
 
-        return back()->with('success', 'Note finalized and signed.');
+        return back()->with('success', __('Note finalized and signed.'));
     }
 
     public function amend(Request $request, NursingNote $note)
@@ -88,6 +88,6 @@ class NursingNoteController extends Controller
 
         $this->auditLogger->log('AMEND', NursingNote::class, $note->id, null, $amendment->toArray(), $request);
 
-        return back()->with('success', 'Addendum added.');
+        return back()->with('success', __('Addendum added.'));
     }
 }

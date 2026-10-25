@@ -3,12 +3,13 @@
 @section('page_title', 'Radiology Order — '.$order->order_number)
 
 @section('page_content')
+    @if($order->patient)<x-patient-banner :patient="$order->patient" />@endif
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $order->order_number }}</h3>
-                    <div class="card-tools"><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></div>
+                    <div class="card-tools"><x-ui.status-badge :status="$order->status" /></div>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">

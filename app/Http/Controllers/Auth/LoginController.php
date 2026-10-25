@@ -160,7 +160,7 @@ class LoginController extends Controller
 
         $user->update(['last_login_at' => now()]);
 
-        return redirect()->intended('/dashboard');
+        return redirect()->intended(app(\App\Services\Ux\RoleHome::class)->urlFor($user));
     }
 
     public function logout(Request $request)

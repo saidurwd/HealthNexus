@@ -72,7 +72,7 @@ class DoctorScheduleController extends Controller
 
         $this->auditLogger->log('CREATE', DoctorSchedule::class, $schedule->id, null, $schedule->toArray(), $request);
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule created successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule created successfully.'));
     }
 
     public function show(DoctorSchedule $schedule)
@@ -127,7 +127,7 @@ class DoctorScheduleController extends Controller
 
         $this->auditLogger->log('UPDATE', DoctorSchedule::class, $schedule->id, $oldValues, $schedule->toArray(), $request);
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule updated successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule updated successfully.'));
     }
 
     public function destroy(DoctorSchedule $schedule)
@@ -139,7 +139,7 @@ class DoctorScheduleController extends Controller
 
         $this->auditLogger->log('DELETE', DoctorSchedule::class, $schedule->id, $oldValues, null, request());
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule deleted successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule deleted successfully.'));
     }
 
     public function generateSlots(Request $request, DoctorSchedule $schedule)

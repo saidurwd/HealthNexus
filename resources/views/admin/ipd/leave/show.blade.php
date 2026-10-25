@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Leave — {{ $leave->patient?->full_name }} <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $leave->status)) }}</span></h3>
+        <h3>Leave — {{ $leave->patient?->full_name }} <x-ui.status-badge :status="$leave->status" /></h3>
         <div>
             @can('approve', $leave)
                 @if($leave->status === 'requested')

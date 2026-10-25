@@ -35,7 +35,7 @@
                                 <td><a href="{{ route('admin.appointments.show', $appointment) }}">{{ $appointment->patient->full_name ?? '-' }}</a></td>
                                 <td>{{ $appointment->token->token_number ?? '-' }}</td>
                                 <td class="text-center">
-                                    <span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $appointment->status)) }}</span>
+                                    <x-ui.status-badge :status="$appointment->status" />
                                 </td>
                             </tr>
                         @empty

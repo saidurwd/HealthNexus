@@ -35,7 +35,7 @@
                             <td>{{ $charge->billingItem?->name }}</td>
                             <td>{{ $charge->quantity }}</td>
                             <td>{{ number_format($charge->net_amount, 2) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($charge->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$charge->status" /></td>
                             <td>{{ $charge->charged_at?->format('Y-m-d H:i') }}</td>
                             <td><a href="{{ route('admin.billing.charges.show', $charge) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

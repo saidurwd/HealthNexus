@@ -10,7 +10,7 @@
                 <table class="table table-sm mb-0">
                     <tr><th>{{ __('Admission #') }}</th><td>{{ $admission->admission_number }}</td></tr>
                     <tr><th>{{ __('Type') }}</th><td>{{ $admission->admissionType?->name ?? '—' }}</td></tr>
-                    <tr><th>{{ __('Status') }}</th><td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admission->status)) }}</span></td></tr>
+                    <tr><th>{{ __('Status') }}</th><td><x-ui.status-badge :status="$admission->status" /></td></tr>
                     <tr>
                         <th>{{ __('Current Location') }}</th>
                         <td>

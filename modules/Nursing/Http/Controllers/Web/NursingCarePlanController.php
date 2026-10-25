@@ -33,7 +33,7 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('CREATE', NursingCarePlan::class, $carePlan->id, null, $carePlan->toArray(), $request);
 
-        return redirect()->route('admin.nursing.care-plans.show', $carePlan)->with('success', 'Care plan created.');
+        return redirect()->route('admin.nursing.care-plans.show', $carePlan)->with('success', __('Care plan created.'));
     }
 
     public function storeDiagnosis(Request $request, NursingCarePlan $carePlan)
@@ -51,7 +51,7 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingDiagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
-        return back()->with('success', 'Nursing diagnosis added.');
+        return back()->with('success', __('Nursing diagnosis added.'));
     }
 
     public function storeGoal(Request $request, NursingCarePlan $carePlan)
@@ -68,7 +68,7 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingCarePlanGoal::class, $goal->id, null, $goal->toArray(), $request);
 
-        return back()->with('success', 'Goal added.');
+        return back()->with('success', __('Goal added.'));
     }
 
     public function storeIntervention(Request $request, NursingCarePlan $carePlan)
@@ -86,7 +86,7 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingCarePlanIntervention::class, $intervention->id, null, $intervention->toArray(), $request);
 
-        return back()->with('success', 'Intervention added.');
+        return back()->with('success', __('Intervention added.'));
     }
 
     public function complete(Request $request, NursingCarePlan $carePlan)
@@ -97,6 +97,6 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('COMPLETE', NursingCarePlan::class, $carePlan->id, null, ['status' => 'completed'], $request);
 
-        return back()->with('success', 'Care plan completed.');
+        return back()->with('success', __('Care plan completed.'));
     }
 }

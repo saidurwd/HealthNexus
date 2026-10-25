@@ -40,6 +40,6 @@ class SettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
+        return redirect()->route('admin.settings.index')->with('success', __('Settings updated successfully.'));
     }
 }

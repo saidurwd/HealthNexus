@@ -45,7 +45,7 @@ class IcuCriticalEventController extends Controller
 
         $event = $this->events->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.critical-events.index')->with('success', 'Critical event documented.');
+        return redirect()->route('admin.icu.critical-events.index')->with('success', __('Critical event documented.'));
     }
 
     public function finalize(Request $request, IcuCriticalEvent $event)
@@ -58,6 +58,6 @@ class IcuCriticalEventController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.critical-events.index')->with('success', 'Critical event finalized.');
+        return redirect()->route('admin.icu.critical-events.index')->with('success', __('Critical event finalized.'));
     }
 }

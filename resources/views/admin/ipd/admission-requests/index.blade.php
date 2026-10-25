@@ -30,7 +30,7 @@
                             <td>{{ $req->admissionType?->name ?? '—' }}</td>
                             <td>{{ ucfirst($req->priority) }}</td>
                             <td>{{ $req->created_at->format('Y-m-d H:i') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $req->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$req->status" /></td>
                             <td><a href="{{ route('admin.ipd.admission-requests.show', $req) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

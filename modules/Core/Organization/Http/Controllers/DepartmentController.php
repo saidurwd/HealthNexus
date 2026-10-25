@@ -75,7 +75,7 @@ class DepartmentController extends Controller
 
         $branch->departments()->create($validated);
 
-        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', 'Department created successfully.');
+        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', __('Department created successfully.'));
     }
 
     public function show(Organization $organization, Branch $branch, Department $department)
@@ -108,7 +108,7 @@ class DepartmentController extends Controller
 
         $department->update($validated);
 
-        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', 'Department updated successfully.');
+        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', __('Department updated successfully.'));
     }
 
     public function destroy(Organization $organization, Branch $branch, Department $department)
@@ -117,6 +117,6 @@ class DepartmentController extends Controller
 
         $department->delete();
 
-        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', 'Department deleted successfully.');
+        return redirect()->route('admin.organizations.branches.departments.index', [$organization, $branch])->with('success', __('Department deleted successfully.'));
     }
 }

@@ -66,7 +66,7 @@ class IpdBedController extends Controller
 
         $this->auditLogger->log('CREATE', IpdBed::class, $bed->id, null, $bed->toArray(), $request);
 
-        return redirect()->route('admin.ipd.beds.index')->with('success', 'Bed created.');
+        return redirect()->route('admin.ipd.beds.index')->with('success', __('Bed created.'));
     }
 
     public function edit(IpdBed $bed)
@@ -90,7 +90,7 @@ class IpdBedController extends Controller
 
         $this->auditLogger->log('UPDATE', IpdBed::class, $bed->id, $oldValues, $bed->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.beds.index')->with('success', 'Bed updated.');
+        return redirect()->route('admin.ipd.beds.index')->with('success', __('Bed updated.'));
     }
 
     public function block(Request $request, IpdBed $bed)
@@ -111,7 +111,7 @@ class IpdBedController extends Controller
 
         $this->auditLogger->log('BLOCK', IpdBedBlock::class, $block->id, null, $block->toArray(), $request);
 
-        return redirect()->route('admin.ipd.beds.index')->with('success', 'Bed blocked.');
+        return redirect()->route('admin.ipd.beds.index')->with('success', __('Bed blocked.'));
     }
 
     public function unblock(Request $request, IpdBedBlock $block)
@@ -128,7 +128,7 @@ class IpdBedController extends Controller
 
         $this->auditLogger->log('UNBLOCK', IpdBedBlock::class, $block->id, $oldValues, $block->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.beds.index')->with('success', 'Bed unblocked.');
+        return redirect()->route('admin.ipd.beds.index')->with('success', __('Bed unblocked.'));
     }
 
     private function rules(): array

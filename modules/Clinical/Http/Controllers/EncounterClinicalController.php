@@ -40,7 +40,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->start($encounter, $request->user());
 
-        return back()->with('success', 'Encounter started successfully.');
+        return back()->with('success', __('Encounter started successfully.'));
     }
 
     public function pause(Request $request, Encounter $encounter)
@@ -49,7 +49,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->pause($encounter, $request->user());
 
-        return back()->with('success', 'Encounter paused successfully.');
+        return back()->with('success', __('Encounter paused successfully.'));
     }
 
     public function resume(Request $request, Encounter $encounter)
@@ -58,7 +58,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->resume($encounter, $request->user());
 
-        return back()->with('success', 'Encounter resumed successfully.');
+        return back()->with('success', __('Encounter resumed successfully.'));
     }
 
     public function complete(Request $request, Encounter $encounter)
@@ -67,7 +67,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->complete($encounter, $request->user());
 
-        return back()->with('success', 'Encounter completed and locked.');
+        return back()->with('success', __('Encounter completed and locked.'));
     }
 
     public function lock(Request $request, Encounter $encounter)
@@ -76,7 +76,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->lock($encounter, $request->user());
 
-        return back()->with('success', 'Encounter locked successfully.');
+        return back()->with('success', __('Encounter locked successfully.'));
     }
 
     public function cancel(Request $request, Encounter $encounter)
@@ -89,7 +89,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->cancel($encounter, $validated['reason'] ?? null, $request->user());
 
-        return back()->with('success', 'Encounter cancelled successfully.');
+        return back()->with('success', __('Encounter cancelled successfully.'));
     }
 
     public function transfer(Request $request, Encounter $encounter)
@@ -98,7 +98,7 @@ class EncounterClinicalController extends Controller
 
         $this->lifecycleService->transfer($encounter, $request->user());
 
-        return back()->with('success', 'Encounter transferred successfully.');
+        return back()->with('success', __('Encounter transferred successfully.'));
     }
 
     public function storeVital(StoreEncounterVitalRequest $request, Encounter $encounter)
@@ -109,7 +109,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
-        return back()->with('success', 'Vitals recorded successfully.');
+        return back()->with('success', __('Vitals recorded successfully.'));
     }
 
     public function storeDiagnosis(StoreEncounterDiagnosisRequest $request, Encounter $encounter)
@@ -120,7 +120,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Diagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
-        return back()->with('success', 'Diagnosis added successfully.');
+        return back()->with('success', __('Diagnosis added successfully.'));
     }
 
     public function storePrescription(StoreEncounterPrescriptionRequest $request, Encounter $encounter)
@@ -131,7 +131,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', Prescription::class, $prescription->id, null, $prescription->toArray(), $request);
 
-        return back()->with('success', 'Prescription drafted successfully.');
+        return back()->with('success', __('Prescription drafted successfully.'));
     }
 
     public function issuePrescription(Request $request, Encounter $encounter, Prescription $prescription)
@@ -143,7 +143,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('ISSUE', Prescription::class, $prescription->id, $oldValues, $prescription->fresh()->toArray(), $request);
 
-        return back()->with('success', 'Prescription issued successfully.');
+        return back()->with('success', __('Prescription issued successfully.'));
     }
 
     public function cancelPrescription(Request $request, Encounter $encounter, Prescription $prescription)
@@ -155,7 +155,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CANCEL', Prescription::class, $prescription->id, $oldValues, $prescription->fresh()->toArray(), $request);
 
-        return back()->with('success', 'Prescription cancelled successfully.');
+        return back()->with('success', __('Prescription cancelled successfully.'));
     }
 
     public function storeComplaint(StoreEncounterComplaintRequest $request, Encounter $encounter)
@@ -164,7 +164,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addComplaint($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Complaint added successfully.');
+        return back()->with('success', __('Complaint added successfully.'));
     }
 
     public function storeHistory(StoreEncounterHistoryRequest $request, Encounter $encounter)
@@ -173,7 +173,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addHistory($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'History added successfully.');
+        return back()->with('success', __('History added successfully.'));
     }
 
     public function storeExamination(StoreEncounterExaminationRequest $request, Encounter $encounter)
@@ -182,7 +182,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addExamination($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Examination added successfully.');
+        return back()->with('success', __('Examination added successfully.'));
     }
 
     public function storeReviewOfSystem(StoreEncounterReviewOfSystemRequest $request, Encounter $encounter)
@@ -191,7 +191,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addReviewOfSystem($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Review of system added successfully.');
+        return back()->with('success', __('Review of system added successfully.'));
     }
 
     public function storeProblem(StorePatientProblemRequest $request, Encounter $encounter)
@@ -200,7 +200,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addProblem($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Problem added successfully.');
+        return back()->with('success', __('Problem added successfully.'));
     }
 
     public function storeProcedure(StoreEncounterProcedureRequest $request, Encounter $encounter)
@@ -209,7 +209,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addProcedure($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Procedure added successfully.');
+        return back()->with('success', __('Procedure added successfully.'));
     }
 
     public function storeOrder(StoreClinicalOrderRequest $request, Encounter $encounter)
@@ -220,7 +220,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\ClinicalOrder::class, $order->id, null, $order->toArray(), $request);
 
-        return back()->with('success', 'Clinical order created successfully.');
+        return back()->with('success', __('Clinical order created successfully.'));
     }
 
     public function storeReferral(StoreEncounterReferralRequest $request, Encounter $encounter)
@@ -229,7 +229,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addReferral($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Referral created successfully.');
+        return back()->with('success', __('Referral created successfully.'));
     }
 
     public function storeInstruction(StoreEncounterInstructionRequest $request, Encounter $encounter)
@@ -238,7 +238,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addInstruction($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Instruction added successfully.');
+        return back()->with('success', __('Instruction added successfully.'));
     }
 
     public function storeNote(StoreEncounterNoteRequest $request, Encounter $encounter)
@@ -247,7 +247,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addNote($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Note added successfully.');
+        return back()->with('success', __('Note added successfully.'));
     }
 
     public function storeDocument(StoreEncounterDocumentRequest $request, Encounter $encounter)
@@ -256,7 +256,7 @@ class EncounterClinicalController extends Controller
 
         $this->clinicalService->addDocument($encounter, $request->validated(), $request->user());
 
-        return back()->with('success', 'Document uploaded successfully.');
+        return back()->with('success', __('Document uploaded successfully.'));
     }
 
     public function storeAmendment(StoreEncounterAmendmentRequest $request, Encounter $encounter)
@@ -267,7 +267,7 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', EncounterAmendment::class, $amendment->id, null, $amendment->toArray(), $request);
 
-        return back()->with('success', 'Amendment submitted successfully.');
+        return back()->with('success', __('Amendment submitted successfully.'));
     }
 
     public function approveAmendment(Request $request, Encounter $encounter, EncounterAmendment $amendment)
@@ -280,6 +280,6 @@ class EncounterClinicalController extends Controller
 
         $this->auditLogger->log('APPROVE', EncounterAmendment::class, $amendment->id, null, $amendment->fresh()->toArray(), $request);
 
-        return back()->with('success', 'Amendment approved.');
+        return back()->with('success', __('Amendment approved.'));
     }
 }

@@ -55,7 +55,7 @@ class ProviderController extends Controller
 
         $this->auditLogger->log('CREATE', Provider::class, $provider->id, null, $provider->toArray(), $request);
 
-        return redirect()->route('admin.providers.index')->with('success', 'Provider created successfully.');
+        return redirect()->route('admin.providers.index')->with('success', __('Provider created successfully.'));
     }
 
     public function show(Provider $provider)
@@ -89,7 +89,7 @@ class ProviderController extends Controller
 
         $this->auditLogger->log('UPDATE', Provider::class, $provider->id, $oldValues, $provider->toArray(), $request);
 
-        return redirect()->route('admin.providers.index')->with('success', 'Provider updated successfully.');
+        return redirect()->route('admin.providers.index')->with('success', __('Provider updated successfully.'));
     }
 
     public function destroy(Provider $provider)
@@ -101,7 +101,7 @@ class ProviderController extends Controller
 
         $this->auditLogger->log('DELETE', Provider::class, $provider->id, $oldValues, null, request());
 
-        return redirect()->route('admin.providers.index')->with('success', 'Provider deleted successfully.');
+        return redirect()->route('admin.providers.index')->with('success', __('Provider deleted successfully.'));
     }
 
     private function validated(Request $request): array

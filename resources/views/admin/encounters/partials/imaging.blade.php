@@ -35,7 +35,7 @@
                                             <a href="{{ route('admin.radiology.reports.show', $report) }}" class="btn btn-xs btn-outline-primary">{{ __('View Report') }}</a>
                                         @endcan
                                     @else
-                                        <span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                                        <x-ui.status-badge :status="$item->status" />
                                     @endif
                                 </td>
                                 <td>

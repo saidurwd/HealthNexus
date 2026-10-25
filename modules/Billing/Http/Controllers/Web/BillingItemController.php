@@ -64,7 +64,7 @@ class BillingItemController extends Controller
 
         $this->auditLogger->log('CREATE', BillingItem::class, $item->id, null, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.items.index')->with('success', 'Billing item created successfully.');
+        return redirect()->route('admin.billing.items.index')->with('success', __('Billing item created successfully.'));
     }
 
     public function show(BillingItem $item)
@@ -96,7 +96,7 @@ class BillingItemController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingItem::class, $item->id, $oldValues, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.items.index')->with('success', 'Billing item updated successfully.');
+        return redirect()->route('admin.billing.items.index')->with('success', __('Billing item updated successfully.'));
     }
 
     public function destroy(Request $request, BillingItem $item)
@@ -109,6 +109,6 @@ class BillingItemController extends Controller
 
         $this->auditLogger->log('DELETE', BillingItem::class, $item->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.billing.items.index')->with('success', 'Billing item deactivated successfully.');
+        return redirect()->route('admin.billing.items.index')->with('success', __('Billing item deactivated successfully.'));
     }
 }

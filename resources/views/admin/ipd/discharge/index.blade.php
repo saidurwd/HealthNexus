@@ -23,7 +23,7 @@
                             <td>{{ $req->admission?->admission_number }}</td>
                             <td>{{ ucfirst($req->discharge_type) }}</td>
                             <td>{{ $req->planned_date?->format('Y-m-d') ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $req->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$req->status" /></td>
                             <td><a href="{{ route('admin.ipd.discharge.show', $req) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

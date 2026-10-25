@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Discharge — {{ $dischargeRequest->patient?->full_name }} <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $dischargeRequest->status)) }}</span></h3>
+        <h3>Discharge — {{ $dischargeRequest->patient?->full_name }} <x-ui.status-badge :status="$dischargeRequest->status" /></h3>
         @can('complete', $dischargeRequest)
             @if($dischargeRequest->status === 'approved')
                 <form method="POST" action="{{ route('admin.ipd.discharge.complete', $dischargeRequest) }}">

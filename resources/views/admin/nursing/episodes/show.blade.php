@@ -3,6 +3,7 @@
 @section('page_title', 'Nursing — '.($episode->patient?->full_name))
 
 @section('page_content')
+    @if($episode->patient)<x-patient-banner :patient="$episode->patient" />@endif
     <div class="card">
         <div class="card-header"><h3 class="card-title">{{ __('Episode') }}</h3></div>
         <div class="card-body">

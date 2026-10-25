@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Stock Count {{ $stockCount->count_number }} <span class="badge bg-info">{{ ucfirst($stockCount->status) }}</span></h3>
+        <h3>Stock Count {{ $stockCount->count_number }} <x-ui.status-badge :status="$stockCount->status" /></h3>
         <div>
             @if($stockCount->status === 'in_progress')
                 <form method="POST" action="{{ route('admin.pharmacy.stock-count.complete', $stockCount) }}" class="d-inline">

@@ -19,7 +19,7 @@
                             <td>{{ $transfer->transfer_number }}</td>
                             <td>{{ $transfer->sourceStore?->name }}</td>
                             <td>{{ $transfer->destinationStore?->name }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($transfer->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$transfer->status" /></td>
                             <td><a href="{{ route('admin.pharmacy.transfers.show', $transfer) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

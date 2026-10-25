@@ -54,6 +54,6 @@ class NursingSettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'nursing_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.nursing.settings.index')->with('success', 'Nursing settings updated successfully.');
+        return redirect()->route('admin.nursing.settings.index')->with('success', __('Nursing settings updated successfully.'));
     }
 }

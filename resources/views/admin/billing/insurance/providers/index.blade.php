@@ -21,7 +21,7 @@
                             <td>{{ $provider->name }}</td>
                             <td>{{ $provider->code }}</td>
                             <td>{{ $provider->contact_name }} — {{ $provider->contact_phone }}</td>
-                            <td><span class="badge {{ $provider->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($provider->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$provider->status" /></td>
                             <td>
                                 @can('insurance.update')
                                     <a href="{{ route('admin.billing.insurance.providers.edit', $provider) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>

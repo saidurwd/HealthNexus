@@ -55,6 +55,6 @@ class BillingChargeController extends Controller
 
         $this->auditLogger->log('CANCEL', BillingCharge::class, $charge->id, $oldValues, $charge->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.charges.show', $charge)->with('success', 'Charge cancelled successfully.');
+        return redirect()->route('admin.billing.charges.show', $charge)->with('success', __('Charge cancelled successfully.'));
     }
 }

@@ -54,7 +54,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCorporate::class, $corporate->id, null, $corporate->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.index')->with('success', 'Corporate created successfully.');
+        return redirect()->route('admin.billing.corporates.index')->with('success', __('Corporate created successfully.'));
     }
 
     public function show(BillingCorporate $corporate)
@@ -83,7 +83,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingCorporate::class, $corporate->id, $oldValues, $corporate->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.index')->with('success', 'Corporate updated successfully.');
+        return redirect()->route('admin.billing.corporates.index')->with('success', __('Corporate updated successfully.'));
     }
 
     public function storeContract(StoreBillingCorporateContractRequest $request, BillingCorporate $corporate)
@@ -98,7 +98,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCorporateContract::class, $contract->id, null, $contract->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', 'Contract added successfully.');
+        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', __('Contract added successfully.'));
     }
 
     public function storeMember(StoreBillingCorporateMemberRequest $request, BillingCorporate $corporate)
@@ -113,7 +113,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCorporateMember::class, $member->id, null, $member->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', 'Member added successfully.');
+        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', __('Member added successfully.'));
     }
 
     public function receivables(Request $request)

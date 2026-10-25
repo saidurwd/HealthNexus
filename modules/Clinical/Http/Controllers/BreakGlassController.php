@@ -49,6 +49,6 @@ class BreakGlassController extends Controller
 
         event(new BreakGlassAccessGranted($encounter, $access));
 
-        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Break-glass access granted temporarily. All actions are being audited.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', __('Break-glass access granted temporarily. All actions are being audited.'));
     }
 }

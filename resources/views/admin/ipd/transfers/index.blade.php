@@ -15,7 +15,7 @@
                             <td>{{ $transfer->admission?->admission_number }}</td>
                             <td>{{ $transfer->fromBed?->bed_code ?? '—' }}</td>
                             <td>{{ $transfer->toBed?->bed_code ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($transfer->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$transfer->status" /></td>
                             <td><a href="{{ route('admin.ipd.transfers.show', $transfer) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

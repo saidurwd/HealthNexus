@@ -64,7 +64,7 @@ class PharmacyOrderController extends Controller
 
         $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', PharmacyOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', 'Order item matched to a medication.');
+        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', __('Order item matched to a medication.'));
     }
 
     public function cancel(Request $request, PharmacyOrder $order)
@@ -78,6 +78,6 @@ class PharmacyOrderController extends Controller
 
         $this->auditLogger->log('CANCEL', PharmacyOrder::class, $order->id, $oldValues, $order->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', 'Pharmacy order cancelled.');
+        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', __('Pharmacy order cancelled.'));
     }
 }

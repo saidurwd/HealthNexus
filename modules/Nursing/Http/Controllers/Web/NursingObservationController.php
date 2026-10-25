@@ -56,7 +56,7 @@ class NursingObservationController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
-        return back()->with('success', 'Vitals recorded.');
+        return back()->with('success', __('Vitals recorded.'));
     }
 
     public function storeObservation(Request $request, NursingEpisode $episode)
@@ -74,7 +74,7 @@ class NursingObservationController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingObservation::class, $observation->id, null, $observation->toArray(), $request);
 
-        return back()->with('success', 'Observation recorded.');
+        return back()->with('success', __('Observation recorded.'));
     }
 
     public function storePain(Request $request, NursingEpisode $episode)
@@ -91,7 +91,7 @@ class NursingObservationController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingPainAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
-        return back()->with('success', 'Pain assessment recorded.');
+        return back()->with('success', __('Pain assessment recorded.'));
     }
 
     public function storeRisk(Request $request, NursingEpisode $episode)
@@ -108,7 +108,7 @@ class NursingObservationController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingRiskAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
-        return back()->with('success', 'Risk assessment recorded.');
+        return back()->with('success', __('Risk assessment recorded.'));
     }
 
     public function intakeOutput(Request $request, NursingEpisode $episode)
@@ -144,6 +144,6 @@ class NursingObservationController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingIntakeOutputRecord::class, $record->id, null, $record->toArray(), $request);
 
-        return back()->with('success', 'Intake/output recorded.');
+        return back()->with('success', __('Intake/output recorded.'));
     }
 }

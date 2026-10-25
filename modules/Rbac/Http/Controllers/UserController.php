@@ -126,7 +126,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+        return redirect()->route('admin.users.index')->with('success', __('User created successfully.'));
     }
 
     public function show(User $user)
@@ -190,13 +190,13 @@ class UserController extends Controller
             $this->syncUserRoles($request, $user, $validated['roles'] ?? []);
         }
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', __('User updated successfully.'));
     }
 
     public function destroy(User $user)
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users.index')->with('success', __('User deleted successfully.'));
     }
 }

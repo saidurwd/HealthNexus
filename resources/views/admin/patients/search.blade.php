@@ -77,7 +77,7 @@
                                                     default => 'bg-secondary',
                                                 };
                                             @endphp
-                                            <span class="badge {{ $statusClass }}">{{ ucfirst($patient->status) }}</span>
+                                            <x-ui.status-badge :status="$patient->status" />
                                         </td>
                                         <td class="text-end"><small class="text-muted">{{ $patient->created_at->format('M d, Y') }}</small></td>
                                     </tr>

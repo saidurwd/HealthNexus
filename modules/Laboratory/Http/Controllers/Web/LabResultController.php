@@ -30,7 +30,7 @@ class LabResultController extends Controller
 
         $this->auditLogger->log('ENTER_RESULT', LabResult::class, $result->id, null, $result->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $item->labOrder)->with('success', 'Result recorded.');
+        return redirect()->route('admin.lab.orders.show', $item->labOrder)->with('success', __('Result recorded.'));
     }
 
     public function validateTechnical(Request $request, LabResult $result)
@@ -42,7 +42,7 @@ class LabResultController extends Controller
 
         $this->auditLogger->log('TECHNICAL_VALIDATE', LabResult::class, $result->id, $oldValues, $result->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', 'Result technically validated.');
+        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', __('Result technically validated.'));
     }
 
     public function approve(Request $request, LabResult $result)
@@ -54,7 +54,7 @@ class LabResultController extends Controller
 
         $this->auditLogger->log('PATHOLOGIST_APPROVE', LabResult::class, $result->id, $oldValues, $result->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', 'Result approved.');
+        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', __('Result approved.'));
     }
 
     public function amend(AmendLabResultRequest $request, LabResult $result)
@@ -65,6 +65,6 @@ class LabResultController extends Controller
 
         $this->auditLogger->log('AMEND', LabResult::class, $amended->id, $result->toArray(), $amended->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', 'Result amended — a new version has been recorded.');
+        return redirect()->route('admin.lab.orders.show', $result->orderItem->labOrder)->with('success', __('Result amended — a new version has been recorded.'));
     }
 }

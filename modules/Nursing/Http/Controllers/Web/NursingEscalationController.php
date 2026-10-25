@@ -50,7 +50,7 @@ class NursingEscalationController extends Controller
 
         $this->auditLogger->log('CREATE', NursingEscalation::class, $escalation->id, null, $escalation->toArray(), $request);
 
-        return back()->with('success', 'Escalation raised.');
+        return back()->with('success', __('Escalation raised.'));
     }
 
     public function acknowledge(Request $request, NursingEscalation $escalation)
@@ -65,7 +65,7 @@ class NursingEscalationController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', NursingEscalation::class, $escalation->id, null, ['acknowledged_at' => now()], $request);
 
-        return back()->with('success', 'Escalation acknowledged.');
+        return back()->with('success', __('Escalation acknowledged.'));
     }
 
     public function resolve(Request $request, NursingEscalation $escalation)
@@ -82,6 +82,6 @@ class NursingEscalationController extends Controller
 
         $this->auditLogger->log('RESOLVE', NursingEscalation::class, $escalation->id, null, $validated, $request);
 
-        return back()->with('success', 'Escalation resolved.');
+        return back()->with('success', __('Escalation resolved.'));
     }
 }

@@ -23,7 +23,7 @@
                             <td>{{ $policy->provider?->name }}</td>
                             <td>{{ number_format($policy->coverage_limit, 2) }}</td>
                             <td>{{ $policy->copay_percentage }}%</td>
-                            <td><span class="badge {{ $policy->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($policy->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$policy->status" /></td>
                             <td>
                                 @can('billing.insurance.policy.manage')
                                     <a href="{{ route('admin.billing.insurance.policies.edit', $policy) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>

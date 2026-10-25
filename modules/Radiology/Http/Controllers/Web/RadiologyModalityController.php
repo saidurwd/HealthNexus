@@ -76,7 +76,7 @@ class RadiologyModalityController extends Controller
 
         $this->auditLogger->log('CREATE', RadiologyModality::class, $modality->id, null, $modality->toArray(), $request);
 
-        return redirect()->route('admin.radiology.modalities.index')->with('success', 'Modality registered.');
+        return redirect()->route('admin.radiology.modalities.index')->with('success', __('Modality registered.'));
     }
 
     public function edit(RadiologyModality $modality)
@@ -116,6 +116,6 @@ class RadiologyModalityController extends Controller
 
         $this->auditLogger->log('UPDATE', RadiologyModality::class, $modality->id, $oldValues, $modality->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.modalities.index')->with('success', 'Modality updated.');
+        return redirect()->route('admin.radiology.modalities.index')->with('success', __('Modality updated.'));
     }
 }

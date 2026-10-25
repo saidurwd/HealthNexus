@@ -49,7 +49,7 @@ class BillingInsuranceController extends Controller
 
         $this->auditLogger->log('CREATE', BillingInsuranceProvider::class, $provider->id, null, $provider->toArray(), $request);
 
-        return redirect()->route('admin.billing.insurance.providers.index')->with('success', 'Insurance provider created successfully.');
+        return redirect()->route('admin.billing.insurance.providers.index')->with('success', __('Insurance provider created successfully.'));
     }
 
     public function editProvider(BillingInsuranceProvider $provider)
@@ -69,7 +69,7 @@ class BillingInsuranceController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingInsuranceProvider::class, $provider->id, $oldValues, $provider->toArray(), $request);
 
-        return redirect()->route('admin.billing.insurance.providers.index')->with('success', 'Insurance provider updated successfully.');
+        return redirect()->route('admin.billing.insurance.providers.index')->with('success', __('Insurance provider updated successfully.'));
     }
 
     public function policies(Request $request)
@@ -107,7 +107,7 @@ class BillingInsuranceController extends Controller
 
         $this->auditLogger->log('CREATE', BillingInsurancePolicy::class, $policy->id, null, $policy->toArray(), $request);
 
-        return redirect()->route('admin.billing.insurance.policies.index')->with('success', 'Insurance policy created successfully.');
+        return redirect()->route('admin.billing.insurance.policies.index')->with('success', __('Insurance policy created successfully.'));
     }
 
     public function editPolicy(BillingInsurancePolicy $policy)
@@ -129,6 +129,6 @@ class BillingInsuranceController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingInsurancePolicy::class, $policy->id, $oldValues, $policy->toArray(), $request);
 
-        return redirect()->route('admin.billing.insurance.policies.index')->with('success', 'Insurance policy updated successfully.');
+        return redirect()->route('admin.billing.insurance.policies.index')->with('success', __('Insurance policy updated successfully.'));
     }
 }

@@ -41,6 +41,6 @@ class RadiologyWorklistController extends Controller
             'assigned_by' => $request->user()->id,
         ]);
 
-        return redirect()->route('admin.radiology.worklist.index')->with('success', 'Study assigned.');
+        return redirect()->route('admin.radiology.worklist.index')->with('success', __('Study assigned.'));
     }
 }

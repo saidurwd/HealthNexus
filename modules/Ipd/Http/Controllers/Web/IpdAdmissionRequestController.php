@@ -83,7 +83,7 @@ class IpdAdmissionRequestController extends Controller
 
         $this->auditLogger->log('CREATE', IpdAdmissionRequest::class, $admissionRequest->id, null, $admissionRequest->toArray(), $request);
 
-        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', 'Admission request created.');
+        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', __('Admission request created.'));
     }
 
     public function show(IpdAdmissionRequest $admissionRequest)
@@ -110,7 +110,7 @@ class IpdAdmissionRequestController extends Controller
 
         $this->auditLogger->log('APPROVE', IpdAdmissionRequest::class, $admissionRequest->id, $oldValues, $admissionRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', 'Admission request approved.');
+        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', __('Admission request approved.'));
     }
 
     public function reject(Request $request, IpdAdmissionRequest $admissionRequest)
@@ -128,7 +128,7 @@ class IpdAdmissionRequestController extends Controller
 
         $this->auditLogger->log('REJECT', IpdAdmissionRequest::class, $admissionRequest->id, $oldValues, $admissionRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', 'Admission request rejected.');
+        return redirect()->route('admin.ipd.admission-requests.show', $admissionRequest)->with('success', __('Admission request rejected.'));
     }
 
     public function cancel(Request $request, IpdAdmissionRequest $admissionRequest)
@@ -146,6 +146,6 @@ class IpdAdmissionRequestController extends Controller
 
         $this->auditLogger->log('CANCEL', IpdAdmissionRequest::class, $admissionRequest->id, $oldValues, $admissionRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.admission-requests.index')->with('success', 'Admission request cancelled.');
+        return redirect()->route('admin.ipd.admission-requests.index')->with('success', __('Admission request cancelled.'));
     }
 }

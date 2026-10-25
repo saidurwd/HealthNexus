@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $examination->orderItem->procedure?->name ?? $examination->orderItem->requested_procedure_name }}</h3>
-                    <div class="card-tools"><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $examination->status)) }}</span></div>
+                    <div class="card-tools"><x-ui.status-badge :status="$examination->status" /></div>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">

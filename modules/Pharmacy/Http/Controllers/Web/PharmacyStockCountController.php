@@ -47,7 +47,7 @@ class PharmacyStockCountController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyStockCount::class, $count->id, null, $count->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.stock-count.show', $count)->with('success', 'Stock count started.');
+        return redirect()->route('admin.pharmacy.stock-count.show', $count)->with('success', __('Stock count started.'));
     }
 
     public function show(PharmacyStockCount $stockCount)
@@ -73,7 +73,7 @@ class PharmacyStockCountController extends Controller
 
         $this->auditLogger->log('RECORD_COUNT', PharmacyStockCount::class, $stockCount->id, null, $validated, $request);
 
-        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', 'Counts recorded.');
+        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', __('Counts recorded.'));
     }
 
     public function complete(Request $request, PharmacyStockCount $stockCount)
@@ -90,7 +90,7 @@ class PharmacyStockCountController extends Controller
 
         $this->auditLogger->log('COMPLETE', PharmacyStockCount::class, $stockCount->id, $oldValues, $stockCount->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', 'Stock count completed.');
+        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', __('Stock count completed.'));
     }
 
     public function applyAdjustments(Request $request, PharmacyStockCount $stockCount)
@@ -102,6 +102,6 @@ class PharmacyStockCountController extends Controller
 
         $this->auditLogger->log('APPLY_ADJUSTMENTS', PharmacyStockCount::class, $stockCount->id, $oldValues, $stockCount->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', 'Variances applied to stock.');
+        return redirect()->route('admin.pharmacy.stock-count.show', $stockCount)->with('success', __('Variances applied to stock.'));
     }
 }

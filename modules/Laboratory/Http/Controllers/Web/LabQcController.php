@@ -80,6 +80,6 @@ class LabQcController extends Controller
 
         $this->auditLogger->log('CREATE', LabQcRun::class, $run->id, null, $run->toArray(), $request);
 
-        return redirect()->route('admin.lab.qc.index')->with('success', 'QC run recorded ('.$status.').');
+        return redirect()->route('admin.lab.qc.index')->with('success', __('QC run recorded (').$status.').');
     }
 }

@@ -25,7 +25,7 @@
                             <td>{{ $payment->invoice?->invoice_number ?? '-' }}</td>
                             <td>{{ number_format($payment->amount, 2) }}</td>
                             <td>{{ $payment->method?->name }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($payment->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$payment->status" /></td>
                             <td>{{ $payment->payment_date?->format('Y-m-d') }}</td>
                             <td><a href="{{ route('admin.billing.payments.show', $payment) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

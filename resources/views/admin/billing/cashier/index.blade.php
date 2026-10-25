@@ -18,7 +18,7 @@
                             <td>{{ number_format($session->expected_closing, 2) }}</td>
                             <td>{{ number_format($session->actual_closing, 2) }}</td>
                             <td class="{{ (float) $session->variance != 0 ? 'text-danger' : '' }}">{{ number_format($session->variance, 2) }}</td>
-                            <td><span class="badge {{ $session->status === 'open' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($session->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$session->status" /></td>
                             <td>{{ $session->opened_at?->format('Y-m-d H:i') }}</td>
                             <td>
                                 @if($session->status === 'closed')

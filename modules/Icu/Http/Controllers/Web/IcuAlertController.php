@@ -40,7 +40,7 @@ class IcuAlertController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.alerts.index')->with('success', 'Alert acknowledged.');
+        return redirect()->route('admin.icu.alerts.index')->with('success', __('Alert acknowledged.'));
     }
 
     public function escalate(Request $request, IcuCriticalAlert $alert)
@@ -49,6 +49,6 @@ class IcuAlertController extends Controller
 
         $this->alerts->escalate($alert, $request->user(), $request->input('escalated_to'));
 
-        return redirect()->route('admin.icu.alerts.index')->with('success', 'Alert escalated.');
+        return redirect()->route('admin.icu.alerts.index')->with('success', __('Alert escalated.'));
     }
 }

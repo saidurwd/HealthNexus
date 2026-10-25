@@ -24,7 +24,7 @@
                             <td>{{ $report->report_number }}</td>
                             <td>{{ $report->examination->orderItem->radiologyOrder->patient?->full_name }}</td>
                             <td>{{ $report->examination->orderItem->procedure?->name }}</td>
-                            <td><span class="badge {{ $report->status === 'amended' ? 'bg-warning' : ($report->isFinal() ? 'bg-success' : 'bg-secondary') }}">{{ ucfirst($report->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$report->status" /></td>
                             <td><a href="{{ route('admin.radiology.reports.show', $report) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

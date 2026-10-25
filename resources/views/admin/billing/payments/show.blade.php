@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Payment {{ $payment->payment_number }}</h3>
             <div class="card-tools">
-                <span class="badge bg-info">{{ ucfirst($payment->status) }}</span>
+                <x-ui.status-badge :status="$payment->status" />
             </div>
         </div>
         <div class="card-body">

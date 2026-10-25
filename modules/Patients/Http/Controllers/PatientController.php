@@ -125,7 +125,7 @@ class PatientController extends Controller
 
         $this->duplicateScoring->scanForCandidate($patient);
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient created successfully.');
+        return redirect()->route('admin.patients.index')->with('success', __('Patient created successfully.'));
     }
 
     public function show(Patient $patient)
@@ -217,7 +217,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', Patient::class, $patient->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient deleted successfully.');
+        return redirect()->route('admin.patients.index')->with('success', __('Patient deleted successfully.'));
     }
 
     public function search(Request $request)
@@ -306,7 +306,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('REVIEW', PatientDuplicateCandidate::class, $candidate->id, null, $candidate->toArray(), $request);
 
-        return redirect()->route('admin.patients.duplicates')->with('success', 'Duplicate candidate reviewed.');
+        return redirect()->route('admin.patients.duplicates')->with('success', __('Duplicate candidate reviewed.'));
     }
 
     public function merge(Request $request)
@@ -332,7 +332,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('MERGE', Patient::class, $duplicatePatient->id, $oldValues, ['merged_into' => $masterPatient->id], $request);
 
-        return redirect()->route('admin.patients.show', $masterPatient)->with('success', 'Patients merged successfully.');
+        return redirect()->route('admin.patients.show', $masterPatient)->with('success', __('Patients merged successfully.'));
     }
 
     public function timeline(Patient $patient)
@@ -395,7 +395,7 @@ class PatientController extends Controller
         $this->auditLogger->log('UPLOAD', PatientDocument::class, $document->id, null, $document->toArray(), $request);
         $this->timeline->record($patient, 'DOCUMENT_UPLOADED', "Document uploaded: {$document->file_name}", $document, $request->user());
 
-        return redirect()->route('admin.patients.documents', $patient)->with('success', 'Document uploaded successfully.');
+        return redirect()->route('admin.patients.documents', $patient)->with('success', __('Document uploaded successfully.'));
     }
 
     public function downloadDocument(Request $request, Patient $patient, PatientDocument $document)
@@ -421,7 +421,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientDocument::class, $document->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.documents', $patient)->with('success', 'Document deleted successfully.');
+        return redirect()->route('admin.patients.documents', $patient)->with('success', __('Document deleted successfully.'));
     }
 
     public function allergies(Patient $patient)
@@ -450,7 +450,7 @@ class PatientController extends Controller
         $this->auditLogger->log('CREATE', PatientAllergy::class, $allergy->id, null, $allergy->toArray(), $request);
         $this->timeline->record($patient, 'ALLERGY_ADDED', "Allergy recorded: {$allergy->substance}", $allergy, $request->user());
 
-        return redirect()->route('admin.patients.allergies', $patient)->with('success', 'Allergy added successfully.');
+        return redirect()->route('admin.patients.allergies', $patient)->with('success', __('Allergy added successfully.'));
     }
 
     public function deleteAllergy(Patient $patient, PatientAllergy $allergy)
@@ -463,7 +463,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientAllergy::class, $allergy->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.allergies', $patient)->with('success', 'Allergy removed successfully.');
+        return redirect()->route('admin.patients.allergies', $patient)->with('success', __('Allergy removed successfully.'));
     }
 
     public function history(Patient $patient)
@@ -491,7 +491,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientHistory::class, $history->id, null, $history->toArray(), $request);
 
-        return redirect()->route('admin.patients.history', $patient)->with('success', 'Medical history added successfully.');
+        return redirect()->route('admin.patients.history', $patient)->with('success', __('Medical history added successfully.'));
     }
 
     public function deleteHistory(Patient $patient, PatientHistory $history)
@@ -504,7 +504,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientHistory::class, $history->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.history', $patient)->with('success', 'Medical history removed successfully.');
+        return redirect()->route('admin.patients.history', $patient)->with('success', __('Medical history removed successfully.'));
     }
 
     public function alerts(Patient $patient)
@@ -534,7 +534,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientAlert::class, $alert->id, null, $alert->toArray(), $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert added successfully.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert added successfully.'));
     }
 
     public function resolveAlert(Request $request, Patient $patient, PatientAlert $alert)
@@ -551,7 +551,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', PatientAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert resolved.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert resolved.'));
     }
 
     public function deleteAlert(Request $request, Patient $patient, PatientAlert $alert)
@@ -564,7 +564,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientAlert::class, $alert->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert removed successfully.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert removed successfully.'));
     }
 
     public function addresses(Patient $patient)
@@ -596,7 +596,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\PatientAddress::class, $address->id, null, $address->toArray(), $request);
 
-        return redirect()->route('admin.patients.addresses', $patient)->with('success', 'Address added successfully.');
+        return redirect()->route('admin.patients.addresses', $patient)->with('success', __('Address added successfully.'));
     }
 
     public function guardians(Patient $patient)
@@ -625,7 +625,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\PatientGuardian::class, $guardian->id, null, $guardian->toArray(), $request);
 
-        return redirect()->route('admin.patients.guardians', $patient)->with('success', 'Guardian added successfully.');
+        return redirect()->route('admin.patients.guardians', $patient)->with('success', __('Guardian added successfully.'));
     }
 
     public function setPreferences(Request $request, Patient $patient)
@@ -641,7 +641,7 @@ class PatientController extends Controller
 
         $this->patientService->setPreferences($patient, $validated);
 
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Preferences updated successfully.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Preferences updated successfully.'));
     }
 
     public function uploadPhoto(Request $request, Patient $patient)
@@ -658,7 +658,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', Patient::class, $patient->id, null, ['photo_file_id' => $file->id], $request);
 
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Photo updated successfully.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Photo updated successfully.'));
     }
 
     public function consents(Patient $patient)
@@ -683,7 +683,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientConsent::class, $consent->id, null, $consent->toArray(), $request);
 
-        return redirect()->route('admin.patients.consents', $patient)->with('success', 'Consent recorded successfully.');
+        return redirect()->route('admin.patients.consents', $patient)->with('success', __('Consent recorded successfully.'));
     }
 
     public function withdrawConsent(Request $request, Patient $patient, PatientConsent $consent)
@@ -696,7 +696,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', PatientConsent::class, $consent->id, null, ['status' => 'withdrawn'], $request);
 
-        return redirect()->route('admin.patients.consents', $patient)->with('success', 'Consent withdrawn.');
+        return redirect()->route('admin.patients.consents', $patient)->with('success', __('Consent withdrawn.'));
     }
 
     public function amendments(Request $request)
@@ -741,7 +741,7 @@ class PatientController extends Controller
 
         $this->amendmentService->approve($amendment, $request->user(), $request->input('note'));
 
-        return redirect()->route('admin.patients.amendments')->with('success', 'Amendment approved and applied.');
+        return redirect()->route('admin.patients.amendments')->with('success', __('Amendment approved and applied.'));
     }
 
     public function rejectAmendment(Request $request, PatientAmendment $amendment)
@@ -752,7 +752,7 @@ class PatientController extends Controller
 
         $this->amendmentService->reject($amendment, $request->user(), $validated['reason']);
 
-        return redirect()->route('admin.patients.amendments')->with('success', 'Amendment rejected.');
+        return redirect()->route('admin.patients.amendments')->with('success', __('Amendment rejected.'));
     }
 
     public function auditTrail(Patient $patient)
@@ -826,6 +826,6 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\PatientPortalAccount::class, $account->id, null, $account->toArray(), $request);
 
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Patient portal invitation created.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Patient portal invitation created.'));
     }
 }

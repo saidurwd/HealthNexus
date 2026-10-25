@@ -23,7 +23,7 @@
                             <td>{{ $leave->admission?->admission_number }}</td>
                             <td>{{ ucfirst(str_replace('_', ' ', $leave->leave_type)) }}</td>
                             <td>{{ $leave->expected_return_at?->format('Y-m-d H:i') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $leave->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$leave->status" /></td>
                             <td><a href="{{ route('admin.ipd.leave.show', $leave) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

@@ -67,7 +67,7 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('CREATE', IpdDischargeRequest::class, $dischargeRequest->id, null, $dischargeRequest->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Discharge requested.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Discharge requested.'));
     }
 
     public function show(IpdDischargeRequest $dischargeRequest)
@@ -94,7 +94,7 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('RECORD_CLEARANCE', IpdDischargeRequest::class, $dischargeRequest->id, $oldValues, $dischargeRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Clearance recorded.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Clearance recorded.'));
     }
 
     public function complete(Request $request, IpdDischargeRequest $dischargeRequest)
@@ -111,6 +111,6 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('COMPLETE', IpdDischargeRequest::class, $dischargeRequest->id, $oldValues, $dischargeRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Discharge completed.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Discharge completed.'));
     }
 }

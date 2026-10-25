@@ -98,7 +98,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CREATE', Appointment::class, $appointment->id, null, $appointment->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment created successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment created successfully.'));
     }
 
     public function show(Appointment $appointment)
@@ -143,7 +143,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('UPDATE', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment updated successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment updated successfully.'));
     }
 
     public function destroy(Appointment $appointment)
@@ -157,7 +157,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('DELETE', Appointment::class, $appointment->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment deleted successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment deleted successfully.'));
     }
 
     public function reschedule(Request $request, Appointment $appointment)
@@ -178,7 +178,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('RESCHEDULE', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment rescheduled successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Appointment rescheduled successfully.'));
     }
 
     public function cancel(Request $request, Appointment $appointment)
@@ -194,7 +194,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CANCEL', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment cancelled successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment cancelled successfully.'));
     }
 
     public function noShow(Request $request, Appointment $appointment)
@@ -210,7 +210,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('NO_SHOW', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment marked as no-show.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment marked as no-show.'));
     }
 
     public function confirm(Request $request, Appointment $appointment)
@@ -222,7 +222,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CONFIRM', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment confirmed successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Appointment confirmed successfully.'));
     }
 
     public function checkIn(Request $request, Appointment $appointment)
@@ -234,7 +234,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CHECK_IN', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Patient checked in successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Patient checked in successfully.'));
     }
 
     public function start(Request $request, Appointment $appointment)
@@ -246,7 +246,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('START', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Consultation started.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Consultation started.'));
     }
 
     public function complete(Request $request, Appointment $appointment)
@@ -258,7 +258,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('COMPLETE', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment completed successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment completed successfully.'));
     }
 
     public function createFollowUp(Request $request, Appointment $appointment)
@@ -275,7 +275,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CREATE', Appointment::class, $followUp->id, null, $followUp->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $followUp)->with('success', 'Follow-up appointment created.');
+        return redirect()->route('admin.appointments.show', $followUp)->with('success', __('Follow-up appointment created.'));
     }
 
     public function addNote(Request $request, Appointment $appointment)
@@ -290,7 +290,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('NOTE_ADDED', Appointment::class, $appointment->id, null, ['note' => $validated['note']], $request);
 
-        return back()->with('success', 'Note added successfully.');
+        return back()->with('success', __('Note added successfully.'));
     }
 
     public function history(Appointment $appointment)
@@ -337,7 +337,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('UPLOAD', AppointmentDocument::class, $document->id, null, $document->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Document uploaded successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Document uploaded successfully.'));
     }
 
     public function downloadDocument(Request $request, Appointment $appointment, AppointmentDocument $document)
@@ -364,6 +364,6 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentDocument::class, $document->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Document removed successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Document removed successfully.'));
     }
 }

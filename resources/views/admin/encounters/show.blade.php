@@ -3,6 +3,7 @@
 @section('page_title', 'Encounter Details')
 
 @section('page_content')
+    @if($encounter->patient)<x-patient-banner :patient="$encounter->patient" />@endif
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Encounter #{{ $encounter->id }}</h3>

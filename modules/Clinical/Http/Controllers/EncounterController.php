@@ -62,7 +62,7 @@ class EncounterController extends Controller
 
         $encounter = $this->encounterService->createEncounter($validated, $request->user());
 
-        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter created successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', __('Encounter created successfully.'));
     }
 
     public function show(Encounter $encounter)
@@ -127,7 +127,7 @@ class EncounterController extends Controller
             $this->encounterService->updateEncounter($encounter, $validated);
         }
 
-        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter updated successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', __('Encounter updated successfully.'));
     }
 
     public function destroy(Encounter $encounter)
@@ -136,6 +136,6 @@ class EncounterController extends Controller
 
         $encounter->delete();
 
-        return redirect()->route('admin.encounters.index')->with('success', 'Encounter deleted successfully.');
+        return redirect()->route('admin.encounters.index')->with('success', __('Encounter deleted successfully.'));
     }
 }

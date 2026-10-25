@@ -43,6 +43,6 @@ class PharmacySettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'pharmacy_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.pharmacy.settings.index')->with('success', 'Pharmacy settings updated successfully.');
+        return redirect()->route('admin.pharmacy.settings.index')->with('success', __('Pharmacy settings updated successfully.'));
     }
 }

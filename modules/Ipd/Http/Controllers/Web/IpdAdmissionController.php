@@ -90,7 +90,7 @@ class IpdAdmissionController extends Controller
 
         $this->auditLogger->log('CREATE', IpdAdmission::class, $admission->id, null, $admission->toArray(), $request);
 
-        return redirect()->route('admin.ipd.admissions.show', $admission)->with('success', 'Patient admitted.');
+        return redirect()->route('admin.ipd.admissions.show', $admission)->with('success', __('Patient admitted.'));
     }
 
     public function show(IpdAdmission $admission)

@@ -67,7 +67,7 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyMedication::class, $medication->id, null, $medication->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication created.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication created.'));
     }
 
     public function edit(PharmacyMedication $medication)
@@ -91,7 +91,7 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('UPDATE', PharmacyMedication::class, $medication->id, $oldValues, $medication->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication updated.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication updated.'));
     }
 
     public function destroy(Request $request, PharmacyMedication $medication)
@@ -103,6 +103,6 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', PharmacyMedication::class, $medication->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication deactivated.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication deactivated.'));
     }
 }

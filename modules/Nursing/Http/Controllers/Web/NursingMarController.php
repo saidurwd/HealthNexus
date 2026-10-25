@@ -67,7 +67,7 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('CREATE', NursingMedicationAdministration::class, $mar->id, null, $mar->toArray(), $request);
 
-        return back()->with('success', 'Ad-hoc medication administration record created.');
+        return back()->with('success', __('Ad-hoc medication administration record created.'));
     }
 
     public function administer(Request $request, NursingMedicationAdministration $mar)
@@ -93,7 +93,7 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('ADMINISTER', NursingMedicationAdministration::class, $updated->id, null, ['status' => 'administered'], $request);
 
-        return back()->with('success', 'Medication administered.');
+        return back()->with('success', __('Medication administered.'));
     }
 
     public function hold(Request $request, NursingMedicationAdministration $mar)
@@ -110,7 +110,7 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('HOLD', NursingMedicationAdministration::class, $mar->id, null, $validated, $request);
 
-        return back()->with('success', 'Medication held.');
+        return back()->with('success', __('Medication held.'));
     }
 
     public function refuse(Request $request, NursingMedicationAdministration $mar)
@@ -127,7 +127,7 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('REFUSE', NursingMedicationAdministration::class, $mar->id, null, $validated, $request);
 
-        return back()->with('success', 'Medication refusal recorded.');
+        return back()->with('success', __('Medication refusal recorded.'));
     }
 
     public function omit(Request $request, NursingMedicationAdministration $mar)
@@ -144,7 +144,7 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('OMIT', NursingMedicationAdministration::class, $mar->id, null, $validated, $request);
 
-        return back()->with('success', 'Medication omission recorded.');
+        return back()->with('success', __('Medication omission recorded.'));
     }
 
     public function correct(Request $request, NursingMedicationAdministration $mar)
@@ -164,6 +164,6 @@ class NursingMarController extends Controller
 
         $this->auditLogger->log('CORRECT', NursingMedicationAdministration::class, $mar->id, null, $correction->toArray(), $request);
 
-        return back()->with('success', 'Correction recorded.');
+        return back()->with('success', __('Correction recorded.'));
     }
 }

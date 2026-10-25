@@ -64,7 +64,7 @@ class PharmacyBrandController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyBrand::class, $brand->id, null, $brand->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.brands.index')->with('success', 'Brand created.');
+        return redirect()->route('admin.pharmacy.brands.index')->with('success', __('Brand created.'));
     }
 
     public function edit(PharmacyBrand $brand)
@@ -93,6 +93,6 @@ class PharmacyBrandController extends Controller
 
         $this->auditLogger->log('UPDATE', PharmacyBrand::class, $brand->id, $oldValues, $brand->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.brands.index')->with('success', 'Brand updated.');
+        return redirect()->route('admin.pharmacy.brands.index')->with('success', __('Brand updated.'));
     }
 }

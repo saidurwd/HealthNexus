@@ -59,7 +59,7 @@
                                                         default => 'bg-secondary',
                                                     };
                                                 @endphp
-                                                <span class="badge {{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span>
+                                                <x-ui.status-badge :status="$item->status" />
                                             </td>
                                             <td class="text-center">
                                                 @if($item->token && $item->token->status === 'waiting')

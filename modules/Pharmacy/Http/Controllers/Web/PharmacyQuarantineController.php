@@ -57,7 +57,7 @@ class PharmacyQuarantineController extends Controller
 
         $this->auditLogger->log('QUARANTINE', PharmacyQuarantine::class, $record->id, null, $record->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', 'Batch quarantined.');
+        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', __('Batch quarantined.'));
     }
 
     public function release(Request $request, PharmacyQuarantine $quarantine)
@@ -74,7 +74,7 @@ class PharmacyQuarantineController extends Controller
 
         $this->auditLogger->log('RELEASE', PharmacyQuarantine::class, $quarantine->id, $oldValues, $quarantine->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', 'Batch released from quarantine.');
+        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', __('Batch released from quarantine.'));
     }
 
     public function dispose(Request $request, PharmacyQuarantine $quarantine)
@@ -91,6 +91,6 @@ class PharmacyQuarantineController extends Controller
 
         $this->auditLogger->log('DISPOSE', PharmacyQuarantine::class, $quarantine->id, $oldValues, $quarantine->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', 'Quarantined stock disposed.');
+        return redirect()->route('admin.pharmacy.quarantine.index')->with('success', __('Quarantined stock disposed.'));
     }
 }

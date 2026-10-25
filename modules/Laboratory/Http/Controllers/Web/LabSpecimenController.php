@@ -55,7 +55,7 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('COLLECT', LabSpecimen::class, $specimen->id, null, $specimen->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen collected: '.$specimen->accession_number);
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen collected: ').$specimen->accession_number);
     }
 
     public function receive(Request $request, LabSpecimen $specimen)
@@ -67,7 +67,7 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('RECEIVE', LabSpecimen::class, $specimen->id, $oldValues, $specimen->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen received.');
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen received.'));
     }
 
     public function reject(RejectSpecimenRequest $request, LabSpecimen $specimen)
@@ -79,6 +79,6 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('REJECT', LabSpecimen::class, $specimen->id, $oldValues, $specimen->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen rejected — recollection required.');
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen rejected — recollection required.'));
     }
 }

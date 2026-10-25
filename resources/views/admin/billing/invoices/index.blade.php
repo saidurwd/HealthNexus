@@ -43,7 +43,7 @@
                             <td>{{ $invoice->invoice_date?->format('Y-m-d') }}</td>
                             <td>{{ number_format($invoice->grand_total, 2) }}</td>
                             <td>{{ number_format($invoice->due_amount, 2) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_',' ',$invoice->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$invoice->status" /></td>
                             <td><a href="{{ route('admin.billing.invoices.show', $invoice) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

@@ -64,7 +64,7 @@ class LabOrderController extends Controller
 
         $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', \App\Models\Laboratory\LabOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $order)->with('success', 'Order item matched to a test.');
+        return redirect()->route('admin.lab.orders.show', $order)->with('success', __('Order item matched to a test.'));
     }
 
     public function cancel(Request $request, LabOrder $order)
@@ -78,6 +78,6 @@ class LabOrderController extends Controller
 
         $this->auditLogger->log('CANCEL', LabOrder::class, $order->id, $oldValues, $order->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $order)->with('success', 'Lab order cancelled.');
+        return redirect()->route('admin.lab.orders.show', $order)->with('success', __('Lab order cancelled.'));
     }
 }

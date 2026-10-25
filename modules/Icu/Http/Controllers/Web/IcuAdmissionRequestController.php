@@ -68,7 +68,7 @@ class IcuAdmissionRequestController extends Controller
 
         $this->auditLogger->log('CREATE', IcuAdmissionRequest::class, $icuRequest->id, null, $icuRequest->toArray(), $request);
 
-        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', 'ICU admission request submitted.');
+        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', __('ICU admission request submitted.'));
     }
 
     public function show(IcuAdmissionRequest $icuRequest)
@@ -88,7 +88,7 @@ class IcuAdmissionRequestController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', 'ICU admission request accepted.');
+        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', __('ICU admission request accepted.'));
     }
 
     public function reject(Request $request, IcuAdmissionRequest $icuRequest)
@@ -103,7 +103,7 @@ class IcuAdmissionRequestController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', 'ICU admission request rejected.');
+        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', __('ICU admission request rejected.'));
     }
 
     public function cancel(Request $request, IcuAdmissionRequest $icuRequest)
@@ -118,6 +118,6 @@ class IcuAdmissionRequestController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', 'ICU admission request cancelled.');
+        return redirect()->route('admin.icu.admission-requests.show', $icuRequest)->with('success', __('ICU admission request cancelled.'));
     }
 }

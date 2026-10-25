@@ -42,6 +42,6 @@ class SecurityEventController extends Controller
             'resolved_at' => now(),
         ]));
 
-        return back()->with('success', 'Security event resolved.');
+        return back()->with('success', __('Security event resolved.'));
     }
 }

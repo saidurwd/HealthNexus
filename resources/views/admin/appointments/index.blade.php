@@ -76,7 +76,7 @@
                                                 default => 'bg-secondary',
                                             };
                                         @endphp
-                                        <span class="badge {{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $appointment->status)) }}</span>
+                                        <x-ui.status-badge :status="$appointment->status" />
                                     </td>
                                     <td>{{ $appointment->token->token_number ?? '-' }}</td>
                                     <td class="text-end"><small class="text-muted">{{ $appointment->created_at->format('M d, Y') }}</small></td>

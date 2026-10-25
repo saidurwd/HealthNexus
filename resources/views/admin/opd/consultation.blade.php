@@ -3,6 +3,7 @@
 @section('page_title', 'OPD Consultation')
 
 @section('page_content')
+    @if($appointment->patient)<x-patient-banner :patient="$appointment->patient" />@endif
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -200,7 +201,7 @@
                                         <span class="text-muted">({{ $diagnosis->code }})</span>
                                     @endif
                                     <br>
-                                    <span class="badge bg-{{ $diagnosis->status === 'confirmed' ? 'success' : ($diagnosis->status === 'provisional' ? 'warning' : 'secondary') }}">{{ ucfirst($diagnosis->status) }}</span>
+                                    <x-ui.status-badge :status="$diagnosis->status" />
                                     <small class="text-muted ms-2">{{ $diagnosis->recorded_at?->format('M d, Y') }}</small>
                                 </div>
                             @endforeach
@@ -379,7 +380,7 @@
                                                 <td>{{ $order->test_name }}</td>
                                                 <td>{{ $order->category ?? '-' }}</td>
                                                 <td>{{ ucfirst($order->priority) }}</td>
-                                                <td><span class="badge bg-info">{{ ucfirst($order->status) }}</span></td>
+                                                <td><x-ui.status-badge :status="$order->status" /></td>
                                                 <td><small class="text-muted">{{ $order->ordered_at?->format('M d, Y') }}</small></td>
                                             </tr>
                                         @endforeach

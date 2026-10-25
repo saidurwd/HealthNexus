@@ -61,7 +61,7 @@ class OtTheatreController extends Controller
 
         $this->auditLogger->log('CREATE', OtTheatre::class, $theatre->id, null, $theatre->toArray(), $request);
 
-        return redirect()->route('admin.ot.theatres.index')->with('success', 'Theatre created.');
+        return redirect()->route('admin.ot.theatres.index')->with('success', __('Theatre created.'));
     }
 
     public function update(Request $request, OtTheatre $theatre)
@@ -80,7 +80,7 @@ class OtTheatreController extends Controller
 
         $this->auditLogger->log('UPDATE', OtTheatre::class, $theatre->id, null, $validated, $request);
 
-        return back()->with('success', 'Theatre updated.');
+        return back()->with('success', __('Theatre updated.'));
     }
 
     public function storeComplex(Request $request)
@@ -97,6 +97,6 @@ class OtTheatreController extends Controller
 
         $this->theatres->createComplex($validated);
 
-        return back()->with('success', 'OT complex created.');
+        return back()->with('success', __('OT complex created.'));
     }
 }

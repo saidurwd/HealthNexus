@@ -25,7 +25,7 @@
                             <td>{{ $corporate->code }}</td>
                             <td>{{ number_format($corporate->credit_limit, 2) }}</td>
                             <td>{{ ucfirst(str_replace('_',' ',$corporate->billing_cycle)) }}</td>
-                            <td><span class="badge {{ $corporate->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($corporate->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$corporate->status" /></td>
                             <td>
                                 <a href="{{ route('admin.billing.corporates.show', $corporate) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
                                 @can('billing.corporate.manage')

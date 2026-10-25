@@ -41,7 +41,7 @@
                             </td>
                             <td>{{ $admission->attendingProvider?->name ?? '—' }}</td>
                             <td>{{ $admission->admitted_at?->format('Y-m-d H:i') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admission->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$admission->status" /></td>
                             <td><a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

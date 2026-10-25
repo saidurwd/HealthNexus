@@ -47,7 +47,7 @@ class IcuProcedureController extends Controller
 
         IcuProcedure::create([...$validated, 'organization_id' => $organizationId, 'is_active' => true]);
 
-        return redirect()->route('admin.icu.procedures.index')->with('success', 'ICU procedure added.');
+        return redirect()->route('admin.icu.procedures.index')->with('success', __('ICU procedure added.'));
     }
 
     public function record(Request $request, IcuEpisode $episode)
@@ -64,6 +64,6 @@ class IcuProcedureController extends Controller
 
         $this->procedures->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Procedure recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Procedure recorded.'));
     }
 }

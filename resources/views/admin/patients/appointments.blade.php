@@ -39,7 +39,7 @@
                                     <td>{{ $appointment->appointment_date->format('M d, Y') }} {{ $appointment->appointment_time->format('H:i') }}</td>
                                     <td>{{ $appointment->provider->name ?? $appointment->doctor->name ?? '-' }}</td>
                                     <td>{{ $appointment->appointmentType->name ?? ucfirst($appointment->type) }}</td>
-                                    <td class="text-center"><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $appointment->status)) }}</span></td>
+                                    <td class="text-center"><x-ui.status-badge :status="$appointment->status" /></td>
                                     <td>{{ ucfirst($appointment->source) }}</td>
                                 </tr>
                             @empty

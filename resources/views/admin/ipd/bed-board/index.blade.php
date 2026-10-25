@@ -43,7 +43,7 @@
                                         <div class="border rounded p-2 mb-2">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <strong>{{ $bed->bed_code }}</strong>
-                                                <span class="badge {{ $statusColor }}">{{ ucfirst(str_replace('_', ' ', $bed->status)) }}</span>
+                                                <x-ui.status-badge :status="$bed->status" />
                                             </div>
                                             @if($bed->isolation_capable)
                                                 <span class="badge bg-dark">{{ __('Isolation') }}</span>

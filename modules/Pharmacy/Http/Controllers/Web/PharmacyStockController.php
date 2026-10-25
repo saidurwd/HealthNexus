@@ -102,7 +102,7 @@ class PharmacyStockController extends Controller
 
         $this->auditLogger->log('RECEIVE', PharmacyBatch::class, $batch->id, null, $batch->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.stock.index', ['store_id' => $store->id])->with('success', 'Stock received.');
+        return redirect()->route('admin.pharmacy.stock.index', ['store_id' => $store->id])->with('success', __('Stock received.'));
     }
 
     public function adjust(Request $request)
@@ -128,6 +128,6 @@ class PharmacyStockController extends Controller
 
         $this->auditLogger->log('ADJUST', PharmacyStockTransaction::class, null, null, $validated, $request);
 
-        return redirect()->route('admin.pharmacy.stock.index', ['store_id' => $store->id])->with('success', 'Stock adjusted.');
+        return redirect()->route('admin.pharmacy.stock.index', ['store_id' => $store->id])->with('success', __('Stock adjusted.'));
     }
 }

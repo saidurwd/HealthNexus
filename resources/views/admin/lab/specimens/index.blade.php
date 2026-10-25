@@ -28,7 +28,7 @@
                             <td>{{ $specimen->accession_number }}</td>
                             <td>{{ $specimen->labOrder->patient?->full_name }}</td>
                             <td>{{ $specimen->specimenType?->name }}</td>
-                            <td><span class="badge {{ $specimen->status === 'rejected' ? 'bg-danger' : 'bg-info' }}">{{ ucfirst($specimen->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$specimen->status" /></td>
                             <td>{{ $specimen->collected_at?->format('Y-m-d H:i') }}</td>
                             <td><a href="{{ route('admin.lab.specimens.show', $specimen) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

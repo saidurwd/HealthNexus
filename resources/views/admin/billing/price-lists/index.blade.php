@@ -34,7 +34,7 @@
                             <td>{{ $priceList->priority }}</td>
                             <td>{{ $priceList->effective_from?->format('Y-m-d') ?? '-' }} &ndash; {{ $priceList->effective_to?->format('Y-m-d') ?? 'ongoing' }}</td>
                             <td>
-                                <span class="badge {{ $priceList->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($priceList->status) }}</span>
+                                <x-ui.status-badge :status="$priceList->status" />
                             </td>
                             <td>
                                 <a href="{{ route('admin.billing.price-lists.show', $priceList) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>

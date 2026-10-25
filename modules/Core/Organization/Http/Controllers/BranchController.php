@@ -40,7 +40,7 @@ class BranchController extends Controller
 
         $organization->branches()->create($validated);
 
-        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch created successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', __('Branch created successfully.'));
     }
 
     public function show(Organization $organization, Branch $branch)
@@ -73,7 +73,7 @@ class BranchController extends Controller
 
         $branch->update($validated);
 
-        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch updated successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', __('Branch updated successfully.'));
     }
 
     public function destroy(Organization $organization, Branch $branch)
@@ -82,6 +82,6 @@ class BranchController extends Controller
 
         $branch->delete();
 
-        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch deleted successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', __('Branch deleted successfully.'));
     }
 }

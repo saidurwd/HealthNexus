@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">{{ $report->report_number }}</h3>
             <div class="card-tools">
-                <span class="badge {{ $report->status === 'amended' ? 'bg-warning' : 'bg-success' }}">{{ ucfirst($report->status) }}</span>
+                <x-ui.status-badge :status="$report->status" />
                 @can('lab.report.print')
                     <a href="{{ route('admin.lab.reports.print', $report) }}" target="_blank" class="btn btn-sm btn-secondary">{{ __('Print') }}</a>
                 @endcan

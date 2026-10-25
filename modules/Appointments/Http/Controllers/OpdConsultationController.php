@@ -67,7 +67,7 @@ class OpdConsultationController extends Controller
 
         $this->auditLogger->log('CREATE', VitalSign::class, $vitalSign->id, null, $vitalSign->toArray(), $request);
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Vital signs recorded successfully.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Vital signs recorded successfully.'));
     }
 
     public function storeDiagnosis(StoreDiagnosisRequest $request)
@@ -83,7 +83,7 @@ class OpdConsultationController extends Controller
 
         $this->auditLogger->log('CREATE', Diagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Diagnosis added successfully.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Diagnosis added successfully.'));
     }
 
     public function storeInvestigationOrder(StoreInvestigationOrderRequest $request)
@@ -99,7 +99,7 @@ class OpdConsultationController extends Controller
 
         $this->auditLogger->log('CREATE', InvestigationOrder::class, $order->id, null, $order->toArray(), $request);
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Investigation order created successfully.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Investigation order created successfully.'));
     }
 
     public function storePrescription(StorePrescriptionRequest $request)
@@ -115,7 +115,7 @@ class OpdConsultationController extends Controller
 
         $this->auditLogger->log('CREATE', Prescription::class, $prescription->id, null, $prescription->toArray(), $request);
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Prescription created successfully.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Prescription created successfully.'));
     }
 
     /**
@@ -129,7 +129,7 @@ class OpdConsultationController extends Controller
         $this->lifecycle->startConsultation($appointment, auth()->user());
         $this->encounterService->findOrCreateFromAppointment($appointment, auth()->user());
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Consultation started.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Consultation started.'));
     }
 
     public function markCompleted(Appointment $appointment)
@@ -144,7 +144,7 @@ class OpdConsultationController extends Controller
             $this->encounterLifecycle->complete($encounter, auth()->user());
         }
 
-        return redirect()->route('admin.opd.consultation', $appointment)->with('success', 'Appointment completed.');
+        return redirect()->route('admin.opd.consultation', $appointment)->with('success', __('Appointment completed.'));
     }
 
     public function checkIn(Appointment $appointment)
@@ -153,7 +153,7 @@ class OpdConsultationController extends Controller
 
         $this->lifecycle->checkIn($appointment, auth()->user());
 
-        return back()->with('success', 'Patient checked in successfully.');
+        return back()->with('success', __('Patient checked in successfully.'));
     }
 
     public function createFollowUp(Request $request, Appointment $appointment)
@@ -169,6 +169,6 @@ class OpdConsultationController extends Controller
 
         $followUp = $this->bookingService->bookFollowUp($appointment, $validated, $request->user());
 
-        return redirect()->route('admin.appointments.show', $followUp)->with('success', 'Follow-up appointment created successfully.');
+        return redirect()->route('admin.appointments.show', $followUp)->with('success', __('Follow-up appointment created successfully.'));
     }
 }

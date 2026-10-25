@@ -57,7 +57,7 @@
                             <td>{{ $record->batch?->batch_number }}</td>
                             <td>{{ $record->quantity }}</td>
                             <td>{{ $record->reason }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($record->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$record->status" /></td>
                             <td>
                                 @if($record->status === 'quarantined')
                                     <form method="POST" action="{{ route('admin.pharmacy.quarantine.release', $record) }}" class="d-inline">

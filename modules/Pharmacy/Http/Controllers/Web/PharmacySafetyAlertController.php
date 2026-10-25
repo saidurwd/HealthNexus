@@ -47,6 +47,6 @@ class PharmacySafetyAlertController extends Controller
 
         $this->auditLogger->log('OVERRIDE', PharmacySafetyAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
 
-        return back()->with('success', 'Safety alert overridden.');
+        return back()->with('success', __('Safety alert overridden.'));
     }
 }

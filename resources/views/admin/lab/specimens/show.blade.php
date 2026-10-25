@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $specimen->accession_number }}</h3>
-                    <div class="card-tools"><span class="badge {{ $specimen->status === 'rejected' ? 'bg-danger' : 'bg-info' }}">{{ ucfirst($specimen->status) }}</span></div>
+                    <div class="card-tools"><x-ui.status-badge :status="$specimen->status" /></div>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">

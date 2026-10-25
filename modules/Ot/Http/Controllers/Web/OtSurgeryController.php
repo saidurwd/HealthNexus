@@ -83,7 +83,7 @@ class OtSurgeryController extends Controller
 
         $this->auditLogger->log('CREATE', OtSurgery::class, $surgery->id, null, $surgery->toArray(), $request);
 
-        return redirect()->route('admin.ot.surgeries.show', $surgery)->with('success', 'Surgical case created.');
+        return redirect()->route('admin.ot.surgeries.show', $surgery)->with('success', __('Surgical case created.'));
     }
 
     public function show(OtSurgery $surgery)
@@ -126,7 +126,7 @@ class OtSurgeryController extends Controller
 
         $this->auditLogger->log('SCHEDULE', OtSurgery::class, $surgery->id, null, $validated, $request);
 
-        return back()->with('success', 'Surgery scheduled.');
+        return back()->with('success', __('Surgery scheduled.'));
     }
 
     public function reschedule(Request $request, OtSurgery $surgery)
@@ -149,7 +149,7 @@ class OtSurgeryController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Surgery rescheduled.');
+        return back()->with('success', __('Surgery rescheduled.'));
     }
 
     public function postpone(Request $request, OtSurgery $surgery)
@@ -164,7 +164,7 @@ class OtSurgeryController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Surgery postponed.');
+        return back()->with('success', __('Surgery postponed.'));
     }
 
     public function cancel(Request $request, OtSurgery $surgery)
@@ -181,7 +181,7 @@ class OtSurgeryController extends Controller
 
         $this->auditLogger->log('CANCEL', OtSurgery::class, $surgery->id, null, $validated, $request);
 
-        return back()->with('success', 'Surgery cancelled.');
+        return back()->with('success', __('Surgery cancelled.'));
     }
 
     public function receive(Request $request, OtSurgery $surgery)
@@ -194,7 +194,7 @@ class OtSurgeryController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Patient received into theatre.');
+        return back()->with('success', __('Patient received into theatre.'));
     }
 
     public function start(Request $request, OtSurgery $surgery)
@@ -209,7 +209,7 @@ class OtSurgeryController extends Controller
 
         $this->auditLogger->log('START', OtSurgery::class, $surgery->id, null, ['status' => 'in_procedure'], $request);
 
-        return back()->with('success', 'Procedure started.');
+        return back()->with('success', __('Procedure started.'));
     }
 
     public function complete(Request $request, OtSurgery $surgery)
@@ -224,6 +224,6 @@ class OtSurgeryController extends Controller
 
         $this->auditLogger->log('COMPLETE', OtSurgery::class, $surgery->id, null, ['status' => 'procedure_completed'], $request);
 
-        return back()->with('success', 'Procedure marked complete.');
+        return back()->with('success', __('Procedure marked complete.'));
     }
 }

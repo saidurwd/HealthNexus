@@ -35,7 +35,7 @@ class IcuDischargeController extends Controller
 
         $summary = $this->discharge->start($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.discharge.show', $summary)->with('success', 'Discharge summary drafted.');
+        return redirect()->route('admin.icu.discharge.show', $summary)->with('success', __('Discharge summary drafted.'));
     }
 
     public function show(IcuDischargeSummary $summary)
@@ -55,6 +55,6 @@ class IcuDischargeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $summary->episode_id)->with('success', 'Patient discharged from ICU.');
+        return redirect()->route('admin.icu.episodes.show', $summary->episode_id)->with('success', __('Patient discharged from ICU.'));
     }
 }

@@ -46,7 +46,7 @@ class MfaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'MFA verified successfully.',
-            'redirect' => route('home'),
+            'redirect' => app(\App\Services\Ux\RoleHome::class)->urlFor($user),
         ]);
     }
 

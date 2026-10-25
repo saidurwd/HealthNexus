@@ -31,7 +31,7 @@
                                 <td>{{ $appointment->provider->name ?? $appointment->doctor->name ?? '-' }}</td>
                                 <td>{{ $appointment->token->token_number ?? '-' }}</td>
                                 <td class="text-center">
-                                    <span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $appointment->status)) }}</span>
+                                    <x-ui.status-badge :status="$appointment->status" />
                                 </td>
                             </tr>
                         @empty

@@ -54,7 +54,7 @@ class NursingTaskController extends Controller
 
         $this->auditLogger->log('CREATE', NursingTask::class, $task->id, null, $task->toArray(), $request);
 
-        return back()->with('success', 'Task created.');
+        return back()->with('success', __('Task created.'));
     }
 
     public function complete(Request $request, NursingTask $task)
@@ -69,7 +69,7 @@ class NursingTaskController extends Controller
 
         $this->auditLogger->log('COMPLETE', NursingTask::class, $task->id, null, ['status' => 'completed'], $request);
 
-        return back()->with('success', 'Task completed.');
+        return back()->with('success', __('Task completed.'));
     }
 
     public function skip(Request $request, NursingTask $task)
@@ -86,7 +86,7 @@ class NursingTaskController extends Controller
 
         $this->auditLogger->log('SKIP', NursingTask::class, $task->id, null, $validated, $request);
 
-        return back()->with('success', 'Task skipped.');
+        return back()->with('success', __('Task skipped.'));
     }
 
     public function refuse(Request $request, NursingTask $task)
@@ -103,6 +103,6 @@ class NursingTaskController extends Controller
 
         $this->auditLogger->log('REFUSE', NursingTask::class, $task->id, null, $validated, $request);
 
-        return back()->with('success', 'Task refused by patient.');
+        return back()->with('success', __('Task refused by patient.'));
     }
 }

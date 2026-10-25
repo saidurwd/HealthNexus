@@ -10,7 +10,7 @@
                 <div class="mb-3 pb-3 border-bottom">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <strong>{{ $labOrder->order_number }}</strong>
-                        <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $labOrder->status)) }}</span>
+                        <x-ui.status-badge :status="$labOrder->status" />
                     </div>
                     <table class="table table-sm mb-2">
                         <thead><tr><th>{{ __('Test') }}</th><th>{{ __('Result') }}</th><th>{{ __('Flag') }}</th></tr></thead>

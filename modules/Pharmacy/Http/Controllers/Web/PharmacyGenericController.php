@@ -61,7 +61,7 @@ class PharmacyGenericController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyGeneric::class, $generic->id, null, $generic->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.generics.index')->with('success', 'Generic created.');
+        return redirect()->route('admin.pharmacy.generics.index')->with('success', __('Generic created.'));
     }
 
     public function edit(PharmacyGeneric $generic)
@@ -90,6 +90,6 @@ class PharmacyGenericController extends Controller
 
         $this->auditLogger->log('UPDATE', PharmacyGeneric::class, $generic->id, $oldValues, $generic->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.generics.index')->with('success', 'Generic updated.');
+        return redirect()->route('admin.pharmacy.generics.index')->with('success', __('Generic updated.'));
     }
 }

@@ -25,7 +25,7 @@
                             <td>{{ $report->report_number }}</td>
                             <td>{{ $report->labOrder->order_number }}</td>
                             <td>{{ $report->labOrder->patient?->full_name }}</td>
-                            <td><span class="badge {{ $report->status === 'amended' ? 'bg-warning' : 'bg-success' }}">{{ ucfirst($report->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$report->status" /></td>
                             <td>{{ $report->generated_at?->format('Y-m-d H:i') }}</td>
                             <td><a href="{{ route('admin.lab.reports.show', $report) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

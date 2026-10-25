@@ -67,7 +67,7 @@ class RadiologyOrderController extends Controller
 
         $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', RadiologyOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.orders.show', $order)->with('success', 'Order item matched to a procedure.');
+        return redirect()->route('admin.radiology.orders.show', $order)->with('success', __('Order item matched to a procedure.'));
     }
 
     public function cancel(Request $request, RadiologyOrder $order)
@@ -81,6 +81,6 @@ class RadiologyOrderController extends Controller
 
         $this->auditLogger->log('CANCEL', RadiologyOrder::class, $order->id, $oldValues, $order->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.orders.show', $order)->with('success', 'Radiology order cancelled.');
+        return redirect()->route('admin.radiology.orders.show', $order)->with('success', __('Radiology order cancelled.'));
     }
 }

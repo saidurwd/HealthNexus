@@ -62,7 +62,7 @@ class BillingAdjustmentController extends Controller
 
         $this->auditLogger->log('CREATE', BillingAdjustment::class, $adjustment->id, null, $adjustment->toArray(), $request);
 
-        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', 'Adjustment requested successfully.');
+        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', __('Adjustment requested successfully.'));
     }
 
     public function show(BillingAdjustment $adjustment)
@@ -87,6 +87,6 @@ class BillingAdjustmentController extends Controller
 
         $this->auditLogger->log('APPROVE', BillingAdjustment::class, $adjustment->id, $oldValues, $adjustment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', 'Adjustment approved and applied.');
+        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', __('Adjustment approved and applied.'));
     }
 }

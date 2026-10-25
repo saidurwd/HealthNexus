@@ -62,6 +62,6 @@ class RadiologyPacsController extends Controller
 
         $this->auditLogger->log('CREATE', RadiologyPacsServer::class, $server->id, null, ['code' => $server->code, 'adapter_type' => $server->adapter_type], $request);
 
-        return redirect()->route('admin.radiology.pacs.index')->with('success', 'PACS server registered.');
+        return redirect()->route('admin.radiology.pacs.index')->with('success', __('PACS server registered.'));
     }
 }

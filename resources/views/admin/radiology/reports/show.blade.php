@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $report->report_number }} <small class="text-muted">v{{ $report->version }}</small></h3>
-                    <div class="card-tools"><span class="badge {{ $report->status === 'amended' ? 'bg-warning' : ($report->isFinal() ? 'bg-success' : 'bg-secondary') }}">{{ ucfirst($report->status) }}</span></div>
+                    <div class="card-tools"><x-ui.status-badge :status="$report->status" /></div>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">
@@ -93,7 +93,7 @@
                             @foreach($report->criticalFindings as $finding)
                                 <li class="list-group-item">
                                     {{ $finding->finding_text }}
-                                    <span class="badge {{ $finding->isAcknowledged() ? 'bg-success' : 'bg-danger' }}">{{ ucfirst($finding->status) }}</span>
+                                    <x-ui.status-badge :status="$finding->status" />
                                 </li>
                             @endforeach
                         </ul>

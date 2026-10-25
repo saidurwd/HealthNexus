@@ -61,7 +61,7 @@ class BillingPaymentController extends Controller
 
         $this->auditLogger->log('CREATE', BillingPayment::class, $payment->id, null, $payment->toArray(), $request);
 
-        return redirect()->route('admin.billing.payments.show', $payment)->with('success', 'Payment collected successfully.');
+        return redirect()->route('admin.billing.payments.show', $payment)->with('success', __('Payment collected successfully.'));
     }
 
     public function show(BillingPayment $payment)
@@ -85,6 +85,6 @@ class BillingPaymentController extends Controller
 
         $this->auditLogger->log('CANCEL', BillingPayment::class, $payment->id, $oldValues, $payment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.payments.show', $payment)->with('success', 'Payment cancelled.');
+        return redirect()->route('admin.billing.payments.show', $payment)->with('success', __('Payment cancelled.'));
     }
 }

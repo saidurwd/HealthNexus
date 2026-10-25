@@ -72,7 +72,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyTransfer::class, $transfer->id, null, $transfer->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer requested.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer requested.'));
     }
 
     public function show(PharmacyTransfer $transfer)
@@ -93,7 +93,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('APPROVE', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer approved.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer approved.'));
     }
 
     public function dispatch(Request $request, PharmacyTransfer $transfer)
@@ -110,7 +110,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('DISPATCH', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer dispatched.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer dispatched.'));
     }
 
     public function receive(Request $request, PharmacyTransfer $transfer)
@@ -122,6 +122,6 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('RECEIVE', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer received.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer received.'));
     }
 }

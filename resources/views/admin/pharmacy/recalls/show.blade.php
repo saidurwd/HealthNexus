@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Recall {{ $recall->recall_number }} <span class="badge bg-info">{{ ucfirst($recall->status) }}</span></h3>
+        <h3>Recall {{ $recall->recall_number }} <x-ui.status-badge :status="$recall->status" /></h3>
         @if($recall->status === 'initiated')
             <form method="POST" action="{{ route('admin.pharmacy.recalls.close', $recall) }}">
                 @csrf

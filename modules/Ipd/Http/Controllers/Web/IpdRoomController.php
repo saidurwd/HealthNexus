@@ -71,7 +71,7 @@ class IpdRoomController extends Controller
 
         $this->auditLogger->log('CREATE', IpdRoom::class, $room->id, null, $room->toArray(), $request);
 
-        return redirect()->route('admin.ipd.rooms.index')->with('success', 'Room created.');
+        return redirect()->route('admin.ipd.rooms.index')->with('success', __('Room created.'));
     }
 
     public function edit(IpdRoom $room)
@@ -104,6 +104,6 @@ class IpdRoomController extends Controller
 
         $this->auditLogger->log('UPDATE', IpdRoom::class, $room->id, $oldValues, $room->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.rooms.index')->with('success', 'Room updated.');
+        return redirect()->route('admin.ipd.rooms.index')->with('success', __('Room updated.'));
     }
 }

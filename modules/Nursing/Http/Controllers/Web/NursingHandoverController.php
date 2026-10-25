@@ -53,7 +53,7 @@ class NursingHandoverController extends Controller
 
         $this->auditLogger->log('CREATE', NursingHandover::class, $handover->id, null, $handover->toArray(), $request);
 
-        return redirect()->route('admin.nursing.handover.show', $handover)->with('success', 'Handover prepared.');
+        return redirect()->route('admin.nursing.handover.show', $handover)->with('success', __('Handover prepared.'));
     }
 
     public function finalize(Request $request, NursingHandover $handover)
@@ -67,7 +67,7 @@ class NursingHandoverController extends Controller
 
         $this->auditLogger->log('FINALIZE', NursingHandover::class, $handover->id, null, ['status' => 'pending_acknowledgement'], $request);
 
-        return back()->with('success', 'Handover finalized and sent for acknowledgement.');
+        return back()->with('success', __('Handover finalized and sent for acknowledgement.'));
     }
 
     public function acknowledge(Request $request, NursingHandover $handover)
@@ -82,6 +82,6 @@ class NursingHandoverController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', NursingHandover::class, $handover->id, null, ['status' => 'acknowledged'], $request);
 
-        return back()->with('success', 'Handover acknowledged.');
+        return back()->with('success', __('Handover acknowledged.'));
     }
 }

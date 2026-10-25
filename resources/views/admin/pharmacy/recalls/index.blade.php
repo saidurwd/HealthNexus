@@ -35,7 +35,7 @@
                             <td>{{ $recall->recall_number }}</td>
                             <td>{{ $recall->medication?->name }}</td>
                             <td>{{ $recall->batch?->batch_number }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($recall->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$recall->status" /></td>
                             <td><a href="{{ route('admin.pharmacy.recalls.show', $recall) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

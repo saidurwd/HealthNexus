@@ -15,7 +15,7 @@
                             <td>{{ $theatre->name }}</td>
                             <td>{{ $theatre->complex?->name ?? '—' }}</td>
                             <td>{{ $theatre->capabilities->pluck('capability')->implode(', ') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($theatre->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$theatre->status" /></td>
                         </tr>
                     @empty
                         <tr><td colspan="5" class="text-center">{{ __('No theatres configured.') }}</td></tr>

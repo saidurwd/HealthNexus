@@ -56,6 +56,6 @@ class RadiologySchedulingController extends Controller
 
         $this->auditLogger->log('SCHEDULE', \App\Models\Radiology\RadiologyExamination::class, $examination->id, null, $examination->toArray(), $request);
 
-        return redirect()->route('admin.radiology.orders.show', $item->radiologyOrder)->with('success', 'Examination scheduled.');
+        return redirect()->route('admin.radiology.orders.show', $item->radiologyOrder)->with('success', __('Examination scheduled.'));
     }
 }

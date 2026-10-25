@@ -23,7 +23,7 @@
                             <td>{{ $examination->orderItem->procedure?->name }}</td>
                             <td>{{ $examination->modality?->name }}</td>
                             <td>{{ $examination->scheduled_at?->format('Y-m-d H:i') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $examination->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$examination->status" /></td>
                             <td><a href="{{ route('admin.radiology.examinations.show', $examination) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

@@ -23,7 +23,7 @@
                             <td>{{ $task->task_type }}</td>
                             <td>{{ $task->due_at }}</td>
                             <td>{{ $task->assignedNurse?->name ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_',' ',$task->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$task->status" /></td>
                             <td>
                                 @if(in_array($task->status, ['pending','in_progress','overdue']))
                                     @can('nursing.task.complete')

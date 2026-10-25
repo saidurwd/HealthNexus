@@ -23,7 +23,7 @@
                             <td>{{ $modality->modality_type }}</td>
                             <td>{{ $modality->section?->name }}</td>
                             <td>{{ $modality->room?->name }}</td>
-                            <td><span class="badge {{ $modality->status === 'online' ? 'bg-success' : ($modality->status === 'disabled' ? 'bg-secondary' : 'bg-warning') }}">{{ ucfirst($modality->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$modality->status" /></td>
                             <td>
                                 @can('radiology.modality.update')
                                     <a href="{{ route('admin.radiology.modalities.edit', $modality) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>

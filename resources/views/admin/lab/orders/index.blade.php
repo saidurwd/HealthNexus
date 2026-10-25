@@ -35,7 +35,7 @@
                             <td>{{ $order->patient?->full_name }}</td>
                             <td>{{ $order->items->count() }}</td>
                             <td>{{ ucfirst($order->priority) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$order->status" /></td>
                             <td>{{ $order->ordered_at?->format('Y-m-d H:i') }}</td>
                             <td><a href="{{ route('admin.lab.orders.show', $order) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

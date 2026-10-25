@@ -123,6 +123,21 @@ class BanglaParityTest extends TestCase
         }
     }
 
+    public function test_every_status_in_the_ux_palette_has_a_bangla_label(): void
+    {
+        $bangla = $this->bangla();
+        $missing = [];
+
+        foreach (array_keys(config('ux.statuses')) as $status) {
+            $label = \Illuminate\Support\Str::headline($status);
+            if (($bangla[$label] ?? '') === '') {
+                $missing[] = $label;
+            }
+        }
+
+        $this->assertSame([], $missing);
+    }
+
     private function flatten(array $array, string $prefix = ''): array
     {
         $out = [];

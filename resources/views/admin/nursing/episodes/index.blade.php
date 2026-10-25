@@ -23,7 +23,7 @@
                             <td>{{ $episode->admission?->admission_number }}</td>
                             <td>{{ $episode->admission?->currentAllocation?->bed?->room?->ward?->name ?? '—' }} / {{ $episode->admission?->currentAllocation?->bed?->bed_code ?? '—' }}</td>
                             <td>{{ $episode->primaryNurse?->name ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($episode->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$episode->status" /></td>
                             <td><a href="{{ route('admin.nursing.episodes.show', $episode) }}" class="btn btn-xs btn-info">{{ __('Open') }}</a></td>
                         </tr>
                     @empty

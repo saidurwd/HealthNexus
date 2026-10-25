@@ -31,7 +31,7 @@
                                 default => 'bg-secondary',
                             };
                         @endphp
-                        <span class="badge {{ $statusClass }}">{{ ucfirst($patient->status) }}</span>
+                        <x-ui.status-badge :status="$patient->status" />
                         @if($patient->blood_group)
                             <span class="badge bg-info text-dark">{{ $patient->blood_group }}</span>
                         @endif

@@ -56,7 +56,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('CREATE', BillingPriceList::class, $priceList->id, null, $priceList->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.index')->with('success', 'Price list created successfully.');
+        return redirect()->route('admin.billing.price-lists.index')->with('success', __('Price list created successfully.'));
     }
 
     public function show(BillingPriceList $priceList)
@@ -88,7 +88,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingPriceList::class, $priceList->id, $oldValues, $priceList->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.index')->with('success', 'Price list updated successfully.');
+        return redirect()->route('admin.billing.price-lists.index')->with('success', __('Price list updated successfully.'));
     }
 
     public function storeItem(StoreBillingPriceListItemRequest $request, BillingPriceList $priceList)
@@ -105,7 +105,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('CREATE', BillingPriceListItem::class, $item->id, null, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', 'Price added successfully.');
+        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', __('Price added successfully.'));
     }
 
     public function destroyItem(Request $request, BillingPriceList $priceList, BillingPriceListItem $item)
@@ -118,7 +118,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', BillingPriceListItem::class, $item->id, $oldValues, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', 'Price deactivated successfully.');
+        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', __('Price deactivated successfully.'));
     }
 
     private function scopeHash(array $data): string

@@ -54,7 +54,7 @@ class IpdLeaveController extends Controller
 
         $this->auditLogger->log('CREATE', IpdPatientLeave::class, $leave->id, null, $leave->toArray(), $request);
 
-        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', 'Leave requested.');
+        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', __('Leave requested.'));
     }
 
     public function show(IpdPatientLeave $leave)
@@ -80,7 +80,7 @@ class IpdLeaveController extends Controller
 
         $this->auditLogger->log('APPROVE', IpdPatientLeave::class, $leave->id, $oldValues, $leave->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', 'Leave approved.');
+        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', __('Leave approved.'));
     }
 
     public function start(Request $request, IpdPatientLeave $leave)
@@ -97,7 +97,7 @@ class IpdLeaveController extends Controller
 
         $this->auditLogger->log('START', IpdPatientLeave::class, $leave->id, $oldValues, $leave->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', 'Leave started.');
+        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', __('Leave started.'));
     }
 
     public function markReturned(Request $request, IpdPatientLeave $leave)
@@ -116,7 +116,7 @@ class IpdLeaveController extends Controller
 
         $this->auditLogger->log('RETURN', IpdPatientLeave::class, $leave->id, $oldValues, $leave->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', 'Patient marked as returned.');
+        return redirect()->route('admin.ipd.leave.show', $leave)->with('success', __('Patient marked as returned.'));
     }
 
     public function cancel(Request $request, IpdPatientLeave $leave)
@@ -133,6 +133,6 @@ class IpdLeaveController extends Controller
 
         $this->auditLogger->log('CANCEL', IpdPatientLeave::class, $leave->id, $oldValues, $leave->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.leave.index')->with('success', 'Leave cancelled.');
+        return redirect()->route('admin.ipd.leave.index')->with('success', __('Leave cancelled.'));
     }
 }

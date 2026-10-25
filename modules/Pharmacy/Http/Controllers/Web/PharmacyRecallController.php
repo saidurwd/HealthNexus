@@ -51,7 +51,7 @@ class PharmacyRecallController extends Controller
 
         $this->auditLogger->log('INITIATE', PharmacyRecall::class, $recall->id, null, $recall->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.recalls.show', $recall)->with('success', 'Recall initiated; affected stock quarantined.');
+        return redirect()->route('admin.pharmacy.recalls.show', $recall)->with('success', __('Recall initiated; affected stock quarantined.'));
     }
 
     public function show(PharmacyRecall $recall)
@@ -78,6 +78,6 @@ class PharmacyRecallController extends Controller
 
         $this->auditLogger->log('CLOSE', PharmacyRecall::class, $recall->id, $oldValues, $recall->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.recalls.show', $recall)->with('success', 'Recall closed.');
+        return redirect()->route('admin.pharmacy.recalls.show', $recall)->with('success', __('Recall closed.'));
     }
 }

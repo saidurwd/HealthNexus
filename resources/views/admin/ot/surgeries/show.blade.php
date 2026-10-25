@@ -3,6 +3,7 @@
 @section('page_title', 'Surgery '.$surgery->surgery_number)
 
 @section('page_content')
+    @if($surgery->patient)<x-patient-banner :patient="$surgery->patient" />@endif
     <div class="card">
         <div class="card-header"><h3 class="card-title">{{ $surgery->surgery_number }} — {{ $surgery->patient?->full_name }} <span class="badge bg-info">{{ ucwords(str_replace('_',' ',$surgery->status)) }}</span></h3></div>
         <div class="card-body">

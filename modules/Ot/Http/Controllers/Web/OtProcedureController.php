@@ -71,7 +71,7 @@ class OtProcedureController extends Controller
 
         $this->auditLogger->log('CREATE', OtProcedure::class, $procedure->id, null, $procedure->toArray(), $request);
 
-        return redirect()->route('admin.ot.procedures.index')->with('success', 'Procedure created.');
+        return redirect()->route('admin.ot.procedures.index')->with('success', __('Procedure created.'));
     }
 
     public function storeCategory(Request $request)
@@ -87,7 +87,7 @@ class OtProcedureController extends Controller
 
         $this->procedures->createCategory($validated);
 
-        return back()->with('success', 'Procedure category created.');
+        return back()->with('success', __('Procedure category created.'));
     }
 
     public function update(Request $request, OtProcedure $procedure)
@@ -105,6 +105,6 @@ class OtProcedureController extends Controller
 
         $this->auditLogger->log('UPDATE', OtProcedure::class, $procedure->id, null, $validated, $request);
 
-        return back()->with('success', 'Procedure updated.');
+        return back()->with('success', __('Procedure updated.'));
     }
 }

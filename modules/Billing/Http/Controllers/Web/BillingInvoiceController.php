@@ -66,7 +66,7 @@ class BillingInvoiceController extends Controller
 
         $this->auditLogger->log('CREATE', BillingInvoice::class, $invoice->id, null, $invoice->toArray(), $request);
 
-        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', 'Draft invoice created. Add charges before finalizing.');
+        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', __('Draft invoice created. Add charges before finalizing.'));
     }
 
     public function show(BillingInvoice $invoice)
@@ -99,7 +99,7 @@ class BillingInvoiceController extends Controller
 
         $this->auditLogger->log('ADD_CHARGES', BillingInvoice::class, $invoice->id, null, ['charge_ids' => $validated['charge_ids']], $request);
 
-        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', 'Charges added to invoice.');
+        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', __('Charges added to invoice.'));
     }
 
     public function finalize(Request $request, BillingInvoice $invoice)
@@ -112,7 +112,7 @@ class BillingInvoiceController extends Controller
 
         $this->auditLogger->log('FINALIZE', BillingInvoice::class, $invoice->id, $oldValues, $invoice->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', 'Invoice finalized successfully.');
+        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', __('Invoice finalized successfully.'));
     }
 
     public function cancel(Request $request, BillingInvoice $invoice)
@@ -127,7 +127,7 @@ class BillingInvoiceController extends Controller
 
         $this->auditLogger->log('CANCEL', BillingInvoice::class, $invoice->id, $oldValues, $invoice->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', 'Invoice cancelled.');
+        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', __('Invoice cancelled.'));
     }
 
     public function writeOff(Request $request, BillingInvoice $invoice)
@@ -142,6 +142,6 @@ class BillingInvoiceController extends Controller
 
         $this->auditLogger->log('WRITE_OFF', BillingInvoice::class, $invoice->id, $oldValues, $invoice->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', 'Invoice written off.');
+        return redirect()->route('admin.billing.invoices.show', $invoice)->with('success', __('Invoice written off.'));
     }
 }

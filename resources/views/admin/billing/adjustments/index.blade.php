@@ -25,7 +25,7 @@
                             <td>{{ number_format($adjustment->original_value, 2) }}</td>
                             <td>{{ number_format($adjustment->new_value, 2) }}</td>
                             <td>{{ number_format($adjustment->difference, 2) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($adjustment->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$adjustment->status" /></td>
                             <td><a href="{{ route('admin.billing.adjustments.show', $adjustment) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

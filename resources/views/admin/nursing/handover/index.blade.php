@@ -14,7 +14,7 @@
                             <td>{{ $h->episode?->patient?->full_name }}</td>
                             <td>{{ $h->outgoingNurse?->name }}</td>
                             <td>{{ $h->incomingNurse?->name ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_',' ',$h->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$h->status" /></td>
                             <td><a href="{{ route('admin.nursing.handover.show', $h) }}" class="btn btn-xs btn-info">{{ __('Open') }}</a></td>
                         </tr>
                     @empty

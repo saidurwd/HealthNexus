@@ -24,7 +24,7 @@
                                 @if($finding->isAcknowledged())
                                     <span class="badge bg-success">{{ __('Acknowledged') }}</span>
                                 @else
-                                    <span class="badge bg-danger">{{ ucfirst($finding->status) }}</span>
+                                    <x-ui.status-badge :status="$finding->status" />
                                 @endif
                             </td>
                             <td>

@@ -72,7 +72,7 @@ class PharmacyDispensingController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyDispensing::class, $dispensing->id, null, $dispensing->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Medications dispensed.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Medications dispensed.'));
     }
 
     public function show(PharmacyDispensing $dispensing)
@@ -93,7 +93,7 @@ class PharmacyDispensingController extends Controller
 
         $this->auditLogger->log('VERIFY', PharmacyDispensing::class, $dispensing->id, $oldValues, $dispensing->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Dispensing verified.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Dispensing verified.'));
     }
 
     public function storeReturn(Request $request, PharmacyDispensing $dispensing)
@@ -111,6 +111,6 @@ class PharmacyDispensingController extends Controller
 
         $this->auditLogger->log('CREATE', \App\Models\Pharmacy\PharmacyReturn::class, $return->id, null, $return->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Return requested.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Return requested.'));
     }
 }

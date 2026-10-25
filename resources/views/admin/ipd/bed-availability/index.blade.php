@@ -43,7 +43,7 @@
                             <td>{{ $bed->room?->ward?->name }}</td>
                             <td>{{ $bed->bedType?->name ?? '—' }}</td>
                             <td>{{ ucfirst($bed->gender_type) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $bed->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$bed->status" /></td>
                         </tr>
                     @empty
                         <tr><td colspan="6" class="text-center">{{ __('No beds match the search.') }}</td></tr>

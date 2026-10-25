@@ -52,7 +52,7 @@ class NursingShiftController extends Controller
 
         $this->auditLogger->log('CREATE', NursingShift::class, $shift->id, null, $shift->toArray(), $request);
 
-        return back()->with('success', 'Shift created.');
+        return back()->with('success', __('Shift created.'));
     }
 
     public function update(Request $request, NursingShift $shift)
@@ -71,6 +71,6 @@ class NursingShiftController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingShift::class, $shift->id, null, $validated, $request);
 
-        return back()->with('success', 'Shift updated.');
+        return back()->with('success', __('Shift updated.'));
     }
 }

@@ -63,7 +63,7 @@ class RadiologyProcedureController extends Controller
 
         $this->auditLogger->log('CREATE', RadiologyProcedure::class, $procedure->id, null, $procedure->toArray(), $request);
 
-        return redirect()->route('admin.radiology.procedures.index')->with('success', 'Radiology procedure created.');
+        return redirect()->route('admin.radiology.procedures.index')->with('success', __('Radiology procedure created.'));
     }
 
     public function edit(RadiologyProcedure $procedure)
@@ -85,7 +85,7 @@ class RadiologyProcedureController extends Controller
 
         $this->auditLogger->log('UPDATE', RadiologyProcedure::class, $procedure->id, $oldValues, $procedure->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.procedures.index')->with('success', 'Radiology procedure updated.');
+        return redirect()->route('admin.radiology.procedures.index')->with('success', __('Radiology procedure updated.'));
     }
 
     public function destroy(Request $request, RadiologyProcedure $procedure)
@@ -97,6 +97,6 @@ class RadiologyProcedureController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', RadiologyProcedure::class, $procedure->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.radiology.procedures.index')->with('success', 'Radiology procedure deactivated.');
+        return redirect()->route('admin.radiology.procedures.index')->with('success', __('Radiology procedure deactivated.'));
     }
 }

@@ -52,7 +52,7 @@
                 @forelse($myRequests as $instance)
                     <tr>
                         <td>{{ $instance->workflow->name }}</td>
-                        <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $instance->status)) }}</span></td>
+                        <td><x-ui.status-badge :status="$instance->status" /></td>
                         <td>{{ $instance->currentStep?->name ?? '-' }}</td>
                         <td>{{ $instance->created_at?->format('Y-m-d H:i') }}</td>
                         <td><a href="{{ route('admin.workflow.show', $instance) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>

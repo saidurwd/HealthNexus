@@ -25,7 +25,7 @@
                             <td>{{ $admission->attendingProvider?->name ?? '—' }}</td>
                             <td>{{ $admission->admitted_at?->format('Y-m-d') }}</td>
                             <td>{{ $admission->actual_discharge_date?->format('Y-m-d') ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admission->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$admission->status" /></td>
                             <td>
                                 @can('ipd.admission.view')
                                     <a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>

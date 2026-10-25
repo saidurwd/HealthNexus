@@ -96,7 +96,7 @@
                                             <td class="text-center">{{ $slot->max_capacity }}</td>
                                             <td class="text-center">{{ $slot->booked_count }}</td>
                                             <td class="text-center">
-                                                <span class="badge {{ $slot->status === 'available' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($slot->status) }}</span>
+                                                <x-ui.status-badge :status="$slot->status" />
                                             </td>
                                         </tr>
                                     @empty

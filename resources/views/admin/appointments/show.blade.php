@@ -3,6 +3,7 @@
 @section('page_title', 'Appointment Details')
 
 @section('page_content')
+    @if($appointment->patient)<x-patient-banner :patient="$appointment->patient" />@endif
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">Appointment #{{ $appointment->appointment_no }}</h2>
@@ -64,7 +65,7 @@
                                                 default => 'bg-secondary',
                                             };
                                         @endphp
-                                        <span class="badge {{ $statusClass }}">{{ ucfirst(str_replace('_', ' ', $appointment->status)) }}</span>
+                                        <x-ui.status-badge :status="$appointment->status" />
                                     </dd>
                                 </dl>
                             </div>

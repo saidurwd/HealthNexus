@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Adjustment #{{ $adjustment->id }}</h3>
-            <div class="card-tools"><span class="badge bg-info">{{ ucfirst($adjustment->status) }}</span></div>
+            <div class="card-tools"><x-ui.status-badge :status="$adjustment->status" /></div>
         </div>
         <div class="card-body">
             <table class="table table-sm">

@@ -43,6 +43,6 @@ class LabSettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'laboratory_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.lab.settings.index')->with('success', 'Laboratory settings updated successfully.');
+        return redirect()->route('admin.lab.settings.index')->with('success', __('Laboratory settings updated successfully.'));
     }
 }

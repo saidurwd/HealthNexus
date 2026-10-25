@@ -3,9 +3,10 @@
 @section('page_title', 'Admission '.$admission->admission_number)
 
 @section('page_content')
+    @if($admission->patient)<x-patient-banner :patient="$admission->patient" />@endif
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h3>{{ $admission->patient?->full_name }} <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admission->status)) }}</span></h3>
+            <h3>{{ $admission->patient?->full_name }} <x-ui.status-badge :status="$admission->status" /></h3>
             <p class="text-muted mb-0">
                 Admission: {{ $admission->admission_number }} ·
                 MRN: {{ $admission->patient?->enterprise_patient_no }} ·
@@ -80,7 +81,7 @@
                             <td>{{ ucfirst(str_replace('_', ' ', $movement->movement_type)) }}</td>
                             <td>{{ $movement->fromBed?->bed_code ?? '—' }}</td>
                             <td>{{ $movement->toBed?->bed_code ?? '—' }}</td>
-                            <td><span class="badge bg-secondary">{{ ucfirst($movement->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$movement->status" /></td>
                             <td>{{ $movement->moved_at?->format('Y-m-d H:i') ?? '—' }}</td>
                         </tr>
                     @empty
@@ -103,7 +104,7 @@
                                 <td>{{ ucfirst(str_replace('_', ' ', $leave->leave_type)) }}</td>
                                 <td>{{ $leave->expected_return_at?->format('Y-m-d H:i') }}</td>
                                 <td>{{ $leave->actual_return_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                                <td><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $leave->status)) }}</span></td>
+                                <td><x-ui.status-badge :status="$leave->status" /></td>
                                 <td><a href="{{ route('admin.ipd.leave.show', $leave) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                             </tr>
                         @endforeach

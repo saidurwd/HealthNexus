@@ -54,6 +54,14 @@
                         @endif
                     </p>
 
+                    {{-- Reference id (guideline 19.2 rule 11): lets support find exactly what happened --}}
+                    @if(app()->bound('request_id'))
+                        <p class="small text-muted mb-4">
+                            {{ __('Reference') }}: <code>{{ app('request_id') }}</code><br>
+                            {{ __('Tell support this reference so they can find what happened.') }}
+                        </p>
+                    @endif
+
                     {{-- Extra content (a search form, a support card, ...) --}}
                     @yield('error_content')
 
@@ -61,6 +69,9 @@
                     @hasSection('error_actions')
                         @yield('error_actions')
                     @elseif($dashboardUrl)
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary me-1">
+                            <i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i> {{ __('Go back') }}
+                        </a>
                         <a href="{{ $dashboardUrl }}" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
                             {{ __('adminlte::adminlte.back_to_dashboard') }}

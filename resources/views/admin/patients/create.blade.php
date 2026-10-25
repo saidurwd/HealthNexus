@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">{{ __('Create Patient') }}</h3>
         </div>
-        <form action="{{ route('admin.patients.store') }}" method="post">
+        <form action="{{ route('admin.patients.store') }}" method="post" data-enter-next>
             @csrf
             <div class="card-body">
                 <div class="row">

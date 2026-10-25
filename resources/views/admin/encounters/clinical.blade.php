@@ -3,6 +3,7 @@
 @section('page_title', 'Encounter Clinical Workspace')
 
 @section('page_content')
+    @if($encounter->patient)<x-patient-banner :patient="$encounter->patient" />@endif
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>

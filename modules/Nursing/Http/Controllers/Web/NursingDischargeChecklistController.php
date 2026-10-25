@@ -47,7 +47,7 @@ class NursingDischargeChecklistController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingDischargeChecklist::class, $checklist->id, null, $validated, $request);
 
-        return back()->with('success', 'Checklist updated.');
+        return back()->with('success', __('Checklist updated.'));
     }
 
     public function complete(Request $request, NursingDischargeChecklist $checklist)
@@ -62,6 +62,6 @@ class NursingDischargeChecklistController extends Controller
 
         $this->auditLogger->log('COMPLETE', NursingDischargeChecklist::class, $checklist->id, null, ['status' => 'completed'], $request);
 
-        return back()->with('success', 'Nursing discharge clearance completed.');
+        return back()->with('success', __('Nursing discharge clearance completed.'));
     }
 }

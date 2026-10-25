@@ -41,7 +41,7 @@ class AppointmentTypeController extends Controller
 
         $this->auditLogger->log('CREATE', AppointmentType::class, $type->id, null, $type->toArray(), $request);
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type added successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type added successfully.'));
     }
 
     public function edit(AppointmentType $appointmentType)
@@ -61,7 +61,7 @@ class AppointmentTypeController extends Controller
 
         $this->auditLogger->log('UPDATE', AppointmentType::class, $appointmentType->id, $oldValues, $appointmentType->toArray(), $request);
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type updated successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type updated successfully.'));
     }
 
     public function destroy(AppointmentType $appointmentType)
@@ -73,7 +73,7 @@ class AppointmentTypeController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentType::class, $appointmentType->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type removed successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type removed successfully.'));
     }
 
     private function validated(Request $request): array

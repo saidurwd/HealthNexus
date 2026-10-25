@@ -31,7 +31,7 @@
                             <td>{{ $refund->refund_number }}</td>
                             <td>{{ $refund->patient?->full_name }}</td>
                             <td>{{ number_format($refund->amount, 2) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($refund->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$refund->status" /></td>
                             <td>{{ $refund->requested_at?->format('Y-m-d H:i') }}</td>
                             <td><a href="{{ route('admin.billing.refunds.show', $refund) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>

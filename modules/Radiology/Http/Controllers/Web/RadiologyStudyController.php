@@ -59,6 +59,6 @@ class RadiologyStudyController extends Controller
 
         SyncPacsStudyMetadata::dispatch($study->examination_id);
 
-        return redirect()->route('admin.radiology.studies.show', $study)->with('success', 'Checking PACS for images — this may take a moment.');
+        return redirect()->route('admin.radiology.studies.show', $study)->with('success', __('Checking PACS for images — this may take a moment.'));
     }
 }

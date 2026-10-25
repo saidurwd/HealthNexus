@@ -52,7 +52,7 @@ class RadiologyExaminationController extends Controller
 
         $this->auditLogger->log('CHECK_IN', RadiologyExamination::class, $examination->id, $oldValues, $examination->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', 'Patient checked in.');
+        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', __('Patient checked in.'));
     }
 
     public function startPreparation(Request $request, RadiologyExamination $examination)
@@ -64,7 +64,7 @@ class RadiologyExaminationController extends Controller
 
         $this->auditLogger->log('START_PREPARATION', RadiologyExamination::class, $examination->id, $oldValues, $examination->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', 'Preparation started.');
+        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', __('Preparation started.'));
     }
 
     public function start(Request $request, RadiologyExamination $examination)
@@ -76,7 +76,7 @@ class RadiologyExaminationController extends Controller
 
         $this->auditLogger->log('START', RadiologyExamination::class, $examination->id, $oldValues, $examination->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', 'Examination started.');
+        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', __('Examination started.'));
     }
 
     public function complete(Request $request, RadiologyExamination $examination)
@@ -90,6 +90,6 @@ class RadiologyExaminationController extends Controller
 
         $this->auditLogger->log('COMPLETE', RadiologyExamination::class, $examination->id, $oldValues, $examination->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', 'Examination completed — checking PACS for images.');
+        return redirect()->route('admin.radiology.examinations.show', $examination)->with('success', __('Examination completed — checking PACS for images.'));
     }
 }

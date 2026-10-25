@@ -56,7 +56,7 @@ class ProviderUnavailabilityController extends Controller
 
         $this->auditLogger->log('CREATE', ProviderUnavailability::class, $entry->id, null, $entry->toArray(), $request);
 
-        return redirect()->route('admin.provider-unavailability.index')->with('success', 'Unavailability recorded — new bookings in this window are now blocked.');
+        return redirect()->route('admin.provider-unavailability.index')->with('success', __('Unavailability recorded — new bookings in this window are now blocked.'));
     }
 
     public function destroy(ProviderUnavailability $unavailability)
@@ -68,6 +68,6 @@ class ProviderUnavailabilityController extends Controller
 
         $this->auditLogger->log('DELETE', ProviderUnavailability::class, $unavailability->id, $oldValues, null, request());
 
-        return redirect()->route('admin.provider-unavailability.index')->with('success', 'Unavailability removed.');
+        return redirect()->route('admin.provider-unavailability.index')->with('success', __('Unavailability removed.'));
     }
 }

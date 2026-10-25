@@ -69,7 +69,7 @@ class BillingCashierSessionController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCashierSession::class, $session->id, null, $session->toArray(), $request);
 
-        return redirect()->route('admin.billing.cashier.my-session')->with('success', 'Cashier session opened.');
+        return redirect()->route('admin.billing.cashier.my-session')->with('success', __('Cashier session opened.'));
     }
 
     public function edit(BillingCashierSession $session)
@@ -91,7 +91,7 @@ class BillingCashierSessionController extends Controller
 
         $this->auditLogger->log('CLOSE', BillingCashierSession::class, $session->id, $oldValues, $session->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.cashier.my-session')->with('success', 'Cashier session closed.');
+        return redirect()->route('admin.billing.cashier.my-session')->with('success', __('Cashier session closed.'));
     }
 
     public function reconciliation(BillingCashierSession $session)

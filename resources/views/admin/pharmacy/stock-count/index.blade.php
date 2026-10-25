@@ -29,7 +29,7 @@
                         <tr>
                             <td>{{ $count->count_number }}</td>
                             <td>{{ $count->store?->name }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($count->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$count->status" /></td>
                             <td><a href="{{ route('admin.pharmacy.stock-count.show', $count) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

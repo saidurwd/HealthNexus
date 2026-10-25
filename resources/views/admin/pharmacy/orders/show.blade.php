@@ -3,8 +3,9 @@
 @section('page_title', 'Pharmacy Order '.$order->order_number)
 
 @section('page_content')
+    @if($order->patient)<x-patient-banner :patient="$order->patient" />@endif
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Order {{ $order->order_number }} <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></h3>
+        <h3>Order {{ $order->order_number }} <x-ui.status-badge :status="$order->status" /></h3>
         <div>
             @can('review', $order)
                 @if(!in_array($order->status, ['fully_dispensed', 'cancelled', 'rejected']))
@@ -57,7 +58,7 @@
                             <td>{{ $item->medication?->name ?? '—' }}</td>
                             <td>{{ $item->quantity_prescribed ?? '—' }}</td>
                             <td>{{ $item->quantity_dispensed }}</td>
-                            <td><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$item->status" /></td>
                             <td>
                                 @foreach($item->safetyAlerts->where('is_overridden', false) as $alert)
                                     <span class="badge bg-danger" title="{{ $alert->explanation }}">{{ ucfirst($alert->alert_type) }}</span>
@@ -97,7 +98,7 @@
                         @foreach($order->dispensings as $dispensing)
                             <tr>
                                 <td>{{ $dispensing->dispensing_number }}</td>
-                                <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $dispensing->status)) }}</span></td>
+                                <td><x-ui.status-badge :status="$dispensing->status" /></td>
                                 <td>{{ $dispensing->dispensed_at?->format('Y-m-d H:i') }}</td>
                                 <td><a href="{{ route('admin.pharmacy.dispensing.show', $dispensing) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                             </tr>

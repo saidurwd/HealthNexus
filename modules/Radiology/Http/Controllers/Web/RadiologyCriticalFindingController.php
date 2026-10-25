@@ -46,7 +46,7 @@ class RadiologyCriticalFindingController extends Controller
 
         $this->auditLogger->log('CRITICAL_FINDING_FLAGGED', RadiologyCriticalFinding::class, $finding->id, null, $finding->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Critical finding flagged and the ordering provider notified.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Critical finding flagged and the ordering provider notified.'));
     }
 
     public function acknowledge(Request $request, RadiologyCriticalFinding $finding)
@@ -60,6 +60,6 @@ class RadiologyCriticalFindingController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', RadiologyCriticalFinding::class, $finding->id, $oldValues, $finding->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.critical-findings.index')->with('success', 'Critical finding acknowledged.');
+        return redirect()->route('admin.radiology.critical-findings.index')->with('success', __('Critical finding acknowledged.'));
     }
 }

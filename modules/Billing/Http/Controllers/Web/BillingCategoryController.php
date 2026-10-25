@@ -53,7 +53,7 @@ class BillingCategoryController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCategory::class, $category->id, null, $category->toArray(), $request);
 
-        return redirect()->route('admin.billing.categories.index')->with('success', 'Billing category created successfully.');
+        return redirect()->route('admin.billing.categories.index')->with('success', __('Billing category created successfully.'));
     }
 
     public function edit(BillingCategory $category)
@@ -73,7 +73,7 @@ class BillingCategoryController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingCategory::class, $category->id, $oldValues, $category->toArray(), $request);
 
-        return redirect()->route('admin.billing.categories.index')->with('success', 'Billing category updated successfully.');
+        return redirect()->route('admin.billing.categories.index')->with('success', __('Billing category updated successfully.'));
     }
 
     public function destroy(Request $request, BillingCategory $category)
@@ -86,6 +86,6 @@ class BillingCategoryController extends Controller
 
         $this->auditLogger->log('DELETE', BillingCategory::class, $category->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.billing.categories.index')->with('success', 'Billing category deactivated successfully.');
+        return redirect()->route('admin.billing.categories.index')->with('success', __('Billing category deactivated successfully.'));
     }
 }

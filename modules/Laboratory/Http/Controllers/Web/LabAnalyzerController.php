@@ -62,6 +62,6 @@ class LabAnalyzerController extends Controller
 
         $this->auditLogger->log('CREATE', LabAnalyzer::class, $analyzer->id, null, $analyzer->toArray(), $request);
 
-        return redirect()->route('admin.lab.analyzers.index')->with('success', 'Analyzer registered.');
+        return redirect()->route('admin.lab.analyzers.index')->with('success', __('Analyzer registered.'));
     }
 }

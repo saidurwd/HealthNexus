@@ -58,7 +58,7 @@ class LabPanelController extends Controller
 
         $this->auditLogger->log('CREATE', LabPanel::class, $panel->id, null, $panel->toArray(), $request);
 
-        return redirect()->route('admin.lab.panels.index')->with('success', 'Lab panel created.');
+        return redirect()->route('admin.lab.panels.index')->with('success', __('Lab panel created.'));
     }
 
     public function edit(LabPanel $panel)
@@ -81,6 +81,6 @@ class LabPanelController extends Controller
 
         $this->auditLogger->log('UPDATE', LabPanel::class, $panel->id, $oldValues, $panel->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.panels.index')->with('success', 'Lab panel updated.');
+        return redirect()->route('admin.lab.panels.index')->with('success', __('Lab panel updated.'));
     }
 }

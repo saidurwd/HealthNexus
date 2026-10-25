@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Transfer {{ $transfer->transfer_number }} <span class="badge bg-info">{{ ucfirst($transfer->status) }}</span></h3>
+        <h3>Transfer {{ $transfer->transfer_number }} <x-ui.status-badge :status="$transfer->status" /></h3>
         <div>
             @can('approve', $transfer)
                 @if($transfer->status === 'requested')

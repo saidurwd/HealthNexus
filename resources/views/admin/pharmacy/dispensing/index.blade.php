@@ -26,7 +26,7 @@
                             <td>{{ $dispensing->patient?->full_name }}</td>
                             <td>{{ $dispensing->store?->name }}</td>
                             <td>{{ $dispensing->dispensed_at?->format('Y-m-d H:i') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $dispensing->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$dispensing->status" /></td>
                             <td><a href="{{ route('admin.pharmacy.dispensing.show', $dispensing) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty

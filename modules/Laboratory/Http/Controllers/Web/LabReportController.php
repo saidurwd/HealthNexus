@@ -60,6 +60,6 @@ class LabReportController extends Controller
 
         $this->auditLogger->log('FINALIZE', LabReport::class, $report->id, null, $report->toArray(), $request);
 
-        return redirect()->route('admin.lab.reports.show', $report)->with('success', 'Report finalized: '.$report->report_number);
+        return redirect()->route('admin.lab.reports.show', $report)->with('success', __('Report finalized: ').$report->report_number);
     }
 }

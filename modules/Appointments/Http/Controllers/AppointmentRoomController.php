@@ -42,7 +42,7 @@ class AppointmentRoomController extends Controller
 
         $this->auditLogger->log('CREATE', AppointmentRoom::class, $room->id, null, $room->toArray(), $request);
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room added successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room added successfully.'));
     }
 
     public function edit(AppointmentRoom $appointmentRoom)
@@ -62,7 +62,7 @@ class AppointmentRoomController extends Controller
 
         $this->auditLogger->log('UPDATE', AppointmentRoom::class, $appointmentRoom->id, $oldValues, $appointmentRoom->toArray(), $request);
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room updated successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room updated successfully.'));
     }
 
     public function destroy(AppointmentRoom $appointmentRoom)
@@ -74,7 +74,7 @@ class AppointmentRoomController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentRoom::class, $appointmentRoom->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room removed successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room removed successfully.'));
     }
 
     private function validated(Request $request): array

@@ -22,7 +22,7 @@
                             <td>{{ $row->patient?->full_name }}</td>
                             <td>{{ $row->medication?->name ?? '—' }} @if($row->is_prn)<span class="badge bg-warning">{{ __('PRN') }}</span>@endif</td>
                             <td>{{ $row->scheduled_at }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($row->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$row->status" /></td>
                             <td><a href="{{ route('admin.nursing.mar.show', $row) }}" class="btn btn-xs btn-info">{{ __('Open') }}</a></td>
                         </tr>
                     @empty

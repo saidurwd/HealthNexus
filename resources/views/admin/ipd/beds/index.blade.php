@@ -37,7 +37,7 @@
                             <td>{{ $bed->room?->ward?->name }}</td>
                             <td>{{ $bed->bedType?->name ?? '—' }}</td>
                             <td>{{ ucfirst($bed->gender_type) }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $bed->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$bed->status" /></td>
                             <td>
                                 @can('update', $bed)
                                     <a href="{{ route('admin.ipd.beds.edit', $bed) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>

@@ -3,13 +3,14 @@
 @section('page_title', 'Lab Order — '.$order->order_number)
 
 @section('page_content')
+    @if($order->patient)<x-patient-banner :patient="$order->patient" />@endif
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $order->order_number }}</h3>
                     <div class="card-tools">
-                        <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span>
+                        <x-ui.status-badge :status="$order->status" />
                     </div>
                 </div>
                 <div class="card-body">
@@ -184,7 +185,7 @@
                             @foreach($order->reports as $report)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <a href="{{ route('admin.lab.reports.show', $report) }}">{{ $report->report_number }}</a>
-                                    <span class="badge bg-secondary">{{ ucfirst($report->status) }}</span>
+                                    <x-ui.status-badge :status="$report->status" />
                                 </li>
                             @endforeach
                         </ul>

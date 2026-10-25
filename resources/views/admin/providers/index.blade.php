@@ -35,7 +35,7 @@
                                     <td>{{ $provider->specialty->name ?? '-' }}</td>
                                     <td>{{ $provider->user->name ?? '-' }}</td>
                                     <td class="text-center">
-                                        <span class="badge {{ $provider->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($provider->status) }}</span>
+                                        <x-ui.status-badge :status="$provider->status" />
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('admin.providers.edit', $provider) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>

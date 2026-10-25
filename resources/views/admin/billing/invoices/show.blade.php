@@ -3,11 +3,12 @@
 @section('page_title', 'Invoice '.($invoice->invoice_number ?? 'Draft'))
 
 @section('page_content')
+    @if($invoice->patient)<x-patient-banner :patient="$invoice->patient" />@endif
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Invoice {{ $invoice->invoice_number ?? '(Draft — not yet finalized)' }}</h3>
             <div class="card-tools">
-                <span class="badge bg-info">{{ ucfirst(str_replace('_',' ',$invoice->status)) }}</span>
+                <x-ui.status-badge :status="$invoice->status" />
             </div>
         </div>
         <div class="card-body">

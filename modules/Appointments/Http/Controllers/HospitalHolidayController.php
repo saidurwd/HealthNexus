@@ -50,7 +50,7 @@ class HospitalHolidayController extends Controller
 
         $this->auditLogger->log('CREATE', HospitalHoliday::class, $holiday->id, null, $holiday->toArray(), $request);
 
-        return redirect()->route('admin.holidays.index')->with('success', 'Holiday added successfully.');
+        return redirect()->route('admin.holidays.index')->with('success', __('Holiday added successfully.'));
     }
 
     public function destroy(HospitalHoliday $holiday)
@@ -62,6 +62,6 @@ class HospitalHolidayController extends Controller
 
         $this->auditLogger->log('DELETE', HospitalHoliday::class, $holiday->id, $oldValues, null, request());
 
-        return redirect()->route('admin.holidays.index')->with('success', 'Holiday removed successfully.');
+        return redirect()->route('admin.holidays.index')->with('success', __('Holiday removed successfully.'));
     }
 }

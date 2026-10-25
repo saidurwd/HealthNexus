@@ -24,7 +24,7 @@
                                 <td>{{ $item->medication?->name ?? $item->requested_medicine_name }}</td>
                                 <td>{{ $item->quantity_prescribed ?? '—' }}</td>
                                 <td>{{ $item->quantity_dispensed }}</td>
-                                <td><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</span></td>
+                                <td><x-ui.status-badge :status="$item->status" /></td>
                                 <td>
                                     @foreach($item->safetyAlerts->where('is_overridden', false) as $alert)
                                         <span class="badge bg-danger">{{ ucfirst($alert->alert_type) }}</span>

@@ -29,7 +29,7 @@
                             <dt class="col-sm-5">{{ __('License') }}</dt>
                             <dd class="col-sm-7">{{ $provider->license_number ?? '-' }}</dd>
                             <dt class="col-sm-5">{{ __('Status') }}</dt>
-                            <dd class="col-sm-7"><span class="badge {{ $provider->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($provider->status) }}</span></dd>
+                            <dd class="col-sm-7"><x-ui.status-badge :status="$provider->status" /></dd>
                         </dl>
                     </div>
                 </div>

@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
     // register each handle*() method a second time and fire every listener twice.
     ->withEvents(discover: false)
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global, so even a 404 (no route matched, no web group) carries a request id for the error screen.
+        $middleware->prepend(RequestIdMiddleware::class);
+
         $middleware->web(prepend: [
             RequestIdMiddleware::class,
         ]);

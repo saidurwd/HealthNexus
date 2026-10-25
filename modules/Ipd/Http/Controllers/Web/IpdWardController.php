@@ -70,7 +70,7 @@ class IpdWardController extends Controller
 
         $this->auditLogger->log('CREATE', IpdWard::class, $ward->id, null, $ward->toArray(), $request);
 
-        return redirect()->route('admin.ipd.wards.index')->with('success', 'Ward created.');
+        return redirect()->route('admin.ipd.wards.index')->with('success', __('Ward created.'));
     }
 
     public function edit(IpdWard $ward)
@@ -103,6 +103,6 @@ class IpdWardController extends Controller
 
         $this->auditLogger->log('UPDATE', IpdWard::class, $ward->id, $oldValues, $ward->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.wards.index')->with('success', 'Ward updated.');
+        return redirect()->route('admin.ipd.wards.index')->with('success', __('Ward updated.'));
     }
 }

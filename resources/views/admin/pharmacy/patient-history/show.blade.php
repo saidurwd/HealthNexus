@@ -24,7 +24,7 @@
                         <tr>
                             <td><a href="{{ route('admin.pharmacy.orders.show', $order) }}">{{ $order->order_number }}</a></td>
                             <td>{{ $order->ordered_at?->format('Y-m-d') }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></td>
+                            <td><x-ui.status-badge :status="$order->status" /></td>
                             <td>{{ $order->items->count() }}</td>
                         </tr>
                     @empty

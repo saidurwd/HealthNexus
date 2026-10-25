@@ -36,7 +36,7 @@
                                     <td>{{ $consent->consent_type }}</td>
                                     <td>v{{ $consent->version }}</td>
                                     <td class="text-center">
-                                        <span class="badge {{ $consent->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($consent->status) }}</span>
+                                        <x-ui.status-badge :status="$consent->status" />
                                     </td>
                                     <td>{{ $consent->grantedBy?->name ?? '-' }}</td>
                                     <td><small class="text-muted">{{ $consent->granted_at?->format('M d, Y') }}</small></td>

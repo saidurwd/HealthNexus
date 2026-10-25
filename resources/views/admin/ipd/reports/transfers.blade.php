@@ -14,7 +14,7 @@
                             <td>{{ $transfer->patient?->full_name }}</td>
                             <td>{{ $transfer->fromBed?->room?->ward?->name ?? '—' }}</td>
                             <td>{{ $transfer->toBed?->room?->ward?->name ?? '—' }}</td>
-                            <td><span class="badge bg-info">{{ ucfirst($transfer->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$transfer->status" /></td>
                             <td>{{ $transfer->moved_at?->format('Y-m-d H:i') ?? '—' }}</td>
                         </tr>
                     @empty

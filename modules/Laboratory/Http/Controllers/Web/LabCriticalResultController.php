@@ -44,6 +44,6 @@ class LabCriticalResultController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', LabCriticalResultAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.critical-results.index')->with('success', 'Critical result acknowledged.');
+        return redirect()->route('admin.lab.critical-results.index')->with('success', __('Critical result acknowledged.'));
     }
 }

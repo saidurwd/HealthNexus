@@ -23,7 +23,7 @@
                             <td>{{ $run->observed_value }}</td>
                             <td>{{ $run->expected_low }} - {{ $run->expected_high }}</td>
                             <td>
-                                <span class="badge {{ $run->isPass() ? 'bg-success' : ($run->isFail() ? 'bg-danger' : 'bg-secondary') }}">{{ ucfirst($run->status) }}</span>
+                                <x-ui.status-badge :status="$run->status" />
                             </td>
                             <td>{{ $run->run_at?->format('Y-m-d H:i') }}</td>
                         </tr>

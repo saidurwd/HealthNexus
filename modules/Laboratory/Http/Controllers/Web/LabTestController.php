@@ -68,7 +68,7 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('CREATE', LabTest::class, $test->id, null, $test->toArray(), $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test created.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test created.'));
     }
 
     public function edit(LabTest $test)
@@ -92,7 +92,7 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('UPDATE', LabTest::class, $test->id, $oldValues, $test->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test updated.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test updated.'));
     }
 
     public function destroy(Request $request, LabTest $test)
@@ -104,6 +104,6 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', LabTest::class, $test->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test deactivated.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test deactivated.'));
     }
 }
