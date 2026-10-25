@@ -19,7 +19,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `provider_unavailability`
 - `providers`
 
-## billing (22)
+## billing (23)
 
 - `billing_adjustments`
 - `billing_advance_accounts`
@@ -43,6 +43,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_receipts`
 - `billing_refunds`
 - `billing_tax_categories`
+- `charge_event_log`
 
 ## core (44)
 

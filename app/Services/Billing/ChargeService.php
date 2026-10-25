@@ -6,6 +6,7 @@ use App\Events\Billing\ChargeCreated;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
 use App\Models\User;
+use App\Services\Billing\Events\ChargeEventLogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -20,6 +21,7 @@ class ChargeService
     public function __construct(
         private readonly BillingPricingService $pricing,
         private readonly BillingCalculationService $calculator,
+        private readonly ChargeEventLogger $eventLog,
     ) {}
 
     /**
@@ -47,11 +49,23 @@ class ChargeService
                 ->where('idempotency_key', $idempotencyKey)
                 ->first();
 
-            if ($existing) {
-                return $existing;
-            }
+            $charge = $existing ?? $this->create($item, $sourceModel, 1, $context, $idempotencyKey);
 
-            return $this->create($item, $sourceModel, 1, $context, $idempotencyKey);
+            // Adapter for modules that still call Billing directly: the Charge Event Contract log sees every charge (H-05).
+            $this->eventLog->recordAdapted($charge, $item, $sourceModel, $existing !== null);
+
+            return $charge;
+        });
+    }
+
+    /** Entry point for the Charge Event Publisher; the key is the contract key, so a repeat never double-charges. */
+    public function createForEvent(BillingItem $item, int $quantity, array $context, string $idempotencyKey, ?string $sourceType, string|int|null $sourceId, ?int $userId): BillingCharge
+    {
+        return DB::transaction(function () use ($item, $quantity, $context, $idempotencyKey, $sourceType, $sourceId, $userId) {
+            $existing = BillingCharge::query()
+                ->where('organization_id', $context['organization_id'])->where('idempotency_key', $idempotencyKey)->first();
+
+            return $existing ?? $this->create($item, null, $quantity, $context, $idempotencyKey, $userId ? User::find($userId) : null, $sourceType, $sourceId);
         });
     }
 
@@ -85,7 +99,7 @@ class ChargeService
         });
     }
 
-    private function create(BillingItem $item, ?Model $source, int $quantity, array $context, string $idempotencyKey, ?User $user = null): BillingCharge
+    private function create(BillingItem $item, ?Model $source, int $quantity, array $context, string $idempotencyKey, ?User $user = null, ?string $sourceType = null, string|int|null $sourceId = null): BillingCharge
     {
         $price = $this->pricing->resolvePrice($item, $context);
 
@@ -109,8 +123,8 @@ class ChargeService
             'billing_item_id' => $item->id,
             'department_id' => $context['department_id'] ?? null,
             'provider_id' => $context['provider_id'] ?? null,
-            'source_type' => $source?->getMorphClass(),
-            'source_id' => $source?->getKey(),
+            'source_type' => $source?->getMorphClass() ?? $sourceType,
+            'source_id' => $source?->getKey() ?? $sourceId,
             'idempotency_key' => $idempotencyKey,
             'status' => 'pending',
             'quantity' => $quantity,

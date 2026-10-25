@@ -110,6 +110,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(\App\Services\ModuleManager::class);
+        $this->app->bind(\App\Contracts\Billing\ChargeEventPublisher::class, \App\Services\Billing\Events\BillingChargeEventPublisher::class);
 
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);
@@ -130,6 +131,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Event::listen(\App\Events\Billing\ChargeReversalRequested::class, \App\Listeners\Billing\ReverseChargeOnReversalRequested::class);
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);
 
