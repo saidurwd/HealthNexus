@@ -81,7 +81,7 @@ class EncounterApiTest extends TestCase
         $response = $this->get('/api/v1/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.id', $encounter->id);
+            ->assertJsonPath('data.public_id', $encounter->public_id);
     }
 
     public function test_user_can_update_encounter(): void
@@ -152,7 +152,7 @@ class EncounterApiTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('data.status', 'draft');
 
-        $prescriptionId = $response->json('data.id');
+        $prescriptionId = $response->json('data.public_id');
 
         $this->post("/api/v1/encounters/{$encounter->public_id}/prescriptions/{$prescriptionId}/issue")
             ->assertStatus(200)
@@ -223,7 +223,7 @@ class EncounterApiTest extends TestCase
         $this->withHeader('Authorization', 'Bearer '.$token)
             ->withHeader('X-Organization-Id', (string) $this->organization->id)
             ->withHeader('X-Branch-Id', (string) $this->branch->id)
-            ->put("/api/v1/encounters/{$encounter->public_id}/amendments/{$amendment->id}/approve")
+            ->put("/api/v1/encounters/{$encounter->public_id}/amendments/{$amendment->public_id}/approve")
             ->assertStatus(200)
             ->assertJsonPath('data.approved_by', $approver->id);
     }

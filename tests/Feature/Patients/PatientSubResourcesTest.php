@@ -101,7 +101,7 @@ class PatientSubResourcesTest extends TestCase
 
         $consent = $this->patient->consents()->first();
 
-        $this->put("/admin/patients/{$this->patient->public_id}/consents/{$consent->id}/withdraw");
+        $this->put("/admin/patients/{$this->patient->public_id}/consents/{$consent->public_id}/withdraw");
 
         $this->assertDatabaseHas('patient_consents', ['id' => $consent->id, 'status' => 'withdrawn']);
     }

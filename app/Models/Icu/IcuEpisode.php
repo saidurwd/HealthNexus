@@ -3,6 +3,7 @@
 namespace App\Models\Icu;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class IcuEpisode extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     public const STATUS_ADMITTED = 'admitted';
 

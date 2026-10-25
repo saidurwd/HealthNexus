@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingMedicationAdministration extends Model
 {
+    use HasPublicId;
+
     public const STATUS_SCHEDULED = 'scheduled';
 
     public const STATUS_DUE = 'due';

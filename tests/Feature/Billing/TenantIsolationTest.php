@@ -109,14 +109,14 @@ class TenantIsolationTest extends BillingTestCase
 
     public function test_cannot_view_another_organizations_invoice(): void
     {
-        $response = $this->get('/admin/billing/invoices/'.$this->otherInvoice->id);
+        $response = $this->get('/admin/billing/invoices/'.$this->otherInvoice->public_id);
 
         $response->assertForbidden();
     }
 
     public function test_cannot_view_another_organizations_payment(): void
     {
-        $response = $this->get('/admin/billing/payments/'.$this->otherPayment->id);
+        $response = $this->get('/admin/billing/payments/'.$this->otherPayment->public_id);
 
         $response->assertForbidden();
     }
@@ -133,7 +133,7 @@ class TenantIsolationTest extends BillingTestCase
 
     public function test_cannot_finalize_another_organizations_invoice(): void
     {
-        $response = $this->post('/admin/billing/invoices/'.$this->otherInvoice->id.'/finalize');
+        $response = $this->post('/admin/billing/invoices/'.$this->otherInvoice->public_id.'/finalize');
 
         $response->assertForbidden();
     }

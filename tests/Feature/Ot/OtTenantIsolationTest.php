@@ -43,8 +43,8 @@ class OtTenantIsolationTest extends OtTestCase
         $this->assertFalse($foreignUser->can('view', $surgery));
         $this->assertFalse($foreignUser->can('start', $surgery));
 
-        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
-        $this->actingAs($foreignUser)->post('/admin/ot/surgeries/'.$surgery->id.'/start')->assertForbidden();
+        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->public_id)->assertForbidden();
+        $this->actingAs($foreignUser)->post('/admin/ot/surgeries/'.$surgery->public_id.'/start')->assertForbidden();
     }
 
     public function test_unauthorized_user_cannot_view_operative_note_or_consent(): void
@@ -56,7 +56,7 @@ class OtTenantIsolationTest extends OtTestCase
         $noPermsUser = $this->userWith([]);
 
         $this->assertFalse($noPermsUser->can('view', $note));
-        $this->actingAs($noPermsUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
+        $this->actingAs($noPermsUser)->get('/admin/ot/surgeries/'.$surgery->public_id)->assertForbidden();
     }
 
     public function test_api_denies_cross_hospital_schedule_and_unauthorized_completion(): void
@@ -66,7 +66,7 @@ class OtTenantIsolationTest extends OtTestCase
         $otherOrganization = Organization::factory()->create();
         $foreignUser = $this->userWith(['ot.schedule.create', 'ot.surgery.view'], $otherOrganization);
 
-        $this->actingAs($foreignUser)->postJson('/api/v1/ot/surgeries/'.$surgery->id.'/schedule', [
+        $this->actingAs($foreignUser)->postJson('/api/v1/ot/surgeries/'.$surgery->public_id.'/schedule', [
             'theatre_id' => $theatre->id,
             'scheduled_start_at' => now()->toDateTimeString(),
             'scheduled_end_at' => now()->addHours(2)->toDateTimeString(),
@@ -81,6 +81,6 @@ class OtTenantIsolationTest extends OtTestCase
         $otherOrganization = Organization::factory()->create();
         $foreignUser = $this->userWith(['ot.surgery.view'], $otherOrganization);
 
-        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
+        $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->public_id)->assertForbidden();
     }
 }

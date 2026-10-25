@@ -3,6 +3,7 @@
 namespace App\Models\Pharmacy;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PharmacySafetyAlert extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     public const TYPE_ALLERGY = 'allergy';
 

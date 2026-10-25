@@ -141,7 +141,7 @@ class PatientTenantIsolationTest extends TestCase
             'patient_id' => $this->otherOrganizationPatient->id,
         ]);
 
-        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->public_id}/documents/{$document->id}/download");
+        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->public_id}/documents/{$document->public_id}/download");
 
         $response->assertForbidden();
     }

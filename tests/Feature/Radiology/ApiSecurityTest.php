@@ -50,7 +50,7 @@ class ApiSecurityTest extends RadiologyTestCase
         $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->withHeader('X-Organization-Id', (string) $this->organization->id)
             ->withHeader('X-Branch-Id', (string) $this->branch->id)
-            ->getJson('/api/v1/radiology/orders/'.$otherOrder->id);
+            ->getJson('/api/v1/radiology/orders/'.$otherOrder->public_id);
 
         $response->assertForbidden();
     }
@@ -91,6 +91,6 @@ class ApiSecurityTest extends RadiologyTestCase
             ->getJson('/api/v1/radiology/orders');
 
         $response->assertOk()->assertJsonPath('success', true);
-        $this->assertTrue(collect($response->json('data'))->pluck('id')->contains($order->id));
+        $this->assertTrue(collect($response->json('data'))->pluck('public_id')->contains($order->public_id));
     }
 }

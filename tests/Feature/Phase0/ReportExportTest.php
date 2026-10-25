@@ -178,7 +178,7 @@ class ReportExportTest extends TestCase
 
     public function test_xlsx_export_has_the_watermark_masks_sensitive_columns_and_keeps_text_as_text(): void
     {
-        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => '=SUM(A1)', 'last_name' => 'Test', 'phone' => '01711000111']);
+        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => '=SUM(A1)', 'middle_name' => null, 'last_name' => 'Test', 'phone' => '01711000111']);
 
         $export = app(ReportExportService::class)->request($this->user, 'patients.list', 'xlsx')->refresh();
 

@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class BillingAdjustment extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'invoice_id', 'payment_id', 'adjustable_type', 'adjustable_id', 'type', 'currency', 'original_value', 'new_value', 'difference', 'reason', 'status', 'requested_by', 'requested_at', 'approved_by', 'approved_at', 'approval_note'];
 

@@ -91,9 +91,9 @@ class LabControllerSmokeTest extends LabTestCase
     public function test_order_and_specimen_pages_load(): void
     {
         $this->get('/admin/lab/orders')->assertOk();
-        $this->get('/admin/lab/orders/'.$this->order->id)->assertOk();
+        $this->get('/admin/lab/orders/'.$this->order->public_id)->assertOk();
         $this->get('/admin/lab/specimens')->assertOk();
-        $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->id)->assertOk();
+        $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->public_id)->assertOk();
     }
 
     public function test_worklist_and_critical_results_pages_load(): void
@@ -121,8 +121,8 @@ class LabControllerSmokeTest extends LabTestCase
         $report = $this->order->reports()->first();
 
         $this->get('/admin/lab/reports')->assertOk();
-        $this->get('/admin/lab/reports/'.$report->id)->assertOk();
-        $this->get('/admin/lab/reports/'.$report->id.'/print')->assertOk();
+        $this->get('/admin/lab/reports/'.$report->public_id)->assertOk();
+        $this->get('/admin/lab/reports/'.$report->public_id.'/print')->assertOk();
         $this->get('/admin/lab/reports-analytics/daily-volume')->assertOk();
         $this->get('/admin/lab/reports-analytics/sample-rejection')->assertOk();
         $this->get('/admin/lab/reports-analytics/critical-results')->assertOk();

@@ -2,6 +2,7 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class IcuInfusion extends Model
 {
+    use HasPublicId;
+
     public const STATUS_RUNNING = 'running';
 
     public const STATUS_COMPLETED = 'completed';

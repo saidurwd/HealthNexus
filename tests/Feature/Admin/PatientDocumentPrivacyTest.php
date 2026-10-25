@@ -83,7 +83,7 @@ class PatientDocumentPrivacyTest extends TestCase
         ]);
 
         $this->assertStringContainsString(
-            "/admin/patients/{$this->patient->public_id}/documents/{$document->id}/download",
+            "/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download",
             $document->url
         );
         $this->assertStringNotContainsString('/storage/', $document->url);
@@ -103,7 +103,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/secret.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->id}/download")
+        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertForbidden();
     }
 
@@ -116,7 +116,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/report.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->id}/download")
+        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertOk();
     }
 
@@ -129,7 +129,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/to-delete.pdf',
         ]);
 
-        $this->delete("/admin/patients/{$this->patient->public_id}/documents/{$document->id}")
+        $this->delete("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}")
             ->assertRedirect();
 
         Storage::disk('local')->assertMissing('patient-documents/to-delete.pdf');

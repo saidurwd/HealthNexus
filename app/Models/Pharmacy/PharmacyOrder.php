@@ -3,6 +3,7 @@
 namespace App\Models\Pharmacy;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Organization;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PharmacyOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = [
         'organization_id', 'branch_id', 'department_id', 'prescription_id', 'patient_id',

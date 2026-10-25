@@ -72,7 +72,7 @@ class PatientApiTest extends TestCase
         $response = $this->get('/api/v1/patients/'.$patient->public_id);
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.id', $patient->id);
+            ->assertJsonPath('data.public_id', $patient->public_id);
     }
 
     public function test_user_can_update_patient(): void

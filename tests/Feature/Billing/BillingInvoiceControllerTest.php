@@ -50,7 +50,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
         ]);
 
         $invoice = BillingInvoice::first();
-        $response->assertRedirect('/admin/billing/invoices/'.$invoice->id);
+        $response->assertRedirect('/admin/billing/invoices/'.$invoice->public_id);
         $this->assertSame('draft', $invoice->status);
         $this->assertNull($invoice->invoice_number);
     }
@@ -74,16 +74,16 @@ class BillingInvoiceControllerTest extends BillingTestCase
             'net_amount' => '500.00', 'charged_at' => now(),
         ]);
 
-        $this->post("/admin/billing/invoices/{$invoice->id}/charges", [
+        $this->post("/admin/billing/invoices/{$invoice->public_id}/charges", [
             'charge_ids' => [$charge->id],
-        ])->assertRedirect("/admin/billing/invoices/{$invoice->id}");
+        ])->assertRedirect("/admin/billing/invoices/{$invoice->public_id}");
 
         $invoice->refresh();
         $this->assertSame('500.00', (string) $invoice->grand_total);
 
         // 3. Finalize.
-        $this->post("/admin/billing/invoices/{$invoice->id}/finalize")
-            ->assertRedirect("/admin/billing/invoices/{$invoice->id}");
+        $this->post("/admin/billing/invoices/{$invoice->public_id}/finalize")
+            ->assertRedirect("/admin/billing/invoices/{$invoice->public_id}");
 
         $invoice->refresh();
         $this->assertSame('finalized', $invoice->status);
@@ -118,7 +118,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
         ]);
         $invoice = BillingInvoice::first();
 
-        $response = $this->get('/admin/billing/invoices/'.$invoice->id);
+        $response = $this->get('/admin/billing/invoices/'.$invoice->public_id);
 
         $response->assertOk();
         $response->assertViewHas('invoice');

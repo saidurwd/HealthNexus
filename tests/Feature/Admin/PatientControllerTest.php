@@ -275,7 +275,7 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->delete('/admin/patients/'.$patient->public_id.'/allergies/'.$allergy->id);
+        $response = $this->delete('/admin/patients/'.$patient->public_id.'/allergies/'.$allergy->public_id);
 
         $response->assertRedirect('/admin/patients/'.$patient->public_id.'/allergies');
         $this->assertSoftDeleted('patient_allergies', ['id' => $allergy->id]);
@@ -289,7 +289,7 @@ class PatientControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->delete('/admin/patients/'.$patient->public_id.'/history/'.$history->id);
+        $response = $this->delete('/admin/patients/'.$patient->public_id.'/history/'.$history->public_id);
 
         $response->assertRedirect('/admin/patients/'.$patient->public_id.'/history');
         $this->assertSoftDeleted('patient_histories', ['id' => $history->id]);

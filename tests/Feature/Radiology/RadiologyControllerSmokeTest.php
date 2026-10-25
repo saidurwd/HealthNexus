@@ -108,13 +108,13 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
     public function test_order_and_scheduling_pages_load(): void
     {
         $this->get('/admin/radiology/orders')->assertOk();
-        $this->get('/admin/radiology/orders/'.$this->order->id)->assertOk();
+        $this->get('/admin/radiology/orders/'.$this->order->public_id)->assertOk();
     }
 
     public function test_examination_and_worklist_pages_load(): void
     {
         $this->get('/admin/radiology/examinations')->assertOk();
-        $this->get('/admin/radiology/examinations/'.$this->examination->id)->assertOk();
+        $this->get('/admin/radiology/examinations/'.$this->examination->public_id)->assertOk();
         $this->get('/admin/radiology/worklist')->assertOk();
     }
 
@@ -126,7 +126,7 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
     public function test_report_pages_load(): void
     {
         $this->get('/admin/radiology/reports')->assertOk();
-        $this->get('/admin/radiology/reports/'.$this->report->id)->assertOk();
+        $this->get('/admin/radiology/reports/'.$this->report->public_id)->assertOk();
     }
 
     public function test_critical_findings_page_loads(): void

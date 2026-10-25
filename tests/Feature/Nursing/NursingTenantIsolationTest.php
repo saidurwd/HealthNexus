@@ -43,8 +43,8 @@ class NursingTenantIsolationTest extends NursingTestCase
         $this->assertFalse($foreignNurse->can('view', $mar));
         $this->assertFalse($foreignNurse->can('administer', $mar));
 
-        $this->actingAs($foreignNurse)->get('/admin/nursing/mar/'.$mar->id)->assertForbidden();
-        $this->actingAs($foreignNurse)->post('/admin/nursing/mar/'.$mar->id.'/administer', ['safety_checks' => ['patient' => 1]])->assertForbidden();
+        $this->actingAs($foreignNurse)->get('/admin/nursing/mar/'.$mar->public_id)->assertForbidden();
+        $this->actingAs($foreignNurse)->post('/admin/nursing/mar/'.$mar->public_id.'/administer', ['safety_checks' => ['patient' => 1]])->assertForbidden();
     }
 
     public function test_ward_nurse_without_assignment_cannot_view_unassigned_patient_but_assigned_nurse_can(): void
@@ -64,7 +64,7 @@ class NursingTenantIsolationTest extends NursingTestCase
         $mar = $this->makeMar($this->makeEpisode());
         $foreignNurse = $this->nurseWith(['nursing.mar.view', 'nursing.mar.administer'], Organization::factory()->create());
 
-        $this->actingAs($foreignNurse)->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', ['safety_checks' => ['patient' => 1]])
+        $this->actingAs($foreignNurse)->postJson('/api/v1/nursing/mar/'.$mar->public_id.'/administer', ['safety_checks' => ['patient' => 1]])
             ->assertStatus(403);
 
         $this->assertSame('scheduled', $mar->fresh()->status);
@@ -75,7 +75,7 @@ class NursingTenantIsolationTest extends NursingTestCase
         $mar = $this->makeMar($this->makeEpisode());
         $nurse = $this->nurseWith(['nursing.mar.view']);
 
-        $this->actingAs($nurse)->post('/admin/nursing/mar/'.$mar->id.'/administer', ['safety_checks' => ['patient' => 1]])->assertForbidden();
+        $this->actingAs($nurse)->post('/admin/nursing/mar/'.$mar->public_id.'/administer', ['safety_checks' => ['patient' => 1]])->assertForbidden();
         $this->assertSame('scheduled', $mar->fresh()->status);
     }
 }

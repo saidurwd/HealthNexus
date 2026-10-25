@@ -22,12 +22,12 @@ class NursingControllerSmokeTest extends NursingTestCase
         app(NursingTaskService::class)->create($episode, ['task_type' => 'Turn', 'due_at' => now()->addHour()]);
 
         foreach ([
-            '/admin/nursing', '/admin/nursing/episodes', '/admin/nursing/episodes/'.$episode->id,
-            '/admin/nursing/shifts', '/admin/nursing/tasks', '/admin/nursing/mar', '/admin/nursing/mar/'.$mar->id,
-            '/admin/nursing/episodes/'.$episode->id.'/observations', '/admin/nursing/episodes/'.$episode->id.'/intake-output',
-            '/admin/nursing/episodes/'.$episode->id.'/clinical', '/admin/nursing/episodes/'.$episode->id.'/notes',
-            '/admin/nursing/care-plans/'.$carePlan->id, '/admin/nursing/handover', '/admin/nursing/handover/'.$handover->id,
-            '/admin/nursing/escalations', '/admin/nursing/episodes/'.$episode->id.'/discharge-checklist',
+            '/admin/nursing', '/admin/nursing/episodes', '/admin/nursing/episodes/'.$episode->public_id,
+            '/admin/nursing/shifts', '/admin/nursing/tasks', '/admin/nursing/mar', '/admin/nursing/mar/'.$mar->public_id,
+            '/admin/nursing/episodes/'.$episode->public_id.'/observations', '/admin/nursing/episodes/'.$episode->public_id.'/intake-output',
+            '/admin/nursing/episodes/'.$episode->public_id.'/clinical', '/admin/nursing/episodes/'.$episode->public_id.'/notes',
+            '/admin/nursing/care-plans/'.$carePlan->public_id, '/admin/nursing/handover', '/admin/nursing/handover/'.$handover->public_id,
+            '/admin/nursing/escalations', '/admin/nursing/episodes/'.$episode->public_id.'/discharge-checklist',
             '/admin/nursing/reports/workload', '/admin/nursing/reports/medication', '/admin/nursing/reports/quality',
             '/admin/nursing/settings',
         ] as $url) {
@@ -40,10 +40,10 @@ class NursingControllerSmokeTest extends NursingTestCase
         $mar = $this->makeMar($this->makeEpisode());
         $payload = ['safety_checks' => ['patient' => 1, 'medication' => 1]];
 
-        $this->post('/admin/nursing/mar/'.$mar->id.'/administer', $payload)->assertRedirect();
+        $this->post('/admin/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertRedirect();
         $this->assertSame('administered', $mar->fresh()->status);
 
-        $this->post('/admin/nursing/mar/'.$mar->id.'/administer', $payload)->assertSessionHasErrors();
+        $this->post('/admin/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertSessionHasErrors();
         $this->assertDatabaseCount('nursing_medication_administrations', 1);
     }
 
@@ -57,12 +57,12 @@ class NursingControllerSmokeTest extends NursingTestCase
         $mar = $this->makeMar($this->makeEpisode());
         $payload = ['safety_checks' => ['patient' => 1]];
 
-        $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertOk();
+        $this->postJson('/api/v1/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertOk();
 
         // The tenant context is per-request state; re-establish it as a real client would via its session/header.
         app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(TenantContextResolver::class)->setBranchId($this->branch->id);
 
-        $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertStatus(422);
+        $this->postJson('/api/v1/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertStatus(422);
     }
 }

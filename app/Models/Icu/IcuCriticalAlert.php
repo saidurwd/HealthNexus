@@ -2,6 +2,7 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class IcuCriticalAlert extends Model
 {
+    use HasPublicId;
+
     public const SEVERITY_LOW = 'low';
 
     public const SEVERITY_MODERATE = 'moderate';

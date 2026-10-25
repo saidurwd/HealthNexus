@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EncounterAmendment extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'encounter_id',
         'patient_id',

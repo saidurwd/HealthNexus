@@ -58,14 +58,14 @@ class TenantIsolationTest extends RadiologyTestCase
 
     public function test_cannot_view_another_organizations_radiology_order(): void
     {
-        $response = $this->get('/admin/radiology/orders/'.$this->otherOrder->id);
+        $response = $this->get('/admin/radiology/orders/'.$this->otherOrder->public_id);
 
         $response->assertForbidden();
     }
 
     public function test_cannot_cancel_another_organizations_radiology_order(): void
     {
-        $response = $this->post('/admin/radiology/orders/'.$this->otherOrder->id.'/cancel', ['reason' => 'Testing tenant isolation']);
+        $response = $this->post('/admin/radiology/orders/'.$this->otherOrder->public_id.'/cancel', ['reason' => 'Testing tenant isolation']);
 
         $response->assertForbidden();
     }

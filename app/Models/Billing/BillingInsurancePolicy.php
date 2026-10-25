@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillingInsurancePolicy extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'insurance_provider_id', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
 

@@ -31,12 +31,12 @@ class OtControllerSmokeTest extends OtTestCase
 
         foreach ([
             '/admin/ot', '/admin/ot/surgery-requests', '/admin/ot/surgery-requests/create',
-            '/admin/ot/surgery-requests/'.$surgeryRequest->id,
-            '/admin/ot/surgeries', '/admin/ot/surgeries/create', '/admin/ot/surgeries/'.$surgery->id,
+            '/admin/ot/surgery-requests/'.$surgeryRequest->public_id,
+            '/admin/ot/surgeries', '/admin/ot/surgeries/create', '/admin/ot/surgeries/'.$surgery->public_id,
             '/admin/ot/theatres', '/admin/ot/theatres/create',
             '/admin/ot/procedures', '/admin/ot/procedures/create',
-            '/admin/ot/surgeries/'.$surgery->id.'/preoperative',
-            '/admin/ot/surgeries/'.$completedSurgery->id.'/recovery',
+            '/admin/ot/surgeries/'.$surgery->public_id.'/preoperative',
+            '/admin/ot/surgeries/'.$completedSurgery->public_id.'/recovery',
             '/admin/ot/reports/surgeries', '/admin/ot/reports/utilization', '/admin/ot/reports/complications',
             '/admin/ot/settings',
         ] as $url) {
@@ -54,7 +54,7 @@ class OtControllerSmokeTest extends OtTestCase
         foreach ([
             '/api/v1/ot/dashboard',
             '/api/v1/ot/surgeries',
-            '/api/v1/ot/surgeries/'.$surgery->id,
+            '/api/v1/ot/surgeries/'.$surgery->public_id,
             '/api/v1/ot/surgery-requests',
         ] as $url) {
             app(TenantContextResolver::class)->setOrganizationId($this->organization->id);

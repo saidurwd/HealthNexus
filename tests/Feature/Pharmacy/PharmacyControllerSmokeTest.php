@@ -99,14 +99,14 @@ class PharmacyControllerSmokeTest extends PharmacyTestCase
     public function test_order_pages_load(): void
     {
         $this->get('/admin/pharmacy/orders')->assertOk();
-        $this->get('/admin/pharmacy/orders/'.$this->order->id)->assertOk();
+        $this->get('/admin/pharmacy/orders/'.$this->order->public_id)->assertOk();
     }
 
     public function test_dispensing_pages_load(): void
     {
         $this->get('/admin/pharmacy/dispensing')->assertOk();
-        $this->get('/admin/pharmacy/dispensing/'.$this->dispensing->id)->assertOk();
-        $this->get('/admin/pharmacy/orders/'.$this->order->id.'/dispense')->assertOk();
+        $this->get('/admin/pharmacy/dispensing/'.$this->dispensing->public_id)->assertOk();
+        $this->get('/admin/pharmacy/orders/'.$this->order->public_id.'/dispense')->assertOk();
     }
 
     public function test_stock_pages_load(): void

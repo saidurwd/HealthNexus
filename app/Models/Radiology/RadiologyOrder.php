@@ -4,6 +4,7 @@ namespace App\Models\Radiology;
 
 use App\Models\Branch;
 use App\Models\ClinicalOrder;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Organization;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RadiologyOrder extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasPublicId, SoftDeletes;
 
     public const ACTIVE_STATUSES = [
         'ordered', 'registered', 'scheduled', 'checked_in', 'preparing', 'ready',

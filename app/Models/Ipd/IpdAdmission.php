@@ -3,6 +3,7 @@
 namespace App\Models\Ipd;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Organization;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class IpdAdmission extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = [
         'organization_id', 'branch_id', 'admission_number', 'patient_id', 'admission_request_id',

@@ -74,7 +74,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $assessment->episode_id)->with('success', __('Assessment finalized.'));
+        return redirect()->route('admin.icu.episodes.show', $assessment->episode)->with('success', __('Assessment finalized.'));
     }
 
     public function flowsheet(Request $request, IcuEpisode $episode)
@@ -136,7 +136,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $note->episode_id)->with('success', __('Progress note finalized.'));
+        return redirect()->route('admin.icu.episodes.show', $note->episode)->with('success', __('Progress note finalized.'));
     }
 
     public function prepareHandover(Request $request, IcuEpisode $episode)
@@ -161,7 +161,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $record->episode_id)->with('success', __('Handover acknowledged.'));
+        return redirect()->route('admin.icu.episodes.show', $record->episode)->with('success', __('Handover acknowledged.'));
     }
 
     public function storeVentilatorEvent(Request $request, IcuEpisode $episode)
@@ -228,7 +228,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $infusion->episode_id)->with('success', __('Infusion titrated.'));
+        return redirect()->route('admin.icu.episodes.show', $infusion->episode)->with('success', __('Infusion titrated.'));
     }
 
     public function stopInfusion(Request $request, IcuInfusion $infusion)
@@ -241,7 +241,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $infusion->episode_id)->with('success', __('Infusion stopped.'));
+        return redirect()->route('admin.icu.episodes.show', $infusion->episode)->with('success', __('Infusion stopped.'));
     }
 
     public function storeDevice(Request $request, IcuEpisode $episode)
@@ -267,7 +267,7 @@ class IcuClinicalController extends Controller
 
         $this->devices->remove($device, $request->user(), $request->input('complication'));
 
-        return redirect()->route('admin.icu.episodes.show', $device->episode_id)->with('success', __('Device removed.'));
+        return redirect()->route('admin.icu.episodes.show', $device->episode)->with('success', __('Device removed.'));
     }
 
     public function storeFluidBalance(Request $request, IcuEpisode $episode)

@@ -2,12 +2,15 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IcuCriticalEvent extends Model
 {
+    use HasPublicId;
+
     public const TYPE_CODE_BLUE = 'code_blue';
 
     public const TYPE_RAPID_DETERIORATION = 'rapid_deterioration';

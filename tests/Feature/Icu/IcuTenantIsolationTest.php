@@ -41,7 +41,7 @@ class IcuTenantIsolationTest extends IcuTestCase
 
         $this->assertFalse($foreignUser->can('view', $episode));
 
-        $this->actingAs($foreignUser)->get('/admin/icu/episodes/'.$episode->id)->assertForbidden();
+        $this->actingAs($foreignUser)->get('/admin/icu/episodes/'.$episode->public_id)->assertForbidden();
     }
 
     public function test_direct_url_manipulation_to_a_foreign_episode_is_rejected(): void
@@ -50,7 +50,7 @@ class IcuTenantIsolationTest extends IcuTestCase
         $otherOrganization = Organization::factory()->create();
         $foreignUser = $this->userWith(['icu.episode.view'], $otherOrganization);
 
-        $this->actingAs($foreignUser)->get('/admin/icu/episodes/'.$episode->id)->assertForbidden();
+        $this->actingAs($foreignUser)->get('/admin/icu/episodes/'.$episode->public_id)->assertForbidden();
     }
 
     public function test_api_denies_cross_hospital_transfer(): void
@@ -59,7 +59,7 @@ class IcuTenantIsolationTest extends IcuTestCase
         $otherOrganization = Organization::factory()->create();
         $foreignUser = $this->userWith(['icu.episode.transfer'], $otherOrganization);
 
-        $this->actingAs($foreignUser)->postJson('/api/v1/icu/episodes/'.$episode->id.'/transfer', [
+        $this->actingAs($foreignUser)->postJson('/api/v1/icu/episodes/'.$episode->public_id.'/transfer', [
             'destination' => 'ward',
         ])->assertStatus(403);
 
@@ -74,6 +74,6 @@ class IcuTenantIsolationTest extends IcuTestCase
         $noPermsUser = $this->userWith([]);
 
         $this->assertFalse($noPermsUser->can('acknowledge', $alert));
-        $this->actingAs($noPermsUser)->post('/admin/icu/alerts/'.$alert->id.'/acknowledge')->assertForbidden();
+        $this->actingAs($noPermsUser)->post('/admin/icu/alerts/'.$alert->public_id.'/acknowledge')->assertForbidden();
     }
 }

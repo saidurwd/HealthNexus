@@ -112,27 +112,27 @@ class IpdControllerSmokeTest extends IpdTestCase
     public function test_admission_pages_load(): void
     {
         $this->get('/admin/ipd/admissions')->assertOk();
-        $this->get('/admin/ipd/admissions/'.$this->admission->id)->assertOk();
+        $this->get('/admin/ipd/admissions/'.$this->admission->public_id)->assertOk();
         $this->get('/admin/ipd/admissions/create')->assertOk();
     }
 
     public function test_transfer_pages_load(): void
     {
         $this->get('/admin/ipd/transfers')->assertOk();
-        $this->get('/admin/ipd/transfers/'.$this->transfer->id)->assertOk();
-        $this->get('/admin/ipd/admissions/'.$this->admission->id.'/transfer')->assertOk();
+        $this->get('/admin/ipd/transfers/'.$this->transfer->public_id)->assertOk();
+        $this->get('/admin/ipd/admissions/'.$this->admission->public_id.'/transfer')->assertOk();
     }
 
     public function test_discharge_pages_load(): void
     {
         $this->get('/admin/ipd/discharge')->assertOk();
-        $this->get('/admin/ipd/discharge/'.$this->dischargeRequest->id)->assertOk();
+        $this->get('/admin/ipd/discharge/'.$this->dischargeRequest->public_id)->assertOk();
     }
 
     public function test_leave_pages_load(): void
     {
         $this->get('/admin/ipd/leave')->assertOk();
-        $this->get('/admin/ipd/leave/'.$this->leave->id)->assertOk();
+        $this->get('/admin/ipd/leave/'.$this->leave->public_id)->assertOk();
     }
 
     public function test_report_pages_load(): void

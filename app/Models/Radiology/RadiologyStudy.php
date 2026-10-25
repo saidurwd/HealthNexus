@@ -3,6 +3,7 @@
 namespace App\Models\Radiology;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RadiologyStudy extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'radiology_examination_id', 'patient_id', 'pacs_server_id',
         'accession_number', 'study_instance_uid', 'study_id', 'study_date', 'study_time',

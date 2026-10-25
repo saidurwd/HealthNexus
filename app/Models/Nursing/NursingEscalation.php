@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
 use App\Models\User;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NursingEscalation extends Model
 {
+    use HasPublicId;
+
     public const RECIPIENT_CHARGE_NURSE = 'charge_nurse';
 
     public const RECIPIENT_ATTENDING_PHYSICIAN = 'attending_physician';

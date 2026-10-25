@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BillingPayment extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'patient_id', 'invoice_id', 'corporate_id', 'payment_method_id', 'cashier_session_id', 'payment_number', 'currency', 'amount', 'transaction_reference', 'payment_date', 'status', 'completed_at', 'cancelled_at', 'received_by', 'cancelled_by', 'notes'];
 

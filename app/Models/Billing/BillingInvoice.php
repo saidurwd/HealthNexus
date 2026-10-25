@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillingInvoice extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'patient_id', 'encounter_id', 'corporate_id', 'corporate_contract_id', 'insurance_policy_id', 'invoice_number', 'invoice_type', 'status', 'currency', 'patient_category', 'subtotal', 'discount_type', 'discount_amount', 'tax_amount', 'rounding_amount', 'grand_total', 'paid_amount', 'due_amount', 'invoice_date', 'due_date', 'billing_party_type', 'billing_party_id', 'notes', 'version', 'created_by', 'finalized_by', 'finalized_at', 'cancelled_by', 'cancelled_at', 'cancellation_reason', 'refunded_by', 'refunded_at', 'written_off_by', 'written_off_at'];
 

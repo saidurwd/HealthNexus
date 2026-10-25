@@ -3,6 +3,7 @@
 namespace App\Models\Laboratory;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LabResult extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'lab_order_item_id', 'test_id', 'specimen_id',
         'result_type', 'numeric_value', 'text_value', 'qualitative_value', 'unit',

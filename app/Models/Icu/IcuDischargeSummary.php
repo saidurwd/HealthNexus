@@ -2,12 +2,15 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IcuDischargeSummary extends Model
 {
+    use HasPublicId;
+
     public const STATUS_DRAFT = 'draft';
 
     public const STATUS_FINAL = 'final';

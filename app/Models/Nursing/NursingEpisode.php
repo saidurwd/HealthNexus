@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class NursingEpisode extends Model
 {
+    use HasPublicId;
+
     public const STATUS_PLANNED = 'planned';
 
     public const STATUS_ACTIVE = 'active';

@@ -2,12 +2,15 @@
 
 namespace App\Models\Radiology;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RadiologyOrderItem extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'radiology_order_id', 'procedure_id', 'protocol_id', 'body_part_id', 'laterality',
         'requested_procedure_name', 'priority', 'status', 'result_status', 'requested_at',

@@ -3,6 +3,7 @@
 namespace App\Models\Laboratory;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LabCriticalResultAlert extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'result_id', 'detected_at', 'notified_to',
         'notification_method', 'acknowledged_by', 'acknowledged_at', 'notes',

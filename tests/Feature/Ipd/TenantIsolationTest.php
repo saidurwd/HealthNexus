@@ -45,7 +45,7 @@ class TenantIsolationTest extends IpdTestCase
 
         $this->assertFalse($otherUser->can('view', $admission));
 
-        $response = $this->get('/admin/ipd/admissions/'.$admission->id);
+        $response = $this->get('/admin/ipd/admissions/'.$admission->public_id);
         $response->assertForbidden();
     }
 

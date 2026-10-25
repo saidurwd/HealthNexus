@@ -4,6 +4,7 @@ namespace App\Models\Radiology;
 
 use App\Models\Appointment;
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RadiologyExamination extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'order_item_id', 'modality_id', 'patient_id', 'encounter_id',
         'appointment_id', 'scheduled_at', 'check_in_at', 'started_at', 'completed_at', 'status',

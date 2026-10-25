@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
 use App\Models\User;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingNote extends Model
 {
+    use HasPublicId;
+
     public const STATUS_DRAFT = 'draft';
 
     public const STATUS_FINAL = 'final';

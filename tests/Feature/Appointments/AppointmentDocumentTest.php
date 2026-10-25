@@ -77,7 +77,7 @@ class AppointmentDocumentTest extends TestCase
 
         $document = $this->appointment->documents()->first();
 
-        $this->get("/admin/appointments/{$this->appointment->public_id}/documents/{$document->id}/download")->assertOk();
+        $this->get("/admin/appointments/{$this->appointment->public_id}/documents/{$document->public_id}/download")->assertOk();
     }
 
     public function test_can_delete_a_document(): void
@@ -90,7 +90,7 @@ class AppointmentDocumentTest extends TestCase
         $document = $this->appointment->documents()->first();
         $path = $document->file->path;
 
-        $this->delete("/admin/appointments/{$this->appointment->public_id}/documents/{$document->id}")->assertRedirect();
+        $this->delete("/admin/appointments/{$this->appointment->public_id}/documents/{$document->public_id}")->assertRedirect();
 
         $this->assertDatabaseMissing('appointment_documents', ['id' => $document->id]);
         Storage::disk('local')->assertMissing($path);

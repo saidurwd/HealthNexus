@@ -2,6 +2,7 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OtSurgicalTeam extends Model
 {
+    use HasPublicId;
+
     public const ROLE_PRIMARY_SURGEON = 'primary_surgeon';
 
     public const ROLE_ASSISTANT_SURGEON = 'assistant_surgeon';

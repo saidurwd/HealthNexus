@@ -98,7 +98,7 @@ class PatientAlertsTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->put('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->id.'/resolve', [
+        $this->put('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id.'/resolve', [
             'resolution_note' => 'Confirmed via chart review.',
         ])->assertRedirect();
 
@@ -115,7 +115,7 @@ class PatientAlertsTest extends TestCase
             'organization_id' => $this->organization->id,
         ]);
 
-        $this->delete('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->id)
+        $this->delete('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id)
             ->assertRedirect();
 
         $this->assertSoftDeleted($alert);

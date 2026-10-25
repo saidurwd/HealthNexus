@@ -2,12 +2,15 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LabOrderItem extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'lab_order_id', 'test_id', 'panel_id', 'specimen_id', 'requested_test_name',
         'priority', 'status', 'result_status', 'requested_at', 'collected_at', 'completed_at',

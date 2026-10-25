@@ -3,6 +3,7 @@
 namespace App\Models\Ipd;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Organization;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class IpdAdmissionRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     public const STATUS_REQUESTED = 'requested';
 

@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Organization;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class BillingCharge extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'patient_id', 'encounter_id', 'billing_item_id', 'department_id', 'provider_id', 'source_type', 'source_id', 'idempotency_key', 'status', 'quantity', 'currency', 'unit_price', 'gross_amount', 'discount_type', 'discount_amount', 'tax_amount', 'net_amount', 'charged_at', 'billed_at', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by'];
 

@@ -2,12 +2,15 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OtPreoperativeChecklistItem extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'checklist_id', 'category', 'label', 'response', 'is_required', 'is_applicable',
         'completed_by', 'completed_at', 'exception_reason',

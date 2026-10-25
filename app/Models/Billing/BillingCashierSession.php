@@ -3,6 +3,7 @@
 namespace App\Models\Billing;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Department;
 use App\Models\Organization;
 use App\Models\User;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillingCashierSession extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     protected $fillable = ['organization_id', 'branch_id', 'counter_id', 'user_id', 'status', 'currency', 'opening_balance', 'expected_collections', 'expected_refunds', 'expected_closing', 'actual_closing', 'variance', 'opened_at', 'closed_at', 'closed_by', 'closing_notes'];
 

@@ -55,6 +55,6 @@ class IcuDischargeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $summary->episode_id)->with('success', __('Patient discharged from ICU.'));
+        return redirect()->route('admin.icu.episodes.show', $summary->episode)->with('success', __('Patient discharged from ICU.'));
     }
 }

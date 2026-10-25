@@ -3,6 +3,7 @@
 namespace App\Models\Radiology;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Provider;
 use App\Models\User;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RadiologyReport extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'examination_id', 'template_id', 'report_number', 'status',
         'radiologist_id', 'clinical_indication', 'technique', 'findings', 'impression', 'recommendation',

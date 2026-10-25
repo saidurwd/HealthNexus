@@ -3,6 +3,7 @@
 namespace App\Models\Radiology;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Provider;
 use App\Models\User;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RadiologyCriticalFinding extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'organization_id', 'branch_id', 'report_id', 'finding_text', 'detected_by', 'detected_at',
         'notified_to', 'notification_method', 'notified_at', 'acknowledged_by', 'acknowledged_at',

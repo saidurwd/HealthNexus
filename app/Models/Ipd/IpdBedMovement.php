@@ -3,6 +3,7 @@
 namespace App\Models\Ipd;
 
 use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IpdBedMovement extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
     public const TYPE_ADMISSION = 'admission';
 

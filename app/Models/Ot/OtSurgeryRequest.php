@@ -2,6 +2,7 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OtSurgeryRequest extends Model
 {
+    use HasPublicId;
+
     public const STATUS_REQUESTED = 'requested';
 
     public const STATUS_PENDING_APPROVAL = 'pending_approval';

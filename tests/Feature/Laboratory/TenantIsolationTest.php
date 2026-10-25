@@ -72,21 +72,21 @@ class TenantIsolationTest extends LabTestCase
 
     public function test_cannot_view_another_organizations_lab_order(): void
     {
-        $response = $this->get('/admin/lab/orders/'.$this->otherOrder->id);
+        $response = $this->get('/admin/lab/orders/'.$this->otherOrder->public_id);
 
         $response->assertForbidden();
     }
 
     public function test_cannot_view_another_organizations_specimen(): void
     {
-        $response = $this->get('/admin/lab/specimens/'.$this->otherSpecimen->id);
+        $response = $this->get('/admin/lab/specimens/'.$this->otherSpecimen->public_id);
 
         $response->assertForbidden();
     }
 
     public function test_cannot_cancel_another_organizations_lab_order(): void
     {
-        $response = $this->post('/admin/lab/orders/'.$this->otherOrder->id.'/cancel', ['reason' => 'Testing tenant isolation']);
+        $response = $this->post('/admin/lab/orders/'.$this->otherOrder->public_id.'/cancel', ['reason' => 'Testing tenant isolation']);
 
         $response->assertForbidden();
     }

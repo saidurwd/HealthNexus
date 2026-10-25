@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingHandover extends Model
 {
+    use HasPublicId;
+
     public const STATUS_DRAFT = 'draft';
 
     public const STATUS_PENDING_ACKNOWLEDGEMENT = 'pending_acknowledgement';

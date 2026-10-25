@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NursingAssessment extends Model
 {
+    use HasPublicId;
+
     public const TYPE_INITIAL = 'initial';
 
     public const TYPE_ONGOING = 'ongoing';
