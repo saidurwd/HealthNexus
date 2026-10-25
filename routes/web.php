@@ -78,6 +78,16 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.notifications.index');
         })->name('notifications.index');
 
+        Route::prefix('imports')->name('imports.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\ImportController::class, 'index'])->name('index');
+            Route::post('/', [\App\Http\Controllers\ImportController::class, 'store'])->name('store');
+            Route::get('template/{key}', [\App\Http\Controllers\ImportController::class, 'template'])->name('template');
+            Route::get('{batch}', [\App\Http\Controllers\ImportController::class, 'show'])->name('show');
+            Route::post('{batch}/commit', [\App\Http\Controllers\ImportController::class, 'commit'])->name('commit');
+            Route::post('{batch}/rollback', [\App\Http\Controllers\ImportController::class, 'rollback'])->name('rollback');
+            Route::get('{batch}/errors', [\App\Http\Controllers\ImportController::class, 'errors'])->name('errors');
+        });
+
         Route::get('search', \App\Http\Controllers\GlobalSearchPageController::class)->name('search');
         Route::get('documents/{type}/{reference}', \App\Http\Controllers\DocumentPrintController::class)->name('documents.print');
 

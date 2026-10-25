@@ -45,7 +45,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_tax_categories`
 - `charge_event_log`
 
-## core (48)
+## core (50)
 
 - `activity_logs`
 - `audit_logs`
@@ -68,6 +68,8 @@ _Generated from the Schema::create calls in database/migrations._
 - `hospital_holidays`
 - `hospitals`
 - `identification_types`
+- `import_batches`
+- `import_rows`
 - `job_batches`
 - `jobs`
 - `login_histories`

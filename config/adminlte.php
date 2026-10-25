@@ -1780,6 +1780,12 @@ return [
             'can' => 'settings.view',
             'submenu' => [
                 [
+                    'text' => 'Data import',
+                    'url' => '/admin/imports',
+                    'icon' => 'bi bi-upload',
+                    'can' => 'import.view',
+                ],
+                [
                     'text' => 'Users',
                     'url' => '/admin/users',
                     'icon' => 'bi bi-people',

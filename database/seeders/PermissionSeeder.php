@@ -30,6 +30,14 @@ class PermissionSeeder extends Seeder
             'patients.delete',
             'patients.merge',
             'patients.export',
+            'import.view',
+            'import.patients',
+            'import.services',
+            'import.medications',
+            'import.lab_tests',
+            'import.beds',
+            'import.users',
+            'import.opening_stock',
             'patients.export.sensitive',
             'patients.print',
             'patients.alert.view',
@@ -654,6 +662,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
                 'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
