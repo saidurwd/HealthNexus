@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AppointmentController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CodeSearchController;
 use App\Http\Controllers\Api\V1\BranchController;
 use App\Http\Controllers\Api\V1\OrganizationController;
 use App\Http\Controllers\Api\V1\DepartmentController;
@@ -22,6 +23,7 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', ApplyTenantContextToInput::class])->group(function () {
         Route::get('/tenant/context', [TenantContextController::class, 'show']);
+        Route::get('/codes/search', CodeSearchController::class);
         Route::post('/tenant/context', [TenantContextController::class, 'update']);
 
         require __DIR__.'/../modules/Settings/Routes/api.php';

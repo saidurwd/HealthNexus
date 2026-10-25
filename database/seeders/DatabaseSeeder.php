@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class,
             SettingsTableSeeder::class,
+            CodeSystemSeeder::class,
             MasterDataSeeder::class,
             OrganizationWithTwoBranchesSeeder::class,
             BillingSeeder::class,

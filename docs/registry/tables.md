@@ -44,7 +44,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_refunds`
 - `billing_tax_categories`
 
-## core (39)
+## core (44)
 
 - `activity_logs`
 - `audit_logs`
@@ -52,6 +52,9 @@ _Generated from the Schema::create calls in database/migrations._
 - `break_glass_accesses`
 - `cache`
 - `cache_locks`
+- `code_concepts`
+- `code_maps`
+- `code_systems`
 - `countries`
 - `currencies`
 - `departments`
@@ -67,6 +70,8 @@ _Generated from the Schema::create calls in database/migrations._
 - `login_histories`
 - `marital_statuses`
 - `notifications`
+- `number_allocations`
+- `number_series`
 - `organization_modules`
 - `organizations`
 - `password_reset_tokens`
