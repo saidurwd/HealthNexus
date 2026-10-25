@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LabResult extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'lab_order_item_id', 'test_id', 'specimen_id',
+        'organization_id', 'branch_id', 'lab_order_item_id', 'test_id', 'specimen_id',
         'result_type', 'numeric_value', 'text_value', 'qualitative_value', 'unit',
         'reference_range_low', 'reference_range_high', 'reference_range_text',
         'abnormal_flag', 'critical_flag', 'result_status',
@@ -35,7 +35,7 @@ class LabResult extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function orderItem(): BelongsTo { return $this->belongsTo(LabOrderItem::class, 'lab_order_item_id'); }
     public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
@@ -75,8 +75,8 @@ class LabResult extends Model
         return $chain;
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -116,7 +116,7 @@ class MasterDataSeeder extends Seeder
     }
 
     /**
-     * company_id left null — these are system-wide defaults every company sees; a hospital can
+     * organization_id left null — these are system-wide defaults every organization sees; a hospital can
      * add its own via Administration > Appointment Types without touching these.
      */
     private function seedAppointmentTypes(): void
@@ -140,7 +140,7 @@ class MasterDataSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            AppointmentType::firstOrCreate(['company_id' => null, 'code' => $type['code']], $type);
+            AppointmentType::firstOrCreate(['organization_id' => null, 'code' => $type['code']], $type);
         }
     }
 }

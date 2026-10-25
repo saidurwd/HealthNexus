@@ -16,7 +16,7 @@ class NursingDevice extends Model
     public const STATUS_REMOVED = 'removed';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'device_type',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'device_type',
         'insertion_date', 'site', 'inserted_by', 'status', 'care_schedule', 'last_assessment_at',
         'removal_date', 'removal_by', 'complication',
     ];
@@ -56,8 +56,8 @@ class NursingDevice extends Model
         return $this->hasMany(NursingDeviceAssessment::class, 'device_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             SettingsTableSeeder::class,
             MasterDataSeeder::class,
-            CompanyWithTwoBranchesSeeder::class,
+            OrganizationWithTwoBranchesSeeder::class,
             BillingSeeder::class,
             LabSeeder::class,
             RadiologySeeder::class,

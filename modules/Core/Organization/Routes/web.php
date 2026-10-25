@@ -1,16 +1,16 @@
 <?php
 
 use App\Http\Middleware\EnsureBranchAccess;
-use App\Http\Middleware\EnsureCompanyAccess;
+use App\Http\Middleware\EnsureOrganizationAccess;
 use Illuminate\Support\Facades\Route;
 use Modules\Core\Organization\Http\Controllers\BranchController;
-use Modules\Core\Organization\Http\Controllers\CompanyController;
+use Modules\Core\Organization\Http\Controllers\OrganizationController;
 use Modules\Core\Organization\Http\Controllers\DepartmentController;
 
-Route::middleware('can:manage companies')->group(function () {
-    Route::resource('companies', CompanyController::class);
+Route::middleware('can:manage organizations')->group(function () {
+    Route::resource('organizations', OrganizationController::class);
 
-    Route::prefix('companies/{company}')->name('companies.')->middleware(EnsureCompanyAccess::class)->group(function () {
+    Route::prefix('organizations/{organization}')->name('organizations.')->middleware(EnsureOrganizationAccess::class)->group(function () {
         Route::get('branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('branches/create', [BranchController::class, 'create'])->name('branches.create');
         Route::post('branches', [BranchController::class, 'store'])->name('branches.store');

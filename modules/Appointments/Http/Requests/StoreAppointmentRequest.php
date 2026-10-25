@@ -44,7 +44,7 @@ class StoreAppointmentRequest extends FormRequest
     {
         $data = parent::validated($key, $default);
 
-        $data['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $data['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $data['branch_id'] = app(TenantContextResolver::class)->getBranchId();
         $data['created_by'] = $this->user()->id;
 

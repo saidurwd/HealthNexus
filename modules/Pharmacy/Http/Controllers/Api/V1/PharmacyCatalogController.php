@@ -17,11 +17,11 @@ class PharmacyCatalogController extends Controller
     {
         $this->authorize('viewAny', PharmacyMedication::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $medications = PharmacyMedication::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->with(['generic', 'brand', 'dosageForm', 'route'])
             ->paginate((int) $request->input('per_page', 20));
@@ -33,11 +33,11 @@ class PharmacyCatalogController extends Controller
     {
         Gate::authorize('pharmacy.generic.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $generics = PharmacyGeneric::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->paginate((int) $request->input('per_page', 20));
 
@@ -48,11 +48,11 @@ class PharmacyCatalogController extends Controller
     {
         Gate::authorize('pharmacy.brand.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $brands = PharmacyBrand::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->with('generic')
             ->paginate((int) $request->input('per_page', 20));

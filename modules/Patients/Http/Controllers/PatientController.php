@@ -5,7 +5,7 @@ namespace Modules\Patients\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Country;
 use App\Models\Gender;
 use App\Models\IdentificationType;
@@ -52,10 +52,10 @@ class PatientController extends Controller
 
     public function index(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $patients = Patient::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('search'), fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
@@ -99,7 +99,7 @@ class PatientController extends Controller
 
     public function create()
     {
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $identificationTypes = IdentificationType::all();
         $genders = Gender::where('is_active', true)->orderBy('sort_order')->get();
@@ -107,7 +107,7 @@ class PatientController extends Controller
         $patientTypes = PatientType::where('is_active', true)->orderBy('sort_order')->get();
         $countries = Country::orderBy('name')->get();
 
-        return view('admin.patients.create', compact('companies', 'branches', 'identificationTypes', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
+        return view('admin.patients.create', compact('organizations', 'branches', 'identificationTypes', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
     }
 
     public function store(StorePatientRequest $request)
@@ -143,14 +143,14 @@ class PatientController extends Controller
     {
         $this->authorize('update', $patient);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $genders = Gender::where('is_active', true)->orderBy('sort_order')->get();
         $maritalStatuses = MaritalStatus::where('is_active', true)->orderBy('sort_order')->get();
         $patientTypes = PatientType::where('is_active', true)->orderBy('sort_order')->get();
         $countries = Country::orderBy('name')->get();
 
-        return view('admin.patients.edit', compact('patient', 'companies', 'branches', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
+        return view('admin.patients.edit', compact('patient', 'organizations', 'branches', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
     }
 
     /**
@@ -224,12 +224,12 @@ class PatientController extends Controller
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $search = $request->input('q', '');
 
         $patients = Patient::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($search, function ($q, $search) {
                 $q->where(function ($q2) use ($search) {
                     $q2->where('first_name', 'like', "%{$search}%")
@@ -251,7 +251,7 @@ class PatientController extends Controller
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $firstName = $request->input('first_name', '');
         $lastName = $request->input('last_name', '');
@@ -259,7 +259,7 @@ class PatientController extends Controller
         $nationalId = $request->input('national_identifier');
         $email = $request->input('email');
 
-        $duplicates = $this->patientService->detectDuplicates($companyId, $firstName, $lastName, $phone, $nationalId, $email);
+        $duplicates = $this->patientService->detectDuplicates($organizationId, $firstName, $lastName, $phone, $nationalId, $email);
 
         return response()->json([
             'duplicates' => $duplicates->map(fn ($p) => [
@@ -276,10 +276,10 @@ class PatientController extends Controller
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $candidates = PatientDuplicateCandidate::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')), fn ($q) => $q->where('status', 'pending'))
             ->with(['patientA', 'patientB'])
             ->latest()
@@ -316,9 +316,9 @@ class PatientController extends Controller
         $masterPatient = Patient::findOrFail($request->input('master_patient_id'));
         $duplicatePatient = Patient::findOrFail($request->input('duplicate_patient_id'));
 
-        // The "merge" ability only checks the permission grant, not company ownership (it takes
+        // The "merge" ability only checks the permission grant, not organization ownership (it takes
         // no Patient instance) — verify both records explicitly so a user with patients.update
-        // can't merge records belonging to a company they aren't assigned to.
+        // can't merge records belonging to an organization they aren't assigned to.
         $this->authorize('view', $masterPatient);
         $this->authorize('view', $duplicatePatient);
 
@@ -381,7 +381,7 @@ class PatientController extends Controller
         $path = $file->store('patient-documents');
 
         $document = PatientDocument::create([
-            'company_id' => $patient->company_id,
+            'organization_id' => $patient->organization_id,
             'patient_id' => $patient->id,
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
@@ -703,10 +703,10 @@ class PatientController extends Controller
     {
         $this->authorize('approveAmendment', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $amendments = PatientAmendment::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')), fn ($q) => $q->whereIn('status', ['submitted', 'pending_approval']))
             ->with(['patient', 'requestedBy'])
             ->latest()
@@ -819,7 +819,7 @@ class PatientController extends Controller
 
         $account = \App\Models\PatientPortalAccount::updateOrCreate(
             ['patient_id' => $patient->id],
-            ['company_id' => $patient->company_id, 'email' => $validated['email'], 'is_active' => false, 'invited_at' => now()],
+            ['organization_id' => $patient->organization_id, 'email' => $validated['email'], 'is_active' => false, 'invited_at' => now()],
         );
 
         $patient->update(['portal_enabled' => true]);

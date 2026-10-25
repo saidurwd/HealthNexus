@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserCompany extends Model
+class UserOrganization extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'company_id',
+        'organization_id',
         'access_level',
         'is_default',
         'metadata',
@@ -28,8 +28,8 @@ class UserCompany extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 }

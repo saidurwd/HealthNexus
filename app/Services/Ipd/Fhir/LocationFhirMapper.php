@@ -22,7 +22,7 @@ class LocationFhirMapper
             'name' => $ward->name,
             'mode' => 'instance',
             'physicalType' => ['coding' => [['code' => 'wa', 'display' => 'Ward']]],
-            'managingOrganization' => ['reference' => "Organization/{$ward->company_id}"],
+            'managingOrganization' => ['reference' => "Organization/{$ward->organization_id}"],
         ];
     }
 

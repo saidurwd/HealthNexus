@@ -29,7 +29,7 @@ class IpdBedMovement extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'admission_id', 'patient_id', 'from_bed_id', 'to_bed_id',
+        'organization_id', 'branch_id', 'admission_id', 'patient_id', 'from_bed_id', 'to_bed_id',
         'movement_type', 'requested_at', 'approved_at', 'moved_at', 'reason', 'status',
         'requested_by', 'approved_by', 'completed_by',
     ];
@@ -39,7 +39,7 @@ class IpdBedMovement extends Model
         return ['requested_at' => 'datetime', 'approved_at' => 'datetime', 'moved_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
@@ -49,8 +49,8 @@ class IpdBedMovement extends Model
     public function approvedBy(): BelongsTo { return $this->belongsTo(User::class, 'approved_by'); }
     public function completedBy(): BelongsTo { return $this->belongsTo(User::class, 'completed_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

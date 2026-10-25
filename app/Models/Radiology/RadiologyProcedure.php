@@ -14,7 +14,7 @@ class RadiologyProcedure extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'section_id', 'body_part_id', 'code', 'name', 'modality_type',
+        'organization_id', 'branch_id', 'section_id', 'body_part_id', 'code', 'name', 'modality_type',
         'description', 'duration_minutes', 'turnaround_time_minutes', 'contrast_required',
         'preparation_required', 'sedation_required', 'preparation_instructions',
         'requires_senior_approval', 'is_active', 'created_by', 'updated_by',
@@ -33,7 +33,7 @@ class RadiologyProcedure extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function section(): BelongsTo { return $this->belongsTo(RadiologySection::class, 'section_id'); }
     public function bodyPart(): BelongsTo { return $this->belongsTo(RadiologyBodyPart::class, 'body_part_id'); }
@@ -41,8 +41,8 @@ class RadiologyProcedure extends Model
     public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
     public function updatedBy(): BelongsTo { return $this->belongsTo(User::class, 'updated_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

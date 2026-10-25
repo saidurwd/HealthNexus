@@ -17,11 +17,11 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $invoices = BillingInvoice::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('patient')
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('invoice_date')
@@ -34,10 +34,10 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $summary = $this->revenue->cashierSummary($companyId, $branchId);
+        $summary = $this->revenue->cashierSummary($organizationId, $branchId);
 
         return view('admin.billing.reports.collection', compact('summary'));
     }
@@ -46,13 +46,13 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->startOfMonth()->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        $byCategory = $this->revenue->revenueByCategory($companyId, $branchId, $from, $to);
+        $byCategory = $this->revenue->revenueByCategory($organizationId, $branchId, $from, $to);
 
         return view('admin.billing.reports.revenue', compact('byCategory', 'from', 'to'));
     }
@@ -61,11 +61,11 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $byPatient = $this->revenue->outstandingByPatient($companyId, $branchId);
-        $byCorporate = $this->revenue->outstandingByCorporate($companyId, $branchId);
+        $byPatient = $this->revenue->outstandingByPatient($organizationId, $branchId);
+        $byCorporate = $this->revenue->outstandingByCorporate($organizationId, $branchId);
 
         return view('admin.billing.reports.receivables', compact('byPatient', 'byCorporate'));
     }
@@ -74,13 +74,13 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->startOfMonth()->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        $refunds = $this->revenue->refundSummary($companyId, $branchId, $from, $to);
+        $refunds = $this->revenue->refundSummary($organizationId, $branchId, $from, $to);
 
         return view('admin.billing.reports.refunds', compact('refunds', 'from', 'to'));
     }
@@ -89,13 +89,13 @@ class BillingReportController extends Controller
     {
         Gate::authorize('billing.report.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->startOfMonth()->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        $discounts = $this->revenue->discountSummary($companyId, $branchId, $from, $to);
+        $discounts = $this->revenue->discountSummary($organizationId, $branchId, $from, $to);
 
         return view('admin.billing.reports.discounts', compact('discounts', 'from', 'to'));
     }

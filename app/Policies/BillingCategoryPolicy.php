@@ -37,6 +37,6 @@ class BillingCategoryPolicy
 
     private function inScope(User $user, BillingCategory $category): bool
     {
-        return $user->companies()->where('companies.id', $category->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $category->organization_id)->exists();
     }
 }

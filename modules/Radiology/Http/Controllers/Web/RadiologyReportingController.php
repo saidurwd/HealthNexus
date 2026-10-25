@@ -15,10 +15,10 @@ class RadiologyReportingController extends Controller
     {
         Gate::authorize('radiology.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $volume = RadiologyOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('ordered_at', [$from, $to])
             ->selectRaw('DATE(ordered_at) as day, count(*) as total')
             ->groupBy('day')
@@ -32,13 +32,13 @@ class RadiologyReportingController extends Controller
     {
         Gate::authorize('radiology.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
-        // Joined against radiology_modalities (which also has company_id/branch_id) — the
+        // Joined against radiology_modalities (which also has organization_id/branch_id) — the
         // forTenant() scope's unqualified columns would be ambiguous here, so scope explicitly
         // against the examinations table instead.
         $utilization = RadiologyExamination::query()
-            ->where('radiology_examinations.company_id', $companyId)
+            ->where('radiology_examinations.organization_id', $organizationId)
             ->when($branchId, fn ($q) => $q->where('radiology_examinations.branch_id', $branchId))
             ->whereBetween('completed_at', [$from, $to])
             ->whereNotNull('modality_id')
@@ -55,10 +55,10 @@ class RadiologyReportingController extends Controller
     {
         Gate::authorize('radiology.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $examinations = RadiologyExamination::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('completed_at', [$from, $to])
             ->whereNotNull('started_at')
             ->whereNotNull('completed_at')
@@ -76,10 +76,10 @@ class RadiologyReportingController extends Controller
     {
         Gate::authorize('radiology.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $findings = \App\Models\Radiology\RadiologyCriticalFinding::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('detected_at', [$from, $to])
             ->with(['report.examination.orderItem.radiologyOrder.patient'])
             ->latest('detected_at')
@@ -90,11 +90,11 @@ class RadiologyReportingController extends Controller
 
     private function scopeAndRange(Request $request): array
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $from = $request->input('from', now()->startOfMonth()->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        return [$companyId, $branchId, $from, $to];
+        return [$organizationId, $branchId, $from, $to];
     }
 }

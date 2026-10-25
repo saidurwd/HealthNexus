@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class NursingShift extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'name', 'start_time', 'end_time', 'grace_period_minutes', 'is_active',
+        'organization_id', 'branch_id', 'name', 'start_time', 'end_time', 'grace_period_minutes', 'is_active',
     ];
 
     protected function casts(): array
@@ -15,9 +15,9 @@ class NursingShift extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)
+        return $query->where('organization_id', $organizationId)
             ->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

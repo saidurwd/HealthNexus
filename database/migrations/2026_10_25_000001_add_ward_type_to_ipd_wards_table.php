@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::table('ipd_wards', function (Blueprint $table) {
             $table->string('ward_type')->default('general')->after('name');
-            $table->index(['company_id', 'branch_id', 'ward_type']);
+            $table->index(['organization_id', 'branch_id', 'ward_type']);
         });
     }
 
     public function down(): void
     {
         Schema::table('ipd_wards', function (Blueprint $table) {
-            $table->dropIndex(['company_id', 'branch_id', 'ward_type']);
+            $table->dropIndex(['organization_id', 'branch_id', 'ward_type']);
             $table->dropColumn('ward_type');
         });
     }

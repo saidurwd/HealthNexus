@@ -17,7 +17,7 @@ class ProviderController extends Controller
         $user = $request->user();
 
         $providers = Provider::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->where('status', 'active')
             ->with(['department', 'specialty'])
             ->get();

@@ -24,10 +24,10 @@ class NursingMarController extends Controller
     {
         $this->authorize('viewAny', NursingMedicationAdministration::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $mar = NursingMedicationAdministration::forTenant($companyId, $branchId)
+        $mar = NursingMedicationAdministration::forTenant($organizationId, $branchId)
             ->with(['patient', 'admission', 'medication'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->input('episode_id'), fn ($q) => $q->where('episode_id', $request->input('episode_id')))

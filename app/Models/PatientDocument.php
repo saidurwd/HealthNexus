@@ -12,7 +12,7 @@ class PatientDocument extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'file_name',
         'file_path',
@@ -27,9 +27,9 @@ class PatientDocument extends Model
         'file_size' => 'integer',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function patient(): BelongsTo

@@ -24,7 +24,7 @@ class DetectMissingIcuDocumentation implements ShouldQueue
     {
         $episodes = IcuEpisode::query()->whereNull('discharged_at')->with(['patient'])->get();
 
-        foreach ($episodes->groupBy('company_id') as $companyId => $group) {
+        foreach ($episodes->groupBy('organization_id') as $organizationId => $group) {
             $missing = $group->filter(function (IcuEpisode $episode) {
                 $hasRecentNote = $episode->progressNotes()->where('created_at', '>=', now()->subDay())->exists();
                 $hasRecentObservation = $episode->observations()->where('observed_at', '>=', now()->subDay())->exists();
@@ -37,7 +37,7 @@ class DetectMissingIcuDocumentation implements ShouldQueue
             }
 
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['icu_charge_nurse', 'icu_manager']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
                 ->get();
 
             foreach ($missing as $episode) {

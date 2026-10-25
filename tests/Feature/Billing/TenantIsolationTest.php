@@ -9,7 +9,7 @@ use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingPaymentMethod;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Billing\InvoiceLifecycleService;
@@ -21,13 +21,13 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 /**
- * Company A's billing user must not be able to view or act on Company B's invoices/payments,
+ * Organization A's billing user must not be able to view or act on Organization B's invoices/payments,
  * even with full billing.* permissions, since those permissions are not tenant-scoped by
- * themselves — every policy re-checks company/branch membership server-side.
+ * themselves — every policy re-checks organization/branch membership server-side.
  */
 class TenantIsolationTest extends BillingTestCase
 {
-    private Company $otherCompany;
+    private Organization $otherOrganization;
 
     private Branch $otherBranch;
 
@@ -48,33 +48,33 @@ class TenantIsolationTest extends BillingTestCase
             $this->user->givePermissionTo($permission);
         }
 
-        $this->otherCompany = Company::factory()->create();
-        $this->otherBranch = Branch::factory()->create(['company_id' => $this->otherCompany->id]);
+        $this->otherOrganization = Organization::factory()->create();
+        $this->otherBranch = Branch::factory()->create(['organization_id' => $this->otherOrganization->id]);
 
         $otherUser = User::factory()->create();
         Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
 
-        $patient = Patient::factory()->create(['company_id' => $this->otherCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->otherOrganization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->otherCompany->id, 'branch_id' => null,
+            'organization_id' => $this->otherOrganization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $item = BillingItem::create([
-            'company_id' => $this->otherCompany->id, 'branch_id' => null,
+            'organization_id' => $this->otherOrganization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
         ]);
 
         $method = BillingPaymentMethod::create([
-            'company_id' => $this->otherCompany->id, 'branch_id' => null,
+            'organization_id' => $this->otherOrganization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 
         $charge = BillingCharge::create([
-            'company_id' => $this->otherCompany->id, 'branch_id' => $this->otherBranch->id,
+            'organization_id' => $this->otherOrganization->id, 'branch_id' => $this->otherBranch->id,
             'patient_id' => $patient->id, 'billing_item_id' => $item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '500.00', 'gross_amount' => '500.00',
@@ -82,7 +82,7 @@ class TenantIsolationTest extends BillingTestCase
             'net_amount' => '500.00', 'charged_at' => now(),
         ]);
 
-        app(TenantContextResolver::class)->setCompanyId($this->otherCompany->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->otherOrganization->id);
         app(TenantContextResolver::class)->setBranchId($this->otherBranch->id);
 
         $invoices = app(InvoiceService::class);
@@ -90,7 +90,7 @@ class TenantIsolationTest extends BillingTestCase
         $payments = app(PaymentService::class);
 
         $this->otherInvoice = $invoices->createDraft($patient, [
-            'company_id' => $this->otherCompany->id, 'branch_id' => $this->otherBranch->id,
+            'organization_id' => $this->otherOrganization->id, 'branch_id' => $this->otherBranch->id,
         ], $otherUser);
         $invoices->addCharges($this->otherInvoice, new Collection([$charge]));
         $this->otherInvoice = $lifecycle->finalize($this->otherInvoice, $otherUser);
@@ -100,28 +100,28 @@ class TenantIsolationTest extends BillingTestCase
         ], $otherUser);
 
         // Restore this test's own tenant context (BillingTestCase::setUp already set it, but
-        // creating the other company's fixtures above overwrote the resolver singleton).
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        // creating the other organization's fixtures above overwrote the resolver singleton).
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(TenantContextResolver::class)->setBranchId($this->branch->id);
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
     }
 
-    public function test_cannot_view_another_companys_invoice(): void
+    public function test_cannot_view_another_organizations_invoice(): void
     {
         $response = $this->get('/admin/billing/invoices/'.$this->otherInvoice->id);
 
         $response->assertForbidden();
     }
 
-    public function test_cannot_view_another_companys_payment(): void
+    public function test_cannot_view_another_organizations_payment(): void
     {
         $response = $this->get('/admin/billing/payments/'.$this->otherPayment->id);
 
         $response->assertForbidden();
     }
 
-    public function test_invoice_index_only_lists_own_companys_invoices(): void
+    public function test_invoice_index_only_lists_own_organizations_invoices(): void
     {
         $response = $this->get('/admin/billing/invoices');
 
@@ -131,17 +131,17 @@ class TenantIsolationTest extends BillingTestCase
         });
     }
 
-    public function test_cannot_finalize_another_companys_invoice(): void
+    public function test_cannot_finalize_another_organizations_invoice(): void
     {
         $response = $this->post('/admin/billing/invoices/'.$this->otherInvoice->id.'/finalize');
 
         $response->assertForbidden();
     }
 
-    public function test_forTenant_scope_excludes_other_companys_rows_at_the_query_level(): void
+    public function test_forTenant_scope_excludes_other_organizations_rows_at_the_query_level(): void
     {
         $ids = BillingInvoice::query()
-            ->forTenant($this->company->id)
+            ->forTenant($this->organization->id)
             ->pluck('id');
 
         $this->assertFalse($ids->contains($this->otherInvoice->id));

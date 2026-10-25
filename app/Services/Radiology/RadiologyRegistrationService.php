@@ -34,12 +34,12 @@ class RadiologyRegistrationService
     {
         return DB::transaction(function () use ($encounter, $clinicalOrder) {
             $order = RadiologyOrder::create([
-                'company_id' => $clinicalOrder->company_id,
+                'organization_id' => $clinicalOrder->organization_id,
                 'branch_id' => $clinicalOrder->branch_id,
                 'patient_id' => $clinicalOrder->patient_id,
                 'encounter_id' => $encounter->id,
                 'clinical_order_id' => $clinicalOrder->id,
-                'order_number' => $this->numbers->generateOrderNumber($clinicalOrder->company_id, $clinicalOrder->branch_id),
+                'order_number' => $this->numbers->generateOrderNumber($clinicalOrder->organization_id, $clinicalOrder->branch_id),
                 'priority' => $clinicalOrder->priority ?? 'routine',
                 'status' => 'ordered',
                 'ordered_by' => $clinicalOrder->ordered_by,
@@ -48,7 +48,7 @@ class RadiologyRegistrationService
             ]);
 
             foreach ($clinicalOrder->items as $clinicalItem) {
-                $procedure = $this->matchProcedure($clinicalOrder->company_id, $clinicalItem->item_code, $clinicalItem->item_name);
+                $procedure = $this->matchProcedure($clinicalOrder->organization_id, $clinicalItem->item_code, $clinicalItem->item_name);
 
                 $order->items()->create([
                     'procedure_id' => $procedure?->id,
@@ -61,7 +61,7 @@ class RadiologyRegistrationService
 
                 if ($procedure) {
                     $this->charges->createFromClinicalEvent($clinicalItem, 'radiology_procedure', $procedure->code, [
-                        'company_id' => $clinicalOrder->company_id,
+                        'organization_id' => $clinicalOrder->organization_id,
                         'branch_id' => $clinicalOrder->branch_id,
                         'patient_id' => $clinicalOrder->patient_id,
                         'encounter_id' => $encounter->id,
@@ -71,7 +71,7 @@ class RadiologyRegistrationService
                 }
             }
 
-            $accessionNumber = $this->numbers->generateAccessionNumber($clinicalOrder->company_id, $clinicalOrder->branch_id);
+            $accessionNumber = $this->numbers->generateAccessionNumber($clinicalOrder->organization_id, $clinicalOrder->branch_id);
 
             $order->update([
                 'accession_number' => $accessionNumber,
@@ -87,9 +87,9 @@ class RadiologyRegistrationService
         });
     }
 
-    private function matchProcedure(int $companyId, ?string $itemCode, string $itemName): ?RadiologyProcedure
+    private function matchProcedure(int $organizationId, ?string $itemCode, string $itemName): ?RadiologyProcedure
     {
-        $query = RadiologyProcedure::query()->forTenant($companyId)->where('is_active', true);
+        $query = RadiologyProcedure::query()->forTenant($organizationId)->where('is_active', true);
 
         if ($itemCode) {
             $byCode = (clone $query)->where('code', $itemCode)->first();

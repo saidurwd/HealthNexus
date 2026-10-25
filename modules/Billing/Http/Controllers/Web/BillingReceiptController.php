@@ -13,11 +13,11 @@ class BillingReceiptController extends Controller
     {
         $this->authorize('viewAny', BillingReceipt::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $receipts = BillingReceipt::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['payment.patient', 'invoice'])
             ->latest('issued_at')
             ->paginate(20);
@@ -29,7 +29,7 @@ class BillingReceiptController extends Controller
     {
         $this->authorize('view', $receipt);
 
-        $receipt->load(['payment.patient', 'payment.method', 'invoice', 'issuedBy', 'branch', 'company']);
+        $receipt->load(['payment.patient', 'payment.method', 'invoice', 'issuedBy', 'branch', 'organization']);
 
         return view('admin.billing.receipts.show', compact('receipt'));
     }

@@ -19,10 +19,10 @@ class OtControllerSmokeTest extends OtTestCase
         $completedSurgery = $this->progressToCompleted($this->makeDaySurgery());
         app(OtRecoveryService::class)->admitToRecovery($completedSurgery);
 
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $this->company->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
         $surgeryRequest = app(OtSurgeryRequestService::class)->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
         ], $this->user);
 
@@ -54,7 +54,7 @@ class OtControllerSmokeTest extends OtTestCase
             '/api/v1/ot/surgeries/'.$surgery->id,
             '/api/v1/ot/surgery-requests',
         ] as $url) {
-            app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+            app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
             app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
             $this->getJson($url)->assertOk();
         }

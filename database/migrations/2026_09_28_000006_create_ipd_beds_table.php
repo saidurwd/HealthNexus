@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_beds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('room_id')->constrained('ipd_rooms')->cascadeOnDelete();
             $table->foreignId('bed_type_id')->nullable()->constrained('ipd_bed_types')->nullOnDelete();
@@ -32,8 +32,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'bed_code']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'bed_code']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('room_id');
         });
     }

@@ -22,11 +22,11 @@ class IpdRoomController extends Controller
     {
         Gate::authorize('ipd.room.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $rooms = IpdRoom::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('ward')
             ->when($request->filled('ward_id'), fn ($q) => $q->where('ward_id', $request->input('ward_id')))
             ->orderBy('ward_id')
@@ -34,7 +34,7 @@ class IpdRoomController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        $wards = IpdWard::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $wards = IpdWard::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.rooms.index', compact('rooms', 'wards'));
     }
@@ -43,8 +43,8 @@ class IpdRoomController extends Controller
     {
         Gate::authorize('ipd.room.create');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $wards = IpdWard::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $wards = IpdWard::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.rooms.create', compact('wards'));
     }
@@ -54,7 +54,7 @@ class IpdRoomController extends Controller
         Gate::authorize('ipd.room.create');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'ward_id' => ['required', 'integer', 'exists:ipd_wards,id'],
             'room_number' => ['required', 'string', 'max:50'],
@@ -78,7 +78,7 @@ class IpdRoomController extends Controller
     {
         Gate::authorize('ipd.room.update');
 
-        $wards = IpdWard::query()->forTenant($room->company_id)->where('is_active', true)->orderBy('name')->get();
+        $wards = IpdWard::query()->forTenant($room->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.rooms.edit', compact('room', 'wards'));
     }

@@ -17,7 +17,7 @@ class PatientPolicy
 
     public function view(User $user, Patient $patient): bool
     {
-        return $user->companies()->where('companies.id', $patient->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $patient->organization_id)->exists();
     }
 
     public function merge(User $user): bool
@@ -72,6 +72,6 @@ class PatientPolicy
 
     private function inScope(User $user, Patient $patient): bool
     {
-        return $user->companies()->where('companies.id', $patient->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $patient->organization_id)->exists();
     }
 }

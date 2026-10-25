@@ -19,28 +19,28 @@ class GenerateIcuDailyCensus implements ShouldQueue
         $today = now()->toDateString();
 
         $census = IcuEpisode::query()
-            ->selectRaw('company_id, count(*) as current_patients')
+            ->selectRaw('organization_id, count(*) as current_patients')
             ->whereNull('discharged_at')
-            ->groupBy('company_id')
+            ->groupBy('organization_id')
             ->get();
 
         $admissionsToday = IcuEpisode::query()
-            ->selectRaw('company_id, count(*) as admissions')
+            ->selectRaw('organization_id, count(*) as admissions')
             ->whereDate('admitted_at', $today)
-            ->groupBy('company_id')
+            ->groupBy('organization_id')
             ->get();
 
         $dischargesToday = IcuEpisode::query()
-            ->selectRaw('company_id, count(*) as discharges')
+            ->selectRaw('organization_id, count(*) as discharges')
             ->whereDate('discharged_at', $today)
-            ->groupBy('company_id')
+            ->groupBy('organization_id')
             ->get();
 
         Log::channel('single')->info('ICU daily census', [
             'date' => $today,
-            'current_patients' => $census->pluck('current_patients', 'company_id'),
-            'admissions_today' => $admissionsToday->pluck('admissions', 'company_id'),
-            'discharges_today' => $dischargesToday->pluck('discharges', 'company_id'),
+            'current_patients' => $census->pluck('current_patients', 'organization_id'),
+            'admissions_today' => $admissionsToday->pluck('admissions', 'organization_id'),
+            'discharges_today' => $dischargesToday->pluck('discharges', 'organization_id'),
         ]);
     }
 }

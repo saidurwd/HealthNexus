@@ -14,7 +14,7 @@ class StoreEncounterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['required', 'integer', 'exists:branches,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'appointment_id' => ['nullable', 'integer', 'exists:appointments,id'],

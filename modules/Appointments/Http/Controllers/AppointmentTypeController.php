@@ -17,8 +17,8 @@ class AppointmentTypeController extends Controller
     {
         $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $types = AppointmentType::forCompany($companyId)->orderBy('sort_order')->paginate(20);
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $types = AppointmentType::forOrganization($organizationId)->orderBy('sort_order')->paginate(20);
 
         return view('admin.appointment-types.index', compact('types'));
     }
@@ -35,7 +35,7 @@ class AppointmentTypeController extends Controller
         $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $this->validated($request);
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
 
         $type = AppointmentType::create($validated);
 

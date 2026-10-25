@@ -4,7 +4,7 @@ namespace App\Services\Appointments;
 
 use App\Models\AppointmentNumberCounter;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -16,27 +16,27 @@ use Illuminate\Support\Facades\DB;
  */
 class AppointmentNumberGenerator
 {
-    public function generateAppointmentNumber(Company $company): string
+    public function generateAppointmentNumber(Organization $organization): string
     {
-        $prefix = strtoupper(substr($company->code, 0, 3));
-        $sequence = $this->nextSequence($company->id, null, 'appointment');
+        $prefix = strtoupper(substr($organization->code, 0, 3));
+        $sequence = $this->nextSequence($organization->id, null, 'appointment');
 
         return sprintf('%s-APT-%08d', $prefix, $sequence);
     }
 
-    public function generateTokenNumber(Company $company, ?Branch $branch): string
+    public function generateTokenNumber(Organization $organization, ?Branch $branch): string
     {
-        $prefix = strtoupper(substr($company->code, 0, 3)).strtoupper(substr($branch?->code ?? 'BR', 0, 2));
-        $sequence = $this->nextSequence($company->id, $branch?->id, 'token');
+        $prefix = strtoupper(substr($organization->code, 0, 3)).strtoupper(substr($branch?->code ?? 'BR', 0, 2));
+        $sequence = $this->nextSequence($organization->id, $branch?->id, 'token');
 
         return sprintf('%s-%08d', $prefix, $sequence);
     }
 
-    private function nextSequence(int $companyId, ?int $branchId, string $type): int
+    private function nextSequence(int $organizationId, ?int $branchId, string $type): int
     {
-        return DB::transaction(function () use ($companyId, $branchId, $type): int {
+        return DB::transaction(function () use ($organizationId, $branchId, $type): int {
             $counter = AppointmentNumberCounter::query()
-                ->where('company_id', $companyId)
+                ->where('organization_id', $organizationId)
                 ->where('branch_id', $branchId)
                 ->where('counter_type', $type)
                 ->lockForUpdate()
@@ -44,7 +44,7 @@ class AppointmentNumberGenerator
 
             if (! $counter) {
                 $counter = AppointmentNumberCounter::create([
-                    'company_id' => $companyId,
+                    'organization_id' => $organizationId,
                     'branch_id' => $branchId,
                     'counter_type' => $type,
                     'last_number' => 0,

@@ -4,7 +4,7 @@ namespace Tests\Feature\Appointments;
 
 use App\Models\Appointment;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -30,11 +30,11 @@ class AppointmentDocumentTest extends TestCase
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         Storage::fake('local');
 
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $company->id]);
+        $this->user->organizations()->attach($organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $organization->id]);
 
         foreach (['appointments.view', 'appointments.update'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -42,11 +42,11 @@ class AppointmentDocumentTest extends TestCase
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $company->id);
-        app(TenantContextResolver::class)->setCompanyId($company->id);
+        session()->put('tenant_organization_id', $organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
-        $this->appointment = Appointment::factory()->create(['company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
+        $this->appointment = Appointment::factory()->create(['organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id]);
     }
 
     public function test_can_upload_a_document(): void

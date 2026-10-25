@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
 use App\Models\PatientDocument;
@@ -19,7 +19,7 @@ class PatientControllerTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -28,13 +28,13 @@ class PatientControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
@@ -42,7 +42,7 @@ class PatientControllerTest extends TestCase
         Permission::create(['name' => 'patients.merge', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.documents.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.documents.manage', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('patients.view');
         $this->user->givePermissionTo('patients.create');
         $this->user->givePermissionTo('patients.update');
@@ -53,8 +53,8 @@ class PatientControllerTest extends TestCase
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
     }
 
     public function test_user_can_view_patients_index(): void
@@ -68,7 +68,7 @@ class PatientControllerTest extends TestCase
     public function test_user_can_create_patient(): void
     {
         $patientData = [
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'first_name' => 'John',
             'middle_name' => 'Doe',
@@ -92,13 +92,13 @@ class PatientControllerTest extends TestCase
         $this->assertDatabaseHas('patients', [
             'first_name' => 'John',
             'last_name' => 'Smith',
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
     }
 
     public function test_user_can_view_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get('/admin/patients/'.$patient->id);
 
@@ -108,7 +108,7 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_update_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->put('/admin/patients/'.$patient->id, [
             'first_name' => 'Jane',
@@ -125,7 +125,7 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_delete_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->delete('/admin/patients/'.$patient->id);
 
@@ -138,13 +138,13 @@ class PatientControllerTest extends TestCase
     public function test_user_can_search_patients(): void
     {
         Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'Alice',
             'last_name' => 'Anderson',
             'national_identifier' => 'NID-001',
         ]);
         Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'Bob',
             'last_name' => 'Brown',
         ]);
@@ -158,7 +158,7 @@ class PatientControllerTest extends TestCase
     public function test_user_can_detect_duplicates(): void
     {
         Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'John',
             'last_name' => 'Smith',
             'national_identifier' => 'NID-123',
@@ -178,17 +178,17 @@ class PatientControllerTest extends TestCase
     public function test_user_can_merge_patients(): void
     {
         $master = Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'Master',
             'last_name' => 'Patient',
         ]);
         $duplicate = Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'Duplicate',
             'last_name' => 'Patient',
         ]);
 
-        PatientAllergy::factory()->create(['company_id' => $this->company->id, 'patient_id' => $duplicate->id]);
+        PatientAllergy::factory()->create(['organization_id' => $this->organization->id, 'patient_id' => $duplicate->id]);
 
         $response = $this->post('/admin/patients/merge', [
             'master_patient_id' => $master->id,
@@ -202,9 +202,9 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_view_patient_timeline(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         PatientAllergy::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $patient->id,
         ]);
 
@@ -216,10 +216,10 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_view_patient_documents(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         PatientDocument::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $patient->id,
         ]);
 
@@ -231,7 +231,7 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_add_allergy(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->post('/admin/patients/'.$patient->id.'/allergies', [
             'substance' => 'Penicillin',
@@ -250,7 +250,7 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_add_medical_history(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->post('/admin/patients/'.$patient->id.'/history', [
             'condition' => 'Hypertension',
@@ -268,9 +268,9 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_delete_allergy(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $allergy = PatientAllergy::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $patient->id,
         ]);
 
@@ -282,9 +282,9 @@ class PatientControllerTest extends TestCase
 
     public function test_user_can_delete_history(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $history = PatientHistory::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $patient->id,
         ]);
 

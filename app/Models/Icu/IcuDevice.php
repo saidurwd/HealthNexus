@@ -15,7 +15,7 @@ class IcuDevice extends Model
     public const STATUS_REMOVED = 'removed';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'patient_id', 'device_type', 'insertion_date',
+        'organization_id', 'branch_id', 'episode_id', 'patient_id', 'device_type', 'insertion_date',
         'site', 'side', 'inserted_by', 'indication', 'status', 'care_schedule', 'last_assessment_at',
         'removal_date', 'removal_by', 'complication',
     ];
@@ -31,8 +31,8 @@ class IcuDevice extends Model
     public function removalBy(): BelongsTo { return $this->belongsTo(User::class, 'removal_by'); }
     public function assessments(): HasMany { return $this->hasMany(IcuDeviceAssessment::class, 'device_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

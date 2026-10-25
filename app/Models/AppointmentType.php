@@ -12,7 +12,7 @@ class AppointmentType extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'code',
         'name',
         'color',
@@ -29,13 +29,13 @@ class AppointmentType extends Model
         'sort_order' => 'integer',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
-    public function scopeForCompany($query, ?int $companyId)
+    public function scopeForOrganization($query, ?int $organizationId)
     {
-        return $query->where(fn ($q) => $q->whereNull('company_id')->orWhere('company_id', $companyId));
+        return $query->where(fn ($q) => $q->whereNull('organization_id')->orWhere('organization_id', $organizationId));
     }
 }

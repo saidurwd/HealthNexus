@@ -32,8 +32,8 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ $currentCompany ? $currentCompany->departments()->count() : 0 }}</h3>
-                    <p>Departments (current company)</p>
+                    <h3>{{ $currentOrganization ? $currentOrganization->departments()->count() : 0 }}</h3>
+                    <p>Departments (current organization)</p>
                 </div>
                 <div class="icon">
                     <i class="bi bi-diagram-3"></i>
@@ -54,12 +54,12 @@
                             <div class="info-box bg-light">
                                 <span class="info-box-icon bg-info"><i class="bi bi-building"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-text">Company</span>
+                                    <span class="info-box-text">Organization</span>
                                     <span class="info-box-number">
-                                        @if($currentCompany)
-                                            {{ $currentCompany->name }} ({{ $currentCompany->code }})
+                                        @if($currentOrganization)
+                                            {{ $currentOrganization->name }} ({{ $currentOrganization->code }})
                                         @else
-                                            No company selected
+                                            No organization selected
                                         @endif
                                     </span>
                                 </div>
@@ -105,7 +105,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Your Companies</h3>
+                    <h3 class="card-title">Your Organizations</h3>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-striped">
@@ -118,24 +118,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($userCompanies as $userCompany)
-                                <tr class="{{ $currentCompany && $currentCompany->id === $userCompany->id ? 'table-active' : '' }}">
-                                    <td>{{ $userCompany->name }}</td>
-                                    <td>{{ $userCompany->code }}</td>
+                            @forelse($userOrganizations as $userOrganization)
+                                <tr class="{{ $currentOrganization && $currentOrganization->id === $userOrganization->id ? 'table-active' : '' }}">
+                                    <td>{{ $userOrganization->name }}</td>
+                                    <td>{{ $userOrganization->code }}</td>
                                     <td>
-                                        <span class="badge {{ $userCompany->is_active ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $userCompany->is_active ? 'Active' : 'Inactive' }}
+                                        <span class="badge {{ $userOrganization->is_active ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $userOrganization->is_active ? 'Active' : 'Inactive' }}
                                         </span>
                                     </td>
                                     <td>
                                         <span class="badge bg-info">
-                                            {{ $userCompany->access_level ?? 'N/A' }}
+                                            {{ $userOrganization->access_level ?? 'N/A' }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">You are not assigned to any companies.</td>
+                                    <td colspan="4" class="text-center">You are not assigned to any organizations.</td>
                                 </tr>
                             @endforelse
                         </tbody>

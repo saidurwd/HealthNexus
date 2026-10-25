@@ -11,11 +11,11 @@ class BillingReceipt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'branch_id', 'payment_id', 'invoice_id', 'receipt_number', 'status', 'issued_at', 'issued_by', 'voided_at', 'voided_by', 'voided_reason'];
+    protected $fillable = ['organization_id', 'branch_id', 'payment_id', 'invoice_id', 'receipt_number', 'status', 'issued_at', 'issued_by', 'voided_at', 'voided_by', 'voided_reason'];
 
     protected function casts(): array { return ['issued_at' => 'datetime', 'voided_at' => 'datetime']; }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function payment(): BelongsTo { return $this->belongsTo(BillingPayment::class); }
     public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
@@ -24,8 +24,8 @@ class BillingReceipt extends Model
 
     public function isVoided(): bool { return $this->status === 'voided'; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

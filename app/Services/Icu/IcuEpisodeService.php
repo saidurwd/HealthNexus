@@ -51,7 +51,7 @@ class IcuEpisodeService
                 $this->bedAllocation->assign($admission, $bed, $user, 'ICU admission');
             } else {
                 $admission = $this->ipdAdmission->admit([
-                    'company_id' => $request->company_id,
+                    'organization_id' => $request->organization_id,
                     'branch_id' => $request->branch_id,
                     'patient_id' => $request->patient_id,
                     'specialty_id' => $bedData['specialty_id'] ?? null,
@@ -63,9 +63,9 @@ class IcuEpisodeService
             }
 
             $episode = IcuEpisode::create([
-                'company_id' => $request->company_id,
+                'organization_id' => $request->organization_id,
                 'branch_id' => $request->branch_id,
-                'episode_number' => $this->numbers->generateEpisodeNumber($request->company_id, $request->branch_id),
+                'episode_number' => $this->numbers->generateEpisodeNumber($request->organization_id, $request->branch_id),
                 'patient_id' => $request->patient_id,
                 'encounter_id' => $request->encounter_id,
                 'admission_id' => $admission->id,
@@ -83,7 +83,7 @@ class IcuEpisodeService
             ]);
 
             IcuEpisodeEvent::create([
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'episode_id' => $episode->id,
                 'event_type' => IcuEpisodeEvent::TYPE_ADMITTED,

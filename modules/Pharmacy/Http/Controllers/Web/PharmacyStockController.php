@@ -25,10 +25,10 @@ class PharmacyStockController extends Controller
     {
         $this->authorize('viewAny', PharmacyStore::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $stores = PharmacyStore::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $stores = PharmacyStore::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
         $storeId = $request->integer('store_id') ?: $stores->first()?->id;
 
         $stockRows = PharmacyStock::query()
@@ -47,10 +47,10 @@ class PharmacyStockController extends Controller
     {
         $this->authorize('viewAny', PharmacyBatch::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $batches = PharmacyBatch::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->with('medication')
             ->when($request->filled('search'), fn ($q) => $q->where('batch_number', 'like', '%'.$request->input('search').'%'))
             ->when($request->boolean('near_expiry'), fn ($q) => $q->where('expiry_date', '<=', now()->addDays(90)->toDateString()))
@@ -65,9 +65,9 @@ class PharmacyStockController extends Controller
     {
         \Illuminate\Support\Facades\Gate::authorize('pharmacy.stock.receive');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $stores = PharmacyStore::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $medications = PharmacyMedication::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $stores = PharmacyStore::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $medications = PharmacyMedication::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.pharmacy.stock.receive', compact('stores', 'medications'));
     }

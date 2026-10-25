@@ -15,10 +15,10 @@ return new class extends Migration
         // sessions is validated in ScheduleGenerationService instead, since MySQL has no portable
         // range-exclusion constraint. The new index is added before the old one is dropped
         // because MySQL silently reuses doctor_schedule_unique as the support index for the
-        // company_id foreign key — dropping it first fails with "needed in a foreign key
-        // constraint" unless a replacement leading-company_id index already exists.
+        // organization_id foreign key — dropping it first fails with "needed in a foreign key
+        // constraint" unless a replacement leading-organization_id index already exists.
         Schema::table('doctor_schedules', function (Blueprint $table) {
-            $table->unique(['company_id', 'doctor_id', 'day_of_week', 'start_time'], 'doctor_schedule_session_unique');
+            $table->unique(['organization_id', 'doctor_id', 'day_of_week', 'start_time'], 'doctor_schedule_session_unique');
         });
 
         Schema::table('doctor_schedules', function (Blueprint $table) {
@@ -45,7 +45,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('doctor_schedules', function (Blueprint $table) {
-            $table->unique(['company_id', 'doctor_id', 'day_of_week'], 'doctor_schedule_unique');
+            $table->unique(['organization_id', 'doctor_id', 'day_of_week'], 'doctor_schedule_unique');
         });
 
         Schema::table('doctor_schedules', function (Blueprint $table) {

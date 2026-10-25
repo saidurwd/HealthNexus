@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Every action route-model-binds the surgery/request and re-authorizes through its policy
- * (company/branch scope) — a client-supplied ID is never trusted (spec §65).
+ * (organization/branch scope) — a client-supplied ID is never trusted (spec §65).
  */
 class OtCareController extends Controller
 {
@@ -32,14 +32,14 @@ class OtCareController extends Controller
     {
         $this->authorize('viewAny', OtSurgery::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $today = now()->toDateString();
 
         return ApiResponse::success([
-            'scheduled_today' => OtSurgery::forTenant($companyId, $branchId)->whereDate('scheduled_date', $today)->count(),
-            'in_procedure' => OtSurgery::forTenant($companyId, $branchId)->where('status', OtSurgery::STATUS_IN_PROCEDURE)->count(),
-            'pending_requests' => OtSurgeryRequest::forTenant($companyId, $branchId)->whereIn('status', [OtSurgeryRequest::STATUS_REQUESTED, OtSurgeryRequest::STATUS_PENDING_APPROVAL])->count(),
+            'scheduled_today' => OtSurgery::forTenant($organizationId, $branchId)->whereDate('scheduled_date', $today)->count(),
+            'in_procedure' => OtSurgery::forTenant($organizationId, $branchId)->where('status', OtSurgery::STATUS_IN_PROCEDURE)->count(),
+            'pending_requests' => OtSurgeryRequest::forTenant($organizationId, $branchId)->whereIn('status', [OtSurgeryRequest::STATUS_REQUESTED, OtSurgeryRequest::STATUS_PENDING_APPROVAL])->count(),
         ]);
     }
 
@@ -47,11 +47,11 @@ class OtCareController extends Controller
     {
         $this->authorize('viewAny', OtSurgeryRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::paginated(
-            OtSurgeryRequest::forTenant($companyId, $branchId)->with('patient')->latest('requested_at')->paginate(20)
+            OtSurgeryRequest::forTenant($organizationId, $branchId)->with('patient')->latest('requested_at')->paginate(20)
         );
     }
 
@@ -92,11 +92,11 @@ class OtCareController extends Controller
     {
         $this->authorize('viewAny', OtSurgery::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::paginated(
-            OtSurgery::forTenant($companyId, $branchId)
+            OtSurgery::forTenant($organizationId, $branchId)
                 ->with(['patient', 'theatre', 'primarySurgeon'])
                 ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
                 ->latest('scheduled_date')

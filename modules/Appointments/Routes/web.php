@@ -14,7 +14,7 @@ use Modules\Appointments\Http\Controllers\QueueController;
 
 // Route-level gates mirror the plural appointments.* permission convention enforced by
 // AppointmentPolicy. Previously this whole module (appointments, schedules, queue, OPD) sat
-// behind a single blanket 'can:manage companies' gate, which silently locked doctor/nurse/
+// behind a single blanket 'can:manage organizations' gate, which silently locked doctor/nurse/
 // receptionist out of every appointment route despite them holding the documented
 // appointments.* grants in PermissionSeeder — the same lockout bug already found and fixed for
 // the Patients module in Phase 1.

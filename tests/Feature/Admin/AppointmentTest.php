@@ -6,7 +6,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentSlot;
 use App\Models\AppointmentToken;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Diagnosis;
 use App\Models\DoctorSchedule;
@@ -26,7 +26,7 @@ class AppointmentTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -39,33 +39,33 @@ class AppointmentTest extends TestCase
         Role::create(['name' => 'doctor', 'guard_name' => 'web']);
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['manage companies', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.delete'] as $permission) {
+        foreach (['manage organizations', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.delete'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
 
         $this->patient = Patient::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
     }
 
     public function test_user_can_view_appointments_index(): void
     {
         Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
         ]);
@@ -105,7 +105,7 @@ class AppointmentTest extends TestCase
     public function test_user_can_view_appointment(): void
     {
         $appointment = Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
         ]);
@@ -119,7 +119,7 @@ class AppointmentTest extends TestCase
     public function test_user_can_update_appointment(): void
     {
         $appointment = Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
         ]);
@@ -146,7 +146,7 @@ class AppointmentTest extends TestCase
     public function test_user_can_delete_appointment(): void
     {
         $appointment = Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
         ]);

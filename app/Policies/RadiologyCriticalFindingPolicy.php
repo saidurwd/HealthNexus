@@ -27,7 +27,7 @@ class RadiologyCriticalFindingPolicy
 
     private function inScope(User $user, RadiologyCriticalFinding $finding): bool
     {
-        return $user->companies()->where('companies.id', $finding->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $finding->organization_id)->exists()
             && $user->branches()->where('branches.id', $finding->branch_id)->exists();
     }
 }

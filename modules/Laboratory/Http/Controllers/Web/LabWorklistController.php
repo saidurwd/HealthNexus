@@ -16,11 +16,11 @@ class LabWorklistController extends Controller
     {
         $this->authorize('lab.result.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $items = $this->worklist->query($companyId, $branchId, $request->only(['section_id', 'test_id', 'priority', 'status', 'date']));
-        $sections = LabSection::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $items = $this->worklist->query($organizationId, $branchId, $request->only(['section_id', 'test_id', 'priority', 'status', 'date']));
+        $sections = LabSection::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.worklist.index', compact('items', 'sections'));
     }

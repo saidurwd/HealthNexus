@@ -4,7 +4,7 @@ namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Radiology\RadiologyBodyPart;
 use App\Models\Radiology\RadiologyProcedure;
 use App\Models\Radiology\RadiologySection;
@@ -26,11 +26,11 @@ class RadiologyProcedureController extends Controller
     {
         $this->authorize('viewAny', RadiologyProcedure::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $procedures = RadiologyProcedure::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['section', 'bodyPart'])
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($sub) => $sub
                 ->where('name', 'like', '%'.$request->input('search').'%')
@@ -46,13 +46,13 @@ class RadiologyProcedureController extends Controller
     {
         $this->authorize('create', RadiologyProcedure::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $sections = RadiologySection::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $bodyParts = RadiologyBodyPart::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $sections = RadiologySection::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $bodyParts = RadiologyBodyPart::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.radiology.procedures.create', compact('sections', 'bodyParts', 'companies', 'branches'));
+        return view('admin.radiology.procedures.create', compact('sections', 'bodyParts', 'organizations', 'branches'));
     }
 
     public function store(StoreRadiologyProcedureRequest $request)
@@ -70,8 +70,8 @@ class RadiologyProcedureController extends Controller
     {
         $this->authorize('update', $procedure);
 
-        $sections = RadiologySection::query()->forTenant($procedure->company_id)->where('is_active', true)->orderBy('name')->get();
-        $bodyParts = RadiologyBodyPart::query()->forTenant($procedure->company_id)->where('is_active', true)->orderBy('name')->get();
+        $sections = RadiologySection::query()->forTenant($procedure->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $bodyParts = RadiologyBodyPart::query()->forTenant($procedure->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.radiology.procedures.edit', compact('procedure', 'sections', 'bodyParts'));
     }

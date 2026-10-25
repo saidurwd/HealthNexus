@@ -29,7 +29,7 @@ class IcuEpisode extends Model
     public const STATUS_DISCHARGED = 'discharged';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_number', 'patient_id', 'encounter_id', 'admission_id',
+        'organization_id', 'branch_id', 'episode_number', 'patient_id', 'encounter_id', 'admission_id',
         'admission_request_id', 'icu_unit_id', 'icu_bed_id', 'admission_reason', 'primary_diagnosis_id',
         'admitting_provider_id', 'attending_provider_id', 'priority', 'status', 'blood_requirement',
         'admitted_at', 'discharged_at', 'created_by', 'completed_by', 'completed_at',
@@ -44,7 +44,7 @@ class IcuEpisode extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
     public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
@@ -77,8 +77,8 @@ class IcuEpisode extends Model
     public function dischargeSummary(): HasOne { return $this->hasOne(IcuDischargeSummary::class, 'episode_id'); }
     public function chargeEvents(): HasMany { return $this->hasMany(IcuChargeEvent::class, 'episode_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

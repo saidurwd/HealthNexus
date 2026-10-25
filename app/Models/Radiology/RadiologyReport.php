@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class RadiologyReport extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'examination_id', 'template_id', 'report_number', 'status',
+        'organization_id', 'branch_id', 'examination_id', 'template_id', 'report_number', 'status',
         'radiologist_id', 'clinical_indication', 'technique', 'findings', 'impression', 'recommendation',
         'submitted_at', 'reviewed_by', 'approved_by', 'approved_at',
         'version', 'is_current', 'amended_from_id', 'amendment_reason', 'amended_by',
@@ -27,7 +27,7 @@ class RadiologyReport extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function examination(): BelongsTo { return $this->belongsTo(RadiologyExamination::class, 'examination_id'); }
     public function template(): BelongsTo { return $this->belongsTo(RadiologyReportTemplate::class, 'template_id'); }
@@ -44,8 +44,8 @@ class RadiologyReport extends Model
     public function isFinal(): bool { return in_array($this->status, ['final', 'amended'], true); }
     public function isMutable(): bool { return in_array($this->status, ['draft'], true); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

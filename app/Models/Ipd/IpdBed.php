@@ -25,7 +25,7 @@ class IpdBed extends Model
     public const STATUS_PENDING_DISCHARGE = 'pending_discharge';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'room_id', 'bed_type_id', 'bed_code', 'bed_name',
+        'organization_id', 'branch_id', 'room_id', 'bed_type_id', 'bed_code', 'bed_name',
         'gender_type', 'status', 'isolation_capable', 'icu_capable', 'ventilator_capable',
         'oxygen_available', 'monitor_available', 'is_vip', 'is_pediatric', 'is_maternity',
         'is_bariatric', 'is_accessible', 'is_active',
@@ -48,7 +48,7 @@ class IpdBed extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function room(): BelongsTo { return $this->belongsTo(IpdRoom::class, 'room_id'); }
     public function bedType(): BelongsTo { return $this->belongsTo(IpdBedType::class, 'bed_type_id'); }
@@ -61,9 +61,9 @@ class IpdBed extends Model
         return $this->hasOne(IpdBedAllocation::class, 'bed_id')->whereNull('released_at')->latestOfMany();
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('ipd_beds.company_id', $companyId)
+        return $query->where('ipd_beds.organization_id', $organizationId)
             ->where(fn ($q) => $q->where('ipd_beds.branch_id', $branchId)->orWhereNull('ipd_beds.branch_id'));
     }
 }

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('lab_results', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('lab_order_item_id')->constrained('lab_order_items')->cascadeOnDelete();
             $table->foreignId('test_id')->constrained('lab_tests')->cascadeOnDelete();
@@ -58,7 +58,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['lab_order_item_id', 'is_current']);
-            $table->index(['company_id', 'branch_id', 'result_status']);
+            $table->index(['organization_id', 'branch_id', 'result_status']);
             $table->index(['critical_flag']);
         });
     }

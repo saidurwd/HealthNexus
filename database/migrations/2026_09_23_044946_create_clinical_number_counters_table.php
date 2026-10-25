@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('clinical_number_counters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->cascadeOnDelete();
             $table->enum('counter_type', ['clinical_order', 'prescription']);
             $table->unsignedBigInteger('last_number')->default(0);
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'counter_type'], 'clinical_number_counter_unique');
+            $table->unique(['organization_id', 'branch_id', 'counter_type'], 'clinical_number_counter_unique');
         });
     }
 

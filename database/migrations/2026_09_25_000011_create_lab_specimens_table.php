@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('lab_specimens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('lab_order_id')->constrained('lab_orders')->cascadeOnDelete();
             $table->foreignId('specimen_type_id')->nullable()->constrained('lab_specimen_types')->nullOnDelete();
@@ -30,9 +30,9 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'accession_number']);
-            $table->unique(['company_id', 'barcode']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'accession_number']);
+            $table->unique(['organization_id', 'barcode']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index(['lab_order_id']);
         });
 

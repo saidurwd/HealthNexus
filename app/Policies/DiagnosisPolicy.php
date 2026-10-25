@@ -17,7 +17,7 @@ class DiagnosisPolicy
 
     public function view(User $user, Diagnosis $diagnosis): bool
     {
-        return $user->companies()->where('companies.id', $diagnosis->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $diagnosis->organization_id)->exists();
     }
 
     public function create(User $user): bool

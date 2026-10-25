@@ -23,10 +23,10 @@ class NursingHandoverController extends Controller
     {
         $this->authorize('viewAny', NursingHandover::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $handovers = NursingHandover::forTenant($companyId, $branchId)
+        $handovers = NursingHandover::forTenant($organizationId, $branchId)
             ->with(['episode.patient', 'outgoingNurse', 'incomingNurse'])
             ->when($request->boolean('pending'), fn ($q) => $q->where('status', NursingHandover::STATUS_PENDING_ACKNOWLEDGEMENT))
             ->latest('prepared_at')

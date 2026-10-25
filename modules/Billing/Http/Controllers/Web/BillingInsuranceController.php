@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Billing\BillingInsurancePolicy;
 use App\Models\Billing\BillingInsuranceProvider;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -24,9 +24,9 @@ class BillingInsuranceController extends Controller
     {
         Gate::authorize('insurance.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $providers = BillingInsuranceProvider::query()->forTenant($companyId)->orderBy('name')->paginate(20);
+        $providers = BillingInsuranceProvider::query()->forTenant($organizationId)->orderBy('name')->paginate(20);
 
         return view('admin.billing.insurance.providers.index', compact('providers'));
     }
@@ -35,10 +35,10 @@ class BillingInsuranceController extends Controller
     {
         Gate::authorize('insurance.create');
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.insurance.providers.create', compact('companies', 'branches'));
+        return view('admin.billing.insurance.providers.create', compact('organizations', 'branches'));
     }
 
     public function storeProvider(StoreInsuranceProviderRequest $request)
@@ -76,10 +76,10 @@ class BillingInsuranceController extends Controller
     {
         $this->authorize('viewAny', BillingInsurancePolicy::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $policies = BillingInsurancePolicy::query()
-            ->forTenant($companyId)
+            ->forTenant($organizationId)
             ->with(['provider', 'patient'])
             ->latest()
             ->paginate(20);
@@ -91,12 +91,12 @@ class BillingInsuranceController extends Controller
     {
         $this->authorize('create', BillingInsurancePolicy::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $providers = BillingInsuranceProvider::query()->forTenant($companyId)->where('status', 'active')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $providers = BillingInsuranceProvider::query()->forTenant($organizationId)->where('status', 'active')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.insurance.policies.create', compact('providers', 'companies', 'branches'));
+        return view('admin.billing.insurance.policies.create', compact('providers', 'organizations', 'branches'));
     }
 
     public function storePolicy(StoreInsurancePolicyRequest $request)
@@ -114,7 +114,7 @@ class BillingInsuranceController extends Controller
     {
         $this->authorize('update', $policy);
 
-        $providers = BillingInsuranceProvider::query()->forTenant($policy->company_id)->where('status', 'active')->get();
+        $providers = BillingInsuranceProvider::query()->forTenant($policy->organization_id)->where('status', 'active')->get();
 
         return view('admin.billing.insurance.policies.edit', compact('policy', 'providers'));
     }

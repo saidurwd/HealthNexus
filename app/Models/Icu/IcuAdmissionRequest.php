@@ -29,7 +29,7 @@ class IcuAdmissionRequest extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'patient_id', 'encounter_id', 'admission_id', 'requesting_provider_id',
+        'organization_id', 'branch_id', 'patient_id', 'encounter_id', 'admission_id', 'requesting_provider_id',
         'admission_reason', 'primary_diagnosis_id', 'priority', 'is_emergency', 'override_reason',
         'status', 'workflow_instance_id', 'requested_by', 'accepted_by', 'accepted_at',
         'rejected_at', 'rejection_reason', 'cancelled_at', 'cancelled_by', 'cancellation_reason',
@@ -45,7 +45,7 @@ class IcuAdmissionRequest extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
     public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
@@ -58,8 +58,8 @@ class IcuAdmissionRequest extends Model
     public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
     public function episode(): HasOne { return $this->hasOne(IcuEpisode::class, 'admission_request_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

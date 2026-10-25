@@ -17,7 +17,7 @@ class PharmacyOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'department_id', 'prescription_id', 'patient_id',
+        'organization_id', 'branch_id', 'department_id', 'prescription_id', 'patient_id',
         'encounter_id', 'order_number', 'status', 'ordered_by', 'ordered_at',
         'cancelled_by', 'cancelled_at', 'cancellation_reason',
     ];
@@ -27,7 +27,7 @@ class PharmacyOrder extends Model
         return ['ordered_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function department(): BelongsTo { return $this->belongsTo(Department::class); }
     public function prescription(): BelongsTo { return $this->belongsTo(Prescription::class); }
@@ -37,8 +37,8 @@ class PharmacyOrder extends Model
     public function items(): HasMany { return $this->hasMany(PharmacyOrderItem::class, 'order_id'); }
     public function dispensings(): HasMany { return $this->hasMany(PharmacyDispensing::class, 'order_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

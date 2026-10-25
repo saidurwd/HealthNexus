@@ -12,7 +12,7 @@ class PatientAlert extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'alert_type',
         'title',
@@ -33,9 +33,9 @@ class PatientAlert extends Model
         'resolved_at' => 'datetime',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function patient(): BelongsTo

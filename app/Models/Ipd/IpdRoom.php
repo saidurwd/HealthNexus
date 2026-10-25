@@ -13,7 +13,7 @@ class IpdRoom extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'ward_id', 'room_number', 'room_type', 'capacity',
+        'organization_id', 'branch_id', 'ward_id', 'room_number', 'room_type', 'capacity',
         'gender_policy', 'isolation_capable', 'is_vip', 'rate_category', 'is_active',
     ];
 
@@ -27,13 +27,13 @@ class IpdRoom extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function ward(): BelongsTo { return $this->belongsTo(IpdWard::class, 'ward_id'); }
     public function beds(): HasMany { return $this->hasMany(IpdBed::class, 'room_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

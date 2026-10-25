@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class Organization extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -45,7 +45,7 @@ class Company extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_companies')
+        return $this->belongsToMany(User::class, 'user_organizations')
             ->withPivot('access_level', 'is_default', 'metadata')
             ->withTimestamps();
     }

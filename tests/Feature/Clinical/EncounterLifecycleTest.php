@@ -21,15 +21,15 @@ class EncounterLifecycleTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $company = \App\Models\Company::factory()->create();
-        $branch = \App\Models\Branch::factory()->create(['company_id' => $company->id]);
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $company->id]);
+        $organization = \App\Models\Organization::factory()->create();
+        $branch = \App\Models\Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = \App\Models\Patient::factory()->create(['organization_id' => $organization->id]);
 
-        $this->user->companies()->attach($company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $company->id]);
+        $this->user->organizations()->attach($organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);
 
         $this->encounter = Encounter::factory()->create([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'branch_id' => $branch->id,
             'patient_id' => $patient->id,
             'status' => 'registered',

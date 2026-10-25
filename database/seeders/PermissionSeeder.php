@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             // Core Administration
-            'manage companies',
+            'manage organizations',
             'manage branches',
             'manage departments',
             'manage users',
@@ -645,7 +645,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'manage companies', 'manage branches', 'manage departments', 'manage users', 'manage patients',
+                'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.consents.manage', 'patients.amend.request', 'patients.amend.approve', 'patients.portal.manage',

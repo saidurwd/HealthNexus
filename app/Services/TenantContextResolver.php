@@ -3,19 +3,19 @@
 namespace App\Services;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use Illuminate\Http\Request;
 
 class TenantContextResolver
 {
-    private ?Company $company = null;
+    private ?Organization $organization = null;
 
     private ?Branch $branch = null;
 
     private ?Department $department = null;
 
-    private ?int $companyId = null;
+    private ?int $organizationId = null;
 
     private ?int $branchId = null;
 
@@ -23,8 +23,8 @@ class TenantContextResolver
 
     public function resolveFromRequest(Request $request): void
     {
-        if ($request->hasHeader('X-Company-Id')) {
-            $this->setCompanyId((int) $request->header('X-Company-Id'));
+        if ($request->hasHeader('X-Organization-Id')) {
+            $this->setOrganizationId((int) $request->header('X-Organization-Id'));
         }
 
         if ($request->hasHeader('X-Branch-Id')) {
@@ -35,8 +35,8 @@ class TenantContextResolver
             $this->setDepartmentId((int) $request->header('X-Department-Id'));
         }
 
-        if ($request->hasSession() && $request->session()->has('tenant_company_id')) {
-            $this->setCompanyId($request->session()->get('tenant_company_id'));
+        if ($request->hasSession() && $request->session()->has('tenant_organization_id')) {
+            $this->setOrganizationId($request->session()->get('tenant_organization_id'));
         }
 
         if ($request->hasSession() && $request->session()->has('tenant_branch_id')) {
@@ -48,10 +48,10 @@ class TenantContextResolver
         }
     }
 
-    public function setCompanyId(int $companyId): void
+    public function setOrganizationId(int $organizationId): void
     {
-        $this->companyId = $companyId;
-        $this->company = null;
+        $this->organizationId = $organizationId;
+        $this->organization = null;
         $this->branch = null;
         $this->branchId = null;
         $this->department = null;
@@ -66,8 +66,8 @@ class TenantContextResolver
         $this->departmentId = null;
 
         if ($this->branch) {
-            $this->companyId = $this->branch->company_id;
-            $this->company = null;
+            $this->organizationId = $this->branch->organization_id;
+            $this->organization = null;
         }
     }
 
@@ -79,14 +79,14 @@ class TenantContextResolver
         if ($this->department) {
             $this->branchId = $this->department->branch_id;
             $this->branch = null;
-            $this->companyId = $this->department->company_id;
-            $this->company = null;
+            $this->organizationId = $this->department->organization_id;
+            $this->organization = null;
         }
     }
 
-    public function getCompanyId(): ?int
+    public function getOrganizationId(): ?int
     {
-        return $this->companyId;
+        return $this->organizationId;
     }
 
     public function getBranchId(): ?int
@@ -99,13 +99,13 @@ class TenantContextResolver
         return $this->departmentId;
     }
 
-    public function getCompany(): ?Company
+    public function getOrganization(): ?Organization
     {
-        if ($this->company === null && $this->companyId !== null) {
-            $this->company = Company::find($this->companyId);
+        if ($this->organization === null && $this->organizationId !== null) {
+            $this->organization = Organization::find($this->organizationId);
         }
 
-        return $this->company;
+        return $this->organization;
     }
 
     public function getBranch(): ?Branch
@@ -128,10 +128,10 @@ class TenantContextResolver
 
     public function clear(): void
     {
-        $this->company = null;
+        $this->organization = null;
         $this->branch = null;
         $this->department = null;
-        $this->companyId = null;
+        $this->organizationId = null;
         $this->branchId = null;
         $this->departmentId = null;
     }

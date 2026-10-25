@@ -24,14 +24,14 @@ use Illuminate\Validation\ValidationException;
 class WorkflowEngine
 {
     /**
-     * @param  array{company_id?:int|null,branch_id?:int|null,notes?:string|null}  $context
+     * @param  array{organization_id?:int|null,branch_id?:int|null,notes?:string|null}  $context
      */
     public function start(Workflow $workflow, Model $subject, User $initiator, array $context = []): WorkflowInstance
     {
         return DB::transaction(function () use ($workflow, $subject, $initiator, $context) {
             return WorkflowInstance::create([
                 'workflow_id' => $workflow->id,
-                'company_id' => $context['company_id'] ?? null,
+                'organization_id' => $context['organization_id'] ?? null,
                 'branch_id' => $context['branch_id'] ?? null,
                 'subject_type' => $subject->getMorphClass(),
                 'subject_id' => $subject->getKey(),

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Events\Clinical\EncounterCreated;
 use App\Models\Appointment;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\EncounterType;
 use App\Models\User;
@@ -17,10 +17,10 @@ class EncounterService
     public function createEncounter(array $data, User $user): Encounter
     {
         return DB::transaction(function () use ($data, $user): Encounter {
-            $company = $user->companies()->findOrFail($data['company_id']);
+            $organization = $user->organizations()->findOrFail($data['organization_id']);
 
-            $data['company_id'] = $company->id;
-            $data['encounter_no'] = $this->generateEncounterNo($company);
+            $data['organization_id'] = $organization->id;
+            $data['encounter_no'] = $this->generateEncounterNo($organization);
             $data['created_by'] = $user->id;
             $data['status'] = 'registered';
 
@@ -70,7 +70,7 @@ class EncounterService
 
         return DB::transaction(function () use ($appointment, $user) {
             $encounter = $this->createEncounter([
-                'company_id' => $appointment->company_id,
+                'organization_id' => $appointment->organization_id,
                 'branch_id' => $appointment->branch_id,
                 'patient_id' => $appointment->patient_id,
                 'appointment_id' => $appointment->id,
@@ -106,18 +106,18 @@ class EncounterService
         return $encounter;
     }
 
-    private function generateEncounterNo(Company $company): string
+    private function generateEncounterNo(Organization $organization): string
     {
-        $prefix = strtoupper(substr($company->code, 0, 3));
+        $prefix = strtoupper(substr($organization->code, 0, 3));
 
         $counter = DB::table('encounter_counters')
-            ->where('company_id', $company->id)
+            ->where('organization_id', $organization->id)
             ->lockForUpdate()
             ->first();
 
         if (! $counter) {
             DB::table('encounter_counters')->insert([
-                'company_id' => $company->id,
+                'organization_id' => $organization->id,
                 'counter' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -129,7 +129,7 @@ class EncounterService
         $next = $counter->counter + 1;
 
         DB::table('encounter_counters')
-            ->where('company_id', $company->id)
+            ->where('organization_id', $organization->id)
             ->update(['counter' => $next, 'updated_at' => now()]);
 
         return sprintf('%s-ENC-%08d', $prefix, $next);

@@ -29,7 +29,7 @@ class SecurityEventController extends Controller
 
     public function show(SecurityEvent $securityEvent)
     {
-        $securityEvent->load('user', 'company', 'branch');
+        $securityEvent->load('user', 'organization', 'branch');
 
         return view('admin.security.show', compact('securityEvent'));
     }

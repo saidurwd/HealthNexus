@@ -14,14 +14,14 @@ class BillingItem extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'branch_id', 'category_id', 'tax_category_id', 'item_code', 'item_type', 'name', 'description', 'unit', 'base_price', 'is_taxable', 'is_clinically_chargeable', 'clinical_event_type', 'clinical_event_key', 'is_active', 'effective_from', 'effective_to', 'created_by', 'updated_by'];
+    protected $fillable = ['organization_id', 'branch_id', 'category_id', 'tax_category_id', 'item_code', 'item_type', 'name', 'description', 'unit', 'base_price', 'is_taxable', 'is_clinically_chargeable', 'clinical_event_type', 'clinical_event_key', 'is_active', 'effective_from', 'effective_to', 'created_by', 'updated_by'];
 
     protected function casts(): array
     {
         return ['base_price' => 'decimal:2', 'is_taxable' => 'boolean', 'is_clinically_chargeable' => 'boolean', 'is_active' => 'boolean', 'effective_from' => 'date', 'effective_to' => 'date'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function category(): BelongsTo { return $this->belongsTo(BillingCategory::class, 'category_id'); }
     public function taxCategory(): BelongsTo { return $this->belongsTo(BillingTaxCategory::class, 'tax_category_id'); }
@@ -31,8 +31,8 @@ class BillingItem extends Model
     public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
     public function updatedBy(): BelongsTo { return $this->belongsTo(User::class, 'updated_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

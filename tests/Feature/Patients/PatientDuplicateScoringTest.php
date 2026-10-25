@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Patients;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientDuplicateCandidate;
 use App\Services\Patients\PatientDuplicateScoringService;
@@ -15,13 +15,13 @@ class PatientDuplicateScoringTest extends TestCase
 
     public function test_identical_name_dob_and_phone_scores_a_strong_match(): void
     {
-        $company = Company::factory()->create();
+        $organization = Organization::factory()->create();
         $a = Patient::factory()->create([
-            'company_id' => $company->id, 'first_name' => 'Jane', 'last_name' => 'Doe',
+            'organization_id' => $organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe',
             'date_of_birth' => '1990-01-01', 'phone' => '01711111111',
         ]);
         $b = Patient::factory()->create([
-            'company_id' => $company->id, 'first_name' => 'Jane', 'last_name' => 'Doe',
+            'organization_id' => $organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe',
             'date_of_birth' => '1990-01-01', 'phone' => '01711111111',
         ]);
 
@@ -36,9 +36,9 @@ class PatientDuplicateScoringTest extends TestCase
 
     public function test_completely_different_patients_score_no_match(): void
     {
-        $company = Company::factory()->create();
-        $a = Patient::factory()->create(['company_id' => $company->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'phone' => '01711111111', 'date_of_birth' => '1990-01-01', 'national_identifier' => null, 'email' => null]);
-        $b = Patient::factory()->create(['company_id' => $company->id, 'first_name' => 'Bob', 'last_name' => 'Smith', 'phone' => '01899999999', 'date_of_birth' => '1970-05-05', 'national_identifier' => null, 'email' => null]);
+        $organization = Organization::factory()->create();
+        $a = Patient::factory()->create(['organization_id' => $organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'phone' => '01711111111', 'date_of_birth' => '1990-01-01', 'national_identifier' => null, 'email' => null]);
+        $b = Patient::factory()->create(['organization_id' => $organization->id, 'first_name' => 'Bob', 'last_name' => 'Smith', 'phone' => '01899999999', 'date_of_birth' => '1970-05-05', 'national_identifier' => null, 'email' => null]);
 
         [$score] = app(PatientDuplicateScoringService::class)->score($a, $b);
 
@@ -47,9 +47,9 @@ class PatientDuplicateScoringTest extends TestCase
 
     public function test_scan_for_candidate_persists_review_queue_rows_without_duplicating(): void
     {
-        $company = Company::factory()->create();
-        $a = Patient::factory()->create(['company_id' => $company->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'date_of_birth' => '1990-01-01', 'phone' => '01711111111']);
-        $b = Patient::factory()->create(['company_id' => $company->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'date_of_birth' => '1990-01-01', 'phone' => '01711111111']);
+        $organization = Organization::factory()->create();
+        $a = Patient::factory()->create(['organization_id' => $organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'date_of_birth' => '1990-01-01', 'phone' => '01711111111']);
+        $b = Patient::factory()->create(['organization_id' => $organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe', 'date_of_birth' => '1990-01-01', 'phone' => '01711111111']);
 
         $service = app(PatientDuplicateScoringService::class);
         $created = $service->scanForCandidate($a);

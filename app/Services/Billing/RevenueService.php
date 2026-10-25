@@ -16,18 +16,18 @@ use Illuminate\Support\Carbon;
  */
 class RevenueService
 {
-    public function todaysSummary(int $companyId, ?int $branchId = null): array
+    public function todaysSummary(int $organizationId, ?int $branchId = null): array
     {
         $today = Carbon::today()->toDateString();
 
-        $invoices = BillingInvoice::query()->forTenant($companyId, $branchId)->where('invoice_date', $today);
-        $payments = BillingPayment::query()->forTenant($companyId, $branchId)->where('payment_date', $today)->where('status', 'completed');
-        $refunds = BillingRefund::query()->forTenant($companyId, $branchId)->whereDate('processed_at', $today)->where('status', 'processed');
+        $invoices = BillingInvoice::query()->forTenant($organizationId, $branchId)->where('invoice_date', $today);
+        $payments = BillingPayment::query()->forTenant($organizationId, $branchId)->where('payment_date', $today)->where('status', 'completed');
+        $refunds = BillingRefund::query()->forTenant($organizationId, $branchId)->whereDate('processed_at', $today)->where('status', 'processed');
 
         return [
             'total_billed' => (string) $invoices->clone()->sum('grand_total'),
             'total_collected' => (string) $payments->clone()->sum('amount'),
-            'total_due' => (string) BillingInvoice::query()->forTenant($companyId, $branchId)->whereIn('status', ['finalized', 'partially_paid'])->sum('due_amount'),
+            'total_due' => (string) BillingInvoice::query()->forTenant($organizationId, $branchId)->whereIn('status', ['finalized', 'partially_paid'])->sum('due_amount'),
             'total_refunds' => (string) $refunds->clone()->sum('amount'),
             'total_discounts' => (string) $invoices->clone()->sum('discount_amount'),
             'invoice_count' => $invoices->clone()->count(),
@@ -35,17 +35,17 @@ class RevenueService
         ];
     }
 
-    public function cashierSummary(int $companyId, ?int $branchId = null): array
+    public function cashierSummary(int $organizationId, ?int $branchId = null): array
     {
-        $openSessions = BillingCashierSession::query()->forTenant($companyId, $branchId)->where('status', 'open')->count();
+        $openSessions = BillingCashierSession::query()->forTenant($organizationId, $branchId)->where('status', 'open')->count();
 
         $today = Carbon::today()->toDateString();
 
-        // Not using forTenant() here: billing_payment_methods also has company_id/branch_id
+        // Not using forTenant() here: billing_payment_methods also has organization_id/branch_id
         // columns, so after the join those unqualified column names become ambiguous to MySQL.
         // Every condition below is qualified to billing_payments explicitly instead.
         $byType = BillingPayment::query()
-            ->where('billing_payments.company_id', $companyId)
+            ->where('billing_payments.organization_id', $organizationId)
             ->when($branchId, fn ($q) => $q->where('billing_payments.branch_id', $branchId))
             ->where('billing_payments.status', 'completed')
             ->where('billing_payments.payment_date', $today)
@@ -63,13 +63,13 @@ class RevenueService
         ];
     }
 
-    public function revenueByCategory(int $companyId, ?int $branchId, string $from, string $to): \Illuminate\Support\Collection
+    public function revenueByCategory(int $organizationId, ?int $branchId, string $from, string $to): \Illuminate\Support\Collection
     {
         return \App\Models\Billing\BillingInvoiceItem::query()
             ->join('billing_invoices', 'billing_invoices.id', '=', 'billing_invoice_items.invoice_id')
             ->join('billing_items', 'billing_items.id', '=', 'billing_invoice_items.billing_item_id')
             ->join('billing_categories', 'billing_categories.id', '=', 'billing_items.category_id')
-            ->where('billing_invoices.company_id', $companyId)
+            ->where('billing_invoices.organization_id', $organizationId)
             ->when($branchId, fn ($q) => $q->where('billing_invoices.branch_id', $branchId))
             ->whereBetween('billing_invoices.invoice_date', [$from, $to])
             ->whereIn('billing_invoices.status', ['finalized', 'partially_paid', 'paid'])
@@ -79,10 +79,10 @@ class RevenueService
             ->get();
     }
 
-    public function outstandingByPatient(int $companyId, ?int $branchId = null)
+    public function outstandingByPatient(int $organizationId, ?int $branchId = null)
     {
         return BillingInvoice::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereIn('status', ['finalized', 'partially_paid'])
             ->where('due_amount', '>', 0)
             ->with('patient:id,first_name,last_name,enterprise_patient_no')
@@ -90,10 +90,10 @@ class RevenueService
             ->get(['id', 'patient_id', 'invoice_number', 'invoice_date', 'grand_total', 'paid_amount', 'due_amount']);
     }
 
-    public function outstandingByCorporate(int $companyId, ?int $branchId = null)
+    public function outstandingByCorporate(int $organizationId, ?int $branchId = null)
     {
         return BillingInvoice::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereNotNull('corporate_id')
             ->whereIn('status', ['finalized', 'partially_paid'])
             ->where('due_amount', '>', 0)
@@ -104,20 +104,20 @@ class RevenueService
             ->get();
     }
 
-    public function discountSummary(int $companyId, ?int $branchId, string $from, string $to)
+    public function discountSummary(int $organizationId, ?int $branchId, string $from, string $to)
     {
         return BillingInvoice::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('invoice_date', [$from, $to])
             ->where('discount_amount', '>', 0)
             ->orderByDesc('discount_amount')
             ->get(['id', 'invoice_number', 'patient_id', 'invoice_date', 'discount_type', 'discount_amount']);
     }
 
-    public function refundSummary(int $companyId, ?int $branchId, string $from, string $to)
+    public function refundSummary(int $organizationId, ?int $branchId, string $from, string $to)
     {
         return BillingRefund::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('requested_at', [$from, $to])
             ->orderByDesc('requested_at')
             ->get();

@@ -27,8 +27,8 @@ class AppointmentPolicy
 
     /**
      * update()/delete() previously checked only the global permission grant, never the
-     * appointment's company — a user with appointments.update in Company A could confirm/
-     * reschedule/cancel/delete Company B's appointments by guessing an ID. Every mutating
+     * appointment's organization — a user with appointments.update in Organization A could confirm/
+     * reschedule/cancel/delete Organization B's appointments by guessing an ID. Every mutating
      * ability below now re-verifies tenant scope, matching the fix already applied to
      * PatientPolicy.
      */
@@ -109,6 +109,6 @@ class AppointmentPolicy
 
     private function inScope(User $user, Appointment $appointment): bool
     {
-        return $user->companies()->where('companies.id', $appointment->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $appointment->organization_id)->exists();
     }
 }

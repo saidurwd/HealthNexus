@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="card-body">
-            <p><strong>{{ $receipt->company?->name }}</strong> &mdash; {{ $receipt->branch?->name }}</p>
+            <p><strong>{{ $receipt->organization?->name }}</strong> &mdash; {{ $receipt->branch?->name }}</p>
             <table class="table table-sm">
                 <tr><th>Patient</th><td>{{ $receipt->payment?->patient?->full_name }} ({{ $receipt->payment?->patient?->enterprise_patient_no }})</td></tr>
                 <tr><th>Invoice</th><td>{{ $receipt->invoice?->invoice_number ?? '-' }}</td></tr>

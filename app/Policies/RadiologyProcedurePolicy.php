@@ -37,6 +37,6 @@ class RadiologyProcedurePolicy
 
     private function inScope(User $user, RadiologyProcedure $procedure): bool
     {
-        return $user->companies()->where('companies.id', $procedure->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $procedure->organization_id)->exists();
     }
 }

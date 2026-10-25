@@ -19,15 +19,15 @@ class BillingInvoiceControllerTest extends BillingTestCase
     {
         parent::setUp();
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $this->item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
@@ -66,7 +66,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
         // 2. Add a manually-created charge to it.
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id, 'billing_item_id' => $this->item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '500.00', 'gross_amount' => '500.00',
@@ -91,7 +91,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
         // 4. Collect payment.
         $method = BillingPaymentMethod::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 

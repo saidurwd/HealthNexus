@@ -16,7 +16,7 @@ class PacsAdapterTest extends RadiologyTestCase
     public function test_factory_resolves_null_client_by_default(): void
     {
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'NONE', 'name' => 'Not connected', 'adapter_type' => 'null', 'is_active' => false,
         ]);
 
@@ -31,7 +31,7 @@ class PacsAdapterTest extends RadiologyTestCase
     public function test_factory_resolves_orthanc_client(): void
     {
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ORTHANC', 'name' => 'Orthanc', 'adapter_type' => 'orthanc',
             'base_url' => 'https://pacs.test', 'is_active' => true,
         ]);
@@ -64,7 +64,7 @@ class PacsAdapterTest extends RadiologyTestCase
         ]);
 
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ORTHANC', 'name' => 'Orthanc', 'adapter_type' => 'orthanc',
             'base_url' => 'https://pacs.test', 'is_active' => true,
         ]);
@@ -83,7 +83,7 @@ class PacsAdapterTest extends RadiologyTestCase
         Http::fake(['pacs.test/tools/find' => Http::response([])]);
 
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ORTHANC', 'name' => 'Orthanc', 'adapter_type' => 'orthanc',
             'base_url' => 'https://pacs.test', 'is_active' => true,
         ]);
@@ -98,7 +98,7 @@ class PacsAdapterTest extends RadiologyTestCase
         Http::fake(['pacs.test/tools/find' => Http::response(null, 500)]);
 
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ORTHANC', 'name' => 'Orthanc', 'adapter_type' => 'orthanc',
             'base_url' => 'https://pacs.test', 'is_active' => true,
         ]);
@@ -112,7 +112,7 @@ class PacsAdapterTest extends RadiologyTestCase
     public function test_viewer_url_is_generated_without_exposing_pacs_credentials(): void
     {
         $server = RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ORTHANC', 'name' => 'Orthanc', 'adapter_type' => 'orthanc',
             'base_url' => 'https://pacs.test', 'username' => 'secret-user', 'password' => 'secret-pass', 'is_active' => true,
         ]);

@@ -37,7 +37,7 @@ class IpdLeavePolicy
 
     private function inScope(User $user, IpdPatientLeave $leave): bool
     {
-        return $user->companies()->where('companies.id', $leave->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $leave->organization_id)->exists()
             && $user->branches()->where('branches.id', $leave->branch_id)->exists();
     }
 }

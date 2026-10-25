@@ -3,7 +3,7 @@
 namespace Tests\Feature\Pharmacy;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Pharmacy\PharmacyOrder;
 use App\Models\User;
@@ -18,29 +18,29 @@ use Spatie\Permission\Models\Permission;
  */
 class TenantIsolationTest extends PharmacyTestCase
 {
-    public function test_a_user_cannot_view_another_companys_pharmacy_order(): void
+    public function test_a_user_cannot_view_another_organizations_pharmacy_order(): void
     {
         $medication = $this->makeMedication();
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 10);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => $medication->name, 'quantity' => 5],
         ]);
         $order = app(PharmacyOrderService::class)->registerFromPrescription($prescription);
 
-        $otherCompany = Company::factory()->create();
-        $otherBranch = Branch::factory()->create(['company_id' => $otherCompany->id]);
+        $otherOrganization = Organization::factory()->create();
+        $otherBranch = Branch::factory()->create(['organization_id' => $otherOrganization->id]);
         $otherUser = User::factory()->create();
-        $otherUser->companies()->attach($otherCompany->id, ['access_level' => 'admin']);
-        $otherUser->branches()->attach($otherBranch->id, ['access_level' => 'manager', 'company_id' => $otherCompany->id]);
+        $otherUser->organizations()->attach($otherOrganization->id, ['access_level' => 'admin']);
+        $otherUser->branches()->attach($otherBranch->id, ['access_level' => 'manager', 'organization_id' => $otherOrganization->id]);
         Permission::firstOrCreate(['name' => 'pharmacy.prescription.view', 'guard_name' => 'web']);
         $otherUser->givePermissionTo('pharmacy.prescription.view');
 
         $this->actingAs($otherUser);
-        session()->put('tenant_company_id', $otherCompany->id);
-        app(TenantContextResolver::class)->setCompanyId($otherCompany->id);
+        session()->put('tenant_organization_id', $otherOrganization->id);
+        app(TenantContextResolver::class)->setOrganizationId($otherOrganization->id);
 
         $this->assertFalse($otherUser->can('view', $order));
 
@@ -48,21 +48,21 @@ class TenantIsolationTest extends PharmacyTestCase
         $response->assertForbidden();
     }
 
-    public function test_order_listing_is_scoped_to_the_current_company(): void
+    public function test_order_listing_is_scoped_to_the_current_organization(): void
     {
         $medication = $this->makeMedication();
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 10);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => $medication->name, 'quantity' => 5],
         ]);
         app(PharmacyOrderService::class)->registerFromPrescription($prescription);
 
-        $otherCompany = Company::factory()->create();
+        $otherOrganization = Organization::factory()->create();
 
-        $this->assertSame(1, PharmacyOrder::forTenant($this->company->id)->count());
-        $this->assertSame(0, PharmacyOrder::forTenant($otherCompany->id)->count());
+        $this->assertSame(1, PharmacyOrder::forTenant($this->organization->id)->count());
+        $this->assertSame(0, PharmacyOrder::forTenant($otherOrganization->id)->count());
     }
 }

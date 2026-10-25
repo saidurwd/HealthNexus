@@ -17,7 +17,7 @@ class PrescriptionPolicy
 
     public function view(User $user, Prescription $prescription): bool
     {
-        return $user->companies()->where('companies.id', $prescription->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $prescription->organization_id)->exists();
     }
 
     public function create(User $user): bool

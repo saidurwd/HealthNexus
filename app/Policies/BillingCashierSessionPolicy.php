@@ -38,7 +38,7 @@ class BillingCashierSessionPolicy
 
     private function inScope(User $user, BillingCashierSession $session): bool
     {
-        return $user->companies()->where('companies.id', $session->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $session->organization_id)->exists()
             && $user->branches()->where('branches.id', $session->branch_id)->exists();
     }
 }

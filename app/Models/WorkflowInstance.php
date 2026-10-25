@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class WorkflowInstance extends Model
 {
     protected $fillable = [
-        'workflow_id', 'company_id', 'branch_id', 'subject_type', 'subject_id',
+        'workflow_id', 'organization_id', 'branch_id', 'subject_type', 'subject_id',
         'status', 'current_step_id', 'initiated_by', 'submitted_at', 'completed_at', 'notes',
     ];
 
@@ -24,9 +24,9 @@ class WorkflowInstance extends Model
         return $this->belongsTo(Workflow::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

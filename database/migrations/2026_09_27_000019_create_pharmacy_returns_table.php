@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_returns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('dispensing_id')->constrained('pharmacy_dispensings')->cascadeOnDelete();
             $table->foreignId('store_id')->constrained('pharmacy_stores')->cascadeOnDelete();
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'return_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'return_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('dispensing_id');
         });
     }

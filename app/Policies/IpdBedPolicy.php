@@ -57,7 +57,7 @@ class IpdBedPolicy
 
     private function inScope(User $user, IpdBed $bed): bool
     {
-        return $user->companies()->where('companies.id', $bed->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $bed->organization_id)->exists()
             && (! $bed->branch_id || $user->branches()->where('branches.id', $bed->branch_id)->exists());
     }
 }

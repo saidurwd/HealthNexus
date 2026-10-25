@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PatientPortalAccount extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'user_id',
         'email',

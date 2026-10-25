@@ -34,7 +34,7 @@ class InvoiceLifecycleService
             }
 
             $invoice->update([
-                'invoice_number' => $this->numbers->generateInvoiceNumber($invoice->company_id, $invoice->branch_id),
+                'invoice_number' => $this->numbers->generateInvoiceNumber($invoice->organization_id, $invoice->branch_id),
                 'status' => $this->deriveStatusAfterFinalize($invoice),
                 'finalized_by' => $user->id,
                 'finalized_at' => now(),

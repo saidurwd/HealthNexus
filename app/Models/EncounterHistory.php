@@ -10,7 +10,7 @@ class EncounterHistory extends Model
     protected $fillable = [
         'encounter_id',
         'patient_id',
-        'company_id',
+        'organization_id',
         'history_type',
         'onset',
         'duration',
@@ -32,8 +32,8 @@ class EncounterHistory extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 }

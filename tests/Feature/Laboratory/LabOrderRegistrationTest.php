@@ -80,23 +80,23 @@ class LabOrderRegistrationTest extends LabTestCase
     private function makeChargeableTest(string $code, string $name): LabTest
     {
         $specimenType = LabSpecimenType::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true,
         ]);
 
         $test = LabTest::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => $code, 'name' => $name, 'test_type' => 'quantitative',
             'unit' => 'g/dL', 'specimen_type_id' => $specimenType->id, 'is_active' => true,
         ]);
 
         $category = \App\Models\Billing\BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Diagnostics', 'code' => 'DIAG', 'is_active' => true,
         ]);
 
         \App\Models\Billing\BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'LAB-'.$code, 'item_type' => 'diagnostic',
             'name' => $name, 'base_price' => '300.00', 'is_taxable' => false,
             'is_clinically_chargeable' => true, 'clinical_event_type' => 'lab_test',
@@ -108,14 +108,14 @@ class LabOrderRegistrationTest extends LabTestCase
 
     private function makeClinicalOrder(string $orderType, array $itemNames): ClinicalOrder
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $department = Department::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'name' => 'General OPD', 'code' => 'GEN-OPD-'.uniqid(), 'is_active' => true,
         ]);
 
         $encounter = Encounter::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_no' => 'ENC-'.uniqid(),
             'encounter_type' => 'opd', 'provider_id' => $this->user->id,
             'department_id' => $department->id, 'encounter_date' => now()->toDateString(),
@@ -123,14 +123,14 @@ class LabOrderRegistrationTest extends LabTestCase
         ]);
 
         $order = ClinicalOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'order_number' => 'ORD-'.uniqid(), 'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
             'provider_id' => $this->user->id, 'order_type' => $orderType, 'priority' => 'routine',
             'status' => 'requested', 'ordered_at' => now(), 'ordered_by' => $this->user->id,
         ]);
 
         foreach ($itemNames as $name) {
-            $order->items()->create(['company_id' => $this->company->id, 'item_name' => $name, 'status' => 'pending']);
+            $order->items()->create(['organization_id' => $this->organization->id, 'item_name' => $name, 'status' => 'pending']);
         }
 
         return $order->fresh(['items', 'encounter']);

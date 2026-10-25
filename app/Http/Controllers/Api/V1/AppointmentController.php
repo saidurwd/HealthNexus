@@ -30,7 +30,7 @@ class AppointmentController extends Controller
         $user = $request->user();
 
         $appointments = Appointment::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->when($request->filled('patient_id'), fn ($q, $id) => $q->where('patient_id', $id))
             ->when($request->filled('provider_id'), fn ($q, $id) => $q->where('provider_id', $id))
             ->when($request->filled('status'), fn ($q, $status) => $q->where('status', $status))
@@ -43,11 +43,11 @@ class AppointmentController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $search = $request->input('q', '');
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($search, fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('appointment_no', 'like', "%{$search}%")
                     ->orWhereHas('patient', fn ($q3) => $q3->where('first_name', 'like', "%{$search}%")
@@ -74,7 +74,7 @@ class AppointmentController extends Controller
             'reason' => ['nullable', 'string'],
         ]);
 
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $validated['branch_id'] = app(TenantContextResolver::class)->getBranchId();
         $validated['created_by'] = $request->user()->id;
 
@@ -189,11 +189,11 @@ class AppointmentController extends Controller
 
     public function calendar(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $date = $request->input('date', today()->toDateString());
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->whereDate('appointment_date', $date)
             ->with(['patient', 'provider', 'token'])
             ->orderBy('appointment_time')

@@ -37,6 +37,6 @@ class LabTestPolicy
 
     private function inScope(User $user, LabTest $test): bool
     {
-        return $user->companies()->where('companies.id', $test->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $test->organization_id)->exists();
     }
 }

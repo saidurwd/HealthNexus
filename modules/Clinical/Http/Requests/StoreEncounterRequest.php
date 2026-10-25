@@ -42,7 +42,7 @@ class StoreEncounterRequest extends FormRequest
     {
         $data = parent::validated($key, $default);
 
-        $data['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $data['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
 
         return $data;
     }

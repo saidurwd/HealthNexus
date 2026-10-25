@@ -13,14 +13,14 @@ class BillingPayment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'branch_id', 'patient_id', 'invoice_id', 'corporate_id', 'payment_method_id', 'cashier_session_id', 'payment_number', 'currency', 'amount', 'transaction_reference', 'payment_date', 'status', 'completed_at', 'cancelled_at', 'received_by', 'cancelled_by', 'notes'];
+    protected $fillable = ['organization_id', 'branch_id', 'patient_id', 'invoice_id', 'corporate_id', 'payment_method_id', 'cashier_session_id', 'payment_number', 'currency', 'amount', 'transaction_reference', 'payment_date', 'status', 'completed_at', 'cancelled_at', 'received_by', 'cancelled_by', 'notes'];
 
     protected function casts(): array
     {
         return ['amount' => 'decimal:2', 'payment_date' => 'date', 'completed_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
     public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
@@ -32,9 +32,9 @@ class BillingPayment extends Model
     public function receivedBy(): BelongsTo { return $this->belongsTo(User::class, 'received_by'); }
     public function cancelledBy(): BelongsTo { return $this->belongsTo(User::class, 'cancelled_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
     public function isMutable(): bool { return $this->status === 'pending'; }

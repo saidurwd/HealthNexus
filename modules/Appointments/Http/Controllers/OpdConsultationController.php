@@ -76,7 +76,7 @@ class OpdConsultationController extends Controller
         $this->authorize('view', $appointment);
 
         $data = $request->validated();
-        unset($data['company_id'], $data['branch_id']);
+        unset($data['organization_id'], $data['branch_id']);
 
         $encounter = Encounter::where('appointment_id', $appointment->id)->first();
         $diagnosis = $this->opdService->addDiagnosis($appointment, $data, $request->user(), $encounter);
@@ -92,7 +92,7 @@ class OpdConsultationController extends Controller
         $this->authorize('view', $appointment);
 
         $data = $request->validated();
-        unset($data['company_id'], $data['branch_id']);
+        unset($data['organization_id'], $data['branch_id']);
 
         $encounter = Encounter::where('appointment_id', $appointment->id)->first();
         $order = $this->opdService->addInvestigationOrder($appointment, $data, $request->user(), $encounter);
@@ -108,7 +108,7 @@ class OpdConsultationController extends Controller
         $this->authorize('view', $appointment);
 
         $data = $request->validated();
-        unset($data['company_id'], $data['branch_id']);
+        unset($data['organization_id'], $data['branch_id']);
 
         $encounter = Encounter::where('appointment_id', $appointment->id)->first();
         $prescription = $this->opdService->createPrescription($appointment, $data, $request->user(), $encounter);

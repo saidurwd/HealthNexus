@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_tax_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('code');
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('effective_to')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
-            $table->index(['company_id', 'branch_id', 'is_active', 'effective_from'], 'billing_tax_categories_scope_idx');
+            $table->unique(['organization_id', 'branch_id', 'code']);
+            $table->index(['organization_id', 'branch_id', 'is_active', 'effective_from'], 'billing_tax_categories_scope_idx');
         });
     }
 

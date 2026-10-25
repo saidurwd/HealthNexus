@@ -21,7 +21,7 @@ class NursingRiskAssessment extends Model
     public const TYPE_ASPIRATION = 'aspiration';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
         'risk_type', 'tool_name', 'score', 'risk_level', 'contributing_factors', 'interventions',
         'assessed_by', 'assessed_at', 'reassessment_due_at',
     ];
@@ -51,8 +51,8 @@ class NursingRiskAssessment extends Model
         return $this->belongsTo(User::class, 'assessed_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -18,11 +18,11 @@ class RadiologyStudyController extends Controller
     {
         $this->authorize('viewAny', RadiologyStudy::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $studies = RadiologyStudy::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'examination.orderItem.procedure'])
             ->paginate((int) $request->input('per_page', 20));
 

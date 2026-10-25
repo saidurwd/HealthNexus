@@ -23,15 +23,15 @@ class ProviderUnavailabilityController extends Controller
     {
         $this->authorize('manageBlock', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $entries = ProviderUnavailability::where('company_id', $companyId)
+        $entries = ProviderUnavailability::where('organization_id', $organizationId)
             ->when($request->filled('provider_id'), fn ($q, $id = null) => $q->where('provider_id', $request->input('provider_id')))
             ->with('provider')
             ->latest('start_at')
             ->paginate(20);
 
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
 
         return view('admin.provider-unavailability.index', compact('entries', 'providers'));
     }
@@ -48,7 +48,7 @@ class ProviderUnavailabilityController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $validated['branch_id'] = app(TenantContextResolver::class)->getBranchId();
         $validated['created_by'] = $request->user()->id;
 

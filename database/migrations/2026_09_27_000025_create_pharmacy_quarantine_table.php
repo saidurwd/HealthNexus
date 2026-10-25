@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_quarantine', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('store_id')->constrained('pharmacy_stores')->cascadeOnDelete();
             $table->foreignId('medication_id')->constrained('pharmacy_medications')->cascadeOnDelete();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('disposed_at')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index(['store_id', 'medication_id', 'batch_id']);
         });
     }

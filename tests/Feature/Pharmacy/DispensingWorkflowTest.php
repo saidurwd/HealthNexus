@@ -28,7 +28,7 @@ class DispensingWorkflowTest extends PharmacyTestCase
         $this->receiveBatch($store, $medication, 30);
         $this->makeChargeableBillingItem($medication->code);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => $medication->name, 'quantity' => 10],
         ]);
@@ -66,7 +66,7 @@ class DispensingWorkflowTest extends PharmacyTestCase
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 30);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => $medication->name, 'quantity' => 10],
         ]);
@@ -93,7 +93,7 @@ class DispensingWorkflowTest extends PharmacyTestCase
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 30);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => $medication->name, 'quantity' => 5],
         ]);
@@ -111,7 +111,7 @@ class DispensingWorkflowTest extends PharmacyTestCase
     public function test_dispensing_an_unmatched_item_without_explicit_medication_is_rejected(): void
     {
         $store = $this->makeStore();
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($patient, [
             ['medicine_name' => 'Totally Unknown Drug', 'quantity' => 5],
         ]);
@@ -129,12 +129,12 @@ class DispensingWorkflowTest extends PharmacyTestCase
     private function makeChargeableBillingItem(string $medicationCode): void
     {
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Pharmacy', 'code' => 'PHARM', 'is_active' => true,
         ]);
 
         BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'PH-'.$medicationCode, 'item_type' => 'medication',
             'name' => $medicationCode, 'base_price' => '5.00', 'is_taxable' => false,
             'is_clinically_chargeable' => true, 'clinical_event_type' => 'pharmacy_medication',

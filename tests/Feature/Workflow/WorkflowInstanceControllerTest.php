@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Workflow;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Workflow;
@@ -21,7 +21,7 @@ class WorkflowInstanceControllerTest extends TestCase
 
     private WorkflowEngine $engine;
 
-    private Company $company;
+    private Organization $organization;
 
     private User $initiator;
 
@@ -34,7 +34,7 @@ class WorkflowInstanceControllerTest extends TestCase
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $this->engine = app(WorkflowEngine::class);
-        $this->company = Company::factory()->create();
+        $this->organization = Organization::factory()->create();
         $this->initiator = User::factory()->create();
         $this->approver = User::factory()->create();
 
@@ -48,11 +48,11 @@ class WorkflowInstanceControllerTest extends TestCase
 
     private function makeOneStepInstance(): \App\Models\WorkflowInstance
     {
-        $workflow = Workflow::create(['company_id' => $this->company->id, 'code' => 'ctrl_test', 'name' => 'Controller Test']);
+        $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'ctrl_test', 'name' => 'Controller Test']);
         $step = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Review', 'is_final' => true]);
         WorkflowApprover::create(['workflow_step_id' => $step->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'approver_role']);
 
-        $subject = Patient::factory()->create(['company_id' => $this->company->id]);
+        $subject = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $instance = $this->engine->start($workflow, $subject, $this->initiator);
 
         return $this->engine->submit($instance, $this->initiator);

@@ -26,11 +26,11 @@ class NursingEpisodePolicy
     }
 
     /**
-     * Company/branch tenant boundary (mandatory: Hospital-A-nurse-cannot-touch-Hospital-B-patient).
+     * Organization/branch tenant boundary (mandatory: Hospital-A-nurse-cannot-touch-Hospital-B-patient).
      */
     public function inScope(User $user, NursingEpisode $episode): bool
     {
-        return $user->companies()->where('companies.id', $episode->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $episode->organization_id)->exists()
             && (! $episode->branch_id || $user->branches()->where('branches.id', $episode->branch_id)->exists());
     }
 

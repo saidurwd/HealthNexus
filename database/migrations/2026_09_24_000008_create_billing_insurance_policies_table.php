@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_insurance_policies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('insurance_provider_id')->constrained('billing_insurance_providers')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['insurance_provider_id', 'policy_number'], 'billing_insurance_policies_provider_number_unique');
-            $table->index(['company_id', 'branch_id', 'patient_id', 'status'], 'billing_insurance_policies_scope_idx');
+            $table->index(['organization_id', 'branch_id', 'patient_id', 'status'], 'billing_insurance_policies_scope_idx');
             $table->index(['effective_from', 'effective_to']);
         });
     }

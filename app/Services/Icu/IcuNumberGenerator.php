@@ -15,11 +15,11 @@ class IcuNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix, string $formatKey, string $defaultFormat): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix, string $formatKey, string $defaultFormat): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix, $formatKey, $defaultFormat) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix, $formatKey, $defaultFormat) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -40,11 +40,11 @@ class IcuNumberGenerator
         });
     }
 
-    public function generateEpisodeNumber(int $companyId, ?int $branchId): string
+    public function generateEpisodeNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('icu.episode_number_prefix', 'ICU');
 
-        return $this->generate($companyId, $branchId, 'EPI', $prefix, 'icu.episode_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
+        return $this->generate($organizationId, $branchId, 'EPI', $prefix, 'icu.episode_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
     }
 
     private function format(string $prefix, int $sequence, string $formatKey, string $defaultFormat): string

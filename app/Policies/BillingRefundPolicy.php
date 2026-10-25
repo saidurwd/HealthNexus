@@ -37,7 +37,7 @@ class BillingRefundPolicy
 
     private function inScope(User $user, BillingRefund $refund): bool
     {
-        return $user->companies()->where('companies.id', $refund->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $refund->organization_id)->exists()
             && $user->branches()->where('branches.id', $refund->branch_id)->exists();
     }
 }

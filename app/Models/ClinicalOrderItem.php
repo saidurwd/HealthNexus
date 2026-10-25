@@ -9,7 +9,7 @@ class ClinicalOrderItem extends Model
 {
     protected $fillable = [
         'clinical_order_id',
-        'company_id',
+        'organization_id',
         'item_name',
         'item_code',
         'quantity',
@@ -22,8 +22,8 @@ class ClinicalOrderItem extends Model
         return $this->belongsTo(ClinicalOrder::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 }

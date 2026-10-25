@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_floors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('building_id')->nullable()->constrained('ipd_buildings')->nullOnDelete();
             $table->string('code');
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
-            $table->index(['company_id', 'branch_id', 'is_active']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
+            $table->index(['organization_id', 'branch_id', 'is_active']);
         });
     }
 

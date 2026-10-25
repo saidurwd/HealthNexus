@@ -17,7 +17,7 @@ class NursingIvInfusion extends Model
     public const STATUS_STOPPED = 'stopped';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'prescription_item_id', 'device_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'prescription_item_id', 'device_id',
         'fluid_name', 'rate', 'start_time', 'expected_completion', 'actual_completion', 'site',
         'volume', 'complications', 'status', 'monitored_by',
     ];
@@ -52,8 +52,8 @@ class NursingIvInfusion extends Model
         return $this->belongsTo(User::class, 'monitored_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

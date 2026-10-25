@@ -3,21 +3,21 @@
 namespace Tests\Feature\Nursing;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class NursingTenantIsolationTest extends NursingTestCase
 {
-    private function nurseWith(array $permissions, ?Company $company = null): User
+    private function nurseWith(array $permissions, ?Organization $organization = null): User
     {
-        $company ??= $this->company;
-        $branch = $company->id === $this->company->id ? $this->branch : Branch::factory()->create(['company_id' => $company->id]);
+        $organization ??= $this->organization;
+        $branch = $organization->id === $this->organization->id ? $this->branch : Branch::factory()->create(['organization_id' => $organization->id]);
 
         $nurse = User::factory()->create();
-        $nurse->companies()->attach($company->id, ['access_level' => 'staff']);
-        $nurse->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $company->id]);
+        $nurse->organizations()->attach($organization->id, ['access_level' => 'staff']);
+        $nurse->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);
         foreach ($permissions as $p) {
             Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
         }
@@ -34,8 +34,8 @@ class NursingTenantIsolationTest extends NursingTestCase
         $episode = $this->makeEpisode();
         $mar = $this->makeMar($episode);
 
-        $otherCompany = Company::factory()->create();
-        $foreignNurse = $this->nurseWith(['nursing.dashboard.view', 'nursing.mar.view', 'nursing.mar.administer'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignNurse = $this->nurseWith(['nursing.dashboard.view', 'nursing.mar.view', 'nursing.mar.administer'], $otherOrganization);
 
         $this->assertFalse($foreignNurse->can('view', $episode));
         $this->assertFalse($foreignNurse->can('view', $mar));
@@ -60,7 +60,7 @@ class NursingTenantIsolationTest extends NursingTestCase
     public function test_api_denies_cross_hospital_mar_and_unauthenticated_access(): void
     {
         $mar = $this->makeMar($this->makeEpisode());
-        $foreignNurse = $this->nurseWith(['nursing.mar.view', 'nursing.mar.administer'], Company::factory()->create());
+        $foreignNurse = $this->nurseWith(['nursing.mar.view', 'nursing.mar.administer'], Organization::factory()->create());
 
         $this->actingAs($foreignNurse)->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', ['safety_checks' => ['patient' => 1]])
             ->assertStatus(403);

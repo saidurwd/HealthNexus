@@ -22,11 +22,11 @@ class RadiologyOrderController extends Controller
     {
         $this->authorize('viewAny', RadiologyOrder::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $orders = RadiologyOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'items'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($sub) => $sub
@@ -45,8 +45,8 @@ class RadiologyOrderController extends Controller
 
         $order->load(['patient', 'encounter', 'items.procedure', 'items.examination.modality', 'items.examination.studies', 'items.examination.report']);
 
-        $companyId = $order->company_id;
-        $availableProcedures = RadiologyProcedure::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = $order->organization_id;
+        $availableProcedures = RadiologyProcedure::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.radiology.orders.show', compact('order', 'availableProcedures'));
     }

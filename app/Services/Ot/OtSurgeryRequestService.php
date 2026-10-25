@@ -16,7 +16,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * Surgery request approval is the one place Phase 10 reuses the generic WorkflowEngine (decision
  * #11 of the plan) — mirrors IpdAdmissionRequestService byte-for-byte, including the direct-
- * approve fallback when no workflow is configured for the company.
+ * approve fallback when no workflow is configured for the organization.
  */
 class OtSurgeryRequestService
 {
@@ -46,14 +46,14 @@ class OtSurgeryRequestService
             }
 
             $workflow = Workflow::query()
-                ->where('company_id', $data['company_id'])
+                ->where('organization_id', $data['organization_id'])
                 ->where('code', 'ot_surgery_request')
                 ->where('is_active', true)
                 ->first();
 
             if ($workflow) {
                 $instance = $this->engine->start($workflow, $request, $user, [
-                    'company_id' => $data['company_id'],
+                    'organization_id' => $data['organization_id'],
                     'branch_id' => $data['branch_id'] ?? null,
                     'notes' => $data['indication'] ?? null,
                 ]);
@@ -78,7 +78,7 @@ class OtSurgeryRequestService
     public function createFromClinicalOrder(Encounter $encounter, \App\Models\ClinicalOrder $order, User $user): OtSurgeryRequest
     {
         return $this->create([
-            'company_id' => $encounter->company_id,
+            'organization_id' => $encounter->organization_id,
             'branch_id' => $encounter->branch_id,
             'patient_id' => $encounter->patient_id,
             'encounter_id' => $encounter->id,

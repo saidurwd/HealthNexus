@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,16 +22,16 @@ class TenantContextResolverTest extends TestCase
         $this->resolver = new TenantContextResolver;
     }
 
-    public function test_can_set_and_get_company_id(): void
+    public function test_can_set_and_get_organization_id(): void
     {
-        $this->resolver->setCompanyId(1);
+        $this->resolver->setOrganizationId(1);
 
-        $this->assertEquals(1, $this->resolver->getCompanyId());
+        $this->assertEquals(1, $this->resolver->getOrganizationId());
     }
 
     public function test_setting_branch_clears_department(): void
     {
-        $this->resolver->setCompanyId(1);
+        $this->resolver->setOrganizationId(1);
         $this->resolver->setDepartmentId(5);
 
         $this->resolver->setBranchId(2);
@@ -42,24 +42,24 @@ class TenantContextResolverTest extends TestCase
 
     public function test_clear_resolves_all_contexts(): void
     {
-        $this->resolver->setCompanyId(1);
+        $this->resolver->setOrganizationId(1);
         $this->resolver->setBranchId(2);
         $this->resolver->setDepartmentId(3);
 
         $this->resolver->clear();
 
-        $this->assertNull($this->resolver->getCompanyId());
+        $this->assertNull($this->resolver->getOrganizationId());
         $this->assertNull($this->resolver->getBranchId());
         $this->assertNull($this->resolver->getDepartmentId());
     }
 
-    public function test_can_resolve_company_model(): void
+    public function test_can_resolve_organization_model(): void
     {
-        $company = Company::factory()->create();
+        $organization = Organization::factory()->create();
 
-        $this->resolver->setCompanyId($company->id);
+        $this->resolver->setOrganizationId($organization->id);
 
-        $this->assertTrue($this->resolver->getCompany()->is($company));
+        $this->assertTrue($this->resolver->getOrganization()->is($organization));
     }
 
     public function test_can_resolve_branch_model(): void

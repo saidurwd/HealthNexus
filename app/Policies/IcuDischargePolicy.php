@@ -32,7 +32,7 @@ class IcuDischargePolicy
 
     private function inScope(User $user, IcuDischargeSummary $summary): bool
     {
-        return $user->companies()->where('companies.id', $summary->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $summary->organization_id)->exists()
             && (! $summary->branch_id || $user->branches()->where('branches.id', $summary->branch_id)->exists());
     }
 }

@@ -38,7 +38,7 @@ class IpdBedAllocationService
             $this->bedStatus->transitionTo($locked, IpdBed::STATUS_OCCUPIED, $user, $reason);
 
             $allocation = IpdBedAllocation::create([
-                'company_id' => $admission->company_id,
+                'organization_id' => $admission->organization_id,
                 'branch_id' => $admission->branch_id,
                 'admission_id' => $admission->id,
                 'patient_id' => $admission->patient_id,
@@ -51,7 +51,7 @@ class IpdBedAllocationService
             ]);
 
             IpdBedMovement::create([
-                'company_id' => $admission->company_id,
+                'organization_id' => $admission->organization_id,
                 'branch_id' => $admission->branch_id,
                 'admission_id' => $admission->id,
                 'patient_id' => $admission->patient_id,

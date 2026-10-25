@@ -16,7 +16,7 @@ class NursingDashboardController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $user = $request->user();
 
@@ -27,14 +27,14 @@ class NursingDashboardController extends Controller
 
         $metrics = [
             'my_patients' => $myEpisodeIds->unique()->count(),
-            'ward_patients' => NursingEpisode::forTenant($companyId, $branchId)->where('status', NursingEpisode::STATUS_ACTIVE)->count(),
-            'pending_assessments' => \App\Models\Nursing\NursingAssessment::forTenant($companyId, $branchId)->where('status', 'draft')->count(),
-            'due_medications' => NursingMedicationAdministration::forTenant($companyId, $branchId)->whereIn('status', ['scheduled', 'due'])->count(),
-            'overdue_medications' => NursingMedicationAdministration::forTenant($companyId, $branchId)->where('status', 'due')->where('scheduled_at', '<', now())->count(),
-            'pending_tasks' => NursingTask::forTenant($companyId, $branchId)->where('status', NursingTask::STATUS_PENDING)->count(),
-            'overdue_tasks' => NursingTask::forTenant($companyId, $branchId)->where('status', NursingTask::STATUS_OVERDUE)->count(),
-            'critical_alerts' => \App\Models\Nursing\NursingAlert::forTenant($companyId, $branchId)->whereNull('resolved_at')->whereIn('severity', ['high', 'critical'])->count(),
-            'pending_handover' => \App\Models\Nursing\NursingHandover::forTenant($companyId, $branchId)->where('status', 'pending_acknowledgement')->count(),
+            'ward_patients' => NursingEpisode::forTenant($organizationId, $branchId)->where('status', NursingEpisode::STATUS_ACTIVE)->count(),
+            'pending_assessments' => \App\Models\Nursing\NursingAssessment::forTenant($organizationId, $branchId)->where('status', 'draft')->count(),
+            'due_medications' => NursingMedicationAdministration::forTenant($organizationId, $branchId)->whereIn('status', ['scheduled', 'due'])->count(),
+            'overdue_medications' => NursingMedicationAdministration::forTenant($organizationId, $branchId)->where('status', 'due')->where('scheduled_at', '<', now())->count(),
+            'pending_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', NursingTask::STATUS_PENDING)->count(),
+            'overdue_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', NursingTask::STATUS_OVERDUE)->count(),
+            'critical_alerts' => \App\Models\Nursing\NursingAlert::forTenant($organizationId, $branchId)->whereNull('resolved_at')->whereIn('severity', ['high', 'critical'])->count(),
+            'pending_handover' => \App\Models\Nursing\NursingHandover::forTenant($organizationId, $branchId)->where('status', 'pending_acknowledgement')->count(),
         ];
 
         $myPatients = NursingEpisode::query()

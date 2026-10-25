@@ -17,10 +17,10 @@ class IcuAlertController extends Controller
     {
         $this->authorize('viewAny', IcuCriticalAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $alerts = IcuCriticalAlert::forTenant($companyId, $branchId)
+        $alerts = IcuCriticalAlert::forTenant($organizationId, $branchId)
             ->with('episode.patient')
             ->when($request->filled('unacknowledged'), fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('triggered_at')

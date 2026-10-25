@@ -31,7 +31,7 @@ class SecurityLogger
 
         $securityEvent = SecurityEvent::create([
             'user_id' => $user?->id,
-            'company_id' => $this->resolver->getCompanyId(),
+            'organization_id' => $this->resolver->getOrganizationId(),
             'branch_id' => $this->resolver->getBranchId(),
             'event' => $event,
             'severity' => $severity,

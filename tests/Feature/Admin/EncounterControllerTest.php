@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -17,7 +17,7 @@ class EncounterControllerTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -28,19 +28,19 @@ class EncounterControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.update', 'guard_name' => 'web']);
         Permission::create(['name' => 'encounters.delete', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('encounters.view');
         $this->user->givePermissionTo('encounters.create');
         $this->user->givePermissionTo('encounters.update');
@@ -48,13 +48,13 @@ class EncounterControllerTest extends TestCase
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
     }
 
     public function test_user_can_view_encounters_index(): void
     {
-        Encounter::factory()->count(3)->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        Encounter::factory()->count(3)->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/admin/encounters');
 
@@ -89,7 +89,7 @@ class EncounterControllerTest extends TestCase
 
     public function test_user_can_view_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/admin/encounters/'.$encounter->id);
 
@@ -99,7 +99,7 @@ class EncounterControllerTest extends TestCase
 
     public function test_user_can_update_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
         $response = $this->put('/admin/encounters/'.$encounter->id, [
             'status' => 'completed',
@@ -114,7 +114,7 @@ class EncounterControllerTest extends TestCase
 
     public function test_user_can_delete_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->delete('/admin/encounters/'.$encounter->id);
 

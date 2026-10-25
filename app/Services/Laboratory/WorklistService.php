@@ -13,11 +13,11 @@ class WorklistService
     /**
      * @param  array{section_id?:int,test_id?:int,priority?:string,status?:string,date?:string}  $filters
      */
-    public function query(int $companyId, ?int $branchId, array $filters = []): LengthAwarePaginator
+    public function query(int $organizationId, ?int $branchId, array $filters = []): LengthAwarePaginator
     {
         return LabOrderItem::query()
-            ->whereHas('labOrder', function ($q) use ($companyId, $branchId) {
-                $q->forTenant($companyId, $branchId);
+            ->whereHas('labOrder', function ($q) use ($organizationId, $branchId) {
+                $q->forTenant($organizationId, $branchId);
             })
             ->whereIn('status', ['received', 'processing'])
             ->with(['labOrder.patient', 'test.section', 'specimen'])

@@ -15,11 +15,11 @@ class OtReportingController extends Controller
     {
         Gate::authorize('ot.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $byStatus = OtSurgery::where('company_id', $companyId)
+        $byStatus = OtSurgery::where('organization_id', $organizationId)
             ->select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total', 'status');
-        $bySpecialty = OtSurgery::where('ot_surgeries.company_id', $companyId)
+        $bySpecialty = OtSurgery::where('ot_surgeries.organization_id', $organizationId)
             ->join('specialties', 'specialties.id', '=', 'ot_surgeries.specialty_id')
             ->select('specialties.name', DB::raw('count(*) as total'))->groupBy('specialties.name')->pluck('total', 'name');
 
@@ -30,14 +30,14 @@ class OtReportingController extends Controller
     {
         Gate::authorize('ot.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $cancellations = OtSurgeryScheduleEvent::join('ot_surgeries', 'ot_surgeries.id', '=', 'ot_surgery_schedule_events.surgery_id')
-            ->where('ot_surgeries.company_id', $companyId)
+            ->where('ot_surgeries.organization_id', $organizationId)
             ->select('change_type', DB::raw('count(*) as total'))->groupBy('change_type')->pluck('total', 'change_type');
 
         $delays = OtSurgeryScheduleEvent::join('ot_surgeries', 'ot_surgeries.id', '=', 'ot_surgery_schedule_events.surgery_id')
-            ->where('ot_surgeries.company_id', $companyId)
+            ->where('ot_surgeries.organization_id', $organizationId)
             ->where('ot_surgery_schedule_events.change_type', OtSurgeryScheduleEvent::TYPE_DELAYED)
             ->select('delay_category', DB::raw('count(*) as total'), DB::raw('avg(delay_minutes) as avg_minutes'))
             ->groupBy('delay_category')->get();
@@ -49,10 +49,10 @@ class OtReportingController extends Controller
     {
         Gate::authorize('ot.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $complications = \App\Models\Ot\OtSurgicalComplication::join('ot_surgeries', 'ot_surgeries.id', '=', 'ot_surgical_complications.surgery_id')
-            ->where('ot_surgeries.company_id', $companyId)
+            ->where('ot_surgeries.organization_id', $organizationId)
             ->select('severity', DB::raw('count(*) as total'))->groupBy('severity')->pluck('total', 'severity');
 
         return view('admin.ot.reports.complications', compact('complications'));

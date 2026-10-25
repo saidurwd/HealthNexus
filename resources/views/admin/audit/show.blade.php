@@ -14,7 +14,7 @@
             <table class="table table-bordered">
                 <tr><th>ID</th><td>{{ $auditLog->id }}</td></tr>
                 <tr><th>User</th><td>{{ $auditLog->user?->name ?? 'System' }} ({{ $auditLog->user?->email ?? 'N/A' }})</td></tr>
-                <tr><th>Company</th><td>{{ $auditLog->company_id ?? 'N/A' }}</td></tr>
+                <tr><th>Organization</th><td>{{ $auditLog->organization_id ?? 'N/A' }}</td></tr>
                 <tr><th>Branch</th><td>{{ $auditLog->branch_id ?? 'N/A' }}</td></tr>
                 <tr><th>Action</th><td>{{ $auditLog->action }}</td></tr>
                 <tr><th>Model</th><td>{{ $auditLog->model_type ?? 'N/A' }}</td></tr>

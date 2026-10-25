@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_bed_allocations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('admission_id')->constrained('ipd_admissions')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->index(['admission_id', 'released_at']);
             $table->index(['bed_id', 'released_at']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
         });
     }
 

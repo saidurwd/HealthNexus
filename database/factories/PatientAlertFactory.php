@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -12,7 +12,7 @@ class PatientAlertFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'patient_id' => Patient::factory(),
             'alert_type' => fake()->randomElement(['allergy', 'fall_risk', 'infection', 'vip', 'custom']),
             'title' => fake()->sentence(3),

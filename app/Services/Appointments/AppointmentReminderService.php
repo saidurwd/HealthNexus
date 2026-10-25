@@ -24,7 +24,7 @@ class AppointmentReminderService
 
         $appointmentAt = $appointment->appointment_date->copy()->setTimeFromTimeString($appointment->appointment_time->format('H:i'));
 
-        $rules = AppointmentReminderRule::where('company_id', $appointment->company_id)
+        $rules = AppointmentReminderRule::where('organization_id', $appointment->organization_id)
             ->where('is_active', true)
             ->get()
             ->filter(fn (AppointmentReminderRule $rule) => $rule->appliesTo($appointment));
@@ -35,7 +35,7 @@ class AppointmentReminderService
             return AppointmentReminder::updateOrCreate(
                 ['appointment_id' => $appointment->id, 'rule_id' => $rule->id],
                 [
-                    'company_id' => $appointment->company_id,
+                    'organization_id' => $appointment->organization_id,
                     'channel' => $rule->channel,
                     'scheduled_for' => $scheduledFor,
                     'status' => $scheduledFor->isFuture() ? 'pending' : 'cancelled',

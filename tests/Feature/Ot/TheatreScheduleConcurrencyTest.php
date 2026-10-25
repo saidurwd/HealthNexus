@@ -46,15 +46,15 @@ class TheatreScheduleConcurrencyTest extends OtTestCase
             return;
         }
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO ot_theatres (company_id, theatre_code, name, capacity, status, is_active, created_at, updated_at)
-            VALUES ({$companyId}, 'OT-CONC', 'Concurrency Theatre', 1, 'available', 1, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ot_theatres (organization_id, theatre_code, name, capacity, status, is_active, created_at, updated_at)
+            VALUES ({$organizationId}, 'OT-CONC', 'Concurrency Theatre', 1, 'available', 1, NOW(), NOW())");
         $theatreId = (int) $pdoA->lastInsertId();
 
         try {

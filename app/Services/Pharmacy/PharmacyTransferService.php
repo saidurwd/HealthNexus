@@ -36,11 +36,11 @@ class PharmacyTransferService
 
         return DB::transaction(function () use ($source, $destination, $items, $user) {
             $transfer = PharmacyTransfer::create([
-                'company_id' => $source->company_id,
+                'organization_id' => $source->organization_id,
                 'branch_id' => $source->branch_id,
                 'source_store_id' => $source->id,
                 'destination_store_id' => $destination->id,
-                'transfer_number' => $this->numbers->generateTransferNumber($source->company_id, $source->branch_id),
+                'transfer_number' => $this->numbers->generateTransferNumber($source->organization_id, $source->branch_id),
                 'status' => 'requested',
                 'requested_by' => $user->id,
                 'requested_at' => now(),

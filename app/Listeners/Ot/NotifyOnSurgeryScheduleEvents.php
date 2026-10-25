@@ -42,7 +42,7 @@ class NotifyOnSurgeryScheduleEvents
     private function notify($surgery, string $template, array $params): void
     {
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ot_coordinator', 'ot_manager']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $surgery->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $surgery->organization_id))
             ->get();
 
         if ($recipients->isEmpty()) {

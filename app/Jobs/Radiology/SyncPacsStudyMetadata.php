@@ -37,7 +37,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
 
         $order = $examination->orderItem->radiologyOrder;
         $server = RadiologyPacsServer::query()
-            ->forTenant($examination->company_id, $examination->branch_id)
+            ->forTenant($examination->organization_id, $examination->branch_id)
             ->where('is_active', true)
             ->where('is_default', true)
             ->first();
@@ -71,7 +71,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
             $study = RadiologyStudy::query()->updateOrCreate(
                 ['radiology_examination_id' => $examination->id],
                 [
-                    'company_id' => $examination->company_id,
+                    'organization_id' => $examination->organization_id,
                     'branch_id' => $examination->branch_id,
                     'patient_id' => $examination->patient_id,
                     'pacs_server_id' => $server->id,
@@ -113,7 +113,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
     private function logEvent(RadiologyExamination $examination, ?RadiologyPacsServer $server, string $status, string $summary): void
     {
         RadiologyDicomEvent::create([
-            'company_id' => $examination->company_id,
+            'organization_id' => $examination->organization_id,
             'branch_id' => $examination->branch_id,
             'radiology_examination_id' => $examination->id,
             'pacs_server_id' => $server?->id,

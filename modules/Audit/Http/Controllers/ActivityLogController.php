@@ -28,7 +28,7 @@ class ActivityLogController extends Controller
 
     public function show(ActivityLog $activityLog)
     {
-        $activityLog->load('user', 'company', 'branch', 'entity');
+        $activityLog->load('user', 'organization', 'branch', 'entity');
 
         return view('admin.activity.show', compact('activityLog'));
     }

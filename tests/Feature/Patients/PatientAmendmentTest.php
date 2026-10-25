@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Patients;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Setting;
 use App\Models\User;
@@ -48,10 +48,10 @@ class PatientAmendmentTest extends TestCase
 
     public function test_request_creates_a_pending_amendment_and_does_not_apply_immediately_when_a_workflow_exists(): void
     {
-        $company = Company::factory()->create();
-        $patient = Patient::factory()->create(['company_id' => $company->id, 'sex' => 'M']);
+        $organization = Organization::factory()->create();
+        $patient = Patient::factory()->create(['organization_id' => $organization->id, 'sex' => 'M']);
         $requester = User::factory()->create();
-        $this->seedAmendmentWorkflow($company);
+        $this->seedAmendmentWorkflow($organization);
 
         $amendment = app(PatientAmendmentService::class)->request($patient, ['sex' => 'F'], 'Corrected from source ID', $requester);
 
@@ -62,13 +62,13 @@ class PatientAmendmentTest extends TestCase
 
     public function test_approve_applies_the_proposed_changes_once_the_workflow_completes(): void
     {
-        $company = Company::factory()->create();
-        $patient = Patient::factory()->create(['company_id' => $company->id, 'sex' => 'M']);
+        $organization = Organization::factory()->create();
+        $patient = Patient::factory()->create(['organization_id' => $organization->id, 'sex' => 'M']);
         $requester = User::factory()->create();
         $approver = User::factory()->create();
         $approver->assignRole($this->hospitalAdminRole());
 
-        $this->seedAmendmentWorkflow($company);
+        $this->seedAmendmentWorkflow($organization);
 
         $service = app(PatientAmendmentService::class);
         $amendment = $service->request($patient, ['sex' => 'F'], 'Corrected from source ID', $requester);
@@ -82,13 +82,13 @@ class PatientAmendmentTest extends TestCase
 
     public function test_reject_leaves_the_patient_record_unchanged(): void
     {
-        $company = Company::factory()->create();
-        $patient = Patient::factory()->create(['company_id' => $company->id, 'sex' => 'M']);
+        $organization = Organization::factory()->create();
+        $patient = Patient::factory()->create(['organization_id' => $organization->id, 'sex' => 'M']);
         $requester = User::factory()->create();
         $approver = User::factory()->create();
         $approver->assignRole($this->hospitalAdminRole());
 
-        $this->seedAmendmentWorkflow($company);
+        $this->seedAmendmentWorkflow($organization);
 
         $service = app(PatientAmendmentService::class);
         $amendment = $service->request($patient, ['sex' => 'F'], 'Corrected from source ID', $requester);
@@ -99,10 +99,10 @@ class PatientAmendmentTest extends TestCase
         $this->assertSame('M', $patient->fresh()->sex);
     }
 
-    public function test_request_applies_directly_when_no_workflow_is_configured_for_the_company(): void
+    public function test_request_applies_directly_when_no_workflow_is_configured_for_the_organization(): void
     {
-        $company = Company::factory()->create();
-        $patient = Patient::factory()->create(['company_id' => $company->id, 'sex' => 'M']);
+        $organization = Organization::factory()->create();
+        $patient = Patient::factory()->create(['organization_id' => $organization->id, 'sex' => 'M']);
         $requester = User::factory()->create();
 
         $amendment = app(PatientAmendmentService::class)->request($patient, ['sex' => 'F'], 'No workflow configured', $requester);
@@ -116,10 +116,10 @@ class PatientAmendmentTest extends TestCase
         return \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'hospital_admin', 'guard_name' => 'web']);
     }
 
-    private function seedAmendmentWorkflow(Company $company): Workflow
+    private function seedAmendmentWorkflow(Organization $organization): Workflow
     {
         $workflow = Workflow::create([
-            'company_id' => $company->id, 'code' => 'patient_amendment', 'name' => 'Patient Record Amendment', 'is_active' => true,
+            'organization_id' => $organization->id, 'code' => 'patient_amendment', 'name' => 'Patient Record Amendment', 'is_active' => true,
         ]);
 
         $step = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Admin Approval', 'is_final' => true]);

@@ -28,22 +28,22 @@ class AdjustmentServiceTest extends BillingTestCase
 
         $invoices = app(InvoiceService::class);
         $lifecycle = app(InvoiceLifecycleService::class);
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '1000.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
         ]);
 
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'billing_item_id' => $item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '1000.00', 'gross_amount' => '1000.00',
@@ -51,7 +51,7 @@ class AdjustmentServiceTest extends BillingTestCase
             'net_amount' => '1000.00', 'charged_at' => now(),
         ]);
 
-        $this->invoice = $invoices->createDraft($patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $this->invoice = $invoices->createDraft($patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $invoices->addCharges($this->invoice, new Collection([$charge]));
         $this->invoice = $lifecycle->finalize($this->invoice, $this->user);
     }
@@ -59,7 +59,7 @@ class AdjustmentServiceTest extends BillingTestCase
     public function test_discount_adjustment_only_applies_to_invoice_after_approval(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $adjustment = $this->adjustments->request($this->invoice, 'discount', '0', '100', 'Loyalty discount', $this->user);
 
@@ -77,7 +77,7 @@ class AdjustmentServiceTest extends BillingTestCase
     public function test_write_off_adjustment_zeroes_due_amount_and_sets_status(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $adjustment = $this->adjustments->request($this->invoice, 'write_off', (string) $this->invoice->grand_total, '0', 'Uncollectable', $this->user);
         $this->adjustments->approve($adjustment, $approver);
@@ -90,7 +90,7 @@ class AdjustmentServiceTest extends BillingTestCase
     public function test_cannot_approve_an_already_approved_adjustment(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $adjustment = $this->adjustments->request($this->invoice, 'discount', '0', '50', 'Discount', $this->user);
         $this->adjustments->approve($adjustment, $approver);

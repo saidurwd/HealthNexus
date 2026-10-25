@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_receipts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('payment_id')->unique()->constrained('billing_payments')->cascadeOnDelete();
             $table->foreignId('invoice_id')->nullable()->constrained('billing_invoices')->nullOnDelete();
@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('issued_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['company_id', 'receipt_number']);
-            $table->index(['company_id', 'branch_id', 'issued_at']);
+            $table->unique(['organization_id', 'receipt_number']);
+            $table->index(['organization_id', 'branch_id', 'issued_at']);
         });
     }
 

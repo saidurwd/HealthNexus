@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_stock_counts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('store_id')->constrained('pharmacy_stores')->cascadeOnDelete();
             $table->string('count_number');
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'count_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'count_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('store_id');
         });
     }

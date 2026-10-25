@@ -17,11 +17,11 @@ class BillingNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -31,7 +31,7 @@ class BillingNumberGenerator
                 BillingCounter::query()->firstOrCreate($attributes, ['last_number' => 0]);
             } catch (QueryException) {
                 // Lost a race to create the counter row — another concurrent transaction
-                // already inserted it (unique constraint on company/branch/type/prefix); fall
+                // already inserted it (unique constraint on organization/branch/type/prefix); fall
                 // through to the locked read below, which will now find it.
             }
 
@@ -44,29 +44,29 @@ class BillingNumberGenerator
         });
     }
 
-    public function generateInvoiceNumber(int $companyId, ?int $branchId): string
+    public function generateInvoiceNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'INV', $this->settings->get('billing.invoice_prefix', 'INV'));
+        return $this->generate($organizationId, $branchId, 'INV', $this->settings->get('billing.invoice_prefix', 'INV'));
     }
 
-    public function generatePaymentNumber(int $companyId, ?int $branchId): string
+    public function generatePaymentNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'PMT', $this->settings->get('billing.payment_prefix', 'PMT'));
+        return $this->generate($organizationId, $branchId, 'PMT', $this->settings->get('billing.payment_prefix', 'PMT'));
     }
 
-    public function generateReceiptNumber(int $companyId, ?int $branchId): string
+    public function generateReceiptNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'RCT', $this->settings->get('billing.receipt_prefix', 'RCT'));
+        return $this->generate($organizationId, $branchId, 'RCT', $this->settings->get('billing.receipt_prefix', 'RCT'));
     }
 
-    public function generateRefundNumber(int $companyId, ?int $branchId): string
+    public function generateRefundNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'RFD', $this->settings->get('billing.refund_prefix', 'RFD'));
+        return $this->generate($organizationId, $branchId, 'RFD', $this->settings->get('billing.refund_prefix', 'RFD'));
     }
 
-    public function generateAdjustmentNumber(int $companyId, ?int $branchId): string
+    public function generateAdjustmentNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'ADJ', $this->settings->get('billing.adjustment_prefix', 'ADJ'));
+        return $this->generate($organizationId, $branchId, 'ADJ', $this->settings->get('billing.adjustment_prefix', 'ADJ'));
     }
 
     private function format(string $prefix, int $sequence): string

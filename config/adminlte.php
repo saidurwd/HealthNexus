@@ -805,9 +805,9 @@ return [
                 ],
                 [
                     'text' => 'Hospital & Branches',
-                    'url' => '/admin/companies',
+                    'url' => '/admin/organizations',
                     'icon' => 'bi bi-building',
-                    'can' => 'manage companies',
+                    'can' => 'manage organizations',
                 ],
                 [
                     'text' => 'Departments',
@@ -1087,7 +1087,7 @@ return [
                     'can' => 'billing.corporate.view',
                     'submenu' => [
                         [
-                            'text' => 'Companies',
+                            'text' => 'Organizations',
                             'url' => '/admin/billing/corporates',
                             'icon' => 'bi bi-building',
                             'can' => 'billing.corporate.view',

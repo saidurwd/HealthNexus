@@ -15,7 +15,7 @@ class ProviderUnavailability extends Model
     protected $table = 'provider_unavailability';
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'provider_id',
         'reason_type',
@@ -30,9 +30,9 @@ class ProviderUnavailability extends Model
         'end_at' => 'datetime',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function provider(): BelongsTo

@@ -60,11 +60,11 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Companies</label>
-                            @foreach($companies as $company)
+                            <label class="form-label">Organizations</label>
+                            @foreach($organizations as $organization)
                                 <div class="form-check">
-                                    <input type="checkbox" name="companies[]" value="{{ $company->id }}" id="company_{{ $company->id }}" class="form-check-input" {{ in_array($company->id, old('companies', [])) ? 'checked' : '' }}>
-                                    <label for="company_{{ $company->id }}" class="form-check-label">{{ $company->name }} ({{ $company->code }})</label>
+                                    <input type="checkbox" name="organizations[]" value="{{ $organization->id }}" id="organization_{{ $organization->id }}" class="form-check-input" {{ in_array($organization->id, old('organizations', [])) ? 'checked' : '' }}>
+                                    <label for="organization_{{ $organization->id }}" class="form-check-label">{{ $organization->name }} ({{ $organization->code }})</label>
                                 </div>
                             @endforeach
                         </div>
@@ -73,7 +73,7 @@
                             @foreach($branches as $branch)
                                 <div class="form-check">
                                     <input type="checkbox" name="branches[]" value="{{ $branch->id }}" id="branch_{{ $branch->id }}" class="form-check-input" {{ in_array($branch->id, old('branches', [])) ? 'checked' : '' }}>
-                                    <label for="branch_{{ $branch->id }}" class="form-check-label">{{ $branch->name }} ({{ $branch->company->name ?? '' }})</label>
+                                    <label for="branch_{{ $branch->id }}" class="form-check-label">{{ $branch->name }} ({{ $branch->organization->name ?? '' }})</label>
                                 </div>
                             @endforeach
                         </div>

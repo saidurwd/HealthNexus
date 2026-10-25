@@ -27,7 +27,7 @@ class OtSurgeryRequest extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'patient_id', 'encounter_id', 'admission_id', 'clinical_order_id',
+        'organization_id', 'branch_id', 'patient_id', 'encounter_id', 'admission_id', 'clinical_order_id',
         'requesting_provider_id', 'specialty_id', 'procedure_id', 'indication', 'site', 'laterality', 'diagnosis_id',
         'priority', 'surgery_type', 'preferred_date', 'estimated_duration_minutes',
         'required_theatre_capability', 'anesthesia_requirement', 'special_equipment',
@@ -100,8 +100,8 @@ class OtSurgeryRequest extends Model
         return $this->belongsTo(WorkflowInstance::class);
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

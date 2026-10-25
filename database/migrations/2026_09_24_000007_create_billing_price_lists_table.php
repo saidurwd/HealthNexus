@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_price_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('code');
@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
-            $table->index(['company_id', 'branch_id', 'status', 'priority', 'effective_from'], 'billing_price_lists_scope_idx');
+            $table->unique(['organization_id', 'branch_id', 'code']);
+            $table->index(['organization_id', 'branch_id', 'status', 'priority', 'effective_from'], 'billing_price_lists_scope_idx');
         });
     }
 

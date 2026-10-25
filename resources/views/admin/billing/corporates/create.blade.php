@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Corporate Company</h3></div>
+        <div class="card-header"><h3 class="card-title">New Corporate Organization</h3></div>
         <form action="{{ route('admin.billing.corporates.store') }}" method="post">
             @csrf
             <div class="card-body row">

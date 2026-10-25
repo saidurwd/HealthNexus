@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AppointmentDocument extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'appointment_id',
         'file_id',
         'document_type',

@@ -23,11 +23,11 @@ class LabSpecimenController extends Controller
     {
         $this->authorize('viewAny', LabSpecimen::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $specimens = LabSpecimen::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['labOrder.patient', 'specimenType'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('accession_number', 'like', '%'.$request->input('search').'%'))

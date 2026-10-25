@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Surgical specialty reuses the existing company-wide `specialties` table (already used by
+     * Surgical specialty reuses the existing organization-wide `specialties` table (already used by
      * Provider.specialty_id and IpdAdmission.specialty_id) — no ot_specialties table.
      */
     public function up(): void
     {
         Schema::create('ot_procedures', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('ot_procedure_categories')->nullOnDelete();
             $table->foreignId('specialty_id')->nullable()->constrained()->nullOnDelete();
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
         });
     }
 

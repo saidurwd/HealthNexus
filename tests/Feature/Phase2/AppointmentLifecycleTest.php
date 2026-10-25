@@ -6,7 +6,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentNote;
 use App\Models\AppointmentStatusHistory;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +18,7 @@ class AppointmentLifecycleTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
-    private Company $company;
+    private Organization $organization;
     private Branch $branch;
     private Patient $patient;
     private Appointment $appointment;
@@ -28,15 +28,15 @@ class AppointmentLifecycleTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         foreach ([
-            'manage companies', 'appointments.view', 'appointments.update', 'appointments.confirm',
+            'manage organizations', 'appointments.view', 'appointments.update', 'appointments.confirm',
             'appointments.checkin', 'appointments.cancel', 'appointments.reschedule', 'appointments.no_show',
         ] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
@@ -44,16 +44,16 @@ class AppointmentLifecycleTest extends TestCase
         }
 
         $this->appointment = Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'status' => 'scheduled',
         ]);
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 
@@ -164,7 +164,7 @@ class AppointmentLifecycleTest extends TestCase
         $this->assertDatabaseHas('appointment_notes', [
             'appointment_id' => $this->appointment->id,
             'note' => 'Patient requested afternoon slot.',
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
     }
 

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
@@ -18,7 +18,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -31,12 +31,12 @@ class EncounterClinicalControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         foreach (['encounters.view', 'clinical.vitals.create', 'clinical.diagnosis.create', 'prescription.create'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
@@ -45,11 +45,11 @@ class EncounterClinicalControllerTest extends TestCase
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
         $this->encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'status' => 'in_progress',
@@ -117,7 +117,7 @@ class EncounterClinicalControllerTest extends TestCase
     public function test_clinical_workspace_renders_with_full_sub_record_set_and_allergy_alert(): void
     {
         PatientAllergy::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'substance' => 'Penicillin',
             'severity' => 'severe',

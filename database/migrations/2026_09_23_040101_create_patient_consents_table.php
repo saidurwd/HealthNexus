@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_consents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->string('consent_type');
             $table->unsignedInteger('version')->default(1);
@@ -25,7 +25,7 @@ return new class extends Migration
 
             // Consents are versioned and never overwritten — each grant/withdrawal is a new row,
             // so history stays intact for audit/legal purposes.
-            $table->index(['company_id', 'patient_id', 'consent_type'], 'patient_consent_type_idx');
+            $table->index(['organization_id', 'patient_id', 'consent_type'], 'patient_consent_type_idx');
         });
     }
 

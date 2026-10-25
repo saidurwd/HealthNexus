@@ -4,7 +4,7 @@ namespace Tests\Feature\Api\V1;
 
 use App\Models\Appointment;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
@@ -18,33 +18,33 @@ class AppointmentApiTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->organization = Organization::factory()->create();
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         foreach (['appointments.view', 'appointments.create', 'appointments.update', 'appointments.confirm', 'appointments.checkin', 'appointments.cancel', 'appointments.reschedule', 'appointments.no_show'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $this->organization->id]);
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
-        $this->withHeader('X-Company-Id', (string) $this->company->id);
+        $this->withHeader('X-Organization-Id', (string) $this->organization->id);
         $this->withHeader('X-Branch-Id', (string) $branch->id);
     }
 
     public function test_user_can_list_appointments(): void
     {
-        Appointment::factory()->count(2)->create(['company_id' => $this->company->id]);
+        Appointment::factory()->count(2)->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get('/api/v1/appointments');
 
@@ -53,7 +53,7 @@ class AppointmentApiTest extends TestCase
 
     public function test_user_can_create_an_appointment(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $doctor = User::factory()->create();
 
         $response = $this->post('/api/v1/appointments', [
@@ -71,7 +71,7 @@ class AppointmentApiTest extends TestCase
 
     public function test_user_can_confirm_and_check_in_an_appointment(): void
     {
-        $appointment = Appointment::factory()->create(['company_id' => $this->company->id, 'status' => 'scheduled']);
+        $appointment = Appointment::factory()->create(['organization_id' => $this->organization->id, 'status' => 'scheduled']);
 
         $this->post("/api/v1/appointments/{$appointment->id}/confirm")->assertOk();
         $this->assertSame('confirmed', $appointment->fresh()->status);
@@ -82,7 +82,7 @@ class AppointmentApiTest extends TestCase
 
     public function test_availability_endpoint_returns_slots(): void
     {
-        $provider = Provider::factory()->create(['company_id' => $this->company->id]);
+        $provider = Provider::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get("/api/v1/appointments/availability?provider_id={$provider->id}&date=".now()->addDay()->toDateString());
 
@@ -91,8 +91,8 @@ class AppointmentApiTest extends TestCase
 
     public function test_providers_endpoint_lists_active_providers(): void
     {
-        Provider::factory()->create(['company_id' => $this->company->id, 'status' => 'active']);
-        Provider::factory()->create(['company_id' => $this->company->id, 'status' => 'inactive']);
+        Provider::factory()->create(['organization_id' => $this->organization->id, 'status' => 'active']);
+        Provider::factory()->create(['organization_id' => $this->organization->id, 'status' => 'inactive']);
 
         $response = $this->get('/api/v1/providers');
 

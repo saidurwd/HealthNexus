@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Collection;
  * Regression coverage for the dashboard/report pages: these run raw joined SQL queries
  * (RevenueService) that a service-level unit test with mocked/empty data won't exercise
  * end-to-end. Seeds a real paid invoice so the join queries actually run against rows,
- * not just empty tables — this is what caught the "Column 'company_id' in WHERE is
+ * not just empty tables — this is what caught the "Column 'organization_id' in WHERE is
  * ambiguous" bug in RevenueService::cashierSummary() (a join against
- * billing_payment_methods, which also has company_id/branch_id columns).
+ * billing_payment_methods, which also has organization_id/branch_id columns).
  */
 class BillingDashboardAndReportsTest extends BillingTestCase
 {
@@ -31,27 +31,27 @@ class BillingDashboardAndReportsTest extends BillingTestCase
         $lifecycle = app(InvoiceLifecycleService::class);
         $payments = app(PaymentService::class);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
         ]);
 
         $method = BillingPaymentMethod::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'billing_item_id' => $item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '500.00', 'gross_amount' => '500.00',
@@ -59,7 +59,7 @@ class BillingDashboardAndReportsTest extends BillingTestCase
             'net_amount' => '500.00', 'charged_at' => now(),
         ]);
 
-        $invoice = $invoices->createDraft($patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $invoice = $invoices->createDraft($patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $invoices->addCharges($invoice, new Collection([$charge]));
         $invoice = $lifecycle->finalize($invoice, $this->user);
 

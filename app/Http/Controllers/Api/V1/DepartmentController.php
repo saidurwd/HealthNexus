@@ -5,32 +5,32 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    public function index(Request $request, Company $company, Branch $branch): JsonResponse
+    public function index(Request $request, Organization $organization, Branch $branch): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $departments = Department::query()
-            ->where('company_id', $company->id)
+            ->where('organization_id', $organization->id)
             ->where('branch_id', $branch->id)
             ->get();
 
         return ApiResponse::success($departments);
     }
 
-    public function store(Request $request, Company $company, Branch $branch): JsonResponse
+    public function store(Request $request, Organization $organization, Branch $branch): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -42,26 +42,26 @@ class DepartmentController extends Controller
             'is_active' => ['boolean'],
         ]);
 
-        $department = $company->departments()->create(array_merge($validated, ['branch_id' => $branch->id]));
+        $department = $organization->departments()->create(array_merge($validated, ['branch_id' => $branch->id]));
 
         return ApiResponse::success($department, 'Department created successfully', 201);
     }
 
-    public function show(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
+    public function show(Request $request, Organization $organization, Branch $branch, Department $department): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
         abort_if($department->branch_id !== $branch->id, 404);
 
         return ApiResponse::success($department);
     }
 
-    public function update(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
+    public function update(Request $request, Organization $organization, Branch $branch, Department $department): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
         abort_if($department->branch_id !== $branch->id, 404);
 
         $validated = $request->validate([
@@ -79,11 +79,11 @@ class DepartmentController extends Controller
         return ApiResponse::success($department, 'Department updated successfully');
     }
 
-    public function destroy(Request $request, Company $company, Branch $branch, Department $department): JsonResponse
+    public function destroy(Request $request, Organization $organization, Branch $branch, Department $department): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
         abort_if($department->branch_id !== $branch->id, 404);
 
         $department->delete();

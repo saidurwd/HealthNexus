@@ -21,11 +21,11 @@ class LabOrderController extends Controller
     {
         $this->authorize('viewAny', LabOrder::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $orders = LabOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'items'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('order_number', 'like', '%'.$request->input('search').'%'))
@@ -42,8 +42,8 @@ class LabOrderController extends Controller
 
         $order->load(['patient', 'encounter', 'items.test', 'items.results', 'specimens', 'reports']);
 
-        $companyId = $order->company_id;
-        $availableTests = LabTest::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = $order->organization_id;
+        $availableTests = LabTest::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.orders.show', compact('order', 'availableTests'));
     }

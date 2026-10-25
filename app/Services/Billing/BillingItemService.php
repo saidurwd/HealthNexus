@@ -31,7 +31,7 @@ class BillingItemService
     public function createItem(array $data, User $user): BillingItem
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['item_code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['item_code']);
 
             return BillingItem::create([
                 ...$data,
@@ -45,7 +45,7 @@ class BillingItemService
     {
         return DB::transaction(function () use ($item, $data, $user) {
             if (isset($data['item_code']) && $data['item_code'] !== $item->item_code) {
-                $this->assertUniqueCode($item->company_id, $item->branch_id, $data['item_code'], $item->id);
+                $this->assertUniqueCode($item->organization_id, $item->branch_id, $data['item_code'], $item->id);
             }
 
             $item->update([...$data, 'updated_by' => $user->id]);
@@ -70,10 +70,10 @@ class BillingItemService
         $category->delete();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $itemCode, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $itemCode, ?int $exceptId = null): void
     {
         $exists = BillingItem::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('item_code', $itemCode)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

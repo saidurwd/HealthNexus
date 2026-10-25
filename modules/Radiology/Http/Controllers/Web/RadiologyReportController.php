@@ -25,11 +25,11 @@ class RadiologyReportController extends Controller
     {
         $this->authorize('viewAny', RadiologyReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $reports = RadiologyReport::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_current', true)
             ->with('examination.orderItem.radiologyOrder.patient')
             ->when($request->filled('search'), fn ($q) => $q->where('report_number', 'like', '%'.$request->input('search').'%'))
@@ -43,8 +43,8 @@ class RadiologyReportController extends Controller
     {
         $this->authorize('create', RadiologyReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $templates = RadiologyReportTemplate::query()->forTenant($companyId)->where('is_active', true)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $templates = RadiologyReportTemplate::query()->forTenant($organizationId)->where('is_active', true)->get();
 
         return view('admin.radiology.reports.create', compact('examination', 'templates'));
     }

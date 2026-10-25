@@ -25,12 +25,12 @@ class RadiologySchedulingController extends Controller
     {
         $this->authorize('view', $item->radiologyOrder);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $modalities = RadiologyModality::query()->forTenant($companyId, $branchId)->where('is_active', true)->get();
+        $modalities = RadiologyModality::query()->forTenant($organizationId, $branchId)->where('is_active', true)->get();
         $technologists = Provider::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->whereIn('provider_type', ['radiologist', 'radiology_technician'])
             ->where('status', 'active')
             ->get();

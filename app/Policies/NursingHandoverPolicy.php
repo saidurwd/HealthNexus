@@ -32,7 +32,7 @@ class NursingHandoverPolicy
 
     private function inScope(User $user, NursingHandover $handover): bool
     {
-        return $user->companies()->where('companies.id', $handover->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $handover->organization_id)->exists()
             && (! $handover->branch_id || $user->branches()->where('branches.id', $handover->branch_id)->exists());
     }
 }

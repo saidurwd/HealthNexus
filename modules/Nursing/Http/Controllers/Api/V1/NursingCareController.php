@@ -39,13 +39,13 @@ class NursingCareController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::success([
-            'active_episodes' => NursingEpisode::forTenant($companyId, $branchId)->where('status', 'active')->count(),
-            'pending_tasks' => NursingTask::forTenant($companyId, $branchId)->where('status', 'pending')->count(),
-            'open_escalations' => NursingEscalation::forTenant($companyId, $branchId)->whereNull('resolved_at')->count(),
+            'active_episodes' => NursingEpisode::forTenant($organizationId, $branchId)->where('status', 'active')->count(),
+            'pending_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', 'pending')->count(),
+            'open_escalations' => NursingEscalation::forTenant($organizationId, $branchId)->whereNull('resolved_at')->count(),
         ]);
     }
 
@@ -53,10 +53,10 @@ class NursingCareController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        return ApiResponse::paginated(NursingEpisode::forTenant($companyId, $branchId)->with('patient')->latest('start_at')->paginate(20));
+        return ApiResponse::paginated(NursingEpisode::forTenant($organizationId, $branchId)->with('patient')->latest('start_at')->paginate(20));
     }
 
     public function episode(NursingEpisode $episode)

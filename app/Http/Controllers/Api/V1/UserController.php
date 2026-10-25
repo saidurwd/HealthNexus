@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index(Request $request, Company $company): JsonResponse
+    public function index(Request $request, Organization $organization): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
         $query = User::query()
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $company->id));
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organization->id));
 
         if ($request->filled('branch_id')) {
             $query->whereHas('branches', fn ($q) => $q->where('branches.id', $request->branch_id));
@@ -38,20 +38,20 @@ class UserController extends Controller
         return ApiResponse::success($users);
     }
 
-    public function show(Request $request, Company $company, User $user): JsonResponse
+    public function show(Request $request, Organization $organization, User $user): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if(! $user->companies()->where('companies.id', $company->id)->exists(), 404);
+        abort_if(! $user->organizations()->where('organizations.id', $organization->id)->exists(), 404);
 
         return ApiResponse::success($user);
     }
 
-    public function update(Request $request, Company $company, User $user): JsonResponse
+    public function update(Request $request, Organization $organization, User $user): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if(! $user->companies()->where('companies.id', $company->id)->exists(), 404);
+        abort_if(! $user->organizations()->where('organizations.id', $organization->id)->exists(), 404);
 
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],

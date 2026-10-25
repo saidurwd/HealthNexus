@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class NursingEducation extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'topic',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'topic',
         'education_provided', 'method', 'patient_understanding', 'caregiver_involvement',
         'materials', 'provided_by', 'provided_at',
     ];
@@ -41,8 +41,8 @@ class NursingEducation extends Model
         return $this->belongsTo(User::class, 'provided_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

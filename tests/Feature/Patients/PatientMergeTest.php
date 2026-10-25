@@ -3,7 +3,7 @@
 namespace Tests\Feature\Patients;
 
 use App\Models\Appointment;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\PatientAddress;
@@ -24,9 +24,9 @@ class PatientMergeTest extends TestCase
 
     public function test_merge_soft_deletes_duplicate_and_marks_merged_into(): void
     {
-        $company = Company::factory()->create();
-        $master = Patient::factory()->create(['company_id' => $company->id]);
-        $duplicate = Patient::factory()->create(['company_id' => $company->id, 'first_name' => 'Original']);
+        $organization = Organization::factory()->create();
+        $master = Patient::factory()->create(['organization_id' => $organization->id]);
+        $duplicate = Patient::factory()->create(['organization_id' => $organization->id, 'first_name' => 'Original']);
 
         app(PatientService::class)->mergePatients($master, $duplicate);
 
@@ -40,14 +40,14 @@ class PatientMergeTest extends TestCase
 
     public function test_merge_transfers_clinical_relations_to_the_master(): void
     {
-        $company = Company::factory()->create();
-        $master = Patient::factory()->create(['company_id' => $company->id]);
-        $duplicate = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $master = Patient::factory()->create(['organization_id' => $organization->id]);
+        $duplicate = Patient::factory()->create(['organization_id' => $organization->id]);
 
-        $encounter = Encounter::factory()->create(['patient_id' => $duplicate->id, 'company_id' => $company->id]);
-        $appointment = Appointment::factory()->create(['patient_id' => $duplicate->id, 'company_id' => $company->id]);
-        $address = PatientAddress::factory()->create(['patient_id' => $duplicate->id, 'company_id' => $company->id]);
-        $guardian = PatientGuardian::factory()->create(['patient_id' => $duplicate->id, 'company_id' => $company->id]);
+        $encounter = Encounter::factory()->create(['patient_id' => $duplicate->id, 'organization_id' => $organization->id]);
+        $appointment = Appointment::factory()->create(['patient_id' => $duplicate->id, 'organization_id' => $organization->id]);
+        $address = PatientAddress::factory()->create(['patient_id' => $duplicate->id, 'organization_id' => $organization->id]);
+        $guardian = PatientGuardian::factory()->create(['patient_id' => $duplicate->id, 'organization_id' => $organization->id]);
 
         app(PatientService::class)->mergePatients($master, $duplicate);
 
@@ -59,9 +59,9 @@ class PatientMergeTest extends TestCase
 
     public function test_merge_records_a_timeline_event_on_the_master(): void
     {
-        $company = Company::factory()->create();
-        $master = Patient::factory()->create(['company_id' => $company->id]);
-        $duplicate = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $master = Patient::factory()->create(['organization_id' => $organization->id]);
+        $duplicate = Patient::factory()->create(['organization_id' => $organization->id]);
         $actor = User::factory()->create();
 
         app(PatientService::class)->mergePatients($master, $duplicate, $actor);

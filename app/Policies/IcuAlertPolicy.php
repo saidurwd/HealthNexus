@@ -32,7 +32,7 @@ class IcuAlertPolicy
 
     private function inScope(User $user, IcuCriticalAlert $alert): bool
     {
-        return $user->companies()->where('companies.id', $alert->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $alert->organization_id)->exists()
             && (! $alert->branch_id || $user->branches()->where('branches.id', $alert->branch_id)->exists());
     }
 }

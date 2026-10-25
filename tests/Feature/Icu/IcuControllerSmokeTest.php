@@ -54,7 +54,7 @@ class IcuControllerSmokeTest extends IcuTestCase
             '/api/v1/icu/episodes/'.$episode->id,
             '/api/v1/icu/admission-requests',
         ] as $url) {
-            app(TenantContextResolver::class)->setCompanyId($this->company->id);
+            app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
             app(TenantContextResolver::class)->setBranchId($this->branch->id);
             $this->getJson($url)->assertOk();
         }

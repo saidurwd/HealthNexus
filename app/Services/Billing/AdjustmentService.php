@@ -33,7 +33,7 @@ class AdjustmentService
 
         return DB::transaction(function () use ($invoice, $type, $originalValue, $newValue, $reason, $user) {
             return BillingAdjustment::create([
-                'company_id' => $invoice->company_id,
+                'organization_id' => $invoice->organization_id,
                 'branch_id' => $invoice->branch_id,
                 'invoice_id' => $invoice->id,
                 'payment_id' => null,

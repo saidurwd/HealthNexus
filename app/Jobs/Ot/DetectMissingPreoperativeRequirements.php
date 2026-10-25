@@ -46,7 +46,7 @@ class DetectMissingPreoperativeRequirements implements ShouldQueue
                 }
 
                 $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ot_coordinator', 'ot_nurse', 'ot_manager']))
-                    ->whereHas('companies', fn ($q) => $q->where('companies.id', $surgery->company_id))
+                    ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $surgery->organization_id))
                     ->get();
 
                 if ($recipients->isEmpty()) {

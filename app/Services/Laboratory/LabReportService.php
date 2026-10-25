@@ -24,10 +24,10 @@ class LabReportService
             }
 
             $report = LabReport::create([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'lab_order_id' => $order->id,
-                'report_number' => $this->numbers->generateReportNumber($order->company_id, $order->branch_id),
+                'report_number' => $this->numbers->generateReportNumber($order->organization_id, $order->branch_id),
                 'status' => 'final',
                 'generated_by' => $user->id,
                 'generated_at' => now(),

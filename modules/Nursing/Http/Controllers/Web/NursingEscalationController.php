@@ -22,10 +22,10 @@ class NursingEscalationController extends Controller
     {
         $this->authorize('viewAny', NursingEscalation::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $escalations = NursingEscalation::forTenant($companyId, $branchId)
+        $escalations = NursingEscalation::forTenant($organizationId, $branchId)
             ->with(['patient', 'admission', 'createdBy'])
             ->when($request->boolean('open'), fn ($q) => $q->whereNull('resolved_at'))
             ->latest()

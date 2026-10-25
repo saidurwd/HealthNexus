@@ -3,7 +3,7 @@
 namespace Tests\Feature\Workflow;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Patient;
 use App\Models\User;
@@ -23,7 +23,7 @@ class WorkflowEngineTest extends TestCase
 
     private WorkflowEngine $engine;
 
-    private Company $company;
+    private Organization $organization;
 
     private User $initiator;
 
@@ -40,11 +40,11 @@ class WorkflowEngineTest extends TestCase
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $this->engine = app(WorkflowEngine::class);
-        $this->company = Company::factory()->create();
+        $this->organization = Organization::factory()->create();
         $this->initiator = User::factory()->create();
         $this->supervisor = User::factory()->create();
         $this->finalApprover = User::factory()->create();
-        $this->subject = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->subject = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         Role::firstOrCreate(['name' => 'billing_supervisor', 'guard_name' => 'web']);
         $this->supervisor->assignRole('billing_supervisor');
@@ -55,7 +55,7 @@ class WorkflowEngineTest extends TestCase
      */
     private function makeTwoStepWorkflow(): Workflow
     {
-        $workflow = Workflow::create(['company_id' => $this->company->id, 'code' => 'test_approval', 'name' => 'Test Approval', 'is_active' => true]);
+        $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'test_approval', 'name' => 'Test Approval', 'is_active' => true]);
 
         $step1 = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Supervisor Review', 'is_final' => false]);
         WorkflowApprover::create(['workflow_step_id' => $step1->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'billing_supervisor']);
@@ -70,7 +70,7 @@ class WorkflowEngineTest extends TestCase
     {
         $workflow = $this->makeTwoStepWorkflow();
 
-        $instance = $this->engine->start($workflow, $this->subject, $this->initiator, ['company_id' => $this->company->id]);
+        $instance = $this->engine->start($workflow, $this->subject, $this->initiator, ['organization_id' => $this->organization->id]);
 
         $this->assertSame('draft', $instance->status);
         $this->assertNull($instance->current_step_id);
@@ -97,7 +97,7 @@ class WorkflowEngineTest extends TestCase
 
     public function test_submitting_a_zero_step_workflow_auto_approves(): void
     {
-        $workflow = Workflow::create(['company_id' => $this->company->id, 'code' => 'no_steps', 'name' => 'No Steps']);
+        $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'no_steps', 'name' => 'No Steps']);
         $instance = $this->engine->start($workflow, $this->subject, $this->initiator);
 
         $instance = $this->engine->submit($instance, $this->initiator);
@@ -214,16 +214,16 @@ class WorkflowEngineTest extends TestCase
 
     public function test_department_based_approver_eligibility(): void
     {
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
         $department = Department::create([
-            'company_id' => $this->company->id, 'branch_id' => $branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $branch->id,
             'name' => 'Finance', 'code' => 'FIN', 'is_active' => true,
         ]);
 
         $deptUser = User::factory()->create();
-        $deptUser->departments()->attach($department->id, ['access_level' => 'staff', 'company_id' => $this->company->id, 'branch_id' => $branch->id]);
+        $deptUser->departments()->attach($department->id, ['access_level' => 'staff', 'organization_id' => $this->organization->id, 'branch_id' => $branch->id]);
 
-        $workflow = Workflow::create(['company_id' => $this->company->id, 'code' => 'dept_approval', 'name' => 'Dept Approval']);
+        $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'dept_approval', 'name' => 'Dept Approval']);
         $step = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Finance Review', 'is_final' => true]);
         WorkflowApprover::create(['workflow_step_id' => $step->id, 'approver_type' => WorkflowApprover::TYPE_DEPARTMENT, 'department_id' => $department->id]);
 

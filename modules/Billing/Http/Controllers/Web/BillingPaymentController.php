@@ -24,11 +24,11 @@ class BillingPaymentController extends Controller
     {
         $this->authorize('viewAny', BillingPayment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $payments = BillingPayment::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'invoice', 'method'])
             ->latest('payment_date')
             ->paginate(20);
@@ -41,8 +41,8 @@ class BillingPaymentController extends Controller
         $this->authorize('create', BillingPayment::class);
 
         $invoice = $request->filled('invoice_id') ? BillingInvoice::findOrFail($request->input('invoice_id')) : null;
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $methods = BillingPaymentMethod::query()->forTenant($companyId)->where('is_active', true)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $methods = BillingPaymentMethod::query()->forTenant($organizationId)->where('is_active', true)->get();
 
         return view('admin.billing.payments.create', compact('invoice', 'methods'));
     }

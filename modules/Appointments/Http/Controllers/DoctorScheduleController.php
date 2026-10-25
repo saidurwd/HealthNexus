@@ -26,11 +26,11 @@ class DoctorScheduleController extends Controller
     {
         $this->authorize('manageSchedule', \App\Models\Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $schedules = DoctorSchedule::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($branchId, fn ($q, $id) => $q->where('branch_id', $id))
             ->when($request->filled('doctor_id'), fn ($q, $id) => $q->where('doctor_id', $id))
             ->when($request->filled('day_of_week'), fn ($q, $day) => $q->where('day_of_week', $day))
@@ -45,14 +45,14 @@ class DoctorScheduleController extends Controller
     {
         $this->authorize('manageSchedule', \App\Models\Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.schedules.create', compact('doctors', 'providers', 'departments', 'specialties'));
     }
@@ -88,14 +88,14 @@ class DoctorScheduleController extends Controller
     {
         $this->authorize('manageSchedule', \App\Models\Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.schedules.edit', compact('schedule', 'doctors', 'providers', 'departments', 'specialties'));
     }

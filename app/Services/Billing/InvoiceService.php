@@ -19,13 +19,13 @@ class InvoiceService
     ) {}
 
     /**
-     * @param  array{company_id:int,branch_id:int,invoice_type?:string,currency?:string,encounter_id?:int|null,corporate_id?:int|null,corporate_contract_id?:int|null,insurance_policy_id?:int|null,patient_category?:string|null,billing_party_type?:string|null,billing_party_id?:int|null,due_date?:string|null,notes?:string|null}  $context
+     * @param  array{organization_id:int,branch_id:int,invoice_type?:string,currency?:string,encounter_id?:int|null,corporate_id?:int|null,corporate_contract_id?:int|null,insurance_policy_id?:int|null,patient_category?:string|null,billing_party_type?:string|null,billing_party_id?:int|null,due_date?:string|null,notes?:string|null}  $context
      */
     public function createDraft(Patient $patient, array $context, User $user): BillingInvoice
     {
         return DB::transaction(function () use ($patient, $context, $user) {
             return BillingInvoice::create([
-                'company_id' => $context['company_id'],
+                'organization_id' => $context['organization_id'],
                 'branch_id' => $context['branch_id'],
                 'patient_id' => $patient->id,
                 'encounter_id' => $context['encounter_id'] ?? null,

@@ -16,7 +16,7 @@ class RadiologyProcedureService
     public function create(array $data, User $user): RadiologyProcedure
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return RadiologyProcedure::create([
                 ...$data,
@@ -30,7 +30,7 @@ class RadiologyProcedureService
     {
         return DB::transaction(function () use ($procedure, $data, $user) {
             if (isset($data['code']) && $data['code'] !== $procedure->code) {
-                $this->assertUniqueCode($procedure->company_id, $procedure->branch_id, $data['code'], $procedure->id);
+                $this->assertUniqueCode($procedure->organization_id, $procedure->branch_id, $data['code'], $procedure->id);
             }
 
             $procedure->update([...$data, 'updated_by' => $user->id]);
@@ -45,10 +45,10 @@ class RadiologyProcedureService
         $procedure->delete();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = RadiologyProcedure::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

@@ -31,9 +31,9 @@ class Breadcrumbs
         if (str_starts_with($name, 'admin.')) {
             $crumbs[] = ['text' => 'Dashboard', 'url' => route('home')];
 
-            if (str_contains($name, 'companies') && ! str_starts_with($name, 'admin.companies')) {
-                if (isset($params['company'])) {
-                    $crumbs[] = ['text' => 'Companies', 'url' => route('admin.companies.index')];
+            if (str_contains($name, 'organizations') && ! str_starts_with($name, 'admin.organizations')) {
+                if (isset($params['organization'])) {
+                    $crumbs[] = ['text' => 'Organizations', 'url' => route('admin.organizations.index')];
                 }
             }
         } elseif ($name === 'home') {
@@ -58,7 +58,7 @@ class Breadcrumbs
 
         if (isset($params['user']) && str_contains($name, 'users')) {
             $user = $params['user'];
-            if (in_array($name, ['admin.users.show', 'admin.users.edit', 'admin.users.update', 'admin.users.company-show', 'admin.users.company-edit', 'admin.users.company-update'])) {
+            if (in_array($name, ['admin.users.show', 'admin.users.edit', 'admin.users.update', 'admin.users.organization-show', 'admin.users.organization-edit', 'admin.users.organization-update'])) {
                 $crumbs[] = ['text' => $user instanceof \App\Models\User ? $user->name : 'User'];
             }
         }
@@ -73,9 +73,9 @@ class Breadcrumbs
             $crumbs[] = ['text' => 'Encounter'];
         }
 
-        if (isset($params['company']) && str_contains($name, 'companies')) {
-            $company = $params['company'];
-            $crumbs[] = ['text' => $company instanceof \App\Models\Company ? $company->name : 'Company'];
+        if (isset($params['organization']) && str_contains($name, 'organizations')) {
+            $organization = $params['organization'];
+            $crumbs[] = ['text' => $organization instanceof \App\Models\Organization ? $organization->name : 'Organization'];
         }
 
         if (isset($params['department']) && str_contains($name, 'departments')) {
@@ -113,8 +113,8 @@ class Breadcrumbs
     protected function routeMap(): array
     {
         return [
-            'admin.companies' => 'Companies',
-            'admin.companies.create' => 'New Company',
+            'admin.organizations' => 'Organizations',
+            'admin.organizations.create' => 'New Organization',
             'admin.branches.index' => 'Branches',
             'admin.branches.create' => 'New Branch',
             'admin.branches.show' => 'Branch Details',
@@ -194,8 +194,8 @@ class Breadcrumbs
     {
         if ($name === $pattern) {
             return match ($name) {
-                'admin.companies.index' => route('admin.companies.index'),
-                'admin.companies.create' => route('admin.companies.create'),
+                'admin.organizations.index' => route('admin.organizations.index'),
+                'admin.organizations.create' => route('admin.organizations.create'),
                 'admin.users.index' => route('admin.users.index'),
                 'admin.users.create' => route('admin.users.create'),
                 'admin.users.show' => route('admin.users.show', $params['user']),

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class RadiologyExamination extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'order_item_id', 'modality_id', 'patient_id', 'encounter_id',
+        'organization_id', 'branch_id', 'order_item_id', 'modality_id', 'patient_id', 'encounter_id',
         'appointment_id', 'scheduled_at', 'check_in_at', 'started_at', 'completed_at', 'status',
         'technologist_id', 'performing_provider_id', 'assigned_radiologist_id', 'assigned_at', 'assigned_by',
         'clinical_notes', 'technical_notes', 'mri_safety_screening', 'mri_screened_by', 'mri_screened_at',
@@ -37,7 +37,7 @@ class RadiologyExamination extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function orderItem(): BelongsTo { return $this->belongsTo(RadiologyOrderItem::class, 'order_item_id'); }
     public function modality(): BelongsTo { return $this->belongsTo(RadiologyModality::class, 'modality_id'); }
@@ -57,8 +57,8 @@ class RadiologyExamination extends Model
 
     public function isAssigned(): bool { return $this->assigned_radiologist_id !== null; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -25,7 +25,7 @@ class NursingTask extends Model
     public const STATUS_OVERDUE = 'overdue';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'care_plan_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'care_plan_id',
         'intervention_id', 'task_type', 'due_at', 'priority', 'assigned_nurse_id', 'status',
         'completed_at', 'completed_by', 'outcome', 'notes',
     ];
@@ -70,8 +70,8 @@ class NursingTask extends Model
         return $this->belongsTo(User::class, 'completed_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -47,7 +47,7 @@ class RadiologySchedulingService
             $order = $item->radiologyOrder;
 
             $appointment = $this->booking->book([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'patient_id' => $order->patient_id,
                 'doctor_id' => $technologist->user_id,
@@ -61,7 +61,7 @@ class RadiologySchedulingService
             ], $user);
 
             $examination = RadiologyExamination::create([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'order_item_id' => $item->id,
                 'modality_id' => $modality->id,

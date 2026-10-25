@@ -22,11 +22,11 @@ class OtTheatreController extends Controller
     {
         Gate::authorize('ot.theatre.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $theatres = OtTheatre::forTenant($companyId, $branchId)->with(['complex', 'capabilities'])->get();
-        $complexes = OtComplex::forTenant($companyId, $branchId)->get();
+        $theatres = OtTheatre::forTenant($organizationId, $branchId)->with(['complex', 'capabilities'])->get();
+        $complexes = OtComplex::forTenant($organizationId, $branchId)->get();
 
         return view('admin.ot.theatres.index', compact('theatres', 'complexes'));
     }
@@ -35,8 +35,8 @@ class OtTheatreController extends Controller
     {
         Gate::authorize('ot.theatre.manage');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $complexes = OtComplex::forTenant($companyId)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $complexes = OtComplex::forTenant($organizationId)->get();
 
         return view('admin.ot.theatres.create', compact('complexes'));
     }
@@ -46,7 +46,7 @@ class OtTheatreController extends Controller
         Gate::authorize('ot.theatre.manage');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'complex_id' => ['nullable', 'integer', 'exists:ot_complexes,id'],
             'theatre_code' => ['required', 'string', 'max:50'],
@@ -88,7 +88,7 @@ class OtTheatreController extends Controller
         Gate::authorize('ot.theatre.manage');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],

@@ -25,11 +25,11 @@ class IpdAdmissionController extends Controller
     {
         $this->authorize('viewAny', IpdAdmission::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $admissions = IpdAdmission::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'currentAllocation.bed.room.ward', 'attendingProvider'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->boolean('current_only'), fn ($q) => $q->whereIn('status', ['admitted', 'active', 'transfer_requested', 'transferred', 'discharge_planned', 'discharge_pending']))
@@ -49,9 +49,9 @@ class IpdAdmissionController extends Controller
             ? IpdAdmissionRequest::query()->where('status', IpdAdmissionRequest::STATUS_APPROVED)->findOrFail($request->input('admission_request_id'))
             : null;
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
-        $availableBeds = $this->availability->search($companyId, $branchId, ['status' => IpdBed::STATUS_AVAILABLE], 100);
+        $availableBeds = $this->availability->search($organizationId, $branchId, ['status' => IpdBed::STATUS_AVAILABLE], 100);
 
         return view('admin.ipd.admissions.create', compact('admissionRequest', 'availableBeds'));
     }
@@ -61,7 +61,7 @@ class IpdAdmissionController extends Controller
         $this->authorize('create', IpdAdmission::class);
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'admission_request_id' => ['nullable', 'integer', 'exists:ipd_admission_requests,id'],

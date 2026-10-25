@@ -45,7 +45,7 @@ class NegativeAllocationTest extends IpdTestCase
     public function test_expired_reservation_does_not_block_a_new_allocation_attempt_by_another_patient(): void
     {
         $bed = $this->makeBed();
-        $reservedPatient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $reservedPatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $reservation = app(IpdBedReservationService::class)->reserve($bed, $reservedPatient, $this->user, null, null, 1);
         $reservation->update(['expires_at' => now()->subMinute()]);
@@ -63,7 +63,7 @@ class NegativeAllocationTest extends IpdTestCase
     public function test_reservation_for_a_different_patient_blocks_allocation(): void
     {
         $bed = $this->makeBed();
-        $reservedPatient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $reservedPatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         app(IpdBedReservationService::class)->reserve($bed, $reservedPatient, $this->user);
 
         $otherAdmission = $this->makeAdmission();
@@ -75,15 +75,15 @@ class NegativeAllocationTest extends IpdTestCase
     public function test_gender_restricted_bed_rejects_mismatched_patient(): void
     {
         $bed = $this->makeBed(genderType: 'female');
-        $malePatient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $malePatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $gender = \App\Models\Gender::firstOrCreate(['code' => 'male'], ['name' => 'Male', 'sort_order' => 1]);
         $malePatient->update(['gender_id' => $gender->id]);
 
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $malePatient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $malePatient->id,
         ]);
         $admission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $malePatient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
@@ -94,13 +94,13 @@ class NegativeAllocationTest extends IpdTestCase
 
     private function makeAdmission(): IpdAdmission
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
 
         return IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);

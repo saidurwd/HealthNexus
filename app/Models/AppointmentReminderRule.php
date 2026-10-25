@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AppointmentReminderRule extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'department_id',
         'provider_id',
@@ -23,9 +23,9 @@ class AppointmentReminderRule extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function provider(): BelongsTo

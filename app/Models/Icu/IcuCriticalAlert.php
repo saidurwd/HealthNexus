@@ -25,7 +25,7 @@ class IcuCriticalAlert extends Model
     public const ESCALATION_RESOLVED = 'resolved';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'rule', 'severity', 'triggered_value',
+        'organization_id', 'branch_id', 'episode_id', 'rule', 'severity', 'triggered_value',
         'expected_range', 'source_type', 'source_id', 'triggered_at', 'acknowledged_by',
         'acknowledged_at', 'action', 'escalation_status',
     ];
@@ -42,8 +42,8 @@ class IcuCriticalAlert extends Model
 
     public function isAcknowledged(): bool { return $this->acknowledged_at !== null; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

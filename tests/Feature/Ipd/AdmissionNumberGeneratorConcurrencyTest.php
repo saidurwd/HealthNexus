@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Ipd;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\Ipd\IpdNumberGenerator;
 
 /**
@@ -13,13 +13,13 @@ class AdmissionNumberGeneratorConcurrencyTest extends IpdTestCase
 {
     public function test_generator_never_produces_duplicate_sequence_numbers_under_repeated_calls(): void
     {
-        $company = Company::factory()->create();
+        $organization = Organization::factory()->create();
 
         $generator = app(IpdNumberGenerator::class);
 
         $numbers = [];
         for ($i = 0; $i < 10; $i++) {
-            $numbers[] = $generator->generateAdmissionNumber($company->id, null);
+            $numbers[] = $generator->generateAdmissionNumber($organization->id, null);
         }
 
         $this->assertCount(10, array_unique($numbers), 'Every generated admission number must be unique.');
@@ -46,15 +46,15 @@ class AdmissionNumberGeneratorConcurrencyTest extends IpdTestCase
         $pdoA->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdoB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO ipd_counters (company_id, branch_id, document_type, prefix, last_number, created_at, updated_at)
-            VALUES ({$companyId}, NULL, 'ADM', 'ADC', 0, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ipd_counters (organization_id, branch_id, document_type, prefix, last_number, created_at, updated_at)
+            VALUES ({$organizationId}, NULL, 'ADM', 'ADC', 0, NOW(), NOW())");
         $counterId = (int) $pdoA->lastInsertId();
 
         try {

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -20,14 +20,14 @@ class EncounterTimelineTest extends TestCase
     public function test_creating_and_completing_an_encounter_populates_the_patient_timeline(): void
     {
         $user = User::factory()->create();
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
 
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
         $encounter = app(EncounterService::class)->createEncounter([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'branch_id' => $branch->id,
             'patient_id' => $patient->id,
         ], $user);
@@ -52,12 +52,12 @@ class EncounterTimelineTest extends TestCase
     public function test_adding_a_diagnosis_populates_the_patient_timeline(): void
     {
         $user = User::factory()->create();
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
 
         $encounter = Encounter::factory()->create([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'branch_id' => $branch->id,
             'patient_id' => $patient->id,
         ]);

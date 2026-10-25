@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('radiology_critical_findings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('report_id')->constrained('radiology_reports')->cascadeOnDelete();
             $table->text('finding_text');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('status')->default('detected');
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status'], 'radiology_critical_findings_fa5ad09d_idx');
             $table->index(['report_id']);
         });
     }

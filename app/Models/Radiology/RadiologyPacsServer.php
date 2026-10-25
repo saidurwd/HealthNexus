@@ -12,7 +12,7 @@ class RadiologyPacsServer extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'code', 'name', 'adapter_type', 'base_url', 'ae_title',
+        'organization_id', 'branch_id', 'code', 'name', 'adapter_type', 'base_url', 'ae_title',
         'port', 'username', 'password', 'is_active', 'is_default',
     ];
 
@@ -27,11 +27,11 @@ class RadiologyPacsServer extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

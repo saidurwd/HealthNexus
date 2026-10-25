@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('billing_categories')->nullOnDelete();
             $table->foreignId('tax_category_id')->nullable()->constrained('billing_tax_categories')->nullOnDelete();
@@ -32,8 +32,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'branch_id', 'item_code']);
-            $table->index(['company_id', 'branch_id', 'is_active']);
+            $table->unique(['organization_id', 'branch_id', 'item_code']);
+            $table->index(['organization_id', 'branch_id', 'is_active']);
             $table->index(['clinical_event_type', 'clinical_event_key']);
         });
     }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LabCriticalResultAlert extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'result_id', 'detected_at', 'notified_to',
+        'organization_id', 'branch_id', 'result_id', 'detected_at', 'notified_to',
         'notification_method', 'acknowledged_by', 'acknowledged_at', 'notes',
     ];
 
@@ -18,7 +18,7 @@ class LabCriticalResultAlert extends Model
         return ['detected_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function result(): BelongsTo { return $this->belongsTo(LabResult::class, 'result_id'); }
     public function notifiedTo(): BelongsTo { return $this->belongsTo(User::class, 'notified_to'); }
@@ -26,8 +26,8 @@ class LabCriticalResultAlert extends Model
 
     public function isAcknowledged(): bool { return $this->acknowledged_at !== null; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

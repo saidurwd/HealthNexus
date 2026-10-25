@@ -3,7 +3,7 @@
 namespace Tests\Feature\Phase0;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +16,7 @@ class Phase0AcceptanceTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
-    private Company $company;
+    private Organization $organization;
     private Branch $branch;
 
     protected function setUp(): void
@@ -24,18 +24,18 @@ class Phase0AcceptanceTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'manage branches', 'guard_name' => 'web']);
         Permission::create(['name' => 'manage departments', 'guard_name' => 'web']);
         Permission::create(['name' => 'manage users', 'guard_name' => 'web']);
 
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('manage branches');
         $this->user->givePermissionTo('manage departments');
         $this->user->givePermissionTo('manage users');
@@ -78,9 +78,9 @@ class Phase0AcceptanceTest extends TestCase
         $this->assertTrue(\Schema::hasColumn('users', 'mfa_confirmed_at'));
     }
 
-    public function test_admin_can_create_company(): void
+    public function test_admin_can_create_organization(): void
     {
-        $response = $this->post('/admin/companies', [
+        $response = $this->post('/admin/organizations', [
             'name' => 'Test Hospital',
             'code' => 'TEST01',
             'slug' => 'test-hospital',
@@ -89,8 +89,8 @@ class Phase0AcceptanceTest extends TestCase
             'address' => '123 Test Street',
         ]);
 
-        $response->assertRedirect('/admin/companies');
-        $this->assertDatabaseHas('companies', [
+        $response->assertRedirect('/admin/organizations');
+        $this->assertDatabaseHas('organizations', [
             'name' => 'Test Hospital',
             'code' => 'TEST01',
         ]);
@@ -98,8 +98,8 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_admin_can_create_branch(): void
     {
-        $response = $this->post('/admin/companies/'.$this->company->id.'/branches', [
-            'company_id' => $this->company->id,
+        $response = $this->post('/admin/organizations/'.$this->organization->id.'/branches', [
+            'organization_id' => $this->organization->id,
             'name' => 'Main Branch',
             'code' => 'MAIN',
             'slug' => 'main-branch',
@@ -108,29 +108,29 @@ class Phase0AcceptanceTest extends TestCase
             'address' => '456 Main Street',
         ]);
 
-        $response->assertRedirect('/admin/companies/'.$this->company->id.'/branches');
+        $response->assertRedirect('/admin/organizations/'.$this->organization->id.'/branches');
         $this->assertDatabaseHas('branches', [
             'name' => 'Main Branch',
             'code' => 'MAIN',
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
     }
 
     public function test_admin_can_create_department(): void
     {
-        $response = $this->post('/admin/companies/'.$this->company->id.'/branches/'.$this->branch->id.'/departments', [
-            'company_id' => $this->company->id,
+        $response = $this->post('/admin/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments', [
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'name' => 'Cardiology',
             'code' => 'CARD',
             'description' => 'Cardiology Department',
         ]);
 
-        $response->assertRedirect('/admin/companies/'.$this->company->id.'/branches/'.$this->branch->id.'/departments');
+        $response->assertRedirect('/admin/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments');
         $this->assertDatabaseHas('departments', [
             'name' => 'Cardiology',
             'code' => 'CARD',
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
         ]);
     }
@@ -162,7 +162,7 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_permissions_work(): void
     {
-        $this->assertTrue($this->user->hasPermissionTo('manage companies'));
+        $this->assertTrue($this->user->hasPermissionTo('manage organizations'));
         $this->assertFalse($this->user->hasAnyPermission(['nonexistent.permission']));
     }
 
@@ -171,14 +171,14 @@ class Phase0AcceptanceTest extends TestCase
         $unauthorizedUser = User::factory()->create();
         $this->actingAs($unauthorizedUser);
 
-        $response = $this->get('/admin/companies');
+        $response = $this->get('/admin/organizations');
 
         $response->assertStatus(403);
     }
 
     public function test_audit_logs_are_generated(): void
     {
-        $this->post('/admin/companies', [
+        $this->post('/admin/organizations', [
             'name' => 'Audit Test Hospital',
             'code' => 'AUDIT01',
             'slug' => 'audit-test',
@@ -189,7 +189,7 @@ class Phase0AcceptanceTest extends TestCase
 
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'CREATE',
-            'model_type' => \App\Models\Company::class,
+            'model_type' => \App\Models\Organization::class,
         ]);
     }
 

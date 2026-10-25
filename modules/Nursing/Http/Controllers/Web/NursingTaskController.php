@@ -23,10 +23,10 @@ class NursingTaskController extends Controller
     {
         Gate::authorize('nursing.task.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $tasks = NursingTask::forTenant($companyId, $branchId)
+        $tasks = NursingTask::forTenant($organizationId, $branchId)
             ->with(['patient', 'admission', 'assignedNurse'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->boolean('mine'), fn ($q) => $q->where('assigned_nurse_id', $request->user()->id))

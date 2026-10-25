@@ -33,12 +33,12 @@ class LabRegistrationService
     {
         return DB::transaction(function () use ($encounter, $clinicalOrder) {
             $order = LabOrder::create([
-                'company_id' => $clinicalOrder->company_id,
+                'organization_id' => $clinicalOrder->organization_id,
                 'branch_id' => $clinicalOrder->branch_id,
                 'patient_id' => $clinicalOrder->patient_id,
                 'encounter_id' => $encounter->id,
                 'clinical_order_id' => $clinicalOrder->id,
-                'order_number' => $this->numbers->generateOrderNumber($clinicalOrder->company_id, $clinicalOrder->branch_id),
+                'order_number' => $this->numbers->generateOrderNumber($clinicalOrder->organization_id, $clinicalOrder->branch_id),
                 'priority' => $clinicalOrder->priority ?? 'routine',
                 'status' => 'ordered',
                 'ordered_by' => $clinicalOrder->ordered_by,
@@ -47,7 +47,7 @@ class LabRegistrationService
             ]);
 
             foreach ($clinicalOrder->items as $clinicalItem) {
-                $test = $this->matchTest($clinicalOrder->company_id, $clinicalItem->item_code, $clinicalItem->item_name);
+                $test = $this->matchTest($clinicalOrder->organization_id, $clinicalItem->item_code, $clinicalItem->item_name);
 
                 $order->items()->create([
                     'test_id' => $test?->id,
@@ -60,7 +60,7 @@ class LabRegistrationService
 
                 if ($test) {
                     $this->charges->createFromClinicalEvent($clinicalItem, 'lab_test', $test->code, [
-                        'company_id' => $clinicalOrder->company_id,
+                        'organization_id' => $clinicalOrder->organization_id,
                         'branch_id' => $clinicalOrder->branch_id,
                         'patient_id' => $clinicalOrder->patient_id,
                         'encounter_id' => $encounter->id,
@@ -78,9 +78,9 @@ class LabRegistrationService
         });
     }
 
-    private function matchTest(int $companyId, ?string $itemCode, string $itemName): ?LabTest
+    private function matchTest(int $organizationId, ?string $itemCode, string $itemName): ?LabTest
     {
-        $query = LabTest::query()->forTenant($companyId)->where('is_active', true);
+        $query = LabTest::query()->forTenant($organizationId)->where('is_active', true);
 
         if ($itemCode) {
             $byCode = (clone $query)->where('code', $itemCode)->first();

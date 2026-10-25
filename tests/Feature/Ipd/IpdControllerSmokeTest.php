@@ -36,12 +36,12 @@ class IpdControllerSmokeTest extends IpdTestCase
         $destinationBed = $this->makeBed();
         $thirdBed = $this->makeBed();
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $this->patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $this->patient->id,
         ]);
         $this->admission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $this->patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
@@ -52,12 +52,12 @@ class IpdControllerSmokeTest extends IpdTestCase
 
         // Discharge needs its own admission — a discharge cannot be planned while a transfer is
         // still pending on the same admission (correctly rejected by IpdAdmissionLifecycleService).
-        $dischargePatient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $dischargePatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $dischargeEncounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $dischargePatient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $dischargePatient->id,
         ]);
         $dischargeAdmission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $dischargePatient->id,
             'encounter_id' => $dischargeEncounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
@@ -66,12 +66,12 @@ class IpdControllerSmokeTest extends IpdTestCase
         $this->dischargeRequest = app(IpdDischargeService::class)->request($dischargeAdmission->fresh(), ['discharge_type' => 'routine'], $this->user);
 
         // Leave needs its own admitted patient too — use a fresh admission on the third bed.
-        $leavePatient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $leavePatient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $leaveEncounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $leavePatient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $leavePatient->id,
         ]);
         $leaveAdmission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $leavePatient->id,
             'encounter_id' => $leaveEncounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);

@@ -14,7 +14,7 @@ class CreateChargeOnEncounterCompleted
         $encounter = $event->encounter;
 
         $this->charges->createFromClinicalEvent($encounter, 'encounter', 'completed', [
-            'company_id' => $encounter->company_id,
+            'organization_id' => $encounter->organization_id,
             'branch_id' => $encounter->branch_id,
             'patient_id' => $encounter->patient_id,
             'encounter_id' => $encounter->id,

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class RadiologyStudy extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'radiology_examination_id', 'patient_id', 'pacs_server_id',
+        'organization_id', 'branch_id', 'radiology_examination_id', 'patient_id', 'pacs_server_id',
         'accession_number', 'study_instance_uid', 'study_id', 'study_date', 'study_time',
         'modality', 'study_description', 'body_part', 'referring_physician', 'institution_name',
         'pacs_status', 'study_status', 'number_of_series', 'number_of_instances', 'last_synced_at',
@@ -26,7 +26,7 @@ class RadiologyStudy extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function examination(): BelongsTo { return $this->belongsTo(RadiologyExamination::class, 'radiology_examination_id'); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
@@ -36,8 +36,8 @@ class RadiologyStudy extends Model
     public function isReconciled(): bool { return $this->study_status === 'reconciled'; }
     public function hasImages(): bool { return $this->study_instance_uid !== null; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

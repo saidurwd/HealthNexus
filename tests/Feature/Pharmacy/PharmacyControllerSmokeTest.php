@@ -44,7 +44,7 @@ class PharmacyControllerSmokeTest extends PharmacyTestCase
         $this->destinationStore = $this->makeStore('PH-WARD');
         $this->receiveBatch($this->store, $this->medication, 100);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $prescription = $this->makePrescription($this->patient, [
             ['medicine_name' => $this->medication->name, 'quantity' => 10],
         ]);
@@ -66,7 +66,7 @@ class PharmacyControllerSmokeTest extends PharmacyTestCase
         $this->recall = app(PharmacyRecallService::class)->initiate($batch, 'Manufacturer notice.', $this->user);
 
         PharmacySafetyAlert::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'order_item_id' => $orderItem->id, 'medication_id' => $this->medication->id,
             'alert_type' => PharmacySafetyAlert::TYPE_ALLERGY, 'severity' => PharmacySafetyAlert::SEVERITY_SEVERE,
             'explanation' => 'Test alert.', 'is_overridden' => false,

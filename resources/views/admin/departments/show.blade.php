@@ -7,8 +7,8 @@
         <div class="card-header">
             <h3 class="card-title">Department Details</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.companies.branches.departments.edit', [$company, $branch, $department]) }}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{{ route('admin.companies.branches.departments.index', [$company, $branch]) }}" class="btn btn-secondary btn-sm">Back</a>
+                <a href="{{ route('admin.organizations.branches.departments.edit', [$organization, $branch, $department]) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ route('admin.organizations.branches.departments.index', [$organization, $branch]) }}" class="btn btn-secondary btn-sm">Back</a>
             </div>
         </div>
         <div class="card-body">
@@ -39,7 +39,7 @@
                 </dd>
 
                 <dt class="col-sm-3">Branch</dt>
-                <dd class="col-sm-9">{{ $branch->name }} ({{ $company->name }})</dd>
+                <dd class="col-sm-9">{{ $branch->name }} ({{ $organization->name }})</dd>
 
                 <dt class="col-sm-3">Created</dt>
                 <dd class="col-sm-9">{{ $department->created_at->format('Y-m-d H:i') }}</dd>

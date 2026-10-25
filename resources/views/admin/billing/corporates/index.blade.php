@@ -1,11 +1,11 @@
 @extends('layouts.adminlte')
 
-@section('page_title', 'Corporate Companies')
+@section('page_title', 'Corporate Organizations')
 
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Corporate Companies</h3>
+            <h3 class="card-title">Corporate Organizations</h3>
             <div class="card-tools">
                 @can('billing.corporate.manage')
                     <a href="{{ route('admin.billing.corporates.create') }}" class="btn btn-primary btn-sm">New Corporate</a>
@@ -34,7 +34,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No corporate companies found.</td></tr>
+                        <tr><td colspan="6" class="text-center">No corporate organizations found.</td></tr>
                     @endforelse
                 </tbody>
             </table>

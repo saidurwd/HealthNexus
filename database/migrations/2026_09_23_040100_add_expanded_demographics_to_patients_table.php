@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->foreignId('patient_type_id')->nullable()->after('company_id')->constrained('patient_types')->nullOnDelete();
+            $table->foreignId('patient_type_id')->nullable()->after('organization_id')->constrained('patient_types')->nullOnDelete();
             $table->foreignId('gender_id')->nullable()->after('sex')->constrained('genders')->nullOnDelete();
             $table->foreignId('marital_status_id')->nullable()->after('gender_id')->constrained('marital_statuses')->nullOnDelete();
             $table->foreignId('nationality_id')->nullable()->after('marital_status_id')->constrained('countries')->nullOnDelete();
@@ -28,14 +28,14 @@ return new class extends Migration
             $table->boolean('portal_enabled')->default(false)->after('photo_file_id');
             $table->foreignId('portal_user_id')->nullable()->after('portal_enabled')->constrained('users')->nullOnDelete();
 
-            $table->index(['company_id', 'patient_type_id'], 'patients_company_type_idx');
+            $table->index(['organization_id', 'patient_type_id'], 'patients_organization_type_idx');
         });
     }
 
     public function down(): void
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->dropIndex('patients_company_type_idx');
+            $table->dropIndex('patients_organization_type_idx');
             $table->dropConstrainedForeignId('patient_type_id');
             $table->dropConstrainedForeignId('gender_id');
             $table->dropConstrainedForeignId('marital_status_id');

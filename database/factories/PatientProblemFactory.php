@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -16,7 +16,7 @@ class PatientProblemFactory extends Factory
     {
         return [
             'patient_id' => Patient::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'problem_code' => fake()->optional()->bothify('??##'),
             'problem_name' => fake()->sentence(3),
             'coding_system' => fake()->optional()->randomElement(['ICD-10', 'ICD-11', 'SNOMED CT']),

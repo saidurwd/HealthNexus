@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\DoctorSchedule;
 use App\Models\User;
@@ -18,7 +18,7 @@ class DoctorScheduleTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -29,22 +29,22 @@ class DoctorScheduleTest extends TestCase
         Role::create(['name' => 'doctor', 'guard_name' => 'web']);
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['manage companies', 'appointments.manage_schedule'] as $permission) {
+        foreach (['manage organizations', 'appointments.manage_schedule'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 
@@ -61,7 +61,7 @@ class DoctorScheduleTest extends TestCase
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
 
-        $department = Department::factory()->create(['company_id' => $this->company->id]);
+        $department = Department::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->post('/admin/schedules', [
             'doctor_id' => $doctor->id,
@@ -85,7 +85,7 @@ class DoctorScheduleTest extends TestCase
     public function test_user_can_update_schedule(): void
     {
         $schedule = DoctorSchedule::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
         ]);
 
@@ -110,7 +110,7 @@ class DoctorScheduleTest extends TestCase
     public function test_user_can_delete_schedule(): void
     {
         $schedule = DoctorSchedule::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
         ]);
 

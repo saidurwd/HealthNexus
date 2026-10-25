@@ -27,10 +27,10 @@ class OtSurgeryController extends Controller
     {
         $this->authorize('viewAny', OtSurgery::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $surgeries = OtSurgery::forTenant($companyId, $branchId)
+        $surgeries = OtSurgery::forTenant($organizationId, $branchId)
             ->with(['patient', 'theatre', 'primarySurgeon', 'primaryProcedure'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('date'), fn ($q) => $q->whereDate('scheduled_date', $request->input('date')))

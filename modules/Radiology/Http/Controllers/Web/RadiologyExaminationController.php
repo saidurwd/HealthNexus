@@ -20,11 +20,11 @@ class RadiologyExaminationController extends Controller
     {
         $this->authorize('viewAny', RadiologyExamination::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $examinations = RadiologyExamination::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereIn('status', ['scheduled', 'checked_in', 'preparing', 'ready', 'in_progress'])
             ->with(['orderItem.radiologyOrder.patient', 'orderItem.procedure', 'modality'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))

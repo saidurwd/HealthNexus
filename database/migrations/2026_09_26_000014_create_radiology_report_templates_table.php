@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('radiology_report_templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('procedure_id')->nullable()->constrained('radiology_procedures')->nullOnDelete();
             $table->string('modality_type')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
         });
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class IcuClinicalScoreResult extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'score_code', 'score_version', 'input_values',
+        'organization_id', 'branch_id', 'episode_id', 'score_code', 'score_version', 'input_values',
         'result_value', 'interpretation', 'calculated_by', 'calculated_at',
     ];
 
@@ -21,8 +21,8 @@ class IcuClinicalScoreResult extends Model
     public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
     public function calculatedBy(): BelongsTo { return $this->belongsTo(User::class, 'calculated_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

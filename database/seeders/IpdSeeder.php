@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Ipd\IpdAdmissionSource;
 use App\Models\Ipd\IpdAdmissionType;
 use App\Models\Ipd\IpdBed;
@@ -17,7 +17,7 @@ use App\Models\Ipd\IpdWard;
 use Illuminate\Database\Seeder;
 
 /**
- * Minimal viable IPD catalog per company: one building/floor, two wards (Medical, Surgical) each
+ * Minimal viable IPD catalog per organization: one building/floor, two wards (Medical, Surgical) each
  * with a couple of rooms and beds, bed types, admission types/sources, discharge dispositions,
  * and admission-fee/bed-day BillingItems per bed type — mirrors LabSeeder/RadiologySeeder/
  * PharmacySeeder's approach so the Admission -> Bed Allocation -> Billing chain has something to
@@ -27,46 +27,46 @@ class IpdSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
-            $building = $this->seedBuilding($company);
-            $floor = $this->seedFloor($company, $building);
-            $bedTypes = $this->seedBedTypes($company);
-            $this->seedAdmissionTypes($company);
-            $this->seedAdmissionSources($company);
-            $this->seedDischargeDispositions($company);
-            $billingCategory = $this->seedBillingCategory($company);
+        Organization::all()->each(function (Organization $organization) {
+            $building = $this->seedBuilding($organization);
+            $floor = $this->seedFloor($organization, $building);
+            $bedTypes = $this->seedBedTypes($organization);
+            $this->seedAdmissionTypes($organization);
+            $this->seedAdmissionSources($organization);
+            $this->seedDischargeDispositions($organization);
+            $billingCategory = $this->seedBillingCategory($organization);
 
-            $this->seedAdmissionFeeBillingItem($company, $billingCategory);
+            $this->seedAdmissionFeeBillingItem($organization, $billingCategory);
 
-            $this->seedWard($company, $floor, 'MED', 'Medical Ward', $bedTypes['GENERAL'], $billingCategory);
-            $this->seedWard($company, $floor, 'SURG', 'Surgical Ward', $bedTypes['PRIVATE'], $billingCategory);
+            $this->seedWard($organization, $floor, 'MED', 'Medical Ward', $bedTypes['GENERAL'], $billingCategory);
+            $this->seedWard($organization, $floor, 'SURG', 'Surgical Ward', $bedTypes['PRIVATE'], $billingCategory);
         });
     }
 
-    private function seedBuilding(Company $company): IpdBuilding
+    private function seedBuilding(Organization $organization): IpdBuilding
     {
         return IpdBuilding::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'MAIN'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'MAIN'],
             ['name' => 'Main Building', 'is_active' => true],
         );
     }
 
-    private function seedFloor(Company $company, IpdBuilding $building): IpdFloor
+    private function seedFloor(Organization $organization, IpdBuilding $building): IpdFloor
     {
         return IpdFloor::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'F3'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'F3'],
             ['name' => '3rd Floor', 'building_id' => $building->id, 'is_active' => true],
         );
     }
 
-    private function seedBedTypes(Company $company): array
+    private function seedBedTypes(Organization $organization): array
     {
         $definitions = ['GENERAL' => 'General', 'PRIVATE' => 'Private', 'ICU' => 'ICU'];
         $types = [];
 
         foreach ($definitions as $code => $name) {
             $types[$code] = IpdBedType::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -74,55 +74,55 @@ class IpdSeeder extends Seeder
         return $types;
     }
 
-    private function seedAdmissionTypes(Company $company): void
+    private function seedAdmissionTypes(Organization $organization): void
     {
         $definitions = ['ELECTIVE' => 'Elective', 'EMERGENCY' => 'Emergency', 'DAY_CARE' => 'Day Care'];
 
         foreach ($definitions as $code => $name) {
             IpdAdmissionType::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
     }
 
-    private function seedAdmissionSources(Company $company): void
+    private function seedAdmissionSources(Organization $organization): void
     {
         $definitions = ['OPD' => 'OPD', 'EMERGENCY' => 'Emergency', 'REFERRAL' => 'Referral', 'DIRECT' => 'Direct'];
 
         foreach ($definitions as $code => $name) {
             IpdAdmissionSource::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
     }
 
-    private function seedDischargeDispositions(Company $company): void
+    private function seedDischargeDispositions(Organization $organization): void
     {
         $definitions = ['HOME' => 'Home', 'ANOTHER_HOSPITAL' => 'Another Hospital', 'DECEASED' => 'Deceased'];
 
         foreach ($definitions as $code => $name) {
             IpdDischargeDisposition::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
     }
 
-    private function seedBillingCategory(Company $company): BillingCategory
+    private function seedBillingCategory(Organization $organization): BillingCategory
     {
         return BillingCategory::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'IPD'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'IPD'],
             ['name' => 'Inpatient', 'description' => 'Admission and bed occupancy charges', 'is_active' => true],
         );
     }
 
-    private function seedAdmissionFeeBillingItem(Company $company, BillingCategory $billingCategory): void
+    private function seedAdmissionFeeBillingItem(Organization $organization, BillingCategory $billingCategory): void
     {
         foreach (['ELECTIVE', 'EMERGENCY', 'DAY_CARE', 'general'] as $code) {
             BillingItem::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'item_code' => 'IPD-ADM-'.$code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'item_code' => 'IPD-ADM-'.$code],
                 [
                     'category_id' => $billingCategory->id,
                     'item_type' => 'admission_fee',
@@ -140,10 +140,10 @@ class IpdSeeder extends Seeder
         }
     }
 
-    private function seedBedDayBillingItem(Company $company, BillingCategory $billingCategory, IpdBedType $bedType, string $price): void
+    private function seedBedDayBillingItem(Organization $organization, BillingCategory $billingCategory, IpdBedType $bedType, string $price): void
     {
         BillingItem::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'item_code' => 'IPD-BED-'.$bedType->code],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'item_code' => 'IPD-BED-'.$bedType->code],
             [
                 'category_id' => $billingCategory->id,
                 'item_type' => 'bed_day',
@@ -160,12 +160,12 @@ class IpdSeeder extends Seeder
         );
     }
 
-    private function seedWard(Company $company, IpdFloor $floor, string $code, string $name, IpdBedType $bedType, BillingCategory $billingCategory): void
+    private function seedWard(Organization $organization, IpdFloor $floor, string $code, string $name, IpdBedType $bedType, BillingCategory $billingCategory): void
     {
-        $this->seedBedDayBillingItem($company, $billingCategory, $bedType, $bedType->code === 'PRIVATE' ? '2500.00' : '1200.00');
+        $this->seedBedDayBillingItem($organization, $billingCategory, $bedType, $bedType->code === 'PRIVATE' ? '2500.00' : '1200.00');
 
         $ward = IpdWard::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
             [
                 'name' => $name,
                 'building_id' => $floor->building_id,
@@ -181,7 +181,7 @@ class IpdSeeder extends Seeder
             $room = IpdRoom::query()->firstOrCreate(
                 ['ward_id' => $ward->id, 'room_number' => (string) (100 * $roomNumber)],
                 [
-                    'company_id' => $company->id,
+                    'organization_id' => $organization->id,
                     'branch_id' => null,
                     'room_type' => $bedType->code === 'PRIVATE' ? 'private' : 'general',
                     'capacity' => 2,
@@ -194,7 +194,7 @@ class IpdSeeder extends Seeder
 
             foreach (['A', 'B'] as $bedLetter) {
                 IpdBed::query()->firstOrCreate(
-                    ['company_id' => $company->id, 'bed_code' => $code.'-'.$room->room_number.'-'.$bedLetter],
+                    ['organization_id' => $organization->id, 'bed_code' => $code.'-'.$room->room_number.'-'.$bedLetter],
                     [
                         'branch_id' => null,
                         'room_id' => $room->id,

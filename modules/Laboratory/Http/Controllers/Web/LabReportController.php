@@ -21,11 +21,11 @@ class LabReportController extends Controller
     {
         $this->authorize('viewAny', LabReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $reports = LabReport::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('labOrder.patient')
             ->when($request->filled('search'), fn ($q) => $q->where('report_number', 'like', '%'.$request->input('search').'%'))
             ->latest('generated_at')

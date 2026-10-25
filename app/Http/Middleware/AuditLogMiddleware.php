@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\User;
 use App\Services\AuditLogger;
@@ -65,8 +65,8 @@ class AuditLogMiddleware
     {
         $path = $request->path();
 
-        if (str_contains($path, 'companies')) {
-            return Company::class;
+        if (str_contains($path, 'organizations')) {
+            return Organization::class;
         }
 
         if (str_contains($path, 'branches')) {
@@ -91,8 +91,8 @@ class AuditLogMiddleware
         if ($route) {
             $parameters = $route->parameters();
 
-            if (isset($parameters['company']) && $parameters['company'] instanceof Company) {
-                return $parameters['company']->id;
+            if (isset($parameters['organization']) && $parameters['organization'] instanceof Organization) {
+                return $parameters['organization']->id;
             }
 
             if (isset($parameters['branch']) && $parameters['branch'] instanceof Branch) {

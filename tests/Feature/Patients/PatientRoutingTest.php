@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Patients;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -25,9 +25,9 @@ class PatientRoutingTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $company = Company::factory()->create();
+        $organization = Organization::factory()->create();
         $user = User::factory()->create();
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
         foreach (['patients.view', 'patients.create', 'patients.merge', 'patients.amend.approve'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);

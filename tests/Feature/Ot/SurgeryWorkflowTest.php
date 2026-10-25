@@ -27,13 +27,13 @@ class SurgeryWorkflowTest extends OtTestCase
 {
     public function test_surgery_request_direct_approve_fallback_when_no_workflow_configured(): void
     {
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $this->company->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
         app(\App\Services\SettingsService::class)->set('ot.surgery_requires_approval', false);
 
         $request = app(OtSurgeryRequestService::class)->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
         ], $this->user);
 
@@ -44,12 +44,12 @@ class SurgeryWorkflowTest extends OtTestCase
     {
         app(\App\Services\SettingsService::class)->set('ot.surgery_requires_approval', true);
 
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $this->company->id]);
-        $encounter = \App\Models\Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
+        $patient = \App\Models\Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = \App\Models\Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
         $requests = app(OtSurgeryRequestService::class);
         $request = $requests->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
         ], $this->user);
 

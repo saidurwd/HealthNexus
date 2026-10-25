@@ -1,11 +1,11 @@
 @extends('layouts.adminlte')
 
-@section('page_title', 'Users - ' . $company->name)
+@section('page_title', 'Users - ' . $organization->name)
 
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Users - {{ $company->name }}</h3>
+            <h3 class="card-title">Users - {{ $organization->name }}</h3>
             <div class="card-tools">
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">New User</a>
             </div>
@@ -38,7 +38,7 @@
                             </td>
                             <td>
                                 <a href="{{ route('admin.users.show', $user) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.users.company-edit', [$company, $user]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.users.organization-edit', [$organization, $user]) }}" class="btn btn-xs btn-warning">Edit</a>
                             </td>
                         </tr>
                     @empty
@@ -50,7 +50,7 @@
             </table>
         </div>
         <div class="card-footer">
-            <a href="{{ route('admin.companies.index') }}" class="btn btn-secondary">Back to Companies</a>
+            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">Back to Organizations</a>
         </div>
     </div>
 @stop

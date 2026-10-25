@@ -16,11 +16,11 @@ class OtNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix, string $formatKey, string $defaultFormat): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix, string $formatKey, string $defaultFormat): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix, $formatKey, $defaultFormat) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix, $formatKey, $defaultFormat) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -41,16 +41,16 @@ class OtNumberGenerator
         });
     }
 
-    public function generateSurgeryNumber(int $companyId, ?int $branchId): string
+    public function generateSurgeryNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('ot.surgery_number_prefix', 'OT');
 
-        return $this->generate($companyId, $branchId, 'SUR', $prefix, 'ot.surgery_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
+        return $this->generate($organizationId, $branchId, 'SUR', $prefix, 'ot.surgery_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
     }
 
-    public function generateSpecimenNumber(int $companyId, ?int $branchId): string
+    public function generateSpecimenNumber(int $organizationId, ?int $branchId): string
     {
-        return $this->generate($companyId, $branchId, 'SPC', 'SPC', 'ot.specimen_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
+        return $this->generate($organizationId, $branchId, 'SPC', 'SPC', 'ot.specimen_number_format', '{PREFIX}-{YEAR}-{SEQ:8}');
     }
 
     private function format(string $prefix, int $sequence, string $formatKey, string $defaultFormat): string

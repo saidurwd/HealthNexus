@@ -40,7 +40,7 @@ class PatientAmendmentService
             }
 
             $amendment = PatientAmendment::create([
-                'company_id' => $patient->company_id,
+                'organization_id' => $patient->organization_id,
                 'patient_id' => $patient->id,
                 'proposed_changes' => $proposedChanges,
                 'original_values' => $original,
@@ -50,14 +50,14 @@ class PatientAmendmentService
             ]);
 
             $workflow = Workflow::query()
-                ->where('company_id', $patient->company_id)
+                ->where('organization_id', $patient->organization_id)
                 ->where('code', 'patient_amendment')
                 ->where('is_active', true)
                 ->first();
 
             if ($workflow) {
                 $instance = $this->engine->start($workflow, $amendment, $user, [
-                    'company_id' => $patient->company_id,
+                    'organization_id' => $patient->organization_id,
                     'branch_id' => $patient->branchRegistrations()->value('branch_id'),
                     'notes' => $reason,
                 ]);
@@ -68,7 +68,7 @@ class PatientAmendmentService
                     'status' => $instance->status === 'approved' ? 'approved' : 'pending_approval',
                 ]);
             } else {
-                // No approval workflow configured for this company — fall back to a direct,
+                // No approval workflow configured for this organization — fall back to a direct,
                 // audited apply rather than leaving the amendment stuck with nobody able to act.
                 $amendment->update(['status' => 'submitted']);
                 $this->apply($amendment, $user);

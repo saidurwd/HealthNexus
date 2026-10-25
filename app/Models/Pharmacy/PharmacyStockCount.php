@@ -13,7 +13,7 @@ class PharmacyStockCount extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'store_id', 'count_number', 'status',
+        'organization_id', 'branch_id', 'store_id', 'count_number', 'status',
         'started_by', 'started_at', 'completed_by', 'completed_at',
     ];
 
@@ -22,15 +22,15 @@ class PharmacyStockCount extends Model
         return ['started_at' => 'datetime', 'completed_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
     public function startedBy(): BelongsTo { return $this->belongsTo(User::class, 'started_by'); }
     public function completedBy(): BelongsTo { return $this->belongsTo(User::class, 'completed_by'); }
     public function items(): HasMany { return $this->hasMany(PharmacyStockCountItem::class, 'stock_count_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

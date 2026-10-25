@@ -15,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * ICU admission REQUEST is a direct-create entry point, not a ClinicalOrder fan-out — mirrors
  * IpdAdmissionRequestService byte-for-byte, including the direct-approve fallback when no
- * 'icu_admission' workflow is configured for the company. Emergency admission (is_emergency=true)
+ * 'icu_admission' workflow is configured for the organization. Emergency admission (is_emergency=true)
  * skips the workflow step but still requires an explicit override_reason and is fully audited —
  * never a silent bypass (spec §6).
  */
@@ -54,14 +54,14 @@ class IcuAdmissionRequestService
             }
 
             $workflow = Workflow::query()
-                ->where('company_id', $data['company_id'])
+                ->where('organization_id', $data['organization_id'])
                 ->where('code', 'icu_admission')
                 ->where('is_active', true)
                 ->first();
 
             if ($workflow) {
                 $instance = $this->engine->start($workflow, $request, $user, [
-                    'company_id' => $data['company_id'],
+                    'organization_id' => $data['organization_id'],
                     'branch_id' => $data['branch_id'] ?? null,
                     'notes' => $data['admission_reason'] ?? null,
                 ]);
@@ -77,7 +77,7 @@ class IcuAdmissionRequestService
                     event(new ICUAdmissionAccepted($request->fresh()));
                 }
             } else {
-                // No approval workflow configured for this company — fall back to a direct,
+                // No approval workflow configured for this organization — fall back to a direct,
                 // audited "pending_approval" state a coordinator can still explicitly accept/reject.
                 $request->update(['status' => IcuAdmissionRequest::STATUS_PENDING_APPROVAL]);
             }

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IpdCounter extends Model
 {
-    protected $fillable = ['company_id', 'branch_id', 'document_type', 'prefix', 'last_number'];
+    protected $fillable = ['organization_id', 'branch_id', 'document_type', 'prefix', 'last_number'];
 
     protected function casts(): array
     {
         return ['last_number' => 'integer'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
 }

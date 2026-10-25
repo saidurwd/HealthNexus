@@ -17,9 +17,9 @@ class HospitalHolidayController extends Controller
     {
         $this->authorize('manageHoliday', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $holidays = HospitalHoliday::where('company_id', $companyId)->orderBy('date')->paginate(20);
+        $holidays = HospitalHoliday::where('organization_id', $organizationId)->orderBy('date')->paginate(20);
 
         return view('admin.holidays.index', compact('holidays'));
     }
@@ -44,7 +44,7 @@ class HospitalHolidayController extends Controller
             'description' => ['nullable', 'string'],
         ]);
 
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
 
         $holiday = HospitalHoliday::create($validated);
 

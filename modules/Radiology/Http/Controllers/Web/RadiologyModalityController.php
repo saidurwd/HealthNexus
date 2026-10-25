@@ -5,7 +5,7 @@ namespace Modules\Radiology\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\AppointmentRoom;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Radiology\RadiologyModality;
 use App\Models\Radiology\RadiologySection;
 use App\Services\AuditLogger;
@@ -25,11 +25,11 @@ class RadiologyModalityController extends Controller
     {
         Gate::authorize('radiology.modality.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $modalities = RadiologyModality::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['section', 'room'])
             ->orderBy('name')
             ->paginate(20);
@@ -41,13 +41,13 @@ class RadiologyModalityController extends Controller
     {
         Gate::authorize('radiology.modality.create');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $sections = RadiologySection::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $sections = RadiologySection::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
         $rooms = AppointmentRoom::query()->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.radiology.modalities.create', compact('sections', 'rooms', 'companies', 'branches'));
+        return view('admin.radiology.modalities.create', compact('sections', 'rooms', 'organizations', 'branches'));
     }
 
     public function store(Request $request)
@@ -55,7 +55,7 @@ class RadiologyModalityController extends Controller
         Gate::authorize('radiology.modality.create');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'section_id' => ['nullable', 'integer', 'exists:radiology_sections,id'],
             'room_id' => ['nullable', 'integer', 'exists:appointment_rooms,id'],
@@ -83,7 +83,7 @@ class RadiologyModalityController extends Controller
     {
         Gate::authorize('radiology.modality.update');
 
-        $sections = RadiologySection::query()->forTenant($modality->company_id)->where('is_active', true)->orderBy('name')->get();
+        $sections = RadiologySection::query()->forTenant($modality->organization_id)->where('is_active', true)->orderBy('name')->get();
         $rooms = AppointmentRoom::query()->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.radiology.modalities.edit', compact('modality', 'sections', 'rooms'));

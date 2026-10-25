@@ -25,7 +25,7 @@ class OpdService
     public function recordVitalSigns(Appointment $appointment, array $data, User $user, ?Encounter $encounter = null): \App\Models\VitalSign
     {
         return DB::transaction(function () use ($appointment, $data, $user, $encounter) {
-            $data['company_id'] = $appointment->company_id;
+            $data['organization_id'] = $appointment->organization_id;
             $data['branch_id'] = $appointment->branch_id;
             $data['appointment_id'] = $appointment->id;
             $data['encounter_id'] = $encounter?->id;
@@ -40,7 +40,7 @@ class OpdService
     public function addDiagnosis(Appointment $appointment, array $data, User $user, ?Encounter $encounter = null): Diagnosis
     {
         return DB::transaction(function () use ($appointment, $data, $user, $encounter) {
-            $data['company_id'] = $appointment->company_id;
+            $data['organization_id'] = $appointment->organization_id;
             $data['branch_id'] = $appointment->branch_id;
             $data['appointment_id'] = $appointment->id;
             $data['encounter_id'] = $encounter?->id;
@@ -62,7 +62,7 @@ class OpdService
 
     public function addInvestigationOrder(Appointment $appointment, array $data, User $user, ?Encounter $encounter = null): InvestigationOrder
     {
-        $data['company_id'] = $appointment->company_id;
+        $data['organization_id'] = $appointment->organization_id;
         $data['branch_id'] = $appointment->branch_id;
         $data['appointment_id'] = $appointment->id;
         $data['encounter_id'] = $encounter?->id;
@@ -78,13 +78,13 @@ class OpdService
     {
         return DB::transaction(function () use ($appointment, $data, $user, $encounter) {
             $prescription = Prescription::create([
-                'company_id' => $appointment->company_id,
+                'organization_id' => $appointment->organization_id,
                 'branch_id' => $appointment->branch_id,
                 'appointment_id' => $appointment->id,
                 'encounter_id' => $encounter?->id,
                 'patient_id' => $appointment->patient_id,
                 'doctor_id' => $appointment->doctor_id,
-                'prescription_no' => $this->numberGenerator->generatePrescriptionNumber($appointment->company, $appointment->branch_id),
+                'prescription_no' => $this->numberGenerator->generatePrescriptionNumber($appointment->organization, $appointment->branch_id),
                 'status' => 'draft',
                 'clinical_notes' => $data['clinical_notes'] ?? null,
                 'advice' => $data['advice'] ?? null,
@@ -93,7 +93,7 @@ class OpdService
             ]);
 
             foreach ($data['items'] ?? [] as $itemData) {
-                $prescription->items()->create(array_merge($itemData, ['company_id' => $appointment->company_id]));
+                $prescription->items()->create(array_merge($itemData, ['organization_id' => $appointment->organization_id]));
             }
 
             if ($encounter) {

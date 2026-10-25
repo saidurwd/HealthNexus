@@ -12,23 +12,23 @@ class BillingCashierSession extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'branch_id', 'counter_id', 'user_id', 'status', 'currency', 'opening_balance', 'expected_collections', 'expected_refunds', 'expected_closing', 'actual_closing', 'variance', 'opened_at', 'closed_at', 'closed_by', 'closing_notes'];
+    protected $fillable = ['organization_id', 'branch_id', 'counter_id', 'user_id', 'status', 'currency', 'opening_balance', 'expected_collections', 'expected_refunds', 'expected_closing', 'actual_closing', 'variance', 'opened_at', 'closed_at', 'closed_by', 'closing_notes'];
 
     protected function casts(): array
     {
         return ['opening_balance' => 'decimal:2', 'expected_collections' => 'decimal:2', 'expected_refunds' => 'decimal:2', 'expected_closing' => 'decimal:2', 'actual_closing' => 'decimal:2', 'variance' => 'decimal:2', 'opened_at' => 'datetime', 'closed_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function counter(): BelongsTo { return $this->belongsTo(\App\Models\Department::class, 'counter_id'); }
     public function user(): BelongsTo { return $this->belongsTo(User::class); }
     public function payments(): HasMany { return $this->hasMany(BillingPayment::class, 'cashier_session_id'); }
     public function closedBy(): BelongsTo { return $this->belongsTo(User::class, 'closed_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 
     public function isOpen(): bool { return $this->status === 'open'; }

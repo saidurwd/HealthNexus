@@ -26,11 +26,11 @@ class IpdBedController extends Controller
     {
         $this->authorize('viewAny', IpdBed::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $beds = IpdBed::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['room.ward', 'bedType'])
             ->when($request->filled('room_id'), fn ($q) => $q->where('room_id', $request->input('room_id')))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
@@ -47,9 +47,9 @@ class IpdBedController extends Controller
     {
         $this->authorize('create', IpdBed::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $rooms = IpdRoom::query()->forTenant($companyId)->where('is_active', true)->with('ward')->orderBy('room_number')->get();
-        $bedTypes = IpdBedType::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $rooms = IpdRoom::query()->forTenant($organizationId)->where('is_active', true)->with('ward')->orderBy('room_number')->get();
+        $bedTypes = IpdBedType::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.beds.create', compact('rooms', 'bedTypes'));
     }
@@ -59,7 +59,7 @@ class IpdBedController extends Controller
         $this->authorize('create', IpdBed::class);
 
         $validated = $request->validate($this->rules());
-        $validated['company_id'] = $request->input('company_id');
+        $validated['organization_id'] = $request->input('organization_id');
         $validated['branch_id'] = $request->input('branch_id');
 
         $bed = $this->beds->create($validated, $request->user());
@@ -73,8 +73,8 @@ class IpdBedController extends Controller
     {
         $this->authorize('update', $bed);
 
-        $rooms = IpdRoom::query()->forTenant($bed->company_id)->where('is_active', true)->with('ward')->orderBy('room_number')->get();
-        $bedTypes = IpdBedType::query()->forTenant($bed->company_id)->where('is_active', true)->orderBy('name')->get();
+        $rooms = IpdRoom::query()->forTenant($bed->organization_id)->where('is_active', true)->with('ward')->orderBy('room_number')->get();
+        $bedTypes = IpdBedType::query()->forTenant($bed->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.beds.edit', compact('bed', 'rooms', 'bedTypes'));
     }

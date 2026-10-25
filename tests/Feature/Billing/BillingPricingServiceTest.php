@@ -22,12 +22,12 @@ class BillingPricingServiceTest extends BillingTestCase
         $this->pricing = app(BillingPricingService::class);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $this->item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
@@ -36,7 +36,7 @@ class BillingPricingServiceTest extends BillingTestCase
 
     public function test_falls_back_to_item_base_price_when_no_price_list_matches(): void
     {
-        $resolution = $this->pricing->resolvePrice($this->item, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $resolution = $this->pricing->resolvePrice($this->item, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $this->assertSame('500.00', $resolution['unit_price']);
         $this->assertSame('item_base_price', $resolution['source']);
@@ -47,7 +47,7 @@ class BillingPricingServiceTest extends BillingTestCase
         $priceList = $this->createPriceList();
         $this->createPriceListItem($priceList, '450.00');
 
-        $resolution = $this->pricing->resolvePrice($this->item, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $resolution = $this->pricing->resolvePrice($this->item, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $this->assertSame('450.00', $resolution['unit_price']);
         $this->assertSame('price_list', $resolution['source']);
@@ -59,7 +59,7 @@ class BillingPricingServiceTest extends BillingTestCase
         $this->createPriceListItem($priceList, '450.00');
 
         $corporate = BillingCorporate::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'ACME Corp', 'code' => 'ACME', 'credit_limit' => '0.00',
             'payment_terms_days' => 30, 'billing_cycle' => 'monthly', 'status' => 'active',
         ]);
@@ -67,7 +67,7 @@ class BillingPricingServiceTest extends BillingTestCase
         $this->createPriceListItem($priceList, '350.00', ['corporate_id' => $corporate->id]);
 
         $resolution = $this->pricing->resolvePrice($this->item, [
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'corporate_id' => $corporate->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'corporate_id' => $corporate->id,
         ]);
 
         $this->assertSame('350.00', $resolution['unit_price']);
@@ -81,7 +81,7 @@ class BillingPricingServiceTest extends BillingTestCase
             'effective_to' => now()->subMonth()->toDateString(),
         ]);
 
-        $resolution = $this->pricing->resolvePrice($this->item, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $resolution = $this->pricing->resolvePrice($this->item, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $this->assertSame('500.00', $resolution['unit_price']);
         $this->assertSame('item_base_price', $resolution['source']);
@@ -92,7 +92,7 @@ class BillingPricingServiceTest extends BillingTestCase
         $priceList = $this->createPriceList();
         $this->createPriceListItem($priceList, '10.00', ['minimum_price' => '100.00']);
 
-        $resolution = $this->pricing->resolvePrice($this->item, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $resolution = $this->pricing->resolvePrice($this->item, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $this->assertSame('100.00', $resolution['unit_price']);
     }
@@ -100,7 +100,7 @@ class BillingPricingServiceTest extends BillingTestCase
     private function createPriceList(): BillingPriceList
     {
         return BillingPriceList::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Default', 'code' => 'DEFAULT', 'currency' => 'BDT',
             'status' => 'active', 'priority' => 100,
         ]);

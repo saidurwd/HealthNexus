@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appointment_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('appointment_id')->constrained()->cascadeOnDelete();
             $table->string('token_number')->unique();
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'branch_id', 'status']);
-            $table->index(['company_id', 'token_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'token_number']);
         });
     }
 

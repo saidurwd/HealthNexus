@@ -27,7 +27,7 @@ class IpdWard extends Model
     public const WARD_TYPE_CCU = 'ccu';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'building_id', 'floor_id', 'department_id', 'specialty_id',
+        'organization_id', 'branch_id', 'building_id', 'floor_id', 'department_id', 'specialty_id',
         'code', 'name', 'ward_type', 'gender_policy', 'capacity', 'isolation_capable', 'is_active',
     ];
 
@@ -40,7 +40,7 @@ class IpdWard extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function building(): BelongsTo { return $this->belongsTo(IpdBuilding::class, 'building_id'); }
     public function floor(): BelongsTo { return $this->belongsTo(IpdFloor::class, 'floor_id'); }
@@ -48,9 +48,9 @@ class IpdWard extends Model
     public function specialty(): BelongsTo { return $this->belongsTo(Specialty::class); }
     public function rooms(): HasMany { return $this->hasMany(IpdRoom::class, 'ward_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 
     public function scopeIcuTypes($query)

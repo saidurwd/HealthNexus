@@ -23,7 +23,7 @@ class IcuCriticalEvent extends Model
     public const STATUS_FINAL = 'final';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'event_type', 'location', 'event_time',
+        'organization_id', 'branch_id', 'episode_id', 'event_type', 'location', 'event_time',
         'recognition_time', 'response_time', 'initial_condition', 'participants', 'interventions',
         'medications', 'procedures', 'defibrillation', 'airway_management', 'rosc', 'outcome',
         'post_event_plan', 'status', 'reported_by', 'finalized_by', 'finalized_at',
@@ -41,8 +41,8 @@ class IcuCriticalEvent extends Model
     public function reportedBy(): BelongsTo { return $this->belongsTo(User::class, 'reported_by'); }
     public function finalizedBy(): BelongsTo { return $this->belongsTo(User::class, 'finalized_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

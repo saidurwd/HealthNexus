@@ -32,7 +32,7 @@ class IpdAdmissionService
     ) {}
 
     /**
-     * @param  array{company_id:int,branch_id?:int|null,patient_id:int,department_id?:int|null,specialty_id?:int|null,admission_type_id?:int|null,admission_source_id?:int|null,admitting_provider_id?:int|null,attending_provider_id?:int|null,expected_discharge_date?:string|null,priority?:string|null,bed_id?:int|null}  $data
+     * @param  array{organization_id:int,branch_id?:int|null,patient_id:int,department_id?:int|null,specialty_id?:int|null,admission_type_id?:int|null,admission_source_id?:int|null,admitting_provider_id?:int|null,attending_provider_id?:int|null,expected_discharge_date?:string|null,priority?:string|null,bed_id?:int|null}  $data
      */
     public function admit(array $data, User $user, ?IpdAdmissionRequest $request = null): IpdAdmission
     {
@@ -47,14 +47,14 @@ class IpdAdmissionService
                 }
             }
 
-            $companyId = $data['company_id'];
+            $organizationId = $data['organization_id'];
             $branchId = $data['branch_id'] ?? null;
 
             $attendingProvider = ! empty($data['attending_provider_id']) ? Provider::query()->findOrFail($data['attending_provider_id']) : null;
             $admittingProvider = ! empty($data['admitting_provider_id']) ? Provider::query()->findOrFail($data['admitting_provider_id']) : null;
 
             $encounter = $this->encounters->createEncounter([
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'patient_id' => $data['patient_id'],
                 'department_id' => $data['department_id'] ?? $request?->department_id,
@@ -63,9 +63,9 @@ class IpdAdmissionService
             ], $user);
 
             $admission = IpdAdmission::create([
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
-                'admission_number' => $this->numbers->generateAdmissionNumber($companyId, $branchId),
+                'admission_number' => $this->numbers->generateAdmissionNumber($organizationId, $branchId),
                 'patient_id' => $data['patient_id'],
                 'admission_request_id' => $request?->id,
                 'encounter_id' => $encounter->id,

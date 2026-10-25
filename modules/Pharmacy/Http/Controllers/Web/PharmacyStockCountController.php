@@ -23,11 +23,11 @@ class PharmacyStockCountController extends Controller
     {
         Gate::authorize('pharmacy.stock.count');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $stockCounts = PharmacyStockCount::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('store')
             ->latest()
             ->paginate(20)

@@ -10,7 +10,7 @@
             <div class="col-md-2">
                 <select name="store_id" class="form-control" required>
                     <option value="">Store</option>
-                    @foreach(\App\Models\Pharmacy\PharmacyStore::query()->forTenant(app(\App\Services\TenantContextResolver::class)->getCompanyId())->where('is_active', true)->get() as $store)
+                    @foreach(\App\Models\Pharmacy\PharmacyStore::query()->forTenant(app(\App\Services\TenantContextResolver::class)->getOrganizationId())->where('is_active', true)->get() as $store)
                         <option value="{{ $store->id }}">{{ $store->name }}</option>
                     @endforeach
                 </select>
@@ -18,7 +18,7 @@
             <div class="col-md-3">
                 <select name="batch_id" class="form-control" required>
                     <option value="">Batch</option>
-                    @foreach(\App\Models\Pharmacy\PharmacyBatch::query()->where('company_id', app(\App\Services\TenantContextResolver::class)->getCompanyId())->where('is_quarantined', false)->with('medication')->get() as $batch)
+                    @foreach(\App\Models\Pharmacy\PharmacyBatch::query()->where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->where('is_quarantined', false)->with('medication')->get() as $batch)
                         <option value="{{ $batch->id }}">{{ $batch->medication?->name }} — {{ $batch->batch_number }}</option>
                     @endforeach
                 </select>

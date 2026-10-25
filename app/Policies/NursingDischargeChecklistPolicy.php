@@ -32,7 +32,7 @@ class NursingDischargeChecklistPolicy
 
     private function inScope(User $user, NursingDischargeChecklist $checklist): bool
     {
-        return $user->companies()->where('companies.id', $checklist->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $checklist->organization_id)->exists()
             && (! $checklist->branch_id || $user->branches()->where('branches.id', $checklist->branch_id)->exists());
     }
 }

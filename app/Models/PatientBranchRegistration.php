@@ -12,7 +12,7 @@ class PatientBranchRegistration extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'branch_id',
         'local_patient_no',
@@ -24,9 +24,9 @@ class PatientBranchRegistration extends Model
         'registered_at' => 'datetime',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function patient(): BelongsTo

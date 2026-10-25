@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class NursingWoundAssessment extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
         'location', 'wound_type', 'size', 'appearance', 'drainage', 'dressing',
         'intervention', 'reassessment_due_at', 'assessed_by', 'assessed_at',
     ];
@@ -51,8 +51,8 @@ class NursingWoundAssessment extends Model
         return $this->morphMany(\App\Models\File::class, 'entity');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

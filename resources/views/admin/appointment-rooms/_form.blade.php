@@ -25,7 +25,7 @@
             <label class="form-label">Department</label>
             <select name="department_id" class="form-select">
                 <option value="">None</option>
-                @foreach(\App\Models\Department::where('company_id', app(\App\Services\TenantContextResolver::class)->getCompanyId())->get() as $department)
+                @foreach(\App\Models\Department::where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->get() as $department)
                     <option value="{{ $department->id }}" {{ old('department_id', $room?->department_id) == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
                 @endforeach
             </select>

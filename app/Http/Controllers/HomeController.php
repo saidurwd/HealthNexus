@@ -20,8 +20,8 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        $companies = $user->companies()->get();
-        $currentCompany = $this->resolver->getCompany();
+        $organizations = $user->organizations()->get();
+        $currentOrganization = $this->resolver->getOrganization();
         $currentBranch = $this->resolver->getBranch();
         $currentDepartment = $this->resolver->getDepartment();
         $widgets = $this->widgets->forUser($user);
@@ -29,8 +29,8 @@ class HomeController extends Controller
         $this->activityLogger->log('DASHBOARD_VIEWED', 'Viewed dashboard', null, [], $request);
 
         return view('dashboard', [
-            'userCompanies' => $companies,
-            'currentCompany' => $currentCompany,
+            'userOrganizations' => $organizations,
+            'currentOrganization' => $currentOrganization,
             'currentBranch' => $currentBranch,
             'currentDepartment' => $currentDepartment,
             'widgets' => $widgets,

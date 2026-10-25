@@ -32,7 +32,7 @@ class IcuCriticalEventPolicy
 
     private function inScope(User $user, IcuCriticalEvent $event): bool
     {
-        return $user->companies()->where('companies.id', $event->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $event->organization_id)->exists()
             && (! $event->branch_id || $user->branches()->where('branches.id', $event->branch_id)->exists());
     }
 }

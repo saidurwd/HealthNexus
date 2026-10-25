@@ -1,13 +1,13 @@
 @extends('layouts.adminlte')
 
-@section('page_title', 'Create Branch - ' . $company->name)
+@section('page_title', 'Create Branch - ' . $organization->name)
 
 @section('page_content')
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Create Branch</h3>
         </div>
-        <form action="{{ route('admin.companies.branches.store', $company) }}" method="post">
+        <form action="{{ route('admin.organizations.branches.store', $organization) }}" method="post">
             @csrf
             <div class="card-body">
                 <div class="mb-3">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.organizations.branches.index', $organization) }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Create Branch</button>
             </div>
         </form>

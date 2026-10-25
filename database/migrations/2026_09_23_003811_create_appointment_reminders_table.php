@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appointment_reminders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('appointment_id')->constrained()->cascadeOnDelete();
             $table->foreignId('rule_id')->nullable()->constrained('appointment_reminder_rules')->nullOnDelete();
             $table->enum('channel', ['sms', 'email', 'whatsapp', 'push']);

@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('icu_clinical_score_results', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('episode_id')->constrained('icu_episodes')->cascadeOnDelete();
             $table->string('score_code');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamp('calculated_at');
             $table->timestamps();
 
-            $table->index(['episode_id', 'score_code', 'calculated_at']);
+            $table->index(['episode_id', 'score_code', 'calculated_at'], 'icu_clinical_score_results_e1f9840e_idx');
         });
     }
 

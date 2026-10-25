@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,16 +15,16 @@ class PatientApiTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
+        $this->organization = Organization::factory()->create();
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         Permission::create(['name' => 'patients.create', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
@@ -35,12 +35,12 @@ class PatientApiTest extends TestCase
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
-        $this->withHeader('X-Company-Id', (string) $this->company->id);
+        $this->withHeader('X-Organization-Id', (string) $this->organization->id);
     }
 
     public function test_user_can_list_patients(): void
     {
-        Patient::factory()->count(3)->create(['company_id' => $this->company->id]);
+        Patient::factory()->count(3)->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get('/api/v1/patients');
 
@@ -51,7 +51,7 @@ class PatientApiTest extends TestCase
     public function test_user_can_create_patient(): void
     {
         $response = $this->post('/api/v1/patients', [
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'first_name' => 'John',
             'last_name' => 'Doe',
             'sex' => 'M',
@@ -65,7 +65,7 @@ class PatientApiTest extends TestCase
 
     public function test_user_can_view_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get('/api/v1/patients/'.$patient->id);
 
@@ -75,7 +75,7 @@ class PatientApiTest extends TestCase
 
     public function test_user_can_update_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->put('/api/v1/patients/'.$patient->id, [
             'first_name' => 'Jane',
@@ -87,7 +87,7 @@ class PatientApiTest extends TestCase
 
     public function test_user_can_delete_patient(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->delete('/api/v1/patients/'.$patient->id);
 

@@ -31,10 +31,10 @@ class PharmacyStockController extends Controller
     {
         Gate::authorize('pharmacy.batch.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $batches = PharmacyBatch::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->with('medication')
             ->when($request->boolean('near_expiry'), fn ($q) => $q->where('expiry_date', '<=', now()->addDays(90)->toDateString()))
             ->orderBy('expiry_date')

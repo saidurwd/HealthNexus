@@ -18,10 +18,10 @@ class IcuCriticalEventController extends Controller
     {
         $this->authorize('viewAny', IcuCriticalEvent::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $events = IcuCriticalEvent::forTenant($companyId, $branchId)
+        $events = IcuCriticalEvent::forTenant($organizationId, $branchId)
             ->with('episode.patient')
             ->latest('event_time')
             ->paginate(20)

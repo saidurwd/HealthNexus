@@ -26,7 +26,7 @@ class NursingObservation extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'encounter_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'encounter_id',
         'observation_type', 'value', 'unit', 'reference_range_low', 'reference_range_high',
         'status', 'observed_at', 'observed_by', 'device_source', 'corrects_observation_id',
     ];
@@ -66,8 +66,8 @@ class NursingObservation extends Model
         return $this->belongsTo(self::class, 'corrects_observation_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

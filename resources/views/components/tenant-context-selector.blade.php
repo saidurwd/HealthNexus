@@ -3,7 +3,7 @@
         <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
-        <span x-text="currentCompanyName || 'Select Company'"></span>
+        <span x-text="currentOrganizationName || 'Select Organization'"></span>
         <div class="ml-1">
             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -14,17 +14,17 @@
     <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50" style="display: none;">
         <div class="py-1">
             <div class="px-4 py-2 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                Companies
+                Organizations
             </div>
-            <template x-for="company in companies" :key="company.id">
-                <button @click="selectCompany(company)" 
-                        :class="currentCompanyId === company.id ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'"
+            <template x-for="organization in organizations" :key="organization.id">
+                <button @click="selectOrganization(organization)" 
+                        :class="currentOrganizationId === organization.id ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'"
                         class="block w-full text-left px-4 py-2 text-sm">
-                    <span x-text="company.name"></span>
+                    <span x-text="organization.name"></span>
                 </button>
             </template>
 
-            <div x-show="currentCompanyId" class="border-t border-gray-100">
+            <div x-show="currentOrganizationId" class="border-t border-gray-100">
                 <div class="px-4 py-2 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
                     Branches
                 </div>
@@ -44,25 +44,25 @@
 function tenantContext() {
     return {
         open: false,
-        companies: @json(auth()->user()?->companies ?? []),
+        organizations: @json(auth()->user()?->organizations ?? []),
         branches: [],
-        currentCompanyId: @json(app(\App\Services\TenantContextResolver::class)->getCompanyId()),
+        currentOrganizationId: @json(app(\App\Services\TenantContextResolver::class)->getOrganizationId()),
         currentBranchId: @json(app(\App\Services\TenantContextResolver::class)->getBranchId()),
         
-        get currentCompanyName() {
-            const company = this.companies.find(c => c.id === this.currentCompanyId);
-            return company ? company.name : null;
+        get currentOrganizationName() {
+            const organization = this.organizations.find(c => c.id === this.currentOrganizationId);
+            return organization ? organization.name : null;
         },
 
         init() {
-            if (this.currentCompanyId) {
-                this.loadBranches(this.currentCompanyId);
+            if (this.currentOrganizationId) {
+                this.loadBranches(this.currentOrganizationId);
             }
         },
 
-        async loadBranches(companyId) {
+        async loadBranches(organizationId) {
             try {
-                const response = await fetch(`/api/v1/companies/${companyId}/branches`, {
+                const response = await fetch(`/api/v1/organizations/${organizationId}/branches`, {
                     headers: {
                         'Authorization': `Bearer ${document.querySelector('meta[name=\"csrf-token\"]')?.content}`,
                         'Accept': 'application/json',
@@ -78,12 +78,12 @@ function tenantContext() {
             }
         },
 
-        async selectCompany(company) {
-            this.currentCompanyId = company.id;
+        async selectOrganization(organization) {
+            this.currentOrganizationId = organization.id;
             this.currentBranchId = null;
             this.branches = [];
             
-            await this.updateContext({ company_id: company.id });
+            await this.updateContext({ organization_id: organization.id });
             this.open = false;
         },
 

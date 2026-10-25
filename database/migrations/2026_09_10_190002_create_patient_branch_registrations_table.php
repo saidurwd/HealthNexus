@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_branch_registrations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->string('local_patient_no')->nullable();
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'patient_id', 'branch_id'], 'patient_branch_unique');
-            $table->index(['company_id', 'branch_id', 'local_patient_no'], 'patient_branch_local_idx');
+            $table->unique(['organization_id', 'patient_id', 'branch_id'], 'patient_branch_unique');
+            $table->index(['organization_id', 'branch_id', 'local_patient_no'], 'patient_branch_local_idx');
         });
     }
 

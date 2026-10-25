@@ -22,11 +22,11 @@ class PharmacyBrandController extends Controller
     {
         Gate::authorize('pharmacy.brand.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $brands = PharmacyBrand::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('generic')
             ->when($request->filled('search'), fn ($q) => $q->where('name', 'like', '%'.$request->input('search').'%'))
             ->orderBy('name')
@@ -40,8 +40,8 @@ class PharmacyBrandController extends Controller
     {
         Gate::authorize('pharmacy.brand.create');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $generics = PharmacyGeneric::query()->forTenant($companyId)->where('is_active', true)->orderBy('generic_name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $generics = PharmacyGeneric::query()->forTenant($organizationId)->where('is_active', true)->orderBy('generic_name')->get();
 
         return view('admin.pharmacy.brands.create', compact('generics'));
     }
@@ -51,7 +51,7 @@ class PharmacyBrandController extends Controller
         Gate::authorize('pharmacy.brand.create');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'generic_id' => ['nullable', 'integer', 'exists:pharmacy_generics,id'],
             'code' => ['required', 'string', 'max:50'],
@@ -71,7 +71,7 @@ class PharmacyBrandController extends Controller
     {
         Gate::authorize('pharmacy.brand.update');
 
-        $generics = PharmacyGeneric::query()->forTenant($brand->company_id)->where('is_active', true)->orderBy('generic_name')->get();
+        $generics = PharmacyGeneric::query()->forTenant($brand->organization_id)->where('is_active', true)->orderBy('generic_name')->get();
 
         return view('admin.pharmacy.brands.edit', compact('brand', 'generics'));
     }

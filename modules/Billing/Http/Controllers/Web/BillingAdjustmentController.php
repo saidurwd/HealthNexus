@@ -22,11 +22,11 @@ class BillingAdjustmentController extends Controller
     {
         $this->authorize('viewAny', BillingAdjustment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $adjustments = BillingAdjustment::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('invoice.patient')
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('requested_at')

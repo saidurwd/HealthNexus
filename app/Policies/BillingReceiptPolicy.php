@@ -27,7 +27,7 @@ class BillingReceiptPolicy
 
     private function inScope(User $user, BillingReceipt $receipt): bool
     {
-        return $user->companies()->where('companies.id', $receipt->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $receipt->organization_id)->exists()
             && $user->branches()->where('branches.id', $receipt->branch_id)->exists();
     }
 }

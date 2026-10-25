@@ -31,7 +31,7 @@ class ActivityLogger
 
         $activity = ActivityLog::create([
             'user_id' => $user?->id,
-            'company_id' => $this->resolver->getCompanyId(),
+            'organization_id' => $this->resolver->getOrganizationId(),
             'branch_id' => $this->resolver->getBranchId(),
             'action' => $action,
             'entity_type' => $entity ? $entity->getMorphClass() : null,

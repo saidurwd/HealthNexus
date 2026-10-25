@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('radiology_examinations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('order_item_id')->constrained('radiology_order_items')->cascadeOnDelete();
             $table->foreignId('modality_id')->nullable()->constrained('radiology_modalities')->nullOnDelete();
@@ -56,7 +56,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index(['patient_id']);
             $table->index(['modality_id']);
             $table->index(['assigned_radiologist_id']);

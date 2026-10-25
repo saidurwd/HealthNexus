@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AppointmentReminder extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'appointment_id',
         'rule_id',
         'channel',

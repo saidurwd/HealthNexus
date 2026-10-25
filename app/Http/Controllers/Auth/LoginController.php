@@ -100,7 +100,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function showCompanyBranchForm(Request $request)
+    public function showOrganizationBranchForm(Request $request)
     {
         $email = $request->session()->get('login_email');
 
@@ -114,15 +114,15 @@ class LoginController extends Controller
             return redirect()->route('login')->withErrors(['email' => 'User not found.']);
         }
 
-        $companies = $user->companies()->get();
+        $organizations = $user->organizations()->get();
 
-        return view('auth.context', compact('companies', 'user'));
+        return view('auth.context', compact('organizations', 'user'));
     }
 
-    public function storeCompanyBranch(Request $request)
+    public function storeOrganizationBranch(Request $request)
     {
         $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['required', 'integer', 'exists:branches,id'],
         ]);
 
@@ -138,23 +138,23 @@ class LoginController extends Controller
             return redirect()->route('login')->withErrors(['email' => 'User not found.']);
         }
 
-        $companyId = (int) $request->input('company_id');
+        $organizationId = (int) $request->input('organization_id');
         $branchId = (int) $request->input('branch_id');
 
-        $hasCompanyAccess = $user->companies()->where('companies.id', $companyId)->exists();
+        $hasOrganizationAccess = $user->organizations()->where('organizations.id', $organizationId)->exists();
         $hasBranchAccess = $user->branches()->where('branches.id', $branchId)->exists();
 
-        if (! $hasCompanyAccess || ! $hasBranchAccess) {
-            return back()->withErrors(['email' => 'You do not have access to the selected company or branch.']);
+        if (! $hasOrganizationAccess || ! $hasBranchAccess) {
+            return back()->withErrors(['email' => 'You do not have access to the selected organization or branch.']);
         }
 
         $branch = Branch::findOrFail($branchId);
 
-        if ($branch->company_id !== $companyId) {
-            return back()->withErrors(['email' => 'The selected branch does not belong to the selected company.']);
+        if ($branch->organization_id !== $organizationId) {
+            return back()->withErrors(['email' => 'The selected branch does not belong to the selected organization.']);
         }
 
-        $request->session()->put('tenant_company_id', $companyId);
+        $request->session()->put('tenant_organization_id', $organizationId);
         $request->session()->put('tenant_branch_id', $branchId);
         $request->session()->forget('login_email');
 

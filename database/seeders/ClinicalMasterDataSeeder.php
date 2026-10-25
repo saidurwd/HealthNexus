@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\EncounterType;
 use Illuminate\Database\Seeder;
 
 /**
- * encounter_types is company-scoped (unlike the rest of MasterDataSeeder's system-wide tables),
- * so it has to run after companies exist — this seeder runs after CompanyWithTwoBranchesSeeder
+ * encounter_types is organization-scoped (unlike the rest of MasterDataSeeder's system-wide tables),
+ * so it has to run after organizations exist — this seeder runs after OrganizationWithTwoBranchesSeeder
  * rather than folding into MasterDataSeeder.
  */
 class ClinicalMasterDataSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
+        Organization::all()->each(function (Organization $organization) {
             $types = [
                 ['name' => 'New Consultation', 'code' => 'new_consultation'],
                 ['name' => 'Follow-up', 'code' => 'follow_up'],
@@ -31,7 +31,7 @@ class ClinicalMasterDataSeeder extends Seeder
 
             foreach ($types as $type) {
                 EncounterType::firstOrCreate(
-                    ['company_id' => $company->id, 'name' => $type['name']],
+                    ['organization_id' => $organization->id, 'name' => $type['name']],
                     ['code' => $type['code'], 'is_active' => true],
                 );
             }

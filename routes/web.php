@@ -22,8 +22,8 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/login/context', [LoginController::class, 'showCompanyBranchForm'])->name('login.context');
-Route::post('/login/context', [LoginController::class, 'storeCompanyBranch'])->name('login.context.store');
+Route::get('/login/context', [LoginController::class, 'showOrganizationBranchForm'])->name('login.context');
+Route::post('/login/context', [LoginController::class, 'storeOrganizationBranch'])->name('login.context.store');
 
 Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');

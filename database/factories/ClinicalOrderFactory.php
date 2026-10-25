@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -15,11 +15,11 @@ class ClinicalOrderFactory extends Factory
 
     public function definition(): array
     {
-        $company = Company::factory();
+        $organization = Organization::factory();
         $prefix = strtoupper(fake()->unique()->bothify('??'));
 
         return [
-            'company_id' => $company,
+            'organization_id' => $organization,
             'branch_id' => Branch::factory(),
             'order_number' => $prefix.'-ORD-'.str_pad(fake()->unique()->randomNumber(5), 8, '0', STR_PAD_LEFT),
             'patient_id' => Patient::factory(),

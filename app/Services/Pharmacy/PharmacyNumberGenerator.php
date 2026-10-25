@@ -16,11 +16,11 @@ class PharmacyNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -42,32 +42,32 @@ class PharmacyNumberGenerator
         });
     }
 
-    public function generateOrderNumber(int $companyId, ?int $branchId): string
+    public function generateOrderNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('pharmacy.order_prefix', 'RX');
 
-        return $this->generate($companyId, $branchId, 'ORD', $prefix);
+        return $this->generate($organizationId, $branchId, 'ORD', $prefix);
     }
 
-    public function generateDispensingNumber(int $companyId, ?int $branchId): string
+    public function generateDispensingNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('pharmacy.dispensing_prefix', 'DSP');
 
-        return $this->generate($companyId, $branchId, 'DSP', $prefix);
+        return $this->generate($organizationId, $branchId, 'DSP', $prefix);
     }
 
-    public function generateTransferNumber(int $companyId, ?int $branchId): string
+    public function generateTransferNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('pharmacy.transfer_prefix', 'TRF');
 
-        return $this->generate($companyId, $branchId, 'TRF', $prefix);
+        return $this->generate($organizationId, $branchId, 'TRF', $prefix);
     }
 
-    public function generateReturnNumber(int $companyId, ?int $branchId): string
+    public function generateReturnNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('pharmacy.return_prefix', 'RTN');
 
-        return $this->generate($companyId, $branchId, 'RTN', $prefix);
+        return $this->generate($organizationId, $branchId, 'RTN', $prefix);
     }
 
     private function format(string $prefix, int $sequence): string

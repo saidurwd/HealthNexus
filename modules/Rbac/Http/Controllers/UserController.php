@@ -4,7 +4,7 @@ namespace Modules\Rbac\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
@@ -27,16 +27,16 @@ class UserController extends Controller
         return view('admin.users.global', compact('users'));
     }
 
-    public function companyIndex(Request $request, Company $company)
+    public function organizationIndex(Request $request, Organization $organization)
     {
         $users = User::query()
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $company->id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organization->id))
             ->when($request->filled('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%"))
             ->latest()
             ->paginate(20);
 
-        return view('admin.users.index', compact('company', 'users'));
+        return view('admin.users.index', compact('organization', 'users'));
     }
 
     /**
@@ -69,11 +69,11 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $roles = $this->assignableRoles($request);
 
-        return view('admin.users.create', compact('companies', 'branches', 'roles'));
+        return view('admin.users.create', compact('organizations', 'branches', 'roles'));
     }
 
     public function store(Request $request)
@@ -87,8 +87,8 @@ class UserController extends Controller
             'locale' => ['nullable', 'string', 'max:10'],
             'is_active' => ['boolean'],
             'profile_picture' => ['nullable', 'image', 'max:2048'],
-            'companies' => ['array'],
-            'companies.*' => ['integer', 'exists:companies,id'],
+            'organizations' => ['array'],
+            'organizations.*' => ['integer', 'exists:organizations,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
             'roles' => ['array'],
@@ -113,16 +113,16 @@ class UserController extends Controller
 
         $this->syncUserRoles($request, $user, $validated['roles'] ?? []);
 
-        if (! empty($validated['companies'])) {
-            foreach ($validated['companies'] as $companyId) {
-                $user->companies()->attach($companyId, ['access_level' => 'staff']);
+        if (! empty($validated['organizations'])) {
+            foreach ($validated['organizations'] as $organizationId) {
+                $user->organizations()->attach($organizationId, ['access_level' => 'staff']);
             }
         }
 
         if (! empty($validated['branches'])) {
             foreach ($validated['branches'] as $branchId) {
                 $branch = Branch::findOrFail($branchId);
-                $user->branches()->attach($branchId, ['access_level' => 'staff', 'company_id' => $branch->company_id]);
+                $user->branches()->attach($branchId, ['access_level' => 'staff', 'organization_id' => $branch->organization_id]);
             }
         }
 
@@ -136,15 +136,15 @@ class UserController extends Controller
 
     public function edit(Request $request, User $user)
     {
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $roles = $this->assignableRoles($request);
         $userRoles = $user->roles()->pluck('name')->toArray();
 
-        $userCompanies = $user->companies()->pluck('companies.id')->toArray();
+        $userOrganizations = $user->organizations()->pluck('organizations.id')->toArray();
         $userBranches = $user->branches()->pluck('branches.id')->toArray();
 
-        return view('admin.users.edit', compact('user', 'companies', 'branches', 'userCompanies', 'userBranches', 'roles', 'userRoles'));
+        return view('admin.users.edit', compact('user', 'organizations', 'branches', 'userOrganizations', 'userBranches', 'roles', 'userRoles'));
     }
 
     public function update(Request $request, User $user)
@@ -158,8 +158,8 @@ class UserController extends Controller
             'locale' => ['nullable', 'string', 'max:10'],
             'is_active' => ['boolean'],
             'profile_picture' => ['nullable', 'image', 'max:2048'],
-            'companies' => ['array'],
-            'companies.*' => ['integer', 'exists:companies,id'],
+            'organizations' => ['array'],
+            'organizations.*' => ['integer', 'exists:organizations,id'],
             'branches' => ['array'],
             'branches.*' => ['integer', 'exists:branches,id'],
             'roles_present' => ['nullable', 'boolean'],
@@ -183,7 +183,7 @@ class UserController extends Controller
 
         $user->update($userData);
 
-        $user->companies()->sync($validated['companies'] ?? []);
+        $user->organizations()->sync($validated['organizations'] ?? []);
         $user->branches()->sync($validated['branches'] ?? []);
 
         if ($request->boolean('roles_present')) {

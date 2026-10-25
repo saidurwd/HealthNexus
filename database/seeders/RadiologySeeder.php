@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Radiology\RadiologyBodyPart;
 use App\Models\Radiology\RadiologyPacsServer;
 use App\Models\Radiology\RadiologyProcedure;
@@ -13,7 +13,7 @@ use App\Models\Radiology\RadiologySection;
 use Illuminate\Database\Seeder;
 
 /**
- * Minimal viable radiology catalog per company: sections, body parts, a starter procedure
+ * Minimal viable radiology catalog per organization: sections, body parts, a starter procedure
  * catalog (Chest X-Ray, CT Brain with non-contrast/contrast protocols, Ultrasound Abdomen),
  * each mapped to a clinically-chargeable BillingItem (clinical_event_type='radiology_procedure')
  * so the Clinical Order -> Radiology Order -> Billing Charge chain has something to exercise
@@ -23,26 +23,26 @@ class RadiologySeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
-            $sections = $this->seedSections($company);
-            $bodyParts = $this->seedBodyParts($company);
-            $billingCategory = $this->seedBillingCategory($company);
+        Organization::all()->each(function (Organization $organization) {
+            $sections = $this->seedSections($organization);
+            $bodyParts = $this->seedBodyParts($organization);
+            $billingCategory = $this->seedBillingCategory($organization);
 
-            $this->seedChestXray($company, $sections, $bodyParts, $billingCategory);
-            $this->seedCtBrain($company, $sections, $bodyParts, $billingCategory);
-            $this->seedUltrasoundAbdomen($company, $sections, $bodyParts, $billingCategory);
-            $this->seedPacsServer($company);
+            $this->seedChestXray($organization, $sections, $bodyParts, $billingCategory);
+            $this->seedCtBrain($organization, $sections, $bodyParts, $billingCategory);
+            $this->seedUltrasoundAbdomen($organization, $sections, $bodyParts, $billingCategory);
+            $this->seedPacsServer($organization);
         });
     }
 
-    private function seedSections(Company $company): array
+    private function seedSections(Organization $organization): array
     {
         $definitions = ['XR' => 'X-Ray', 'CT' => 'CT', 'MRI' => 'MRI', 'US' => 'Ultrasound'];
         $sections = [];
 
         foreach ($definitions as $code => $name) {
             $sections[$code] = RadiologySection::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -50,7 +50,7 @@ class RadiologySeeder extends Seeder
         return $sections;
     }
 
-    private function seedBodyParts(Company $company): array
+    private function seedBodyParts(Organization $organization): array
     {
         $definitions = [
             'HEAD' => ['Head', false], 'BRAIN' => ['Brain', false], 'CHEST' => ['Chest', false],
@@ -62,7 +62,7 @@ class RadiologySeeder extends Seeder
 
         foreach ($definitions as $code => [$name, $laterality]) {
             $bodyParts[$code] = RadiologyBodyPart::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'laterality_applicable' => $laterality, 'is_active' => true],
             );
         }
@@ -70,18 +70,18 @@ class RadiologySeeder extends Seeder
         return $bodyParts;
     }
 
-    private function seedBillingCategory(Company $company): BillingCategory
+    private function seedBillingCategory(Organization $organization): BillingCategory
     {
         return BillingCategory::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'DIAG'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'DIAG'],
             ['name' => 'Diagnostics', 'description' => 'Laboratory and diagnostic services', 'is_active' => true],
         );
     }
 
-    private function seedBillingItemFor(Company $company, BillingCategory $billingCategory, RadiologyProcedure $procedure, string $price): void
+    private function seedBillingItemFor(Organization $organization, BillingCategory $billingCategory, RadiologyProcedure $procedure, string $price): void
     {
         BillingItem::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'item_code' => 'RAD-'.$procedure->code],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'item_code' => 'RAD-'.$procedure->code],
             [
                 'category_id' => $billingCategory->id,
                 'item_type' => 'diagnostic',
@@ -98,10 +98,10 @@ class RadiologySeeder extends Seeder
         );
     }
 
-    private function seedChestXray(Company $company, array $sections, array $bodyParts, BillingCategory $billingCategory): void
+    private function seedChestXray(Organization $organization, array $sections, array $bodyParts, BillingCategory $billingCategory): void
     {
         $procedure = RadiologyProcedure::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'XR-CHEST-PA'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'XR-CHEST-PA'],
             [
                 'section_id' => $sections['XR']->id,
                 'body_part_id' => $bodyParts['CHEST']->id,
@@ -113,13 +113,13 @@ class RadiologySeeder extends Seeder
             ],
         );
 
-        $this->seedBillingItemFor($company, $billingCategory, $procedure, '400.00');
+        $this->seedBillingItemFor($organization, $billingCategory, $procedure, '400.00');
     }
 
-    private function seedCtBrain(Company $company, array $sections, array $bodyParts, BillingCategory $billingCategory): void
+    private function seedCtBrain(Organization $organization, array $sections, array $bodyParts, BillingCategory $billingCategory): void
     {
         $procedure = RadiologyProcedure::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'CT-BRAIN'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'CT-BRAIN'],
             [
                 'section_id' => $sections['CT']->id,
                 'body_part_id' => $bodyParts['BRAIN']->id,
@@ -142,13 +142,13 @@ class RadiologySeeder extends Seeder
             ['name' => 'Contrast', 'contrast_required' => true, 'is_active' => true],
         );
 
-        $this->seedBillingItemFor($company, $billingCategory, $procedure, '4500.00');
+        $this->seedBillingItemFor($organization, $billingCategory, $procedure, '4500.00');
     }
 
-    private function seedUltrasoundAbdomen(Company $company, array $sections, array $bodyParts, BillingCategory $billingCategory): void
+    private function seedUltrasoundAbdomen(Organization $organization, array $sections, array $bodyParts, BillingCategory $billingCategory): void
     {
         $procedure = RadiologyProcedure::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'US-ABDOMEN'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'US-ABDOMEN'],
             [
                 'section_id' => $sections['US']->id,
                 'body_part_id' => $bodyParts['ABDOMEN']->id,
@@ -162,13 +162,13 @@ class RadiologySeeder extends Seeder
             ],
         );
 
-        $this->seedBillingItemFor($company, $billingCategory, $procedure, '1200.00');
+        $this->seedBillingItemFor($organization, $billingCategory, $procedure, '1200.00');
     }
 
-    private function seedPacsServer(Company $company): void
+    private function seedPacsServer(Organization $organization): void
     {
         RadiologyPacsServer::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'DEFAULT'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'DEFAULT'],
             [
                 'name' => 'Default PACS (not connected)',
                 'adapter_type' => 'null',

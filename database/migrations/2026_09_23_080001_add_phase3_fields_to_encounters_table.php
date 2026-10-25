@@ -30,7 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('locked_by')->nullable()->after('locked_at');
             $table->foreign('locked_by')->references('id')->on('users')->nullOnDelete();
 
-            $table->index(['company_id', 'encounter_date']);
+            $table->index(['organization_id', 'encounter_date']);
             $table->index(['patient_id', 'encounter_date']);
             $table->index(['provider_id', 'encounter_date']);
         });
@@ -46,7 +46,7 @@ return new class extends Migration
             $table->dropForeign(['created_by']);
             $table->dropForeign(['completed_by']);
             $table->dropForeign(['locked_by']);
-            $table->dropIndex(['company_id', 'encounter_date']);
+            $table->dropIndex(['organization_id', 'encounter_date']);
             $table->dropIndex(['patient_id', 'encounter_date']);
             $table->dropIndex(['provider_id', 'encounter_date']);
 

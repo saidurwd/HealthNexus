@@ -16,10 +16,10 @@ class LabReportingController extends Controller
     {
         Gate::authorize('lab.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $volume = LabOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereBetween('ordered_at', [$from, $to])
             ->selectRaw('DATE(ordered_at) as day, count(*) as total')
             ->groupBy('day')
@@ -33,10 +33,10 @@ class LabReportingController extends Controller
     {
         Gate::authorize('lab.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $rejections = LabSpecimen::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('status', 'rejected')
             ->whereBetween('rejected_at', [$from, $to])
             ->selectRaw('rejection_reason, count(*) as total')
@@ -51,10 +51,10 @@ class LabReportingController extends Controller
     {
         Gate::authorize('lab.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $results = LabResult::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('critical_flag', true)
             ->whereBetween('entered_at', [$from, $to])
             ->with(['test', 'orderItem.labOrder.patient'])
@@ -68,10 +68,10 @@ class LabReportingController extends Controller
     {
         Gate::authorize('lab.report.view');
 
-        [$companyId, $branchId, $from, $to] = $this->scopeAndRange($request);
+        [$organizationId, $branchId, $from, $to] = $this->scopeAndRange($request);
 
         $amendments = LabResult::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereNotNull('amended_from_id')
             ->whereBetween('entered_at', [$from, $to])
             ->with(['test', 'amendedBy', 'orderItem.labOrder.patient'])
@@ -83,11 +83,11 @@ class LabReportingController extends Controller
 
     private function scopeAndRange(Request $request): array
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $from = $request->input('from', now()->startOfMonth()->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        return [$companyId, $branchId, $from, $to];
+        return [$organizationId, $branchId, $from, $to];
     }
 }

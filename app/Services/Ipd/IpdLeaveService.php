@@ -31,7 +31,7 @@ class IpdLeaveService
     {
         return IpdPatientLeave::create([
             ...$data,
-            'company_id' => $admission->company_id,
+            'organization_id' => $admission->organization_id,
             'branch_id' => $admission->branch_id,
             'admission_id' => $admission->id,
             'patient_id' => $admission->patient_id,
@@ -65,7 +65,7 @@ class IpdLeaveService
 
             if ($currentAllocation) {
                 IpdBedMovement::create([
-                    'company_id' => $admission->company_id,
+                    'organization_id' => $admission->organization_id,
                     'branch_id' => $admission->branch_id,
                     'admission_id' => $admission->id,
                     'patient_id' => $admission->patient_id,
@@ -110,7 +110,7 @@ class IpdLeaveService
                 $this->allocation->allocate($admission, $bed, $user, IpdBedAllocation::TYPE_LEAVE_RETURN, 'Returned from leave');
 
                 IpdBedMovement::create([
-                    'company_id' => $admission->company_id,
+                    'organization_id' => $admission->organization_id,
                     'branch_id' => $admission->branch_id,
                     'admission_id' => $admission->id,
                     'patient_id' => $admission->patient_id,

@@ -13,7 +13,7 @@ class PharmacyBatch extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'medication_id', 'batch_number', 'manufacturer',
+        'organization_id', 'branch_id', 'medication_id', 'batch_number', 'manufacturer',
         'manufacturing_date', 'expiry_date', 'unit_cost', 'selling_price',
         'supplier_reference', 'is_quarantined', 'created_by',
     ];
@@ -29,7 +29,7 @@ class PharmacyBatch extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
     public function stock(): HasMany { return $this->hasMany(PharmacyStock::class, 'batch_id'); }
@@ -40,9 +40,9 @@ class PharmacyBatch extends Model
         return $this->expiry_date->isPast();
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('pharmacy_batches.company_id', $companyId)
+        return $query->where('pharmacy_batches.organization_id', $organizationId)
             ->where(fn ($q) => $q->where('pharmacy_batches.branch_id', $branchId)->orWhereNull('pharmacy_batches.branch_id'));
     }
 }

@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,7 +14,7 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'branch_id' => Branch::factory(),
             'name' => fake()->word().' Department',
             'code' => strtoupper(fake()->unique()->lexify('DEPT???')),

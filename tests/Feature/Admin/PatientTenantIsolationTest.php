@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -14,8 +14,8 @@ use Tests\TestCase;
 
 /**
  * PatientPolicy::update()/delete() previously checked only the Spatie permission string, with no
- * check that the target patient belongs to a company the user is actually assigned to — a user
- * with patients.update could update another company's patient if they could reach the route.
+ * check that the target patient belongs to an organization the user is actually assigned to — a user
+ * with patients.update could update another organization's patient if they could reach the route.
  * These tests guard against that regression.
  */
 class PatientTenantIsolationTest extends TestCase
@@ -24,11 +24,11 @@ class PatientTenantIsolationTest extends TestCase
 
     private User $user;
 
-    private Company $ownCompany;
+    private Organization $ownOrganization;
 
-    private Company $otherCompany;
+    private Organization $otherOrganization;
 
-    private Patient $otherCompanyPatient;
+    private Patient $otherOrganizationPatient;
 
     protected function setUp(): void
     {
@@ -36,53 +36,53 @@ class PatientTenantIsolationTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->ownCompany = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $this->ownCompany->id]);
-        $this->otherCompany = Company::factory()->create();
+        $this->ownOrganization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $this->ownOrganization->id]);
+        $this->otherOrganization = Organization::factory()->create();
 
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->ownCompany->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->ownCompany->id]);
+        $this->user->organizations()->attach($this->ownOrganization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $this->ownOrganization->id]);
 
-        foreach (['manage companies', 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
+        foreach (['manage organizations', 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->ownCompany->id);
-        app(TenantContextResolver::class)->setCompanyId($this->ownCompany->id);
+        session()->put('tenant_organization_id', $this->ownOrganization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->ownOrganization->id);
 
-        $this->otherCompanyPatient = Patient::factory()->create(['company_id' => $this->otherCompany->id]);
+        $this->otherOrganizationPatient = Patient::factory()->create(['organization_id' => $this->otherOrganization->id]);
     }
 
-    public function test_cannot_update_another_companys_patient_despite_having_permission(): void
+    public function test_cannot_update_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->put('/admin/patients/'.$this->otherCompanyPatient->id, [
-            'company_id' => $this->otherCompany->id,
+        $response = $this->put('/admin/patients/'.$this->otherOrganizationPatient->id, [
+            'organization_id' => $this->otherOrganization->id,
             'first_name' => 'Hacked',
             'last_name' => 'Name',
             'status' => 'active',
         ]);
 
         $response->assertForbidden();
-        $this->assertDatabaseMissing('patients', ['id' => $this->otherCompanyPatient->id, 'first_name' => 'Hacked']);
+        $this->assertDatabaseMissing('patients', ['id' => $this->otherOrganizationPatient->id, 'first_name' => 'Hacked']);
     }
 
-    public function test_cannot_delete_another_companys_patient_despite_having_permission(): void
+    public function test_cannot_delete_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->delete('/admin/patients/'.$this->otherCompanyPatient->id);
+        $response = $this->delete('/admin/patients/'.$this->otherOrganizationPatient->id);
 
         $response->assertForbidden();
-        $this->assertDatabaseHas('patients', ['id' => $this->otherCompanyPatient->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('patients', ['id' => $this->otherOrganizationPatient->id, 'deleted_at' => null]);
     }
 
-    public function test_own_company_patient_can_still_be_updated(): void
+    public function test_own_organization_patient_can_still_be_updated(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
 
         $response = $this->put('/admin/patients/'.$patient->id, [
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'first_name' => 'Updated',
             'last_name' => 'Name',
             'status' => 'active',
@@ -97,7 +97,7 @@ class PatientTenantIsolationTest extends TestCase
         $this->user->revokePermissionTo('patients.create');
 
         $response = $this->post('/admin/patients', [
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'first_name' => 'New',
             'last_name' => 'Patient',
             'status' => 'active',
@@ -107,40 +107,40 @@ class PatientTenantIsolationTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_cannot_merge_a_patient_belonging_to_another_company(): void
+    public function test_cannot_merge_a_patient_belonging_to_another_organization(): void
     {
-        $ownPatient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $ownPatient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
 
         $response = $this->post('/admin/patients/merge', [
             'master_patient_id' => $ownPatient->id,
-            'duplicate_patient_id' => $this->otherCompanyPatient->id,
+            'duplicate_patient_id' => $this->otherOrganizationPatient->id,
         ]);
 
         $response->assertForbidden();
-        $this->assertDatabaseHas('patients', ['id' => $this->otherCompanyPatient->id, 'status' => 'active']);
+        $this->assertDatabaseHas('patients', ['id' => $this->otherOrganizationPatient->id, 'status' => 'active']);
     }
 
-    public function test_search_only_returns_patients_from_the_active_tenant_company(): void
+    public function test_search_only_returns_patients_from_the_active_tenant_organization(): void
     {
-        $ownPatient = Patient::factory()->create(['company_id' => $this->ownCompany->id, 'first_name' => 'Findme']);
+        $ownPatient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id, 'first_name' => 'Findme']);
 
         $response = $this->get('/admin/patients/search?q=Findme');
 
         $response->assertOk();
         $response->assertViewHas('patients', function ($patients) use ($ownPatient) {
             return $patients->contains('id', $ownPatient->id)
-                && ! $patients->contains('id', $this->otherCompanyPatient->id);
+                && ! $patients->contains('id', $this->otherOrganizationPatient->id);
         });
     }
 
-    public function test_cannot_download_another_companys_patient_document(): void
+    public function test_cannot_download_another_organizations_patient_document(): void
     {
         $document = \App\Models\PatientDocument::factory()->create([
-            'company_id' => $this->otherCompany->id,
-            'patient_id' => $this->otherCompanyPatient->id,
+            'organization_id' => $this->otherOrganization->id,
+            'patient_id' => $this->otherOrganizationPatient->id,
         ]);
 
-        $response = $this->get("/admin/patients/{$this->otherCompanyPatient->id}/documents/{$document->id}/download");
+        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->id}/documents/{$document->id}/download");
 
         $response->assertForbidden();
     }

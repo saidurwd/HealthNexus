@@ -11,7 +11,7 @@ class NursingAlertService
     public function raise(NursingObservation $observation, string $description, string $severity = NursingAlert::SEVERITY_MODERATE): NursingAlert
     {
         return NursingAlert::create([
-            'company_id' => $observation->company_id,
+            'organization_id' => $observation->organization_id,
             'branch_id' => $observation->branch_id,
             'episode_id' => $observation->episode_id,
             'admission_id' => $observation->admission_id,

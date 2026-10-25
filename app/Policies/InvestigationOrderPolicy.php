@@ -17,7 +17,7 @@ class InvestigationOrderPolicy
 
     public function view(User $user, InvestigationOrder $order): bool
     {
-        return $user->companies()->where('companies.id', $order->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $order->organization_id)->exists();
     }
 
     public function create(User $user): bool

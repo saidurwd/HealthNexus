@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -17,7 +17,7 @@ class EncounterDocumentFactory extends Factory
         return [
             'encounter_id' => Encounter::factory(),
             'patient_id' => Patient::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'document_type' => fake()->randomElement(['consultation_summary', 'referral_letter', 'prescription', 'clinical_certificate', 'medical_note']),
             'file_name' => fake()->word().'.pdf',
             'file_path' => 'documents/'.fake()->uuid().'.pdf',

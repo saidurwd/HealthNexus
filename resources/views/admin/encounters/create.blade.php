@@ -25,7 +25,7 @@
                     <label for="encounter_type_id" class="form-label">Encounter Type</label>
                     <select name="encounter_type_id" id="encounter_type_id" class="form-control @error('encounter_type_id') is-invalid @enderror">
                         <option value="">Select Type</option>
-                        @foreach (\App\Models\EncounterType::where('company_id', app(\App\Services\TenantContextResolver::class)->getCompanyId())->where('is_active', true)->get() as $type)
+                        @foreach (\App\Models\EncounterType::where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->where('is_active', true)->get() as $type)
                             <option value="{{ $type->id }}" {{ old('encounter_type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
                         @endforeach
                     </select>

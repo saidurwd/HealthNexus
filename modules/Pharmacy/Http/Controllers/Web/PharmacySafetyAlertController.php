@@ -20,11 +20,11 @@ class PharmacySafetyAlertController extends Controller
     {
         $this->authorize('viewAny', PharmacySafetyAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $alerts = PharmacySafetyAlert::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['medication', 'orderItem.order.patient'])
             ->when($request->filled('status'), function ($q) use ($request) {
                 $request->input('status') === 'overridden' ? $q->where('is_overridden', true) : $q->where('is_overridden', false);

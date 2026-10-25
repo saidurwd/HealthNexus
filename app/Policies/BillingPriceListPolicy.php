@@ -37,6 +37,6 @@ class BillingPriceListPolicy
 
     private function inScope(User $user, BillingPriceList $priceList): bool
     {
-        return $user->companies()->where('companies.id', $priceList->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $priceList->organization_id)->exists();
     }
 }

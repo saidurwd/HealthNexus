@@ -53,7 +53,7 @@ class NursingControllerSmokeTest extends NursingTestCase
         $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertOk();
 
         // The tenant context is per-request state; re-establish it as a real client would via its session/header.
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
 
         $this->postJson('/api/v1/nursing/mar/'.$mar->id.'/administer', $payload)->assertStatus(422);

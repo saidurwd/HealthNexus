@@ -31,7 +31,7 @@ class OtSurgeryService
         }
 
         return $this->create([
-            'company_id' => $request->company_id,
+            'organization_id' => $request->organization_id,
             'branch_id' => $request->branch_id,
             'patient_id' => $request->patient_id,
             'admission_id' => $request->admission_id,
@@ -50,14 +50,14 @@ class OtSurgeryService
     public function create(array $data, User $user): OtSurgery
     {
         return DB::transaction(function () use ($data, $user) {
-            $companyId = $data['company_id'] ?? $this->tenant->getCompanyId();
+            $organizationId = $data['organization_id'] ?? $this->tenant->getOrganizationId();
             $branchId = $data['branch_id'] ?? $this->tenant->getBranchId();
 
             $surgery = OtSurgery::create([
                 ...$data,
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
-                'surgery_number' => $this->numbers->generateSurgeryNumber($companyId, $branchId),
+                'surgery_number' => $this->numbers->generateSurgeryNumber($organizationId, $branchId),
                 'status' => OtSurgery::STATUS_APPROVED,
                 'created_by' => $user->id,
             ]);

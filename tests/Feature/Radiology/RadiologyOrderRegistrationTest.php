@@ -80,17 +80,17 @@ class RadiologyOrderRegistrationTest extends RadiologyTestCase
     private function makeChargeableProcedure(string $code, string $name): RadiologyProcedure
     {
         $procedure = RadiologyProcedure::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => $code, 'name' => $name, 'modality_type' => 'CT', 'is_active' => true,
         ]);
 
         $category = \App\Models\Billing\BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Diagnostics', 'code' => 'DIAG', 'is_active' => true,
         ]);
 
         \App\Models\Billing\BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'RAD-'.$code, 'item_type' => 'diagnostic',
             'name' => $name, 'base_price' => '4500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => true, 'clinical_event_type' => 'radiology_procedure',
@@ -102,14 +102,14 @@ class RadiologyOrderRegistrationTest extends RadiologyTestCase
 
     private function makeClinicalOrder(string $orderType, array $itemNames): ClinicalOrder
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $department = Department::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'name' => 'General OPD', 'code' => 'GEN-OPD-'.uniqid(), 'is_active' => true,
         ]);
 
         $encounter = Encounter::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_no' => 'ENC-'.uniqid(),
             'encounter_type' => 'opd', 'provider_id' => $this->user->id,
             'department_id' => $department->id, 'encounter_date' => now()->toDateString(),
@@ -117,14 +117,14 @@ class RadiologyOrderRegistrationTest extends RadiologyTestCase
         ]);
 
         $order = ClinicalOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'order_number' => 'ORD-'.uniqid(), 'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
             'provider_id' => $this->user->id, 'order_type' => $orderType, 'priority' => 'routine',
             'status' => 'requested', 'ordered_at' => now(), 'ordered_by' => $this->user->id,
         ]);
 
         foreach ($itemNames as $name) {
-            $order->items()->create(['company_id' => $this->company->id, 'item_name' => $name, 'status' => 'pending']);
+            $order->items()->create(['organization_id' => $this->organization->id, 'item_name' => $name, 'status' => 'pending']);
         }
 
         return $order->fresh(['items', 'encounter']);

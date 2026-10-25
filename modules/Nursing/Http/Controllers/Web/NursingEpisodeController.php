@@ -13,10 +13,10 @@ class NursingEpisodeController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $episodes = NursingEpisode::forTenant($companyId, $branchId)
+        $episodes = NursingEpisode::forTenant($organizationId, $branchId)
             ->with(['patient', 'primaryNurse', 'admission.currentAllocation.bed.room.ward'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('start_at')

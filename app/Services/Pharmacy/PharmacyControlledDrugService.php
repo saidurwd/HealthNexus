@@ -25,7 +25,7 @@ class PharmacyControlledDrugService
             $balanceAfter = $direction === 'in' ? $currentBalance + $quantity : $currentBalance - $quantity;
 
             return PharmacyControlledDrugTransaction::create([
-                'company_id' => $medication->company_id,
+                'organization_id' => $medication->organization_id,
                 'branch_id' => $medication->branch_id,
                 'store_id' => $store->id,
                 'medication_id' => $medication->id,

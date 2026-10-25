@@ -20,11 +20,11 @@ class LabCriticalResultController extends Controller
     {
         $this->authorize('viewAny', LabCriticalResultAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $alerts = LabCriticalResultAlert::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['result.test', 'result.orderItem.labOrder.patient', 'notifiedTo'])
             ->when($request->filled('status') && $request->input('status') === 'unacknowledged', fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('detected_at')

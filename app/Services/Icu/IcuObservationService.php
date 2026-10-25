@@ -16,7 +16,7 @@ class IcuObservationService
     {
         return IcuObservation::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'patient_id' => $episode->patient_id,
@@ -30,7 +30,7 @@ class IcuObservationService
     {
         return IcuObservation::create([
             ...$data,
-            'company_id' => $observation->company_id,
+            'organization_id' => $observation->organization_id,
             'branch_id' => $observation->branch_id,
             'episode_id' => $observation->episode_id,
             'patient_id' => $observation->patient_id,

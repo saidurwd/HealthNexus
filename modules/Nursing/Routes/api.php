@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Middleware\EnsureBranchAccess;
-use App\Http\Middleware\EnsureCompanyAccess;
+use App\Http\Middleware\EnsureOrganizationAccess;
 use Illuminate\Support\Facades\Route;
 use Modules\Nursing\Http\Controllers\Api\V1\NursingCareController;
 use Modules\Nursing\Http\Controllers\Api\V1\NursingMarController;
 
-Route::middleware([EnsureCompanyAccess::class, EnsureBranchAccess::class])->prefix('nursing')->group(function () {
+Route::middleware([EnsureOrganizationAccess::class, EnsureBranchAccess::class])->prefix('nursing')->group(function () {
     Route::get('/dashboard', [NursingCareController::class, 'dashboard']);
     Route::get('/episodes', [NursingCareController::class, 'episodes']);
     Route::get('/episodes/{episode}', [NursingCareController::class, 'episode']);

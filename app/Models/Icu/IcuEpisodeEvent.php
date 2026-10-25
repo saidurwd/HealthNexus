@@ -24,7 +24,7 @@ class IcuEpisodeEvent extends Model
     public const TYPE_DEATH = 'death';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'event_type', 'from_status', 'to_status',
+        'organization_id', 'branch_id', 'episode_id', 'event_type', 'from_status', 'to_status',
         'from_bed_id', 'to_bed_id', 'destination', 'reason', 'notes', 'created_by',
     ];
 

@@ -28,10 +28,10 @@ class PatientService
     public function createPatient(array $data, User $user, ?Branch $branch = null): Patient
     {
         return DB::transaction(function () use ($data, $user, $branch): Patient {
-            $company = $user->companies()->findOrFail($data['company_id']);
+            $organization = $user->organizations()->findOrFail($data['organization_id']);
 
-            $data['company_id'] = $company->id;
-            $data['enterprise_patient_no'] = $this->numberGenerator->generateEnterprisePatientNo($company);
+            $data['organization_id'] = $organization->id;
+            $data['enterprise_patient_no'] = $this->numberGenerator->generateEnterprisePatientNo($organization);
             $data['registered_at'] = $data['registered_at'] ?? now();
             $data['registered_by'] = $user->id;
 
@@ -43,14 +43,14 @@ class PatientService
 
             if (! empty($data['identifiers'])) {
                 foreach ($data['identifiers'] as $identifierData) {
-                    $identifierData['company_id'] = $company->id;
+                    $identifierData['organization_id'] = $organization->id;
                     $patient->identifiers()->create($identifierData);
                 }
             }
 
             if (! empty($data['contacts'])) {
                 foreach ($data['contacts'] as $contactData) {
-                    $contactData['company_id'] = $company->id;
+                    $contactData['organization_id'] = $organization->id;
                     $patient->contacts()->create($contactData);
                 }
             }
@@ -65,12 +65,12 @@ class PatientService
 
     public function registerPatientToBranch(Patient $patient, Branch $branch, User $user): PatientBranchRegistration
     {
-        $company = $user->companies()->findOrFail($patient->company_id);
+        $organization = $user->organizations()->findOrFail($patient->organization_id);
 
-        $localPatientNo = $this->numberGenerator->generateLocalPatientNo($company, $branch);
+        $localPatientNo = $this->numberGenerator->generateLocalPatientNo($organization, $branch);
 
         return PatientBranchRegistration::create([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'patient_id' => $patient->id,
             'branch_id' => $branch->id,
             'local_patient_no' => $localPatientNo,
@@ -86,21 +86,21 @@ class PatientService
 
     public function addContact(Patient $patient, array $contactData): PatientContact
     {
-        $contactData['company_id'] = $patient->company_id;
+        $contactData['organization_id'] = $patient->organization_id;
 
         return $patient->contacts()->create($contactData);
     }
 
     public function addAllergy(Patient $patient, array $allergyData): PatientAllergy
     {
-        $allergyData['company_id'] = $patient->company_id;
+        $allergyData['organization_id'] = $patient->organization_id;
 
         return $patient->allergies()->create($allergyData);
     }
 
     public function addAlert(Patient $patient, array $alertData): PatientAlert
     {
-        $alertData['company_id'] = $patient->company_id;
+        $alertData['organization_id'] = $patient->organization_id;
         $alertData['created_by'] = $alertData['created_by'] ?? auth()->id();
 
         return $patient->alerts()->create($alertData);
@@ -119,7 +119,7 @@ class PatientService
 
     public function addHistory(Patient $patient, array $historyData): PatientHistory
     {
-        $historyData['company_id'] = $patient->company_id;
+        $historyData['organization_id'] = $patient->organization_id;
         $historyData['recorded_by'] = auth()->id();
 
         return $patient->histories()->create($historyData);
@@ -141,7 +141,7 @@ class PatientService
 
     public function addAddress(Patient $patient, array $addressData): PatientAddress
     {
-        $addressData['company_id'] = $patient->company_id;
+        $addressData['organization_id'] = $patient->organization_id;
 
         if (! empty($addressData['is_primary'])) {
             $patient->addresses()->where('address_type', $addressData['address_type'])->update(['is_primary' => false]);
@@ -152,14 +152,14 @@ class PatientService
 
     public function addGuardian(Patient $patient, array $guardianData): PatientGuardian
     {
-        $guardianData['company_id'] = $patient->company_id;
+        $guardianData['organization_id'] = $patient->organization_id;
 
         return $patient->guardians()->create($guardianData);
     }
 
     public function setPreferences(Patient $patient, array $preferenceData): PatientPreference
     {
-        $preferenceData['company_id'] = $patient->company_id;
+        $preferenceData['organization_id'] = $patient->organization_id;
 
         return $patient->preference()->updateOrCreate(['patient_id' => $patient->id], $preferenceData);
     }
@@ -173,7 +173,7 @@ class PatientService
             $version = $patient->consents()->where('consent_type', $consentType)->max('version') + 1;
 
             $consent = $patient->consents()->create([
-                'company_id' => $patient->company_id,
+                'organization_id' => $patient->organization_id,
                 'consent_type' => $consentType,
                 'version' => $version,
                 'status' => 'active',
@@ -201,10 +201,10 @@ class PatientService
         return $consent;
     }
 
-    public function detectDuplicates(int $companyId, string $firstName, string $lastName, ?string $phone = null, ?string $nationalId = null, ?string $email = null): Collection
+    public function detectDuplicates(int $organizationId, string $firstName, string $lastName, ?string $phone = null, ?string $nationalId = null, ?string $email = null): Collection
     {
         return Patient::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->where(function ($query) use ($firstName, $lastName, $phone, $nationalId, $email) {
                 $query->where('first_name', 'like', '%'.$firstName.'%')
                     ->where('last_name', 'like', '%'.$lastName.'%');

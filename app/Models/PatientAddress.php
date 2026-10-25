@@ -12,7 +12,7 @@ class PatientAddress extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'address_type',
         'line1',

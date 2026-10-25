@@ -45,9 +45,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->locked_until !== null && $this->locked_until->isFuture();
     }
 
-    public function companies(): BelongsToMany
+    public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class, 'user_companies')
+        return $this->belongsToMany(Organization::class, 'user_organizations')
             ->withPivot('access_level', 'is_default', 'metadata')
             ->withTimestamps();
     }
@@ -66,9 +66,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
-    public function companyAccess(): HasMany
+    public function organizationAccess(): HasMany
     {
-        return $this->hasMany(UserCompany::class);
+        return $this->hasMany(UserOrganization::class);
     }
 
     public function branchAccess(): HasMany

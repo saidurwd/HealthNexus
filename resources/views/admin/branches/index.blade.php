@@ -1,13 +1,13 @@
 @extends('layouts.adminlte')
 
-@section('page_title', $company->name . ' - Branches')
+@section('page_title', $organization->name . ' - Branches')
 
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Branches - {{ $company->name }}</h3>
+            <h3 class="card-title">Branches - {{ $organization->name }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.companies.branches.create', $company) }}" class="btn btn-primary btn-sm">New Branch</a>
+                <a href="{{ route('admin.organizations.branches.create', $organization) }}" class="btn btn-primary btn-sm">New Branch</a>
             </div>
         </div>
         <div class="card-body p-0">
@@ -33,9 +33,9 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.companies.branches.show', [$company, $branch]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.companies.branches.edit', [$company, $branch]) }}" class="btn btn-xs btn-warning">Edit</a>
-                                <form action="{{ route('admin.companies.branches.destroy', [$company, $branch]) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                <a href="{{ route('admin.organizations.branches.show', [$organization, $branch]) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.organizations.branches.edit', [$organization, $branch]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <form action="{{ route('admin.organizations.branches.destroy', [$organization, $branch]) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('delete')
                                     <button class="btn btn-xs btn-danger">Delete</button>
@@ -51,7 +51,7 @@
             </table>
         </div>
         <div class="card-footer">
-            <a href="{{ route('admin.companies.index') }}" class="btn btn-secondary">Back to Companies</a>
+            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">Back to Organizations</a>
         </div>
     </div>
 @stop

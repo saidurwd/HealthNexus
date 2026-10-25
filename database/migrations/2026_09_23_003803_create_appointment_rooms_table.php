@@ -12,7 +12,7 @@ return new class extends Migration
         // the complete room model.
         Schema::create('appointment_rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'branch_id', 'is_active'], 'appointment_room_branch_active_idx');
+            $table->index(['organization_id', 'branch_id', 'is_active'], 'appointment_room_branch_active_idx');
         });
     }
 

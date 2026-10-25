@@ -16,7 +16,7 @@ class NotifyOnEscalationEvents
         $escalation = $event->escalation;
 
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['charge_nurse', 'doctor', 'nursing_supervisor']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $escalation->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $escalation->organization_id))
             ->get();
 
         if ($recipients->isEmpty()) {

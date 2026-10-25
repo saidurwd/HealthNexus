@@ -13,7 +13,7 @@ class Patient extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'country_id',
         'state_id',
         'patient_type_id',
@@ -66,9 +66,9 @@ class Patient extends Model
         'portal_enabled' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function country(): BelongsTo

@@ -22,9 +22,9 @@ class UserProfilePictureTest extends TestCase
 
         $this->user = User::factory()->create();
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'manage users', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('manage users');
 
         $this->actingAs($this->user);

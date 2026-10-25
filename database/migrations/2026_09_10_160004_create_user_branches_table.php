@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('user_branches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->enum('access_level', ['manager', 'staff'])->default('staff');
             $table->boolean('is_default')->default(false);
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['user_id', 'branch_id']);
-            $table->index(['user_id', 'company_id']);
+            $table->index(['user_id', 'organization_id']);
             $table->index(['branch_id', 'access_level']);
         });
     }

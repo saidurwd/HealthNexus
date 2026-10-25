@@ -18,12 +18,12 @@ class TenantContextController extends Controller
         $user = $request->user();
 
         return ApiResponse::success([
-            'company_id' => $this->resolver->getCompanyId(),
+            'organization_id' => $this->resolver->getOrganizationId(),
             'branch_id' => $this->resolver->getBranchId(),
             'department_id' => $this->resolver->getDepartmentId(),
-            'companies' => $user->companies()->get(['companies.id', 'companies.name', 'companies.code']),
-            'branches' => $this->resolver->getCompanyId()
-                ? $user->branches()->whereHas('company', fn ($q) => $q->where('id', $this->resolver->getCompanyId()))->get(['branches.id', 'branches.name', 'branches.code'])
+            'organizations' => $user->organizations()->get(['organizations.id', 'organizations.name', 'organizations.code']),
+            'branches' => $this->resolver->getOrganizationId()
+                ? $user->branches()->whereHas('organization', fn ($q) => $q->where('id', $this->resolver->getOrganizationId()))->get(['branches.id', 'branches.name', 'branches.code'])
                 : collect(),
             'departments' => $this->resolver->getBranchId()
                 ? Department::where('branch_id', $this->resolver->getBranchId())->get(['departments.id', 'departments.name', 'departments.code'])
@@ -34,16 +34,16 @@ class TenantContextController extends Controller
     public function update(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
+            'organization_id' => ['nullable', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'department_id' => ['nullable', 'integer', 'exists:departments,id'],
         ]);
 
         $user = $request->user();
 
-        if (isset($validated['company_id'])) {
-            abort_if(! $user->companies()->where('companies.id', $validated['company_id'])->exists(), 403);
-            $this->resolver->setCompanyId($validated['company_id']);
+        if (isset($validated['organization_id'])) {
+            abort_if(! $user->organizations()->where('organizations.id', $validated['organization_id'])->exists(), 403);
+            $this->resolver->setOrganizationId($validated['organization_id']);
         }
 
         if (isset($validated['branch_id'])) {
@@ -58,7 +58,7 @@ class TenantContextController extends Controller
         }
 
         return ApiResponse::success([
-            'company_id' => $this->resolver->getCompanyId(),
+            'organization_id' => $this->resolver->getOrganizationId(),
             'branch_id' => $this->resolver->getBranchId(),
             'department_id' => $this->resolver->getDepartmentId(),
         ], 'Tenant context updated successfully');

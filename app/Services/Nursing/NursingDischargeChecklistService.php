@@ -20,7 +20,7 @@ class NursingDischargeChecklistService
         return NursingDischargeChecklist::firstOrCreate(
             ['episode_id' => $episode->id],
             [
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'admission_id' => $episode->admission_id,
                 'patient_id' => $episode->patient_id,

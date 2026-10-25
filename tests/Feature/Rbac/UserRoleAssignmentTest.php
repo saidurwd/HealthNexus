@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Rbac;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -17,15 +17,15 @@ class UserRoleAssignmentTest extends TestCase
     private function actor(string $role): User
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        Permission::firstOrCreate(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'manage organizations', 'guard_name' => 'web']);
         $r = Role::firstOrCreate(['name' => $role, 'guard_name' => 'web']);
         if ($role !== 'super_admin') {
-            $r->givePermissionTo('manage companies');
+            $r->givePermissionTo('manage organizations');
         }
         $user = User::factory()->create();
         $user->assignRole($r);
-        $company = Company::factory()->create();
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        $organization = Organization::factory()->create();
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
         return $user;
     }

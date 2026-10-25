@@ -13,7 +13,7 @@ class IcuFluidBalanceEntry extends Model
     public const TYPE_OUTPUT = 'output';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'type', 'category', 'volume_ml', 'recorded_at', 'recorded_by',
+        'organization_id', 'branch_id', 'episode_id', 'type', 'category', 'volume_ml', 'recorded_at', 'recorded_by',
     ];
 
     protected function casts(): array
@@ -24,8 +24,8 @@ class IcuFluidBalanceEntry extends Model
     public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
     public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

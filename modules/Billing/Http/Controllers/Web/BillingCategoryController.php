@@ -5,7 +5,7 @@ namespace Modules\Billing\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Billing\BillingCategory;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Billing\BillingItemService;
 use App\Services\TenantContextResolver;
@@ -24,11 +24,11 @@ class BillingCategoryController extends Controller
     {
         $this->authorize('viewAny', BillingCategory::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $categories = BillingCategory::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->orderBy('name')
             ->paginate(20);
 
@@ -39,10 +39,10 @@ class BillingCategoryController extends Controller
     {
         $this->authorize('create', BillingCategory::class);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.categories.create', compact('companies', 'branches'));
+        return view('admin.billing.categories.create', compact('organizations', 'branches'));
     }
 
     public function store(StoreBillingCategoryRequest $request)

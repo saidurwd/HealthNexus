@@ -15,7 +15,7 @@ class LabPanelService
     public function create(array $data, array $testIds, User $user): LabPanel
     {
         return DB::transaction(function () use ($data, $testIds, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             $panel = LabPanel::create($data);
 
@@ -29,7 +29,7 @@ class LabPanelService
     {
         return DB::transaction(function () use ($panel, $data, $testIds) {
             if (isset($data['code']) && $data['code'] !== $panel->code) {
-                $this->assertUniqueCode($panel->company_id, $panel->branch_id, $data['code'], $panel->id);
+                $this->assertUniqueCode($panel->organization_id, $panel->branch_id, $data['code'], $panel->id);
             }
 
             $panel->update($data);
@@ -54,10 +54,10 @@ class LabPanelService
         }
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = LabPanel::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +16,7 @@ class EncounterHistoryFactory extends Factory
         return [
             'encounter_id' => Encounter::factory(),
             'patient_id' => Patient::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'history_type' => fake()->randomElement(['hpi', 'medical', 'surgical', 'family', 'social', 'medication']),
             'onset' => fake()->optional()->word(),
             'duration' => fake()->optional()->word(),

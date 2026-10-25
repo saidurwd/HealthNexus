@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Every action route-model-binds the MAR row and re-authorizes through the policy (company/branch
+ * Every action route-model-binds the MAR row and re-authorizes through the policy (organization/branch
  * scope) — a client-supplied ID is never trusted (spec §67).
  */
 class NursingMarController extends Controller
@@ -27,10 +27,10 @@ class NursingMarController extends Controller
     {
         $this->authorize('viewAny', NursingMedicationAdministration::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $rows = NursingMedicationAdministration::forTenant($companyId, $branchId)
+        $rows = NursingMedicationAdministration::forTenant($organizationId, $branchId)
             ->with(['patient', 'medication'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('admission_id'), fn ($q) => $q->where('admission_id', $request->input('admission_id')))

@@ -33,7 +33,7 @@ class IpdDischargeService
         return DB::transaction(function () use ($admission, $data, $user) {
             $request = IpdDischargeRequest::create([
                 ...$data,
-                'company_id' => $admission->company_id,
+                'organization_id' => $admission->organization_id,
                 'branch_id' => $admission->branch_id,
                 'admission_id' => $admission->id,
                 'patient_id' => $admission->patient_id,

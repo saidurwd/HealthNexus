@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OtSpecimen extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'surgery_id', 'patient_id', 'encounter_id', 'specimen_number',
+        'organization_id', 'branch_id', 'surgery_id', 'patient_id', 'encounter_id', 'specimen_number',
         'specimen_type', 'description', 'site', 'laterality', 'collected_at', 'collected_by',
         'container', 'label', 'destination', 'clinical_order_id',
     ];
@@ -47,8 +47,8 @@ class OtSpecimen extends Model
         return $this->belongsTo(ClinicalOrder::class);
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

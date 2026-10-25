@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Create Department</h3>
         </div>
-        <form action="{{ route('admin.companies.branches.departments.store', [$company, $branch]) }}" method="post">
+        <form action="{{ route('admin.organizations.branches.departments.store', [$organization, $branch]) }}" method="post">
             @csrf
             <div class="card-body">
                 <div class="mb-3">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.companies.branches.departments.index', [$company, $branch]) }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.organizations.branches.departments.index', [$organization, $branch]) }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Create Department</button>
             </div>
         </form>

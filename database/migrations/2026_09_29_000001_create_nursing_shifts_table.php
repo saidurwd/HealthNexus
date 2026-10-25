@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('nursing_shifts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->time('start_time');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'name']);
+            $table->unique(['organization_id', 'branch_id', 'name']);
         });
     }
 

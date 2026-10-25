@@ -20,7 +20,7 @@ class IpdAdmission extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'admission_number', 'patient_id', 'admission_request_id',
+        'organization_id', 'branch_id', 'admission_number', 'patient_id', 'admission_request_id',
         'encounter_id', 'admission_type_id', 'admission_source_id', 'department_id', 'specialty_id',
         'admitting_provider_id', 'attending_provider_id', 'admitted_at', 'expected_discharge_date',
         'actual_discharge_date', 'priority', 'status', 'discharge_disposition_id',
@@ -36,7 +36,7 @@ class IpdAdmission extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
     public function admissionRequest(): BelongsTo { return $this->belongsTo(IpdAdmissionRequest::class, 'admission_request_id'); }
@@ -78,8 +78,8 @@ class IpdAdmission extends Model
         )->whereNull('ipd_bed_allocations.released_at');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

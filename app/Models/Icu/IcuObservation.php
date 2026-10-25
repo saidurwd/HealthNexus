@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class IcuObservation extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'patient_id', 'encounter_id',
+        'organization_id', 'branch_id', 'episode_id', 'patient_id', 'encounter_id',
         'observation_type', 'code', 'value_numeric', 'value_text', 'unit',
         'reference_range_low', 'reference_range_high', 'observed_at', 'recorded_by',
         'device_source', 'corrects_observation_id',
@@ -38,8 +38,8 @@ class IcuObservation extends Model
     public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
     public function corrects(): BelongsTo { return $this->belongsTo(self::class, 'corrects_observation_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

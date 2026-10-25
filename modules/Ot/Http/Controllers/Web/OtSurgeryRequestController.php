@@ -21,10 +21,10 @@ class OtSurgeryRequestController extends Controller
     {
         $this->authorize('viewAny', OtSurgeryRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $requests = OtSurgeryRequest::forTenant($companyId, $branchId)
+        $requests = OtSurgeryRequest::forTenant($organizationId, $branchId)
             ->with(['patient', 'procedure', 'requestingProvider'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('requested_at')

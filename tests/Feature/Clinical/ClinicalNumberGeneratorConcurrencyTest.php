@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Clinical;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\Clinical\ClinicalNumberGenerator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -27,13 +27,13 @@ class ClinicalNumberGeneratorConcurrencyTest extends TestCase
 
     public function test_generator_never_produces_duplicate_sequence_numbers_under_repeated_calls(): void
     {
-        $company = Company::factory()->create(['code' => 'ABC']);
+        $organization = Organization::factory()->create(['code' => 'ABC']);
 
         $generator = app(ClinicalNumberGenerator::class);
 
         $numbers = [];
         for ($i = 0; $i < 10; $i++) {
-            $numbers[] = $generator->generateOrderNumber($company);
+            $numbers[] = $generator->generateOrderNumber($organization);
         }
 
         $this->assertCount(10, array_unique($numbers), 'Every generated order number must be unique.');
@@ -62,15 +62,15 @@ class ClinicalNumberGeneratorConcurrencyTest extends TestCase
         $pdoA->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdoB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO clinical_number_counters (company_id, branch_id, counter_type, last_number, created_at, updated_at)
-            VALUES ({$companyId}, NULL, 'clinical_order', 0, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO clinical_number_counters (organization_id, branch_id, counter_type, last_number, created_at, updated_at)
+            VALUES ({$organizationId}, NULL, 'clinical_order', 0, NOW(), NOW())");
         $counterId = (int) $pdoA->lastInsertId();
 
         try {

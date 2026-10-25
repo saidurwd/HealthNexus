@@ -21,7 +21,7 @@ class IcuVentilatorEvent extends Model
     public const TYPE_RE_INTUBATED = 're_intubated';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'event_type', 'mode', 'fio2', 'peep',
+        'organization_id', 'branch_id', 'episode_id', 'event_type', 'mode', 'fio2', 'peep',
         'tidal_volume', 'respiratory_rate', 'pressure_support', 'peak_pressure', 'plateau_pressure',
         'mean_airway_pressure', 'ie_ratio', 'notes', 'recorded_by', 'recorded_at',
     ];
@@ -38,8 +38,8 @@ class IcuVentilatorEvent extends Model
     public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
     public function recordedBy(): BelongsTo { return $this->belongsTo(User::class, 'recorded_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

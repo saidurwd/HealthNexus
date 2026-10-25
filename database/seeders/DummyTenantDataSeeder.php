@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -18,24 +18,24 @@ class DummyTenantDataSeeder extends Seeder
             return;
         }
 
-        $companies = Company::factory()
+        $organizations = Organization::factory()
             ->count(4)
             ->create();
 
-        foreach ($companies as $company) {
-            $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        foreach ($organizations as $organization) {
+            $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
             $branches = Branch::factory()
                 ->count(3)
-                ->for($company)
+                ->for($organization)
                 ->create();
 
             foreach ($branches as $branch) {
-                $user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $company->id]);
+                $user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $organization->id]);
 
                 Department::factory()
                     ->count(2)
-                    ->for($company)
+                    ->for($organization)
                     ->for($branch)
                     ->create();
             }

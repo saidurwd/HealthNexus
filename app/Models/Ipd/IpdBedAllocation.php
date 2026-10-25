@@ -20,7 +20,7 @@ class IpdBedAllocation extends Model
     public const TYPE_LEAVE_RETURN = 'leave_return';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'admission_id', 'patient_id', 'bed_id',
+        'organization_id', 'branch_id', 'admission_id', 'patient_id', 'bed_id',
         'allocated_at', 'released_at', 'status', 'allocation_type', 'reason',
         'allocated_by', 'released_by',
     ];
@@ -30,7 +30,7 @@ class IpdBedAllocation extends Model
         return ['allocated_at' => 'datetime', 'released_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
@@ -38,8 +38,8 @@ class IpdBedAllocation extends Model
     public function allocatedBy(): BelongsTo { return $this->belongsTo(User::class, 'allocated_by'); }
     public function releasedBy(): BelongsTo { return $this->belongsTo(User::class, 'released_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

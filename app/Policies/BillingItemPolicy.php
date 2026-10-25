@@ -37,6 +37,6 @@ class BillingItemPolicy
 
     private function inScope(User $user, BillingItem $item): bool
     {
-        return $user->companies()->where('companies.id', $item->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $item->organization_id)->exists();
     }
 }

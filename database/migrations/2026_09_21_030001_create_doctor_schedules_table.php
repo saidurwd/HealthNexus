@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('doctor_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'doctor_id', 'day_of_week'], 'doctor_schedule_unique');
+            $table->unique(['organization_id', 'doctor_id', 'day_of_week'], 'doctor_schedule_unique');
         });
     }
 

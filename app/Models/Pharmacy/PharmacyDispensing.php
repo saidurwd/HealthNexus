@@ -24,7 +24,7 @@ class PharmacyDispensing extends Model
     public const STATUS_RETURNED = 'returned';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'order_id', 'prescription_id', 'patient_id', 'store_id',
+        'organization_id', 'branch_id', 'order_id', 'prescription_id', 'patient_id', 'store_id',
         'dispensing_number', 'dispensed_by', 'dispensed_at', 'verified_by', 'verified_at',
         'status', 'remarks',
     ];
@@ -34,7 +34,7 @@ class PharmacyDispensing extends Model
         return ['dispensed_at' => 'datetime', 'verified_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function order(): BelongsTo { return $this->belongsTo(PharmacyOrder::class, 'order_id'); }
     public function prescription(): BelongsTo { return $this->belongsTo(Prescription::class); }
@@ -44,8 +44,8 @@ class PharmacyDispensing extends Model
     public function verifiedBy(): BelongsTo { return $this->belongsTo(User::class, 'verified_by'); }
     public function items(): HasMany { return $this->hasMany(PharmacyDispensingItem::class, 'dispensing_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

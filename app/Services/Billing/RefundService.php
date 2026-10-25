@@ -39,12 +39,12 @@ class RefundService
             }
 
             $refund = BillingRefund::create([
-                'company_id' => $payment->company_id,
+                'organization_id' => $payment->organization_id,
                 'branch_id' => $payment->branch_id,
                 'payment_id' => $payment->id,
                 'invoice_id' => $payment->invoice_id,
                 'patient_id' => $payment->patient_id,
-                'refund_number' => $this->numbers->generateRefundNumber($payment->company_id, $payment->branch_id),
+                'refund_number' => $this->numbers->generateRefundNumber($payment->organization_id, $payment->branch_id),
                 'amount' => $amount,
                 'reason' => $reason,
                 'status' => 'requested',

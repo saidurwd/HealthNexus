@@ -23,10 +23,10 @@ class QueueController extends Controller
     {
         $this->authorize('manageQueue', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $queue = $this->queueService->todaysQueue($companyId, $branchId);
+        $queue = $this->queueService->todaysQueue($organizationId, $branchId);
 
         return view('admin.queue.index', compact('queue'));
     }
@@ -35,12 +35,12 @@ class QueueController extends Controller
     {
         $this->authorize('manageQueue', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $providerId = $request->input('provider_id');
         $tokenId = $request->input('token_id');
 
-        $token = $this->queueService->callNext($companyId, $branchId, $providerId, $tokenId);
+        $token = $this->queueService->callNext($organizationId, $branchId, $providerId, $tokenId);
 
         if ($token) {
             $this->auditLogger->log('CALLED', AppointmentToken::class, $token->id, null, ['token_number' => $token->token_number], $request);
@@ -123,12 +123,12 @@ class QueueController extends Controller
     {
         $this->authorize('viewAny', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $date = $request->input('date', today()->toDateString());
         $doctorId = $request->input('doctor_id');
         $providerId = $request->input('provider_id');
 
-        $query = AppointmentSlot::where('company_id', $companyId)
+        $query = AppointmentSlot::where('organization_id', $organizationId)
             ->whereDate('slot_datetime', $date)
             ->where('status', 'available')
             ->with(['doctor', 'schedule']);

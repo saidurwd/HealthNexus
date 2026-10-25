@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('encounter_counters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->integer('counter')->default(0);
             $table->timestamps();
 
-            $table->unique(['company_id']);
+            $table->unique(['organization_id']);
         });
     }
 

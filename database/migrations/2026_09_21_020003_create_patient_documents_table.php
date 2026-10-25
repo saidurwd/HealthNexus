@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->string('file_name');
             $table->string('file_path');
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'patient_id']);
-            $table->index(['company_id', 'document_type']);
+            $table->index(['organization_id', 'patient_id']);
+            $table->index(['organization_id', 'document_type']);
         });
     }
 

@@ -42,7 +42,7 @@ class IcuAdmissionRequestPolicy
 
     private function inScope(User $user, IcuAdmissionRequest $request): bool
     {
-        return $user->companies()->where('companies.id', $request->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $request->organization_id)->exists()
             && (! $request->branch_id || $user->branches()->where('branches.id', $request->branch_id)->exists());
     }
 }

@@ -21,7 +21,7 @@ class IpdDischargeRequest extends Model
     public const STATUS_COMPLETED = 'completed';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'admission_id', 'patient_id', 'discharge_type', 'planned_date',
+        'organization_id', 'branch_id', 'admission_id', 'patient_id', 'discharge_type', 'planned_date',
         'reason', 'discharge_diagnosis', 'disposition_id', 'instructions', 'follow_up_required',
         'follow_up_provider_id', 'follow_up_date', 'status',
         'clinical_cleared_at', 'clinical_cleared_by', 'billing_cleared_at', 'billing_cleared_by',
@@ -43,7 +43,7 @@ class IpdDischargeRequest extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
@@ -55,8 +55,8 @@ class IpdDischargeRequest extends Model
     public function billingClearedBy(): BelongsTo { return $this->belongsTo(User::class, 'billing_cleared_by'); }
     public function pharmacyClearedBy(): BelongsTo { return $this->belongsTo(User::class, 'pharmacy_cleared_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

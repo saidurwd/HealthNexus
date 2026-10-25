@@ -32,7 +32,7 @@ class LabOrderPolicy
 
     private function inScope(User $user, LabOrder $order): bool
     {
-        return $user->companies()->where('companies.id', $order->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $order->organization_id)->exists()
             && $user->branches()->where('branches.id', $order->branch_id)->exists();
     }
 }

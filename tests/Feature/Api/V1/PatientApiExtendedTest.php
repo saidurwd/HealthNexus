@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api\V1;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,15 +15,15 @@ class PatientApiExtendedTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->organization = Organization::factory()->create();
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         foreach (['patients.create', 'patients.update', 'patients.merge'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -32,13 +32,13 @@ class PatientApiExtendedTest extends TestCase
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
-        $this->withHeader('X-Company-Id', (string) $this->company->id);
+        $this->withHeader('X-Organization-Id', (string) $this->organization->id);
     }
 
     public function test_search_returns_matching_patients(): void
     {
-        Patient::factory()->create(['company_id' => $this->company->id, 'first_name' => 'Findable']);
-        Patient::factory()->create(['company_id' => $this->company->id, 'first_name' => 'Other']);
+        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => 'Findable']);
+        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => 'Other']);
 
         $response = $this->get('/api/v1/patients/search?q=Findable');
 
@@ -47,7 +47,7 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_can_add_and_list_identifiers(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->post("/api/v1/patients/{$patient->id}/identifiers", [
             'identifier_type' => 'passport', 'identifier_value' => 'X123',
@@ -60,7 +60,7 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_can_add_and_list_contacts(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->post("/api/v1/patients/{$patient->id}/contacts", ['name' => 'Emergency Contact', 'phone' => '01700000000'])
             ->assertStatus(201);
@@ -70,7 +70,7 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_can_add_and_list_addresses(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->post("/api/v1/patients/{$patient->id}/addresses", ['address_type' => 'present', 'city' => 'Dhaka'])
             ->assertStatus(201);
@@ -80,7 +80,7 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_timeline_returns_events(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->get("/api/v1/patients/{$patient->id}/timeline");
 
@@ -89,7 +89,7 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_duplicate_check_finds_matching_patients(): void
     {
-        Patient::factory()->create(['company_id' => $this->company->id, 'first_name' => 'Jane', 'last_name' => 'Doe']);
+        Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => 'Jane', 'last_name' => 'Doe']);
 
         $response = $this->post('/api/v1/patients/duplicate-check', ['first_name' => 'Jane', 'last_name' => 'Doe']);
 
@@ -98,8 +98,8 @@ class PatientApiExtendedTest extends TestCase
 
     public function test_can_merge_two_patients(): void
     {
-        $master = Patient::factory()->create(['company_id' => $this->company->id]);
-        $duplicate = Patient::factory()->create(['company_id' => $this->company->id]);
+        $master = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $duplicate = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $response = $this->post('/api/v1/patients/merge', [
             'master_patient_id' => $master->id,

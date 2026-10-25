@@ -11,21 +11,21 @@ class BillingInsurancePolicy extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'branch_id', 'insurance_provider_id', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
+    protected $fillable = ['organization_id', 'branch_id', 'insurance_provider_id', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
 
     protected function casts(): array
     {
         return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function provider(): BelongsTo { return $this->belongsTo(BillingInsuranceProvider::class, 'insurance_provider_id'); }
     public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
     public function invoices(): HasMany { return $this->hasMany(BillingInvoice::class, 'insurance_policy_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

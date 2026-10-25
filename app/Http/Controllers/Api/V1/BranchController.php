@@ -5,26 +5,26 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    public function index(Request $request, Company $company): JsonResponse
+    public function index(Request $request, Organization $organization): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
         $branches = Branch::query()
-            ->where('company_id', $company->id)
+            ->where('organization_id', $organization->id)
             ->get();
 
         return ApiResponse::success($branches);
     }
 
-    public function store(Request $request, Company $company): JsonResponse
+    public function store(Request $request, Organization $organization): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -36,25 +36,25 @@ class BranchController extends Controller
             'is_active' => ['boolean'],
         ]);
 
-        $branch = $company->branches()->create($validated);
+        $branch = $organization->branches()->create($validated);
 
         return ApiResponse::success($branch, 'Branch created successfully', 201);
     }
 
-    public function show(Request $request, Company $company, Branch $branch): JsonResponse
+    public function show(Request $request, Organization $organization, Branch $branch): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         return ApiResponse::success($branch);
     }
 
-    public function update(Request $request, Company $company, Branch $branch): JsonResponse
+    public function update(Request $request, Organization $organization, Branch $branch): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $validated = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
@@ -71,11 +71,11 @@ class BranchController extends Controller
         return ApiResponse::success($branch, 'Branch updated successfully');
     }
 
-    public function destroy(Request $request, Company $company, Branch $branch): JsonResponse
+    public function destroy(Request $request, Organization $organization, Branch $branch): JsonResponse
     {
-        $this->authorize('view', $company);
+        $this->authorize('view', $organization);
 
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $branch->delete();
 

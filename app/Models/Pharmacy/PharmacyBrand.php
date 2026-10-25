@@ -14,7 +14,7 @@ class PharmacyBrand extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'generic_id', 'code', 'name', 'manufacturer',
+        'organization_id', 'branch_id', 'generic_id', 'code', 'name', 'manufacturer',
         'is_active', 'created_by', 'updated_by',
     ];
 
@@ -23,15 +23,15 @@ class PharmacyBrand extends Model
         return ['is_active' => 'boolean'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function generic(): BelongsTo { return $this->belongsTo(PharmacyGeneric::class, 'generic_id'); }
     public function medications(): HasMany { return $this->hasMany(PharmacyMedication::class, 'brand_id'); }
     public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
     public function updatedBy(): BelongsTo { return $this->belongsTo(User::class, 'updated_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

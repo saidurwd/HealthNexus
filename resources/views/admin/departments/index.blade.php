@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Departments - {{ $company->name }} / {{ $branch->name }}</h3>
+            <h3 class="card-title">Departments - {{ $organization->name }} / {{ $branch->name }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.companies.branches.departments.create', [$company, $branch]) }}" class="btn btn-primary btn-sm">New Department</a>
+                <a href="{{ route('admin.organizations.branches.departments.create', [$organization, $branch]) }}" class="btn btn-primary btn-sm">New Department</a>
             </div>
         </div>
         <div class="card-body p-0">
@@ -33,9 +33,9 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.companies.branches.departments.show', [$company, $branch, $department]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.companies.branches.departments.edit', [$company, $branch, $department]) }}" class="btn btn-xs btn-warning">Edit</a>
-                                <form action="{{ route('admin.companies.branches.departments.destroy', [$company, $branch, $department]) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                <a href="{{ route('admin.organizations.branches.departments.show', [$organization, $branch, $department]) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.organizations.branches.departments.edit', [$organization, $branch, $department]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <form action="{{ route('admin.organizations.branches.departments.destroy', [$organization, $branch, $department]) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('delete')
                                     <button class="btn btn-xs btn-danger">Delete</button>
@@ -52,7 +52,7 @@
         </div>
         <div class="card-footer">
             {{ $departments->links() }}
-            <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary">Back to Branches</a>
+            <a href="{{ route('admin.organizations.branches.index', $organization) }}" class="btn btn-secondary">Back to Branches</a>
         </div>
     </div>
 @stop

@@ -23,12 +23,12 @@ class SpecimenService
     {
         return DB::transaction(function () use ($order, $data, $collector) {
             $specimen = LabSpecimen::create([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'lab_order_id' => $order->id,
                 'specimen_type_id' => $data['specimen_type_id'] ?? null,
                 'container_type_id' => $data['container_type_id'] ?? null,
-                'accession_number' => $this->numbers->generateAccessionNumber($order->company_id, $order->branch_id),
+                'accession_number' => $this->numbers->generateAccessionNumber($order->organization_id, $order->branch_id),
                 'status' => 'collected',
                 'collected_by' => $collector->id,
                 'collected_at' => now(),

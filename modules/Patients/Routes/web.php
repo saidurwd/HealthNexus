@@ -5,7 +5,7 @@ use Modules\Patients\Http\Controllers\PatientController;
 
 // Route-level gates mirror the plural patients.* permission convention enforced by PatientPolicy
 // (index/show-type routes need patients.view, mutations need the matching action permission).
-// Previously the whole module sat behind a single blanket 'can:manage companies' gate, which
+// Previously the whole module sat behind a single blanket 'can:manage organizations' gate, which
 // silently locked doctor/nurse/receptionist out of every patient route despite them holding the
 // documented patients.* grants in PermissionSeeder.
 //

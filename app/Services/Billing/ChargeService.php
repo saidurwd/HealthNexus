@@ -23,12 +23,12 @@ class ChargeService
     ) {}
 
     /**
-     * @param  array{company_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
+     * @param  array{organization_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
      */
     public function createFromClinicalEvent(Model $sourceModel, string $eventType, string $eventKey, array $context): ?BillingCharge
     {
         $item = BillingItem::query()
-            ->forTenant($context['company_id'], $context['branch_id'] ?? null)
+            ->forTenant($context['organization_id'], $context['branch_id'] ?? null)
             ->where('is_clinically_chargeable', true)
             ->where('clinical_event_type', $eventType)
             ->where('clinical_event_key', $eventKey)
@@ -43,7 +43,7 @@ class ChargeService
 
         return DB::transaction(function () use ($sourceModel, $item, $context, $idempotencyKey) {
             $existing = BillingCharge::query()
-                ->where('company_id', $context['company_id'])
+                ->where('organization_id', $context['organization_id'])
                 ->where('idempotency_key', $idempotencyKey)
                 ->first();
 
@@ -56,7 +56,7 @@ class ChargeService
     }
 
     /**
-     * @param  array{company_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
+     * @param  array{organization_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
      */
     public function createManual(BillingItem $item, int $quantity, array $context, User $user): BillingCharge
     {
@@ -102,7 +102,7 @@ class ChargeService
         );
 
         $charge = BillingCharge::create([
-            'company_id' => $context['company_id'],
+            'organization_id' => $context['organization_id'],
             'branch_id' => $context['branch_id'],
             'patient_id' => $context['patient_id'],
             'encounter_id' => $context['encounter_id'] ?? null,

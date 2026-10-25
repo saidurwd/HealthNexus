@@ -22,7 +22,7 @@ class IcuAlertService
     public function trigger(IcuEpisode $episode, string $rule, string $severity, ?string $triggeredValue = null, ?string $expectedRange = null, ?Model $source = null): IcuCriticalAlert
     {
         $alert = IcuCriticalAlert::create([
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'rule' => $rule,

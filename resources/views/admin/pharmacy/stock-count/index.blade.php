@@ -10,7 +10,7 @@
             <div class="col-md-4">
                 <select name="store_id" class="form-control" required>
                     <option value="">Select Store</option>
-                    @foreach(\App\Models\Pharmacy\PharmacyStore::query()->forTenant(app(\App\Services\TenantContextResolver::class)->getCompanyId(), app(\App\Services\TenantContextResolver::class)->getBranchId())->where('is_active', true)->get() as $store)
+                    @foreach(\App\Models\Pharmacy\PharmacyStore::query()->forTenant(app(\App\Services\TenantContextResolver::class)->getOrganizationId(), app(\App\Services\TenantContextResolver::class)->getBranchId())->where('is_active', true)->get() as $store)
                         <option value="{{ $store->id }}">{{ $store->name }}</option>
                     @endforeach
                 </select>

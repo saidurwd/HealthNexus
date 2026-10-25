@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -27,7 +27,7 @@ class RefreshSystemStatistics extends Command
         $stats = [
             'total_users' => User::count(),
             'total_active_users' => User::where('is_active', true)->count(),
-            'total_companies' => Company::count(),
+            'total_organizations' => Organization::count(),
             'total_branches' => Branch::count(),
             'total_patients' => class_exists(Patient::class) ? Patient::count() : 0,
             'generated_at' => now()->toIso8601String(),

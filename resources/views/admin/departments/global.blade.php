@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Departments</h3>
             <div class="card-tools">
-                <span class="text-muted small">Create departments from within a Company → Branch</span>
+                <span class="text-muted small">Create departments from within a Organization → Branch</span>
             </div>
         </div>
         <div class="card-body p-0">
@@ -16,7 +16,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Code</th>
-                        <th>Company</th>
+                        <th>Organization</th>
                         <th>Branch</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -27,7 +27,7 @@
                         <tr>
                             <td>{{ $department->name }}</td>
                             <td>{{ $department->code }}</td>
-                            <td>{{ $department->company->name ?? '-' }}</td>
+                            <td>{{ $department->organization->name ?? '-' }}</td>
                             <td>{{ $department->branch->name ?? '-' }}</td>
                             <td>
                                 <span class="badge {{ $department->is_active ? 'bg-success' : 'bg-danger' }}">
@@ -35,8 +35,8 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.companies.branches.departments.show', [$department->company, $department->branch, $department]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.companies.branches.departments.edit', [$department->company, $department->branch, $department]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.organizations.branches.departments.show', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.organizations.branches.departments.edit', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-warning">Edit</a>
                             </td>
                         </tr>
                     @empty

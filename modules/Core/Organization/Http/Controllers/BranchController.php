@@ -4,67 +4,67 @@ namespace Modules\Core\Organization\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    public function index(Request $request, Company $company)
+    public function index(Request $request, Organization $organization)
     {
         $branches = Branch::query()
-            ->where('company_id', $company->id)
+            ->where('organization_id', $organization->id)
             ->when($request->filled('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
                 ->orWhere('code', 'like', "%{$search}%"))
             ->latest()
             ->paginate(20);
 
-        return view('admin.branches.index', compact('company', 'branches'));
+        return view('admin.branches.index', compact('organization', 'branches'));
     }
 
-    public function create(Company $company)
+    public function create(Organization $organization)
     {
-        return view('admin.branches.create', compact('company'));
+        return view('admin.branches.create', compact('organization'));
     }
 
-    public function store(Request $request, Company $company)
+    public function store(Request $request, Organization $organization)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:branches,code,NULL,id,company_id,'.$company->id],
-            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,NULL,id,company_id,'.$company->id],
+            'code' => ['required', 'string', 'max:50', 'unique:branches,code,NULL,id,organization_id,'.$organization->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,NULL,id,organization_id,'.$organization->id],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],
             'is_active' => ['boolean'],
         ]);
 
-        $company->branches()->create($validated);
+        $organization->branches()->create($validated);
 
-        return redirect()->route('admin.companies.branches.index', $company)->with('success', 'Branch created successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch created successfully.');
     }
 
-    public function show(Company $company, Branch $branch)
+    public function show(Organization $organization, Branch $branch)
     {
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
-        return view('admin.branches.show', compact('company', 'branch'));
+        return view('admin.branches.show', compact('organization', 'branch'));
     }
 
-    public function edit(Company $company, Branch $branch)
+    public function edit(Organization $organization, Branch $branch)
     {
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
-        return view('admin.branches.edit', compact('company', 'branch'));
+        return view('admin.branches.edit', compact('organization', 'branch'));
     }
 
-    public function update(Request $request, Company $company, Branch $branch)
+    public function update(Request $request, Organization $organization, Branch $branch)
     {
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:50', 'unique:branches,code,'.$branch->id.',id,company_id,'.$company->id],
-            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,'.$branch->id.',id,company_id,'.$company->id],
+            'code' => ['required', 'string', 'max:50', 'unique:branches,code,'.$branch->id.',id,organization_id,'.$organization->id],
+            'slug' => ['required', 'string', 'max:255', 'unique:branches,slug,'.$branch->id.',id,organization_id,'.$organization->id],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string'],
@@ -73,15 +73,15 @@ class BranchController extends Controller
 
         $branch->update($validated);
 
-        return redirect()->route('admin.companies.branches.index', $company)->with('success', 'Branch updated successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch updated successfully.');
     }
 
-    public function destroy(Company $company, Branch $branch)
+    public function destroy(Organization $organization, Branch $branch)
     {
-        abort_if($branch->company_id !== $company->id, 404);
+        abort_if($branch->organization_id !== $organization->id, 404);
 
         $branch->delete();
 
-        return redirect()->route('admin.companies.branches.index', $company)->with('success', 'Branch deleted successfully.');
+        return redirect()->route('admin.organizations.branches.index', $organization)->with('success', 'Branch deleted successfully.');
     }
 }

@@ -9,7 +9,7 @@ class PatientProblem extends Model
 {
     protected $fillable = [
         'patient_id',
-        'company_id',
+        'organization_id',
         'problem_code',
         'problem_name',
         'coding_system',
@@ -32,9 +32,9 @@ class PatientProblem extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function sourceEncounter(): BelongsTo

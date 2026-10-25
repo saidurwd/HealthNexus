@@ -7,7 +7,7 @@ use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingTaxCategory;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Billing\BillingItemService;
 use App\Services\TenantContextResolver;
@@ -26,11 +26,11 @@ class BillingItemController extends Controller
     {
         $this->authorize('viewAny', BillingItem::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $items = BillingItem::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('category')
             ->when($request->filled('search'), fn ($q) => $q->where(function ($q2) use ($request) {
                 $q2->where('name', 'like', '%'.$request->input('search').'%')
@@ -47,13 +47,13 @@ class BillingItemController extends Controller
     {
         $this->authorize('create', BillingItem::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $categories = BillingCategory::query()->forTenant($companyId)->orderBy('name')->get();
-        $taxCategories = BillingTaxCategory::query()->forTenant($companyId)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $categories = BillingCategory::query()->forTenant($organizationId)->orderBy('name')->get();
+        $taxCategories = BillingTaxCategory::query()->forTenant($organizationId)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.items.create', compact('categories', 'taxCategories', 'companies', 'branches'));
+        return view('admin.billing.items.create', compact('categories', 'taxCategories', 'organizations', 'branches'));
     }
 
     public function store(StoreBillingItemRequest $request)
@@ -80,8 +80,8 @@ class BillingItemController extends Controller
     {
         $this->authorize('update', $item);
 
-        $categories = BillingCategory::query()->forTenant($item->company_id)->orderBy('name')->get();
-        $taxCategories = BillingTaxCategory::query()->forTenant($item->company_id)->orderBy('name')->get();
+        $categories = BillingCategory::query()->forTenant($item->organization_id)->orderBy('name')->get();
+        $taxCategories = BillingTaxCategory::query()->forTenant($item->organization_id)->orderBy('name')->get();
 
         return view('admin.billing.items.edit', compact('item', 'categories', 'taxCategories'));
     }

@@ -5,23 +5,23 @@
         @csrf
 
         <div class="mb-3">
-            <label for="company_id" class="form-label">Company</label>
-            <select name="company_id" id="company_id" class="form-control @error('company_id') is-invalid @enderror" required>
-                <option value="">Select Company</option>
-                @foreach($companies as $company)
-                    <option value="{{ $company->id }}" data-branches='@json($company->branches()->get(["id", "name", "code"]))' {{ old('company_id') == $company->id ? 'selected' : '' }}>
-                        {{ $company->name }} ({{ $company->code }})
+            <label for="organization_id" class="form-label">Organization</label>
+            <select name="organization_id" id="organization_id" class="form-control @error('organization_id') is-invalid @enderror" required>
+                <option value="">Select Organization</option>
+                @foreach($organizations as $organization)
+                    <option value="{{ $organization->id }}" data-branches='@json($organization->branches()->get(["id", "name", "code"]))' {{ old('organization_id') == $organization->id ? 'selected' : '' }}>
+                        {{ $organization->name }} ({{ $organization->code }})
                     </option>
                 @endforeach
             </select>
-            @error('company_id')
+            @error('organization_id')
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
 
         <div class="mb-3">
             <label for="branch_id" class="form-label">Branch</label>
-            <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required {{ old('company_id') ? '' : 'disabled' }}>
+            <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required {{ old('organization_id') ? '' : 'disabled' }}>
                 <option value="">Select Branch</option>
             </select>
             @error('branch_id')
@@ -48,7 +48,7 @@
     </form>
 
     <script>
-        document.getElementById('company_id').addEventListener('change', function() {
+        document.getElementById('organization_id').addEventListener('change', function() {
             const branchSelect = document.getElementById('branch_id');
             const selectedOption = this.options[this.selectedIndex];
             const branches = selectedOption.dataset.branches ? JSON.parse(selectedOption.dataset.branches) : [];
@@ -69,9 +69,9 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            const companySelect = document.getElementById('company_id');
-            if (companySelect.value) {
-                companySelect.dispatchEvent(new Event('change'));
+            const organizationSelect = document.getElementById('organization_id');
+            if (organizationSelect.value) {
+                organizationSelect.dispatchEvent(new Event('change'));
             }
         });
     </script>

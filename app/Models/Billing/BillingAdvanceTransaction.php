@@ -24,11 +24,11 @@ class BillingAdvanceTransaction extends Model
     public function performedBy(): BelongsTo { return $this->belongsTo(User::class, 'performed_by'); }
 
     /**
-     * This table carries no company_id/branch_id columns of its own — tenant scope is inherited
+     * This table carries no organization_id/branch_id columns of its own — tenant scope is inherited
      * from the parent advance account, so this filters via that relation instead of a literal column.
      */
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->whereHas('advanceAccount', fn ($q) => $q->forTenant($companyId, $branchId));
+        return $query->whereHas('advanceAccount', fn ($q) => $q->forTenant($organizationId, $branchId));
     }
 }

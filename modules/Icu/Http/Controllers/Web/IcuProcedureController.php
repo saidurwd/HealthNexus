@@ -18,10 +18,10 @@ class IcuProcedureController extends Controller
     {
         Gate::authorize('icu.procedure.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $procedures = IcuProcedure::forTenant($companyId, $branchId)->orderBy('name')->paginate(20);
+        $procedures = IcuProcedure::forTenant($organizationId, $branchId)->orderBy('name')->paginate(20);
 
         return view('admin.icu.procedures.index', compact('procedures'));
     }
@@ -43,9 +43,9 @@ class IcuProcedureController extends Controller
             'category' => ['nullable', 'string'],
         ]);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        IcuProcedure::create([...$validated, 'company_id' => $companyId, 'is_active' => true]);
+        IcuProcedure::create([...$validated, 'organization_id' => $organizationId, 'is_active' => true]);
 
         return redirect()->route('admin.icu.procedures.index')->with('success', 'ICU procedure added.');
     }

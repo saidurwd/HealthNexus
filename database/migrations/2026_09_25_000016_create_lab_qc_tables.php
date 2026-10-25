@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lab_qc_materials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('section_id')->nullable()->constrained('lab_sections')->nullOnDelete();
             $table->string('code');
@@ -26,12 +26,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
         });
 
         Schema::create('lab_qc_runs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('qc_material_id')->constrained('lab_qc_materials')->cascadeOnDelete();
             $table->foreignId('test_id')->constrained('lab_tests')->cascadeOnDelete();
@@ -46,7 +46,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index(['qc_material_id']);
         });
     }

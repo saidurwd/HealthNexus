@@ -36,7 +36,7 @@ class DetectScheduleConflicts implements ShouldQueue
             ->orderBy('scheduled_start_at')
             ->get();
 
-        $conflictsByCompany = [];
+        $conflictsByOrganization = [];
 
         foreach ($surgeries->groupBy('theatre_id') as $theatreId => $group) {
             $sorted = $group->sortBy('scheduled_start_at')->values();
@@ -46,20 +46,20 @@ class DetectScheduleConflicts implements ShouldQueue
                 $next = $sorted[$i + 1];
 
                 if ($current->scheduled_end_at && $next->scheduled_start_at && $current->scheduled_end_at->gt($next->scheduled_start_at)) {
-                    $conflictsByCompany[$current->company_id][] = [$current->id, $next->id, $theatreId];
+                    $conflictsByOrganization[$current->organization_id][] = [$current->id, $next->id, $theatreId];
                 }
             }
         }
 
-        if (empty($conflictsByCompany)) {
+        if (empty($conflictsByOrganization)) {
             return;
         }
 
-        Log::channel('single')->warning('OT schedule conflicts detected', ['conflicts_by_company' => $conflictsByCompany]);
+        Log::channel('single')->warning('OT schedule conflicts detected', ['conflicts_by_organization' => $conflictsByOrganization]);
 
-        foreach ($conflictsByCompany as $companyId => $conflicts) {
+        foreach ($conflictsByOrganization as $organizationId => $conflicts) {
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ot_coordinator', 'ot_manager', 'hospital_admin']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
                 ->get();
 
             if ($recipients->isEmpty()) {

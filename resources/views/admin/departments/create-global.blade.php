@@ -5,23 +5,23 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Select Company and Branch</h3>
+            <h3 class="card-title">Select Organization and Branch</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.companies.branches.departments.create') }}" id="departmentCreateForm">
+            <form method="GET" action="{{ route('admin.organizations.branches.departments.create') }}" id="departmentCreateForm">
                 <div class="mb-3">
-                    <label for="company_id" class="form-label">Company</label>
-                    <select class="form-control" id="company_id" name="company" required>
-                        <option value="">Select Company</option>
-                        @foreach ($companies as $company)
-                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                    <label for="organization_id" class="form-label">Organization</label>
+                    <select class="form-control" id="organization_id" name="organization" required>
+                        <option value="">Select Organization</option>
+                        @foreach ($organizations as $organization)
+                            <option value="{{ $organization->id }}">{{ $organization->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="branch_id" class="form-label">Branch</label>
                     <select class="form-control" id="branch_id" name="branch" required disabled>
-                        <option value="">Select Company First</option>
+                        <option value="">Select Organization First</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" id="continueBtn" disabled>Continue</button>
@@ -32,19 +32,19 @@
 
 @push('scripts')
 <script>
-document.getElementById('company_id').addEventListener('change', function() {
-    const companyId = this.value;
+document.getElementById('organization_id').addEventListener('change', function() {
+    const organizationId = this.value;
     const branchSelect = document.getElementById('branch_id');
     const continueBtn = document.getElementById('continueBtn');
 
-    if (!companyId) {
-        branchSelect.innerHTML = '<option value="">Select Company First</option>';
+    if (!organizationId) {
+        branchSelect.innerHTML = '<option value="">Select Organization First</option>';
         branchSelect.disabled = true;
         continueBtn.disabled = true;
         return;
     }
 
-    fetch(`/api/v1/companies/${companyId}/branches`)
+    fetch(`/api/v1/organizations/${organizationId}/branches`)
         .then(response => response.json())
         .then(data => {
             branchSelect.innerHTML = '<option value="">Select Branch</option>';

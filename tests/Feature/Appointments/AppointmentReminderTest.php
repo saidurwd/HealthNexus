@@ -8,7 +8,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentReminder;
 use App\Models\AppointmentReminderRule;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Appointments\AppointmentReminderService;
@@ -22,24 +22,24 @@ class AppointmentReminderTest extends TestCase
 
     public function test_scheduling_reminders_creates_one_row_per_matching_rule(): void
     {
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
         $doctor = User::factory()->create();
 
         AppointmentReminderRule::create([
-            'company_id' => $company->id, 'channel' => 'email', 'offset_minutes' => 24 * 60, 'is_active' => true,
+            'organization_id' => $organization->id, 'channel' => 'email', 'offset_minutes' => 24 * 60, 'is_active' => true,
         ]);
         AppointmentReminderRule::create([
-            'company_id' => $company->id, 'channel' => 'sms', 'offset_minutes' => 120, 'is_active' => true,
+            'organization_id' => $organization->id, 'channel' => 'sms', 'offset_minutes' => 120, 'is_active' => true,
         ]);
         // Inactive rule must be skipped.
         AppointmentReminderRule::create([
-            'company_id' => $company->id, 'channel' => 'push', 'offset_minutes' => 30, 'is_active' => false,
+            'organization_id' => $organization->id, 'channel' => 'push', 'offset_minutes' => 30, 'is_active' => false,
         ]);
 
         $appointment = Appointment::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
             'appointment_no' => 'APT-REM-1', 'appointment_date' => now()->addDays(3)->toDateString(), 'appointment_time' => '10:00',
             'type' => 'scheduled', 'source' => 'online',
         ]);
@@ -55,17 +55,17 @@ class AppointmentReminderTest extends TestCase
 
     public function test_appointment_created_event_triggers_reminder_scheduling(): void
     {
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
         $doctor = User::factory()->create();
 
         AppointmentReminderRule::create([
-            'company_id' => $company->id, 'channel' => 'email', 'offset_minutes' => 60, 'is_active' => true,
+            'organization_id' => $organization->id, 'channel' => 'email', 'offset_minutes' => 60, 'is_active' => true,
         ]);
 
         $appointment = Appointment::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
             'appointment_no' => 'APT-REM-2', 'appointment_date' => now()->addDays(1)->toDateString(), 'appointment_time' => '09:00',
             'type' => 'scheduled', 'source' => 'online',
         ]);
@@ -77,19 +77,19 @@ class AppointmentReminderTest extends TestCase
 
     public function test_cancelling_an_appointment_cancels_its_pending_reminders(): void
     {
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
         $doctor = User::factory()->create();
 
         $appointment = Appointment::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
             'appointment_no' => 'APT-REM-3', 'appointment_date' => now()->addDays(1)->toDateString(), 'appointment_time' => '09:00',
             'type' => 'scheduled', 'source' => 'online', 'status' => 'scheduled',
         ]);
 
         $reminder = AppointmentReminder::create([
-            'company_id' => $company->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
+            'organization_id' => $organization->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
             'scheduled_for' => now()->addHours(2), 'status' => 'pending',
         ]);
 
@@ -102,23 +102,23 @@ class AppointmentReminderTest extends TestCase
     {
         Queue::fake();
 
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
         $doctor = User::factory()->create();
 
         $appointment = Appointment::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
             'appointment_no' => 'APT-REM-4', 'appointment_date' => now()->toDateString(), 'appointment_time' => now()->addHour()->format('H:i'),
             'type' => 'scheduled', 'source' => 'online',
         ]);
 
         AppointmentReminder::create([
-            'company_id' => $company->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
+            'organization_id' => $organization->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
             'scheduled_for' => now()->subMinute(), 'status' => 'pending',
         ]);
         AppointmentReminder::create([
-            'company_id' => $company->id, 'appointment_id' => $appointment->id, 'channel' => 'sms',
+            'organization_id' => $organization->id, 'appointment_id' => $appointment->id, 'channel' => 'sms',
             'scheduled_for' => now()->addDay(), 'status' => 'pending',
         ]);
 
@@ -131,19 +131,19 @@ class AppointmentReminderTest extends TestCase
     {
         \Illuminate\Support\Facades\Mail::fake();
 
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id, 'email' => 'patient@example.com']);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id, 'email' => 'patient@example.com']);
         $doctor = User::factory()->create();
 
         $appointment = Appointment::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'doctor_id' => $doctor->id,
             'appointment_no' => 'APT-REM-5', 'appointment_date' => now()->addDay()->toDateString(), 'appointment_time' => '09:00',
             'type' => 'scheduled', 'source' => 'online',
         ]);
 
         $reminder = AppointmentReminder::create([
-            'company_id' => $company->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
+            'organization_id' => $organization->id, 'appointment_id' => $appointment->id, 'channel' => 'email',
             'scheduled_for' => now()->subMinute(), 'status' => 'pending',
         ]);
 

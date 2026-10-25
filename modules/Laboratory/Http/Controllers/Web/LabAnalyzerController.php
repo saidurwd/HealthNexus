@@ -4,7 +4,7 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Laboratory\LabAnalyzer;
 use App\Models\Laboratory\LabSection;
 use App\Services\AuditLogger;
@@ -24,10 +24,10 @@ class LabAnalyzerController extends Controller
     {
         Gate::authorize('lab.analyzer.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $analyzers = LabAnalyzer::query()->forTenant($companyId, $branchId)->with('section')->orderBy('name')->paginate(20);
+        $analyzers = LabAnalyzer::query()->forTenant($organizationId, $branchId)->with('section')->orderBy('name')->paginate(20);
 
         return view('admin.lab.analyzers.index', compact('analyzers'));
     }
@@ -36,12 +36,12 @@ class LabAnalyzerController extends Controller
     {
         Gate::authorize('lab.analyzer.configure');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $sections = LabSection::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $sections = LabSection::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.lab.analyzers.create', compact('sections', 'companies', 'branches'));
+        return view('admin.lab.analyzers.create', compact('sections', 'organizations', 'branches'));
     }
 
     public function store(Request $request)
@@ -49,7 +49,7 @@ class LabAnalyzerController extends Controller
         Gate::authorize('lab.analyzer.configure');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'section_id' => ['nullable', 'integer', 'exists:lab_sections,id'],
             'code' => ['required', 'string', 'max:50'],

@@ -48,7 +48,7 @@
                             <label class="form-label">Room</label>
                             <select name="room_id" class="form-select">
                                 <option value="">Select Room</option>
-                                @foreach(\App\Models\AppointmentRoom::where('company_id', app(\App\Services\TenantContextResolver::class)->getCompanyId())->get() as $room)
+                                @foreach(\App\Models\AppointmentRoom::where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->get() as $room)
                                     <option value="{{ $room->id }}" {{ old('room_id', $schedule->room_id) == $room->id ? 'selected' : '' }}>{{ $room->name }}</option>
                                 @endforeach
                             </select>

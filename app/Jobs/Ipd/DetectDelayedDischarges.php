@@ -34,7 +34,7 @@ class DetectDelayedDischarges implements ShouldQueue
                 // whereHas against the roles pivot, not Spatie's role() scope — that throws
                 // RoleDoesNotExist if a listed role isn't defined yet for a given deployment.
                 $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ipd_coordinator', 'ward_manager', 'hospital_admin']))
-                    ->whereHas('companies', fn ($q) => $q->where('companies.id', $admission->company_id))
+                    ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $admission->organization_id))
                     ->get();
 
                 if ($recipients->isEmpty()) {

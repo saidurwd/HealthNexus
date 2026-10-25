@@ -13,12 +13,12 @@ class EnsureBranchAccess
 
     public function handle(Request $request, Closure $next): Response
     {
-        $companyId = $this->resolver->getCompanyId();
+        $organizationId = $this->resolver->getOrganizationId();
         $branchId = $this->resolver->getBranchId();
 
-        if ($companyId === null && $request->route('company')) {
-            $companyId = $request->route('company')->id;
-            $this->resolver->setCompanyId($companyId);
+        if ($organizationId === null && $request->route('organization')) {
+            $organizationId = $request->route('organization')->id;
+            $this->resolver->setOrganizationId($organizationId);
         }
 
         if ($branchId === null && $request->route('branch')) {
@@ -26,8 +26,8 @@ class EnsureBranchAccess
             $this->resolver->setBranchId($branchId);
         }
 
-        if ($companyId === null || $branchId === null) {
-            return response()->json(['error' => 'No company or branch context set.'], 403);
+        if ($organizationId === null || $branchId === null) {
+            return response()->json(['error' => 'No organization or branch context set.'], 403);
         }
 
         $user = $request->user();

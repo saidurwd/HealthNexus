@@ -84,18 +84,18 @@ class LocalizationTest extends TestCase
 
     public function test_patients_index_renders_translated_strings_in_bangla(): void
     {
-        $company = \App\Models\Company::factory()->create();
+        $organization = \App\Models\Organization::factory()->create();
         $user = User::factory()->create(['locale' => 'bn']);
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage companies', 'guard_name' => 'web']);
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage organizations', 'guard_name' => 'web']);
         \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
-        $user->givePermissionTo('manage companies');
+        $user->givePermissionTo('manage organizations');
         $user->givePermissionTo('patients.view');
 
         $this->actingAs($user);
-        session()->put('tenant_company_id', $company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($company->id);
+        session()->put('tenant_organization_id', $organization->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($organization->id);
 
         $response = $this->get('/admin/patients');
 

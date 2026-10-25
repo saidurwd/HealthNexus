@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title">Edit Branch</h3>
         </div>
-        <form action="{{ route('admin.companies.branches.update', [$company, $branch]) }}" method="post">
+        <form action="{{ route('admin.organizations.branches.update', [$organization, $branch]) }}" method="post">
             @csrf
             @method('put')
             <div class="card-body">
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.organizations.branches.index', $organization) }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">Update Branch</button>
             </div>
         </form>

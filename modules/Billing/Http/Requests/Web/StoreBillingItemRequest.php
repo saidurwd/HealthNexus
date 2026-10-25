@@ -14,7 +14,7 @@ class StoreBillingItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'category_id' => ['required', 'integer', 'exists:billing_categories,id'],
             'tax_category_id' => ['nullable', 'integer', 'exists:billing_tax_categories,id'],

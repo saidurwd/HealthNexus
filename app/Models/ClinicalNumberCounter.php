@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ClinicalNumberCounter extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'counter_type',
         'last_number',
@@ -18,9 +18,9 @@ class ClinicalNumberCounter extends Model
         'last_number' => 'integer',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

@@ -49,7 +49,7 @@ class ProviderAvailabilityService
 
     private function isHoliday(Provider $provider, Carbon $date): bool
     {
-        return HospitalHoliday::where('company_id', $provider->company_id)
+        return HospitalHoliday::where('organization_id', $provider->organization_id)
             ->where(fn ($q) => $q->whereNull('branch_id')->orWhere('branch_id', $provider->branch_id))
             ->where(fn ($q) => $q->whereNull('department_id')->orWhere('department_id', $provider->department_id))
             ->get()

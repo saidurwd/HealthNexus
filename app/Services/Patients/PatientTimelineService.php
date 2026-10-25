@@ -24,7 +24,7 @@ class PatientTimelineService
         array $metadata = [],
     ): PatientTimelineEvent {
         return PatientTimelineEvent::create([
-            'company_id' => $patient->company_id,
+            'organization_id' => $patient->organization_id,
             'patient_id' => $patient->id,
             'event_type' => $eventType,
             'description' => $description,

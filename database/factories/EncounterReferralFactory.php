@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -17,7 +17,7 @@ class EncounterReferralFactory extends Factory
         return [
             'encounter_id' => Encounter::factory(),
             'patient_id' => Patient::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'referral_type' => fake()->randomElement(['internal', 'external', 'department', 'provider']),
             'referred_to' => fake()->optional()->word(),
             'referred_by' => fake()->optional()->word(),

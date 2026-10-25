@@ -24,11 +24,11 @@ class PharmacyQuarantineController extends Controller
     {
         Gate::authorize('pharmacy.quarantine.manage');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $quarantineRecords = PharmacyQuarantine::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['store', 'medication', 'batch'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()

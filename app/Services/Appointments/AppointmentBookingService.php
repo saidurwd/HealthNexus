@@ -36,7 +36,7 @@ class AppointmentBookingService
     public function book(array $data, User $user, bool $allowOverbooking = false): Appointment
     {
         return DB::transaction(function () use ($data, $user, $allowOverbooking) {
-            $company = $user->companies()->findOrFail($data['company_id']);
+            $organization = $user->organizations()->findOrFail($data['organization_id']);
             $branch = ! empty($data['branch_id']) ? Branch::find($data['branch_id']) : null;
 
             $slot = null;
@@ -48,29 +48,29 @@ class AppointmentBookingService
                 $data['appointment_date'] = $slot->slot_datetime->toDateString();
                 $data['appointment_time'] = $slot->slot_datetime->format('H:i');
             } elseif (! empty($data['provider_id'])) {
-                $this->assertNoConflict($company->id, 'provider_id', (int) $data['provider_id'], $data['appointment_date'], $data['appointment_time']);
+                $this->assertNoConflict($organization->id, 'provider_id', (int) $data['provider_id'], $data['appointment_date'], $data['appointment_time']);
             } elseif (! empty($data['doctor_id'])) {
                 // Legacy path: no generic Provider selected, only the direct doctor_id/User
                 // reference most existing callers still use. Still gap-locked the same way so
                 // two concurrent requests for the same doctor/date/time can't both succeed.
-                $this->assertNoConflict($company->id, 'doctor_id', (int) $data['doctor_id'], $data['appointment_date'], $data['appointment_time']);
+                $this->assertNoConflict($organization->id, 'doctor_id', (int) $data['doctor_id'], $data['appointment_date'], $data['appointment_time']);
             }
 
             if (! empty($data['provider_id'])) {
                 $this->assertProviderBookable((int) $data['provider_id'], $data['appointment_date'], $data['appointment_time'], $slot->duration_minutes ?? 15);
             }
 
-            $data['company_id'] = $company->id;
+            $data['organization_id'] = $organization->id;
             $data['branch_id'] = $branch?->id ?? $data['branch_id'] ?? null;
-            $data['appointment_no'] = $this->numberGenerator->generateAppointmentNumber($company);
+            $data['appointment_no'] = $this->numberGenerator->generateAppointmentNumber($organization);
             $data['booked_at'] = now();
             $data['status'] = 'scheduled';
 
             $appointment = Appointment::create($data);
 
-            $tokenNo = $this->numberGenerator->generateTokenNumber($company, $branch);
+            $tokenNo = $this->numberGenerator->generateTokenNumber($organization, $branch);
             $appointment->token()->create([
-                'company_id' => $company->id,
+                'organization_id' => $organization->id,
                 'branch_id' => $appointment->branch_id,
                 'token_number' => $tokenNo,
                 'priority' => $data['queue_priority'] ?? 'regular',
@@ -99,7 +99,7 @@ class AppointmentBookingService
      */
     public function bookFollowUp(Appointment $previous, array $data, User $user): Appointment
     {
-        $data['company_id'] = $previous->company_id;
+        $data['organization_id'] = $previous->organization_id;
         $data['branch_id'] = $data['branch_id'] ?? $previous->branch_id;
         $data['patient_id'] = $previous->patient_id;
         $data['provider_id'] = $data['provider_id'] ?? $previous->provider_id;
@@ -134,10 +134,10 @@ class AppointmentBookingService
         return $slot;
     }
 
-    private function assertNoConflict(int $companyId, string $column, int $value, string $date, string $time): void
+    private function assertNoConflict(int $organizationId, string $column, int $value, string $date, string $time): void
     {
         $conflict = Appointment::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->where($column, $value)
             ->where('appointment_date', $date)
             ->where('appointment_time', $time)

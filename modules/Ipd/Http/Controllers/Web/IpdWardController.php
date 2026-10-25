@@ -22,11 +22,11 @@ class IpdWardController extends Controller
     {
         $this->authorize('viewAny', IpdWard::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $wards = IpdWard::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->withCount('rooms')
             ->when($request->filled('search'), fn ($q) => $q->where('name', 'like', '%'.$request->input('search').'%'))
             ->orderBy('name')
@@ -40,13 +40,13 @@ class IpdWardController extends Controller
     {
         $this->authorize('create', IpdWard::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $buildings = IpdBuilding::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $floors = IpdFloor::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = \App\Models\Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $buildings = IpdBuilding::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $floors = IpdFloor::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = \App\Models\Organization::all();
         $branches = \App\Models\Branch::all();
 
-        return view('admin.ipd.wards.create', compact('buildings', 'floors', 'companies', 'branches'));
+        return view('admin.ipd.wards.create', compact('buildings', 'floors', 'organizations', 'branches'));
     }
 
     public function store(Request $request)
@@ -54,7 +54,7 @@ class IpdWardController extends Controller
         $this->authorize('create', IpdWard::class);
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'building_id' => ['nullable', 'integer', 'exists:ipd_buildings,id'],
             'floor_id' => ['nullable', 'integer', 'exists:ipd_floors,id'],
@@ -77,8 +77,8 @@ class IpdWardController extends Controller
     {
         $this->authorize('update', $ward);
 
-        $buildings = IpdBuilding::query()->forTenant($ward->company_id)->where('is_active', true)->orderBy('name')->get();
-        $floors = IpdFloor::query()->forTenant($ward->company_id)->where('is_active', true)->orderBy('name')->get();
+        $buildings = IpdBuilding::query()->forTenant($ward->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $floors = IpdFloor::query()->forTenant($ward->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.wards.edit', compact('ward', 'buildings', 'floors'));
     }

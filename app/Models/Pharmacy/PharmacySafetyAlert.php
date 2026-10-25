@@ -21,7 +21,7 @@ class PharmacySafetyAlert extends Model
     public const SEVERITY_SEVERE = 'severe';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'order_item_id', 'dispensing_item_id', 'medication_id',
+        'organization_id', 'branch_id', 'order_item_id', 'dispensing_item_id', 'medication_id',
         'alert_type', 'severity', 'interacting_reference', 'explanation', 'recommended_action',
         'is_overridden', 'override_reason', 'overridden_by', 'overridden_at',
     ];
@@ -34,15 +34,15 @@ class PharmacySafetyAlert extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function orderItem(): BelongsTo { return $this->belongsTo(PharmacyOrderItem::class, 'order_item_id'); }
     public function dispensingItem(): BelongsTo { return $this->belongsTo(PharmacyDispensingItem::class, 'dispensing_item_id'); }
     public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
     public function overriddenBy(): BelongsTo { return $this->belongsTo(User::class, 'overridden_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

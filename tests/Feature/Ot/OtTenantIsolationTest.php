@@ -3,21 +3,21 @@
 namespace Tests\Feature\Ot;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class OtTenantIsolationTest extends OtTestCase
 {
-    private function userWith(array $permissions, ?Company $company = null): User
+    private function userWith(array $permissions, ?Organization $organization = null): User
     {
-        $company ??= $this->company;
-        $branch = $company->id === $this->company->id ? $this->branch : Branch::factory()->create(['company_id' => $company->id]);
+        $organization ??= $this->organization;
+        $branch = $organization->id === $this->organization->id ? $this->branch : Branch::factory()->create(['organization_id' => $organization->id]);
 
         $user = User::factory()->create();
-        $user->companies()->attach($company->id, ['access_level' => 'staff']);
-        $user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $company->id]);
+        $user->organizations()->attach($organization->id, ['access_level' => 'staff']);
+        $user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);
 
         foreach ($permissions as $p) {
             Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
@@ -34,8 +34,8 @@ class OtTenantIsolationTest extends OtTestCase
     public function test_hospital_a_user_cannot_touch_hospital_b_surgery(): void
     {
         $surgery = $this->makeDaySurgery();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['ot.surgery.view', 'ot.surgery.start', 'ot.surgery.complete'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['ot.surgery.view', 'ot.surgery.start', 'ot.surgery.complete'], $otherOrganization);
 
         $this->assertFalse($foreignUser->can('view', $surgery));
         $this->assertFalse($foreignUser->can('start', $surgery));
@@ -60,8 +60,8 @@ class OtTenantIsolationTest extends OtTestCase
     {
         $surgery = $this->makeDaySurgery();
         $theatre = $this->makeTheatre();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['ot.schedule.create', 'ot.surgery.view'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['ot.schedule.create', 'ot.surgery.view'], $otherOrganization);
 
         $this->actingAs($foreignUser)->postJson('/api/v1/ot/surgeries/'.$surgery->id.'/schedule', [
             'theatre_id' => $theatre->id,
@@ -75,8 +75,8 @@ class OtTenantIsolationTest extends OtTestCase
     public function test_direct_url_manipulation_to_a_foreign_surgery_id_is_rejected(): void
     {
         $surgery = $this->makeDaySurgery();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['ot.surgery.view'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['ot.surgery.view'], $otherOrganization);
 
         $this->actingAs($foreignUser)->get('/admin/ot/surgeries/'.$surgery->id)->assertForbidden();
     }

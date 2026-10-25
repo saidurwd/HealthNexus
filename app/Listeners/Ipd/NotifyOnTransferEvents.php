@@ -19,7 +19,7 @@ class NotifyOnTransferEvents
         // RoleDoesNotExist if a listed role isn't defined yet, which would crash this listener
         // during an ordinary transfer completion.
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ipd_coordinator', 'ward_manager']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $movement->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $movement->organization_id))
             ->get();
 
         if ($recipients->isEmpty() || ! $admission) {

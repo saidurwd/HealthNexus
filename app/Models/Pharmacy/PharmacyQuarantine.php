@@ -18,7 +18,7 @@ class PharmacyQuarantine extends Model
     protected $table = 'pharmacy_quarantine';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'store_id', 'medication_id', 'batch_id', 'quantity',
+        'organization_id', 'branch_id', 'store_id', 'medication_id', 'batch_id', 'quantity',
         'reason_type', 'reason', 'status', 'quarantined_by', 'quarantined_at',
         'released_by', 'released_at', 'disposed_by', 'disposed_at',
     ];
@@ -33,7 +33,7 @@ class PharmacyQuarantine extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
     public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
@@ -42,8 +42,8 @@ class PharmacyQuarantine extends Model
     public function releasedBy(): BelongsTo { return $this->belongsTo(User::class, 'released_by'); }
     public function disposedBy(): BelongsTo { return $this->belongsTo(User::class, 'disposed_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

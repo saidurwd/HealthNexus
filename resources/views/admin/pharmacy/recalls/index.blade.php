@@ -10,7 +10,7 @@
             <div class="col-md-4">
                 <select name="batch_id" class="form-control" required>
                     <option value="">Select Batch</option>
-                    @foreach(\App\Models\Pharmacy\PharmacyBatch::query()->where('company_id', app(\App\Services\TenantContextResolver::class)->getCompanyId())->with('medication')->get() as $batch)
+                    @foreach(\App\Models\Pharmacy\PharmacyBatch::query()->where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->with('medication')->get() as $batch)
                         <option value="{{ $batch->id }}">{{ $batch->medication?->name }} — {{ $batch->batch_number }}</option>
                     @endforeach
                 </select>

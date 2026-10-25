@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Patients;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -17,7 +17,7 @@ class PatientSubResourcesTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Patient $patient;
 
@@ -27,9 +27,9 @@ class PatientSubResourcesTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->company = Company::factory()->create();
+        $this->organization = Organization::factory()->create();
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         foreach (['patients.view', 'patients.update', 'patients.consents.view', 'patients.consents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -37,10 +37,10 @@ class PatientSubResourcesTest extends TestCase
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
     }
 
     public function test_can_add_an_address(): void

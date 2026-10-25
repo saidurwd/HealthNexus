@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Edit Corporate Company</h3></div>
+        <div class="card-header"><h3 class="card-title">Edit Corporate Organization</h3></div>
         <form action="{{ route('admin.billing.corporates.update', $corporate) }}" method="post">
             @csrf
             @method('put')

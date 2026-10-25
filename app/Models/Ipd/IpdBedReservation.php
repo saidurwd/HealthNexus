@@ -18,7 +18,7 @@ class IpdBedReservation extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'patient_id', 'admission_request_id', 'bed_id',
+        'organization_id', 'branch_id', 'patient_id', 'admission_request_id', 'bed_id',
         'reserved_at', 'expires_at', 'status', 'reason', 'requested_by',
     ];
 
@@ -27,15 +27,15 @@ class IpdBedReservation extends Model
         return ['reserved_at' => 'datetime', 'expires_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
     public function admissionRequest(): BelongsTo { return $this->belongsTo(IpdAdmissionRequest::class, 'admission_request_id'); }
     public function bed(): BelongsTo { return $this->belongsTo(IpdBed::class, 'bed_id'); }
     public function requestedBy(): BelongsTo { return $this->belongsTo(User::class, 'requested_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

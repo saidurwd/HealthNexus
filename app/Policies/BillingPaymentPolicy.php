@@ -32,7 +32,7 @@ class BillingPaymentPolicy
 
     private function inScope(User $user, BillingPayment $payment): bool
     {
-        return $user->companies()->where('companies.id', $payment->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $payment->organization_id)->exists()
             && $user->branches()->where('branches.id', $payment->branch_id)->exists();
     }
 }

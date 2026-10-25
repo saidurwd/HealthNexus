@@ -21,11 +21,11 @@ class LabQcController extends Controller
     {
         $this->authorize('viewAny', LabQcRun::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $runs = LabQcRun::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['qcMaterial', 'test'])
             ->latest('run_at')
             ->paginate(20);
@@ -37,10 +37,10 @@ class LabQcController extends Controller
     {
         $this->authorize('create', LabQcRun::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
-        $materials = LabQcMaterial::query()->forTenant($companyId, $branchId)->where('is_active', true)->get();
-        $tests = LabTest::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $materials = LabQcMaterial::query()->forTenant($organizationId, $branchId)->where('is_active', true)->get();
+        $tests = LabTest::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.qc.create', compact('materials', 'tests'));
     }
@@ -66,12 +66,12 @@ class LabQcController extends Controller
             $status = $inRange ? 'pass' : 'fail';
         }
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $run = LabQcRun::create([
             ...$validated,
-            'company_id' => $companyId,
+            'organization_id' => $organizationId,
             'branch_id' => $branchId,
             'run_at' => now(),
             'status' => $status,

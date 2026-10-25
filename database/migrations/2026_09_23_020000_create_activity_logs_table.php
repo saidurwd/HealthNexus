@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('action');
             $table->string('entity_type')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('request_id')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'action']);
+            $table->index(['organization_id', 'action']);
             $table->index('created_at');
             $table->index('request_id');
         });
@@ -31,7 +31,7 @@ return new class extends Migration
         Schema::create('security_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('event');
             $table->string('severity')->default('info');

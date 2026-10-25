@@ -25,11 +25,11 @@ class IpdTransferController extends Controller
     {
         $this->authorize('viewAny', IpdBedMovement::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $transfers = IpdBedMovement::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('movement_type', IpdBedMovement::TYPE_TRANSFER)
             ->with(['patient', 'admission', 'fromBed', 'toBed'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
@@ -45,7 +45,7 @@ class IpdTransferController extends Controller
         $this->authorize('create', IpdBedMovement::class);
 
         $admission->load(['patient', 'currentAllocation.bed.room.ward']);
-        $availableBeds = $this->availability->search($admission->company_id, $admission->branch_id, ['status' => IpdBed::STATUS_AVAILABLE], 100);
+        $availableBeds = $this->availability->search($admission->organization_id, $admission->branch_id, ['status' => IpdBed::STATUS_AVAILABLE], 100);
 
         return view('admin.ipd.transfers.create', compact('admission', 'availableBeds'));
     }

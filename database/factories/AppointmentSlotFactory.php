@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\AppointmentSlot;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\DoctorSchedule;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +16,7 @@ class AppointmentSlotFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'branch_id' => Branch::factory(),
             'doctor_id' => User::factory(),
             'schedule_id' => DoctorSchedule::factory(),

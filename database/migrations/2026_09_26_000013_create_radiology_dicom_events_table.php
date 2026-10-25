@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('radiology_dicom_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('radiology_examination_id')->nullable()->constrained('radiology_examinations')->nullOnDelete();
             $table->foreignId('pacs_server_id')->nullable()->constrained('radiology_pacs_servers')->nullOnDelete();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->text('error')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'event_type', 'status'], 'radiology_dicom_events_scope_idx');
+            $table->index(['organization_id', 'branch_id', 'event_type', 'status'], 'radiology_dicom_events_scope_idx');
             $table->index(['radiology_examination_id']);
         });
     }

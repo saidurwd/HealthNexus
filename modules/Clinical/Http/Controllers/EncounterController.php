@@ -24,11 +24,11 @@ class EncounterController extends Controller
     {
         $this->authorize('viewAny', Encounter::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $encounters = Encounter::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q, $branchId) => $q->where('branch_id', $branchId))
             ->when($request->filled('patient_id'), fn ($q, $patientId) => $q->where('patient_id', $request->input('patient_id')))
             ->when($request->filled('type'), fn ($q, $type) => $q->where('encounter_type', $request->input('type')))
@@ -46,10 +46,10 @@ class EncounterController extends Controller
     {
         $this->authorize('create', Encounter::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $branches = Branch::where('company_id', $companyId)->get();
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+        $branches = Branch::where('organization_id', $organizationId)->get();
+        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
 
         return view('admin.encounters.create', compact('branches', 'patients'));
     }
@@ -103,10 +103,10 @@ class EncounterController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $branches = Branch::where('company_id', $companyId)->get();
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+        $branches = Branch::where('organization_id', $organizationId)->get();
+        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
 
         return view('admin.encounters.edit', compact('encounter', 'branches', 'patients'));
     }

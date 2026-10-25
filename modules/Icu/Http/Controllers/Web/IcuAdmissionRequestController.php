@@ -21,10 +21,10 @@ class IcuAdmissionRequestController extends Controller
     {
         $this->authorize('viewAny', IcuAdmissionRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $requests = IcuAdmissionRequest::forTenant($companyId, $branchId)
+        $requests = IcuAdmissionRequest::forTenant($organizationId, $branchId)
             ->with(['patient', 'requestingProvider'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()
@@ -57,11 +57,11 @@ class IcuAdmissionRequestController extends Controller
             'override_reason' => ['nullable', 'string'],
         ]);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         try {
-            $icuRequest = $this->requests->create([...$validated, 'company_id' => $companyId, 'branch_id' => $branchId], $request->user());
+            $icuRequest = $this->requests->create([...$validated, 'organization_id' => $organizationId, 'branch_id' => $branchId], $request->user());
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }

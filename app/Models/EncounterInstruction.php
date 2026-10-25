@@ -10,7 +10,7 @@ class EncounterInstruction extends Model
     protected $fillable = [
         'encounter_id',
         'patient_id',
-        'company_id',
+        'organization_id',
         'instruction_type',
         'content',
         'created_by',
@@ -26,9 +26,9 @@ class EncounterInstruction extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function createdBy(): BelongsTo

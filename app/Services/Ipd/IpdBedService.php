@@ -17,7 +17,7 @@ class IpdBedService
     public function create(array $data, User $user): IpdBed
     {
         return DB::transaction(function () use ($data) {
-            $this->assertUniqueCode($data['company_id'], $data['bed_code']);
+            $this->assertUniqueCode($data['organization_id'], $data['bed_code']);
 
             return IpdBed::create([...$data, 'status' => IpdBed::STATUS_AVAILABLE]);
         });
@@ -29,7 +29,7 @@ class IpdBedService
             unset($data['status']);
 
             if (isset($data['bed_code']) && $data['bed_code'] !== $bed->bed_code) {
-                $this->assertUniqueCode($bed->company_id, $data['bed_code'], $bed->id);
+                $this->assertUniqueCode($bed->organization_id, $data['bed_code'], $bed->id);
             }
 
             $bed->update($data);
@@ -44,10 +44,10 @@ class IpdBedService
         $bed->delete();
     }
 
-    private function assertUniqueCode(int $companyId, string $bedCode, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, string $bedCode, ?int $exceptId = null): void
     {
         $exists = IpdBed::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->where('bed_code', $bedCode)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

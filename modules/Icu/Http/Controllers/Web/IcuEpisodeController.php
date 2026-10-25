@@ -24,10 +24,10 @@ class IcuEpisodeController extends Controller
     {
         $this->authorize('viewAny', IcuEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $episodes = IcuEpisode::forTenant($companyId, $branchId)
+        $episodes = IcuEpisode::forTenant($organizationId, $branchId)
             ->with(['patient', 'icuBed', 'icuUnit'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('admitted_at')

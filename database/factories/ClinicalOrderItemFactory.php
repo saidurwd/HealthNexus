@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ClinicalOrder;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClinicalOrderItemFactory extends Factory
@@ -14,7 +14,7 @@ class ClinicalOrderItemFactory extends Factory
     {
         return [
             'clinical_order_id' => ClinicalOrder::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'item_name' => fake()->word(),
             'item_code' => fake()->optional()->bothify('??##'),
             'quantity' => fake()->optional()->numberBetween(1, 5),

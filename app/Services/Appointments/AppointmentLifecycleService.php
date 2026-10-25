@@ -215,7 +215,7 @@ class AppointmentLifecycleService
     public function addNote(Appointment $appointment, string $note, ?User $user = null): AppointmentNote
     {
         return $appointment->notes()->create([
-            'company_id' => $appointment->company_id,
+            'organization_id' => $appointment->organization_id,
             'note' => $note,
             'created_by' => $user?->id ?? auth()->id(),
         ]);

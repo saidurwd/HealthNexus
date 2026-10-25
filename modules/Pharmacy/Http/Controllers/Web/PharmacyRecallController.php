@@ -23,11 +23,11 @@ class PharmacyRecallController extends Controller
     {
         Gate::authorize('pharmacy.recall.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $recallRecords = PharmacyRecall::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['medication', 'batch'])
             ->latest()
             ->paginate(20)

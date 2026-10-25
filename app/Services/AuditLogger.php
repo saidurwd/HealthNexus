@@ -16,7 +16,7 @@ class AuditLogger
 
         return AuditLog::create([
             'user_id' => $user?->id,
-            'company_id' => app(TenantContextResolver::class)->getCompanyId(),
+            'organization_id' => app(TenantContextResolver::class)->getOrganizationId(),
             'branch_id' => app(TenantContextResolver::class)->getBranchId(),
             'action' => $action,
             'module' => $this->moduleFor($modelType),

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -17,7 +17,7 @@ use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 /**
- * Guards the Phase 3 fixes against regression: cross-hospital access to another company's
+ * Guards the Phase 3 fixes against regression: cross-hospital access to another organization's
  * encounter, writes to a locked/completed encounter bypassing the amendment workflow, and
  * break-glass access that isn't actually logged as a security event.
  */
@@ -27,13 +27,13 @@ class EncounterSecurityTest extends TestCase
 
     private User $user;
 
-    private Company $ownCompany;
+    private Organization $ownOrganization;
 
     private Branch $ownBranch;
 
-    private Company $otherCompany;
+    private Organization $otherOrganization;
 
-    private Encounter $otherCompanyEncounter;
+    private Encounter $otherOrganizationEncounter;
 
     protected function setUp(): void
     {
@@ -41,21 +41,21 @@ class EncounterSecurityTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->ownCompany = Company::factory()->create();
-        $this->ownBranch = Branch::factory()->create(['company_id' => $this->ownCompany->id]);
-        $this->otherCompany = Company::factory()->create();
-        $otherBranch = Branch::factory()->create(['company_id' => $this->otherCompany->id]);
-        $otherPatient = Patient::factory()->create(['company_id' => $this->otherCompany->id]);
+        $this->ownOrganization = Organization::factory()->create();
+        $this->ownBranch = Branch::factory()->create(['organization_id' => $this->ownOrganization->id]);
+        $this->otherOrganization = Organization::factory()->create();
+        $otherBranch = Branch::factory()->create(['organization_id' => $this->otherOrganization->id]);
+        $otherPatient = Patient::factory()->create(['organization_id' => $this->otherOrganization->id]);
 
-        $this->otherCompanyEncounter = Encounter::factory()->create([
-            'company_id' => $this->otherCompany->id,
+        $this->otherOrganizationEncounter = Encounter::factory()->create([
+            'organization_id' => $this->otherOrganization->id,
             'branch_id' => $otherBranch->id,
             'patient_id' => $otherPatient->id,
         ]);
 
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->ownCompany->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->ownBranch->id, ['access_level' => 'manager', 'company_id' => $this->ownCompany->id]);
+        $this->user->organizations()->attach($this->ownOrganization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->ownBranch->id, ['access_level' => 'manager', 'organization_id' => $this->ownOrganization->id]);
 
         foreach ([
             'encounters.view', 'encounters.update', 'encounters.delete',
@@ -66,42 +66,42 @@ class EncounterSecurityTest extends TestCase
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->ownCompany->id);
-        app(TenantContextResolver::class)->setCompanyId($this->ownCompany->id);
+        session()->put('tenant_organization_id', $this->ownOrganization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->ownOrganization->id);
     }
 
-    public function test_user_cannot_view_another_companys_encounter(): void
+    public function test_user_cannot_view_another_organizations_encounter(): void
     {
-        $response = $this->get('/admin/encounters/'.$this->otherCompanyEncounter->id);
+        $response = $this->get('/admin/encounters/'.$this->otherOrganizationEncounter->id);
 
         $response->assertStatus(403);
     }
 
-    public function test_user_cannot_update_another_companys_encounter(): void
+    public function test_user_cannot_update_another_organizations_encounter(): void
     {
-        $response = $this->put('/admin/encounters/'.$this->otherCompanyEncounter->id, [
+        $response = $this->put('/admin/encounters/'.$this->otherOrganizationEncounter->id, [
             'status' => 'waiting',
         ]);
 
         $response->assertStatus(403);
     }
 
-    public function test_user_cannot_delete_another_companys_encounter(): void
+    public function test_user_cannot_delete_another_organizations_encounter(): void
     {
-        $response = $this->delete('/admin/encounters/'.$this->otherCompanyEncounter->id);
+        $response = $this->delete('/admin/encounters/'.$this->otherOrganizationEncounter->id);
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('encounters', [
-            'id' => $this->otherCompanyEncounter->id,
+            'id' => $this->otherOrganizationEncounter->id,
             'deleted_at' => null,
         ]);
     }
 
     public function test_locked_encounter_rejects_new_vitals_via_policy(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'branch_id' => $this->ownBranch->id,
             'patient_id' => $patient->id,
             'status' => 'completed',
@@ -119,9 +119,9 @@ class EncounterSecurityTest extends TestCase
 
     public function test_locked_encounter_rejects_new_diagnosis_via_policy(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'branch_id' => $this->ownBranch->id,
             'patient_id' => $patient->id,
             'status' => 'completed',
@@ -138,9 +138,9 @@ class EncounterSecurityTest extends TestCase
 
     public function test_amendment_workflow_leaves_locked_encounter_untouched(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'branch_id' => $this->ownBranch->id,
             'patient_id' => $patient->id,
             'status' => 'completed',
@@ -168,9 +168,9 @@ class EncounterSecurityTest extends TestCase
 
     public function test_amendment_cannot_be_approved_by_its_own_creator(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'branch_id' => $this->ownBranch->id,
             'patient_id' => $patient->id,
             'status' => 'completed',
@@ -190,11 +190,11 @@ class EncounterSecurityTest extends TestCase
         $service->approveAmendment($amendment, $this->user);
     }
 
-    public function test_break_glass_access_within_own_company_is_logged_as_a_security_event(): void
+    public function test_break_glass_access_within_own_organization_is_logged_as_a_security_event(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->ownCompany->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->ownCompany->id,
+            'organization_id' => $this->ownOrganization->id,
             'branch_id' => $this->ownBranch->id,
             'patient_id' => $patient->id,
         ]);
@@ -216,12 +216,12 @@ class EncounterSecurityTest extends TestCase
         ]);
     }
 
-    public function test_break_glass_cannot_be_requested_for_another_companys_encounter(): void
+    public function test_break_glass_cannot_be_requested_for_another_organizations_encounter(): void
     {
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
 
         app(BreakGlassService::class)->requestAccess(
-            $this->otherCompanyEncounter,
+            $this->otherOrganizationEncounter,
             'Trying to reach across tenants',
             $this->user,
         );

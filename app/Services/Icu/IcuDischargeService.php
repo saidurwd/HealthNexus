@@ -22,7 +22,7 @@ class IcuDischargeService
     {
         $summary = IcuDischargeSummary::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'status' => IcuDischargeSummary::STATUS_DRAFT,
@@ -69,7 +69,7 @@ class IcuDischargeService
             ]);
 
             IcuEpisodeEvent::create([
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'episode_id' => $episode->id,
                 'event_type' => $summary->destination === 'death' ? IcuEpisodeEvent::TYPE_DEATH : IcuEpisodeEvent::TYPE_DISCHARGED,

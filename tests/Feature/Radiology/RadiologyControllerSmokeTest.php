@@ -33,26 +33,26 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
         parent::setUp();
 
         $procedure = RadiologyProcedure::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'CT-BRAIN', 'name' => 'CT Brain', 'modality_type' => 'CT', 'is_active' => true,
         ]);
 
         $modality = RadiologyModality::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'code' => 'CT-01', 'name' => 'CT Scanner 1', 'modality_type' => 'CT', 'status' => 'online', 'is_active' => true,
         ]);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
-        $department = Department::create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'Radiology', 'code' => 'RAD-'.uniqid(), 'is_active' => true]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $department = Department::create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'name' => 'Radiology', 'code' => 'RAD-'.uniqid(), 'is_active' => true]);
         $encounter = Encounter::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
             'encounter_no' => 'ENC-'.uniqid(), 'encounter_type' => 'opd', 'provider_id' => $this->user->id,
             'department_id' => $department->id, 'encounter_date' => now()->toDateString(),
             'status' => 'in_progress', 'source' => 'walk_in', 'created_by' => $this->user->id,
         ]);
 
         $this->order = RadiologyOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id, 'order_number' => 'RAD-'.uniqid(),
             'accession_number' => 'RAD-ACC-'.uniqid(), 'priority' => 'routine', 'status' => 'registered',
             'ordered_by' => $this->user->id, 'ordered_at' => now(),
@@ -65,7 +65,7 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
 
         $technologistUser = User::factory()->create();
         $technologist = Provider::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'user_id' => $technologistUser->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'user_id' => $technologistUser->id,
             'provider_code' => 'TECH-'.uniqid(), 'name' => $technologistUser->name, 'provider_type' => 'radiology_technician', 'status' => 'active',
         ]);
 
@@ -78,14 +78,14 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
 
         $radiologistUser = User::factory()->create();
         $radiologist = Provider::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'user_id' => $radiologistUser->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'user_id' => $radiologistUser->id,
             'provider_code' => 'RAD-'.uniqid(), 'name' => $radiologistUser->name, 'provider_type' => 'radiologist', 'status' => 'active',
         ]);
 
         $this->report = app(RadiologyReportService::class)->createDraft($this->examination, $radiologist, ['findings' => 'Clear.', 'impression' => 'Normal.']);
 
         RadiologyPacsServer::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'DEFAULT', 'name' => 'Default PACS', 'adapter_type' => 'null', 'is_active' => false, 'is_default' => true,
         ]);
     }

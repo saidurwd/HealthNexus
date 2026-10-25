@@ -3,18 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class CompanyWithTwoBranchesSeeder extends Seeder
+class OrganizationWithTwoBranchesSeeder extends Seeder
 {
     public function run(): void
     {
-        $company = Company::create([
+        $organization = Organization::create([
             'name' => 'HealthNexus Hospital Group',
             'code' => 'HN-HG',
             'slug' => 'healthnexus-hospital-group',
@@ -25,7 +25,7 @@ class CompanyWithTwoBranchesSeeder extends Seeder
         ]);
 
         $branch1 = Branch::create([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'name' => 'Main Hospital',
             'code' => 'MAIN',
             'slug' => 'main-hospital',
@@ -36,7 +36,7 @@ class CompanyWithTwoBranchesSeeder extends Seeder
         ]);
 
         $branch2 = Branch::create([
-            'company_id' => $company->id,
+            'organization_id' => $organization->id,
             'name' => 'City Center Clinic',
             'code' => 'CITY',
             'slug' => 'city-center-clinic',
@@ -53,9 +53,9 @@ class CompanyWithTwoBranchesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $user->companies()->attach($company->id, ['access_level' => 'admin', 'is_default' => true]);
-        $user->branches()->attach($branch1->id, ['access_level' => 'manager', 'company_id' => $company->id, 'is_default' => true]);
-        $user->branches()->attach($branch2->id, ['access_level' => 'manager', 'company_id' => $company->id]);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin', 'is_default' => true]);
+        $user->branches()->attach($branch1->id, ['access_level' => 'manager', 'organization_id' => $organization->id, 'is_default' => true]);
+        $user->branches()->attach($branch2->id, ['access_level' => 'manager', 'organization_id' => $organization->id]);
 
         $allPermissions = Permission::all();
         $user->givePermissionTo($allPermissions);

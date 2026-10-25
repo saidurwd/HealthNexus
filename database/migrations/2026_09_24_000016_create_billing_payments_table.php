@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('invoice_id')->nullable()->constrained('billing_invoices')->nullOnDelete();
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'payment_number']);
-            $table->index(['company_id', 'branch_id', 'patient_id', 'status', 'payment_date'], 'billing_payments_scope_idx');
+            $table->unique(['organization_id', 'payment_number']);
+            $table->index(['organization_id', 'branch_id', 'patient_id', 'status', 'payment_date'], 'billing_payments_scope_idx');
             $table->index(['invoice_id', 'status']);
             $table->index(['cashier_session_id', 'status']);
         });

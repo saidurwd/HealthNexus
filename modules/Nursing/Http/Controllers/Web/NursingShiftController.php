@@ -26,10 +26,10 @@ class NursingShiftController extends Controller
     {
         Gate::authorize('nursing.shift.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $shifts = NursingShift::forTenant($companyId, $branchId)->orderBy('start_time')->get();
+        $shifts = NursingShift::forTenant($organizationId, $branchId)->orderBy('start_time')->get();
 
         return view('admin.nursing.shifts.index', compact('shifts'));
     }
@@ -39,7 +39,7 @@ class NursingShiftController extends Controller
         Gate::authorize('nursing.shift.manage');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'name' => ['required', 'string', 'max:255'],
             'start_time' => ['required'],

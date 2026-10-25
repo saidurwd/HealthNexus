@@ -25,7 +25,7 @@ class NursingEpisodeService
         }
 
         $episode = NursingEpisode::create([
-            'company_id' => $admission->company_id,
+            'organization_id' => $admission->organization_id,
             'branch_id' => $admission->branch_id,
             'admission_id' => $admission->id,
             'patient_id' => $admission->patient_id,

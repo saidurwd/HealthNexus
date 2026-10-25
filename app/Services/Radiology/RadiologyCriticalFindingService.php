@@ -19,7 +19,7 @@ class RadiologyCriticalFindingService
     public function flag(RadiologyReport $report, string $findingText, Provider $detector): RadiologyCriticalFinding
     {
         $finding = RadiologyCriticalFinding::create([
-            'company_id' => $report->company_id,
+            'organization_id' => $report->organization_id,
             'branch_id' => $report->branch_id,
             'report_id' => $report->id,
             'finding_text' => $findingText,

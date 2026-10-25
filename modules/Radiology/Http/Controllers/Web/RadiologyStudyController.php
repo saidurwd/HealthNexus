@@ -18,11 +18,11 @@ class RadiologyStudyController extends Controller
     {
         $this->authorize('viewAny', RadiologyStudy::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $studies = RadiologyStudy::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'examination.orderItem.procedure'])
             ->when($request->filled('search'), fn ($q) => $q->where('accession_number', 'like', '%'.$request->input('search').'%'))
             ->latest('study_date')

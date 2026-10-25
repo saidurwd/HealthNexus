@@ -32,7 +32,7 @@ class BillingAdjustmentPolicy
 
     private function inScope(User $user, BillingAdjustment $adjustment): bool
     {
-        return $user->companies()->where('companies.id', $adjustment->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $adjustment->organization_id)->exists()
             && $user->branches()->where('branches.id', $adjustment->branch_id)->exists();
     }
 }

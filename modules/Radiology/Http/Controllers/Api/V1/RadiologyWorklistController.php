@@ -17,10 +17,10 @@ class RadiologyWorklistController extends Controller
     {
         Gate::authorize('radiology.worklist.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $examinations = $this->worklist->query($companyId, $branchId, $request->only([
+        $examinations = $this->worklist->query($organizationId, $branchId, $request->only([
             'modality_id', 'priority', 'status', 'date', 'assigned_radiologist_id', 'unassigned', 'accession_number',
         ]));
 

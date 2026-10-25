@@ -3,7 +3,7 @@
 namespace Tests\Feature\Radiology;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +17,7 @@ abstract class RadiologyTestCase extends TestCase
 
     protected User $user;
 
-    protected Company $company;
+    protected Organization $organization;
 
     protected Branch $branch;
 
@@ -27,21 +27,21 @@ abstract class RadiologyTestCase extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
         $this->user->assignRole('super_admin');
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 }

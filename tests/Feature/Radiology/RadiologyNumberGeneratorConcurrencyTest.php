@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Radiology;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\Radiology\RadiologyNumberGenerator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -17,13 +17,13 @@ class RadiologyNumberGeneratorConcurrencyTest extends TestCase
 
     public function test_generator_never_produces_duplicate_sequence_numbers_under_repeated_calls(): void
     {
-        $company = Company::factory()->create();
+        $organization = Organization::factory()->create();
 
         $generator = app(RadiologyNumberGenerator::class);
 
         $numbers = [];
         for ($i = 0; $i < 10; $i++) {
-            $numbers[] = $generator->generateAccessionNumber($company->id, null);
+            $numbers[] = $generator->generateAccessionNumber($organization->id, null);
         }
 
         $this->assertCount(10, array_unique($numbers), 'Every generated accession number must be unique.');
@@ -50,15 +50,15 @@ class RadiologyNumberGeneratorConcurrencyTest extends TestCase
         $pdoA->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdoB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO radiology_counters (company_id, branch_id, document_type, prefix, last_number, created_at, updated_at)
-            VALUES ({$companyId}, NULL, 'ACC', 'RAD', 0, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO radiology_counters (organization_id, branch_id, document_type, prefix, last_number, created_at, updated_at)
+            VALUES ({$organizationId}, NULL, 'ACC', 'RAD', 0, NOW(), NOW())");
         $counterId = (int) $pdoA->lastInsertId();
 
         try {

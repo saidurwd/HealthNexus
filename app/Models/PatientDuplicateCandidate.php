@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PatientDuplicateCandidate extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id_a',
         'patient_id_b',
         'score',

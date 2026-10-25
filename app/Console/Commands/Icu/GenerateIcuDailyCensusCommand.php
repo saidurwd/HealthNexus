@@ -9,7 +9,7 @@ class GenerateIcuDailyCensusCommand extends Command
 {
     protected $signature = 'icu:generate-daily-census';
 
-    protected $description = 'Log the daily ICU census per company';
+    protected $description = 'Log the daily ICU census per organization';
 
     public function handle(): int
     {

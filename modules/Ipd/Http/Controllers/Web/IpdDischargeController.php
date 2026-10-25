@@ -23,11 +23,11 @@ class IpdDischargeController extends Controller
     {
         $this->authorize('viewAny', IpdDischargeRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $dischargeRequests = IpdDischargeRequest::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'admission'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()
@@ -41,8 +41,8 @@ class IpdDischargeController extends Controller
     {
         $this->authorize('create', IpdDischargeRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $dispositions = IpdDischargeDisposition::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $dispositions = IpdDischargeDisposition::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.discharge.create', compact('admission', 'dispositions'));
     }

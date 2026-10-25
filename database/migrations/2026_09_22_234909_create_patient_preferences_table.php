@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_preferences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->unique()->constrained()->cascadeOnDelete();
             $table->string('preferred_language')->nullable();
             $table->enum('preferred_contact_method', ['phone', 'email', 'sms'])->nullable();

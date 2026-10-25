@@ -25,11 +25,11 @@ class BillingInvoiceController extends Controller
     {
         $this->authorize('viewAny', BillingInvoice::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $invoices = BillingInvoice::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('patient')
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('invoice_number', 'like', '%'.$request->input('search').'%'))
@@ -53,14 +53,14 @@ class BillingInvoiceController extends Controller
     {
         $this->authorize('create', BillingInvoice::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $patient = Patient::findOrFail($request->validated('patient_id'));
 
         $invoice = $this->invoices->createDraft($patient, [
             ...$request->validated(),
-            'company_id' => $companyId,
+            'organization_id' => $organizationId,
             'branch_id' => $branchId,
         ], $request->user());
 

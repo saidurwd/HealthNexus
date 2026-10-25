@@ -14,19 +14,19 @@ use Illuminate\Support\Collection;
  */
 class IcuBedBoardService
 {
-    public function board(int $companyId, ?int $branchId = null): Collection
+    public function board(int $organizationId, ?int $branchId = null): Collection
     {
-        $wardIds = IpdWard::query()->forTenant($companyId, $branchId)->icuTypes()->pluck('id');
+        $wardIds = IpdWard::query()->forTenant($organizationId, $branchId)->icuTypes()->pluck('id');
         $roomIds = IpdRoom::query()->whereIn('ward_id', $wardIds)->pluck('id');
 
         $beds = IpdBed::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where(fn ($q) => $q->where('icu_capable', true)->orWhereIn('room_id', $roomIds))
             ->with(['room.ward', 'currentAllocation.admission.patient'])
             ->get();
 
         $activeEpisodesByBed = IcuEpisode::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereNull('discharged_at')
             ->whereNotNull('icu_bed_id')
             ->with('patient')

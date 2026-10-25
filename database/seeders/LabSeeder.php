@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Billing\BillingCategory;
 use App\Models\Billing\BillingItem;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Laboratory\LabContainerType;
 use App\Models\Laboratory\LabCriticalValue;
 use App\Models\Laboratory\LabPanel;
@@ -16,7 +16,7 @@ use App\Models\Laboratory\LabTestCategory;
 use Illuminate\Database\Seeder;
 
 /**
- * Minimal viable lab catalog per company: sections, specimen/container types, a starter test
+ * Minimal viable lab catalog per organization: sections, specimen/container types, a starter test
  * catalog (a CBC panel + Fasting Blood Glucose with age/gender reference ranges and a critical
  * value pair), each mapped to a clinically-chargeable BillingItem (clinical_event_type='lab_test')
  * so the Clinical Order -> Lab Order -> Billing Charge chain has something to exercise end to
@@ -27,27 +27,27 @@ class LabSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
-            $sections = $this->seedSections($company);
-            $specimenTypes = $this->seedSpecimenTypes($company);
-            $containerTypes = $this->seedContainerTypes($company);
-            $categories = $this->seedTestCategories($company);
-            $billingCategory = $this->seedBillingCategory($company);
+        Organization::all()->each(function (Organization $organization) {
+            $sections = $this->seedSections($organization);
+            $specimenTypes = $this->seedSpecimenTypes($organization);
+            $containerTypes = $this->seedContainerTypes($organization);
+            $categories = $this->seedTestCategories($organization);
+            $billingCategory = $this->seedBillingCategory($organization);
 
-            $cbcTests = $this->seedCbcTests($company, $sections, $categories, $specimenTypes, $containerTypes, $billingCategory);
-            $this->seedCbcPanel($company, $cbcTests);
-            $this->seedFastingGlucose($company, $sections, $categories, $specimenTypes, $containerTypes, $billingCategory);
+            $cbcTests = $this->seedCbcTests($organization, $sections, $categories, $specimenTypes, $containerTypes, $billingCategory);
+            $this->seedCbcPanel($organization, $cbcTests);
+            $this->seedFastingGlucose($organization, $sections, $categories, $specimenTypes, $containerTypes, $billingCategory);
         });
     }
 
-    private function seedSections(Company $company): array
+    private function seedSections(Organization $organization): array
     {
         $definitions = ['HEMA' => 'Hematology', 'BIOCHEM' => 'Biochemistry', 'MICRO' => 'Microbiology'];
         $sections = [];
 
         foreach ($definitions as $code => $name) {
             $sections[$code] = LabSection::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -55,14 +55,14 @@ class LabSeeder extends Seeder
         return $sections;
     }
 
-    private function seedSpecimenTypes(Company $company): array
+    private function seedSpecimenTypes(Organization $organization): array
     {
         $definitions = ['BLOOD' => 'Blood', 'SERUM' => 'Serum', 'URINE' => 'Urine'];
         $types = [];
 
         foreach ($definitions as $code => $name) {
             $types[$code] = LabSpecimenType::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -70,14 +70,14 @@ class LabSeeder extends Seeder
         return $types;
     }
 
-    private function seedContainerTypes(Company $company): array
+    private function seedContainerTypes(Organization $organization): array
     {
         $definitions = ['EDTA' => 'EDTA Tube', 'PLAIN' => 'Plain Tube', 'FLUORIDE' => 'Fluoride Tube'];
         $types = [];
 
         foreach ($definitions as $code => $name) {
             $types[$code] = LabContainerType::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -85,14 +85,14 @@ class LabSeeder extends Seeder
         return $types;
     }
 
-    private function seedTestCategories(Company $company): array
+    private function seedTestCategories(Organization $organization): array
     {
         $definitions = ['HEMA' => 'Hematology', 'CHEM' => 'Clinical Chemistry'];
         $categories = [];
 
         foreach ($definitions as $code => $name) {
             $categories[$code] = LabTestCategory::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'is_active' => true],
             );
         }
@@ -100,18 +100,18 @@ class LabSeeder extends Seeder
         return $categories;
     }
 
-    private function seedBillingCategory(Company $company): BillingCategory
+    private function seedBillingCategory(Organization $organization): BillingCategory
     {
         return BillingCategory::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'DIAG'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'DIAG'],
             ['name' => 'Diagnostics', 'description' => 'Laboratory and diagnostic services', 'is_active' => true],
         );
     }
 
-    private function seedBillingItemFor(Company $company, BillingCategory $billingCategory, LabTest $test, string $price): void
+    private function seedBillingItemFor(Organization $organization, BillingCategory $billingCategory, LabTest $test, string $price): void
     {
         BillingItem::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'item_code' => 'LAB-'.$test->code],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'item_code' => 'LAB-'.$test->code],
             [
                 'category_id' => $billingCategory->id,
                 'item_type' => 'diagnostic',
@@ -131,7 +131,7 @@ class LabSeeder extends Seeder
     /**
      * @return array<string, LabTest>
      */
-    private function seedCbcTests(Company $company, array $sections, array $categories, array $specimenTypes, array $containerTypes, BillingCategory $billingCategory): array
+    private function seedCbcTests(Organization $organization, array $sections, array $categories, array $specimenTypes, array $containerTypes, BillingCategory $billingCategory): array
     {
         $definitions = [
             'HGB' => ['name' => 'Hemoglobin', 'unit' => 'g/dL', 'price' => '300.00'],
@@ -146,7 +146,7 @@ class LabSeeder extends Seeder
 
         foreach ($definitions as $code => $definition) {
             $test = LabTest::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 [
                     'category_id' => $categories['HEMA']->id,
                     'section_id' => $sections['HEMA']->id,
@@ -159,7 +159,7 @@ class LabSeeder extends Seeder
                 ],
             );
 
-            $this->seedBillingItemFor($company, $billingCategory, $test, $definition['price']);
+            $this->seedBillingItemFor($organization, $billingCategory, $test, $definition['price']);
             $tests[$code] = $test;
         }
 
@@ -179,10 +179,10 @@ class LabSeeder extends Seeder
         return $tests;
     }
 
-    private function seedCbcPanel(Company $company, array $cbcTests): void
+    private function seedCbcPanel(Organization $organization, array $cbcTests): void
     {
         $panel = LabPanel::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'CBC'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'CBC'],
             ['name' => 'Complete Blood Count', 'is_active' => true],
         );
 
@@ -193,10 +193,10 @@ class LabSeeder extends Seeder
         }
     }
 
-    private function seedFastingGlucose(Company $company, array $sections, array $categories, array $specimenTypes, array $containerTypes, BillingCategory $billingCategory): void
+    private function seedFastingGlucose(Organization $organization, array $sections, array $categories, array $specimenTypes, array $containerTypes, BillingCategory $billingCategory): void
     {
         $test = LabTest::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'FBS'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'FBS'],
             [
                 'category_id' => $categories['CHEM']->id,
                 'section_id' => $sections['BIOCHEM']->id,
@@ -210,7 +210,7 @@ class LabSeeder extends Seeder
             ],
         );
 
-        $this->seedBillingItemFor($company, $billingCategory, $test, '200.00');
+        $this->seedBillingItemFor($organization, $billingCategory, $test, '200.00');
 
         LabReferenceRange::query()->firstOrCreate(
             ['test_id' => $test->id, 'gender' => 'any', 'age_min_years' => null, 'age_max_years' => null],

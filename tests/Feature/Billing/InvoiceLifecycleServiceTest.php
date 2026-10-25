@@ -26,15 +26,15 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
 
         $this->invoices = app(InvoiceService::class);
         $this->lifecycle = app(InvoiceLifecycleService::class);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $this->item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
@@ -44,7 +44,7 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
     private function makeCharge(): BillingCharge
     {
         return BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id, 'billing_item_id' => $this->item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '500.00', 'gross_amount' => '500.00',
@@ -65,7 +65,7 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
     public function test_finalize_assigns_invoice_number_and_transitions_status(): void
     {
         $invoice = $this->invoices->createDraft($this->patient, [
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
         ], $this->user);
 
         $this->invoices->addCharges($invoice, $this->chargeCollection($this->makeCharge()));
@@ -81,7 +81,7 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
     public function test_cannot_finalize_invoice_with_no_items(): void
     {
         $invoice = $this->invoices->createDraft($this->patient, [
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
         ], $this->user);
 
         $this->expectException(ValidationException::class);
@@ -92,7 +92,7 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
     public function test_invoice_is_immutable_after_finalization(): void
     {
         $invoice = $this->invoices->createDraft($this->patient, [
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
         ], $this->user);
 
         $this->invoices->addCharges($invoice, $this->chargeCollection($this->makeCharge()));
@@ -107,11 +107,11 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
 
     public function test_two_finalized_invoices_get_unique_sequential_numbers(): void
     {
-        $invoiceA = $this->invoices->createDraft($this->patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $invoiceA = $this->invoices->createDraft($this->patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $this->invoices->addCharges($invoiceA, $this->chargeCollection($this->makeCharge()));
         $invoiceA = $this->lifecycle->finalize($invoiceA, $this->user);
 
-        $invoiceB = $this->invoices->createDraft($this->patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $invoiceB = $this->invoices->createDraft($this->patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $this->invoices->addCharges($invoiceB, $this->chargeCollection($this->makeCharge()));
         $invoiceB = $this->lifecycle->finalize($invoiceB, $this->user);
 
@@ -120,7 +120,7 @@ class InvoiceLifecycleServiceTest extends BillingTestCase
 
     public function test_cancel_requires_reason_and_transitions_status(): void
     {
-        $invoice = $this->invoices->createDraft($this->patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $invoice = $this->invoices->createDraft($this->patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $this->invoices->addCharges($invoice, $this->chargeCollection($this->makeCharge()));
 
         $cancelled = $this->lifecycle->cancel($invoice, 'Patient requested cancellation', $this->user);

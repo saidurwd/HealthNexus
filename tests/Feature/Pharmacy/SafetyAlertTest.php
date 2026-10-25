@@ -23,9 +23,9 @@ class SafetyAlertTest extends PharmacyTestCase
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 30);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         PatientAllergy::create([
-            'company_id' => $this->company->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'patient_id' => $patient->id,
             'substance' => 'Paracetamol', 'severity' => 'severe', 'is_active' => true,
         ]);
 
@@ -69,9 +69,9 @@ class SafetyAlertTest extends PharmacyTestCase
         $store = $this->makeStore();
         $this->receiveBatch($store, $medication, 30);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         PatientAllergy::create([
-            'company_id' => $this->company->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'patient_id' => $patient->id,
             'substance' => 'Penicillin', 'severity' => 'severe', 'is_active' => true,
         ]);
 

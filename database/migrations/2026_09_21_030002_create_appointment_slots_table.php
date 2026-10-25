@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appointment_slots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('schedule_id')->constrained('doctor_schedules')->cascadeOnDelete();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'doctor_id', 'slot_datetime'], 'slot_datetime_unique');
+            $table->unique(['organization_id', 'doctor_id', 'slot_datetime'], 'slot_datetime_unique');
         });
     }
 

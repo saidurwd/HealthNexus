@@ -84,14 +84,14 @@ class PatientDuplicateScoringService
     }
 
     /**
-     * Scores a candidate against other active patients in the same company and persists any
+     * Scores a candidate against other active patients in the same organization and persists any
      * possible/strong matches as review-queue rows (idempotent — an existing pending/actioned
      * pair for the same two patients is left alone rather than duplicated).
      */
     public function scanForCandidate(Patient $patient): Collection
     {
         $candidates = Patient::query()
-            ->where('company_id', $patient->company_id)
+            ->where('organization_id', $patient->organization_id)
             ->where('id', '!=', $patient->id)
             ->whereNull('merged_into_patient_id')
             ->where('status', '!=', 'merged')
@@ -120,7 +120,7 @@ class PatientDuplicateScoringService
             }
 
             $created->push(PatientDuplicateCandidate::create([
-                'company_id' => $patient->company_id,
+                'organization_id' => $patient->organization_id,
                 'patient_id_a' => $idA,
                 'patient_id_b' => $idB,
                 'score' => $score,

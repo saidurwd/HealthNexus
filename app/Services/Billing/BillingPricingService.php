@@ -15,17 +15,17 @@ use Illuminate\Support\Carbon;
 class BillingPricingService
 {
     /**
-     * @param  array{company_id:int,branch_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null,provider_id?:int|null,department_id?:int|null,date?:string}  $context
+     * @param  array{organization_id:int,branch_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null,provider_id?:int|null,department_id?:int|null,date?:string}  $context
      * @return array{unit_price:string,discount_type:string,discount_value:string,tax_included:bool,price_list_item_id:?int,source:string}
      */
     public function resolvePrice(BillingItem $item, array $context): array
     {
-        $companyId = $context['company_id'];
+        $organizationId = $context['organization_id'];
         $branchId = $context['branch_id'] ?? null;
         $date = $context['date'] ?? Carbon::now()->toDateString();
 
         $priceListIds = BillingPriceList::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('status', 'active')
             ->where(fn ($q) => $q->whereNull('effective_from')->orWhere('effective_from', '<=', $date))
             ->where(fn ($q) => $q->whereNull('effective_to')->orWhere('effective_to', '>=', $date))

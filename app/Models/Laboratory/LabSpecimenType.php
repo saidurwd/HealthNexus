@@ -13,7 +13,7 @@ class LabSpecimenType extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'code', 'name', 'description',
+        'organization_id', 'branch_id', 'code', 'name', 'description',
         'collection_requirements', 'storage_temperature', 'stability_hours',
         'max_processing_minutes', 'is_active',
     ];
@@ -23,12 +23,12 @@ class LabSpecimenType extends Model
         return ['is_active' => 'boolean', 'stability_hours' => 'integer', 'max_processing_minutes' => 'integer'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function tests(): HasMany { return $this->hasMany(LabTest::class, 'specimen_type_id'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

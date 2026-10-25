@@ -16,7 +16,7 @@ use App\Models\Billing\BillingPriceList;
 use App\Models\Billing\BillingReceipt;
 use App\Models\Billing\BillingRefund;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Diagnosis;
@@ -56,7 +56,7 @@ use App\Policies\BillingPriceListPolicy;
 use App\Policies\BillingReceiptPolicy;
 use App\Policies\BillingRefundPolicy;
 use App\Policies\BranchPolicy;
-use App\Policies\CompanyPolicy;
+use App\Policies\OrganizationPolicy;
 use App\Policies\CountryPolicy;
 use App\Policies\CurrencyPolicy;
 use App\Policies\DiagnosisPolicy;
@@ -88,7 +88,7 @@ use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
-        Company::class => CompanyPolicy::class,
+        Organization::class => OrganizationPolicy::class,
         Branch::class => BranchPolicy::class,
         Patient::class => PatientPolicy::class,
         Appointment::class => AppointmentPolicy::class,

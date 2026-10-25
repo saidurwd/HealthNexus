@@ -19,12 +19,12 @@ class RadiologyWorklistController extends Controller
     {
         Gate::authorize('radiology.worklist.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $examinations = $this->worklist->query($companyId, $branchId, $request->only(['modality_id', 'priority', 'status', 'date', 'assigned_radiologist_id', 'unassigned', 'accession_number']));
-        $modalities = RadiologyModality::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
-        $radiologists = Provider::query()->where('company_id', $companyId)->where('provider_type', 'radiologist')->where('status', 'active')->get();
+        $examinations = $this->worklist->query($organizationId, $branchId, $request->only(['modality_id', 'priority', 'status', 'date', 'assigned_radiologist_id', 'unassigned', 'accession_number']));
+        $modalities = RadiologyModality::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $radiologists = Provider::query()->where('organization_id', $organizationId)->where('provider_type', 'radiologist')->where('status', 'active')->get();
 
         return view('admin.radiology.worklist.index', compact('examinations', 'modalities', 'radiologists'));
     }

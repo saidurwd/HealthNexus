@@ -20,9 +20,9 @@ class ProviderController extends Controller
     {
         $this->authorize('manageProvider', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $providers = Provider::where('company_id', $companyId)
+        $providers = Provider::where('organization_id', $organizationId)
             ->when($request->filled('search'), fn ($q, $search = null) => $q->where('name', 'like', '%'.$request->input('search').'%'))
             ->with(['department', 'specialty', 'user'])
             ->orderBy('name')
@@ -35,10 +35,10 @@ class ProviderController extends Controller
     {
         $this->authorize('manageProvider', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $users = User::whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $users = User::whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.providers.create', compact('users', 'departments', 'specialties'));
     }
@@ -48,7 +48,7 @@ class ProviderController extends Controller
         $this->authorize('manageProvider', Appointment::class);
 
         $validated = $this->validated($request);
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $validated['branch_id'] = app(TenantContextResolver::class)->getBranchId();
 
         $provider = Provider::create($validated);
@@ -71,10 +71,10 @@ class ProviderController extends Controller
     {
         $this->authorize('manageProvider', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $users = User::whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $users = User::whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.providers.edit', compact('provider', 'users', 'departments', 'specialties'));
     }

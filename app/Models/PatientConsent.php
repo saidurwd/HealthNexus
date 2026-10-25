@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PatientConsent extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'consent_type',
         'version',

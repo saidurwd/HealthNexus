@@ -10,26 +10,26 @@ return new class extends Migration
     {
         Schema::create('encounter_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('code')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'name']);
+            $table->unique(['organization_id', 'name']);
         });
 
         Schema::create('specialties', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('code')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'name']);
+            $table->unique(['organization_id', 'name']);
         });
     }
 

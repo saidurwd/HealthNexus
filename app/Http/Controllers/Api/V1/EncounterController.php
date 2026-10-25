@@ -30,7 +30,7 @@ class EncounterController extends Controller
         $user = $request->user();
 
         $encounters = Encounter::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->when($request->filled('branch_id'), fn ($q, $branchId) => $q->where('branch_id', $branchId))
             ->when($request->filled('patient_id'), fn ($q, $patientId) => $q->where('patient_id', $patientId))
             ->when($request->filled('status'), fn ($q, $status) => $q->where('status', $status))
@@ -49,9 +49,9 @@ class EncounterController extends Controller
         $user = $request->user();
 
         abort_if(
-            ! $user->hasRole('super_admin') && ! $user->companies()->where('companies.id', $validated['company_id'])->exists(),
+            ! $user->hasRole('super_admin') && ! $user->organizations()->where('organizations.id', $validated['organization_id'])->exists(),
             403,
-            'You do not have access to this company.'
+            'You do not have access to this organization.'
         );
 
         $encounter = $this->encounterService->createEncounter($validated, $user);

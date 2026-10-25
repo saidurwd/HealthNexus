@@ -11,7 +11,7 @@ class RadiologyModalityService
     public function create(array $data): RadiologyModality
     {
         return DB::transaction(function () use ($data) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return RadiologyModality::create($data);
         });
@@ -21,7 +21,7 @@ class RadiologyModalityService
     {
         return DB::transaction(function () use ($modality, $data) {
             if (isset($data['code']) && $data['code'] !== $modality->code) {
-                $this->assertUniqueCode($modality->company_id, $modality->branch_id, $data['code'], $modality->id);
+                $this->assertUniqueCode($modality->organization_id, $modality->branch_id, $data['code'], $modality->id);
             }
 
             $modality->update($data);
@@ -41,10 +41,10 @@ class RadiologyModalityService
         return $modality->refresh();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = RadiologyModality::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

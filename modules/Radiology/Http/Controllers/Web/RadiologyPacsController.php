@@ -4,7 +4,7 @@ namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Radiology\RadiologyPacsServer;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
@@ -18,10 +18,10 @@ class RadiologyPacsController extends Controller
     {
         $this->authorize('viewAny', RadiologyPacsServer::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $servers = RadiologyPacsServer::query()->forTenant($companyId, $branchId)->orderBy('name')->get();
+        $servers = RadiologyPacsServer::query()->forTenant($organizationId, $branchId)->orderBy('name')->get();
 
         return view('admin.radiology.pacs.index', compact('servers'));
     }
@@ -30,10 +30,10 @@ class RadiologyPacsController extends Controller
     {
         $this->authorize('manage', RadiologyPacsServer::class);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.radiology.pacs.create', compact('companies', 'branches'));
+        return view('admin.radiology.pacs.create', compact('organizations', 'branches'));
     }
 
     public function store(Request $request)
@@ -41,7 +41,7 @@ class RadiologyPacsController extends Controller
         $this->authorize('manage', RadiologyPacsServer::class);
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
@@ -55,7 +55,7 @@ class RadiologyPacsController extends Controller
         ]);
 
         if (! empty($validated['is_default'])) {
-            RadiologyPacsServer::query()->where('company_id', $validated['company_id'])->update(['is_default' => false]);
+            RadiologyPacsServer::query()->where('organization_id', $validated['organization_id'])->update(['is_default' => false]);
         }
 
         $server = RadiologyPacsServer::create([...$validated, 'is_active' => true]);

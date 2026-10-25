@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LabReport extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'lab_order_id', 'report_number', 'status',
+        'organization_id', 'branch_id', 'lab_order_id', 'report_number', 'status',
         'generated_by', 'generated_at', 'amended_by', 'amended_at',
         'cancelled_by', 'cancelled_at', 'cancellation_reason',
     ];
@@ -19,7 +19,7 @@ class LabReport extends Model
         return ['generated_at' => 'datetime', 'amended_at' => 'datetime', 'cancelled_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function labOrder(): BelongsTo { return $this->belongsTo(LabOrder::class, 'lab_order_id'); }
     public function generatedBy(): BelongsTo { return $this->belongsTo(User::class, 'generated_by'); }
@@ -30,8 +30,8 @@ class LabReport extends Model
     public function isPreliminary(): bool { return $this->status === 'preliminary'; }
     public function isCancelled(): bool { return $this->status === 'cancelled'; }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Laboratory\LabOrder;
@@ -31,13 +31,13 @@ class EncounterImagingAndLabPanelTest extends TestCase
     public function test_encounter_workspace_renders_lab_results_and_imaging_tabs_with_real_data(): void
     {
         $user = User::factory()->create();
-        $company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $company->id]);
-        $patient = Patient::factory()->create(['company_id' => $company->id]);
-        $department = Department::create(['company_id' => $company->id, 'branch_id' => $branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
+        $organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $organization->id]);
+        $patient = Patient::factory()->create(['organization_id' => $organization->id]);
+        $department = Department::create(['organization_id' => $organization->id, 'branch_id' => $branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
 
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
-        $user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $company->id]);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
+        $user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $organization->id]);
 
         foreach (['encounters.view', 'lab.report.view', 'radiology.report.view', 'radiology.study.view'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -45,21 +45,21 @@ class EncounterImagingAndLabPanelTest extends TestCase
         }
 
         $this->actingAs($user);
-        session()->put('tenant_company_id', $company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($company->id);
+        session()->put('tenant_organization_id', $organization->id);
+        app(\App\Services\TenantContextResolver::class)->setOrganizationId($organization->id);
 
         $encounter = Encounter::factory()->create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'status' => 'in_progress',
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'patient_id' => $patient->id, 'status' => 'in_progress',
         ]);
 
         // Lab order attached to this encounter.
-        $labSpecimenType = LabSpecimenType::create(['company_id' => $company->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
+        $labSpecimenType = LabSpecimenType::create(['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
         $labTest = LabTest::create([
-            'company_id' => $company->id, 'branch_id' => null, 'code' => 'HGB', 'name' => 'Hemoglobin',
+            'organization_id' => $organization->id, 'branch_id' => null, 'code' => 'HGB', 'name' => 'Hemoglobin',
             'test_type' => 'quantitative', 'unit' => 'g/dL', 'specimen_type_id' => $labSpecimenType->id, 'is_active' => true,
         ]);
         $labOrder = LabOrder::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'department_id' => $department->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'department_id' => $department->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id, 'order_number' => 'LAB-'.uniqid(),
             'priority' => 'routine', 'status' => 'registered', 'ordered_by' => $user->id, 'ordered_at' => now(),
         ]);
@@ -69,13 +69,13 @@ class EncounterImagingAndLabPanelTest extends TestCase
 
         // Radiology order attached to this encounter.
         $procedure = RadiologyProcedure::create([
-            'company_id' => $company->id, 'branch_id' => null, 'code' => 'XR-CHEST', 'name' => 'Chest X-Ray', 'modality_type' => 'XR', 'is_active' => true,
+            'organization_id' => $organization->id, 'branch_id' => null, 'code' => 'XR-CHEST', 'name' => 'Chest X-Ray', 'modality_type' => 'XR', 'is_active' => true,
         ]);
         RadiologyModality::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'code' => 'XR-01', 'name' => 'X-Ray Room 1', 'modality_type' => 'XR', 'status' => 'online', 'is_active' => true,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'code' => 'XR-01', 'name' => 'X-Ray Room 1', 'modality_type' => 'XR', 'status' => 'online', 'is_active' => true,
         ]);
         $radiologyOrder = RadiologyOrder::create([
-            'company_id' => $company->id, 'branch_id' => $branch->id, 'department_id' => $department->id,
+            'organization_id' => $organization->id, 'branch_id' => $branch->id, 'department_id' => $department->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id, 'order_number' => 'RAD-'.uniqid(),
             'accession_number' => 'RAD-ACC-'.uniqid(), 'priority' => 'routine', 'status' => 'registered', 'ordered_by' => $user->id, 'ordered_at' => now(),
         ]);

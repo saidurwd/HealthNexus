@@ -27,7 +27,7 @@ class PharmacyStockService
 
         return DB::transaction(function () use ($store, $medication, $batchData, $quantity, $user, $type, $reference) {
             $batch = PharmacyBatch::create([
-                'company_id' => $medication->company_id,
+                'organization_id' => $medication->organization_id,
                 'branch_id' => $medication->branch_id,
                 'medication_id' => $medication->id,
                 'created_by' => $user->id,

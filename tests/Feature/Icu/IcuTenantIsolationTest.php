@@ -3,21 +3,21 @@
 namespace Tests\Feature\Icu;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class IcuTenantIsolationTest extends IcuTestCase
 {
-    private function userWith(array $permissions, ?Company $company = null): User
+    private function userWith(array $permissions, ?Organization $organization = null): User
     {
-        $company ??= $this->company;
-        $branch = $company->id === $this->company->id ? $this->branch : Branch::factory()->create(['company_id' => $company->id]);
+        $organization ??= $this->organization;
+        $branch = $organization->id === $this->organization->id ? $this->branch : Branch::factory()->create(['organization_id' => $organization->id]);
 
         $user = User::factory()->create();
-        $user->companies()->attach($company->id, ['access_level' => 'staff']);
-        $user->branches()->attach($branch->id, ['access_level' => 'staff', 'company_id' => $company->id]);
+        $user->organizations()->attach($organization->id, ['access_level' => 'staff']);
+        $user->branches()->attach($branch->id, ['access_level' => 'staff', 'organization_id' => $organization->id]);
 
         foreach ($permissions as $p) {
             Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
@@ -34,8 +34,8 @@ class IcuTenantIsolationTest extends IcuTestCase
     public function test_hospital_a_user_cannot_view_hospital_b_icu_episode(): void
     {
         $episode = $this->makeEpisode();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['icu.episode.view'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['icu.episode.view'], $otherOrganization);
 
         $this->assertFalse($foreignUser->can('view', $episode));
 
@@ -45,8 +45,8 @@ class IcuTenantIsolationTest extends IcuTestCase
     public function test_direct_url_manipulation_to_a_foreign_episode_is_rejected(): void
     {
         $episode = $this->makeEpisode();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['icu.episode.view'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['icu.episode.view'], $otherOrganization);
 
         $this->actingAs($foreignUser)->get('/admin/icu/episodes/'.$episode->id)->assertForbidden();
     }
@@ -54,8 +54,8 @@ class IcuTenantIsolationTest extends IcuTestCase
     public function test_api_denies_cross_hospital_transfer(): void
     {
         $episode = $this->makeEpisode();
-        $otherCompany = Company::factory()->create();
-        $foreignUser = $this->userWith(['icu.episode.transfer'], $otherCompany);
+        $otherOrganization = Organization::factory()->create();
+        $foreignUser = $this->userWith(['icu.episode.transfer'], $otherOrganization);
 
         $this->actingAs($foreignUser)->postJson('/api/v1/icu/episodes/'.$episode->id.'/transfer', [
             'destination' => 'ward',

@@ -34,7 +34,7 @@ class NotifyOnIcuEpisodeEvents
     private function notify(IcuEpisode $episode, string $template, array $params): void
     {
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['icu_coordinator', 'icu_manager', 'icu_charge_nurse']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $episode->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $episode->organization_id))
             ->get();
 
         if ($recipients->isEmpty()) {

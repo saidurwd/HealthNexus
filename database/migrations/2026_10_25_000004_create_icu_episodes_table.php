@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('icu_episodes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('episode_number');
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -38,8 +38,8 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'episode_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'episode_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('patient_id');
             $table->index('admission_id');
             $table->index('icu_bed_id');

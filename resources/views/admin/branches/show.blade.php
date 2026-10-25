@@ -7,9 +7,9 @@
         <div class="card-header">
             <h3 class="card-title">Branch Details</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.companies.branches.edit', [$company, $branch]) }}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{{ route('admin.companies.branches.departments.index', [$company, $branch]) }}" class="btn btn-info btn-sm">Manage Departments</a>
-                <a href="{{ route('admin.companies.branches.index', $company) }}" class="btn btn-secondary btn-sm">Back</a>
+                <a href="{{ route('admin.organizations.branches.edit', [$organization, $branch]) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ route('admin.organizations.branches.departments.index', [$organization, $branch]) }}" class="btn btn-info btn-sm">Manage Departments</a>
+                <a href="{{ route('admin.organizations.branches.index', $organization) }}" class="btn btn-secondary btn-sm">Back</a>
             </div>
         </div>
         <div class="card-body">
@@ -39,8 +39,8 @@
                     </span>
                 </dd>
 
-                <dt class="col-sm-3">Company</dt>
-                <dd class="col-sm-9">{{ $company->name }}</dd>
+                <dt class="col-sm-3">Organization</dt>
+                <dd class="col-sm-9">{{ $organization->name }}</dd>
 
                 <dt class="col-sm-3">Created</dt>
                 <dd class="col-sm-9">{{ $branch->created_at->format('Y-m-d H:i') }}</dd>

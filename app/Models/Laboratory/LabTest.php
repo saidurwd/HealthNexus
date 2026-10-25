@@ -14,7 +14,7 @@ class LabTest extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'category_id', 'section_id', 'specimen_type_id', 'container_type_id',
+        'organization_id', 'branch_id', 'category_id', 'section_id', 'specimen_type_id', 'container_type_id',
         'code', 'name', 'short_name', 'description', 'test_type', 'method', 'unit',
         'fasting_required', 'turnaround_time_minutes', 'is_panel', 'requires_pathologist_approval',
         'is_active', 'effective_from', 'effective_to', 'created_by', 'updated_by',
@@ -33,7 +33,7 @@ class LabTest extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
+    public function organization(): BelongsTo { return $this->belongsTo(\App\Models\Organization::class); }
     public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
     public function category(): BelongsTo { return $this->belongsTo(LabTestCategory::class, 'category_id'); }
     public function section(): BelongsTo { return $this->belongsTo(LabSection::class, 'section_id'); }
@@ -45,8 +45,8 @@ class LabTest extends Model
     public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
     public function updatedBy(): BelongsTo { return $this->belongsTo(User::class, 'updated_by'); }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

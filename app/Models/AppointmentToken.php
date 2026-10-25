@@ -12,7 +12,7 @@ class AppointmentToken extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'appointment_id',
         'token_number',
@@ -38,9 +38,9 @@ class AppointmentToken extends Model
 
     public const PRIORITY_ORDER = ['emergency', 'priority', 'vip', 'regular', 'follow_up'];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

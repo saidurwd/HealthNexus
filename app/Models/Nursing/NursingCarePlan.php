@@ -21,7 +21,7 @@ class NursingCarePlan extends Model
 
     public const STATUS_SUPERSEDED = 'superseded';
 
-    protected $fillable = ['company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'status', 'created_by'];
+    protected $fillable = ['organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'status', 'created_by'];
 
     public function episode(): BelongsTo
     {
@@ -58,8 +58,8 @@ class NursingCarePlan extends Model
         return $this->hasMany(NursingCarePlanIntervention::class, 'care_plan_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

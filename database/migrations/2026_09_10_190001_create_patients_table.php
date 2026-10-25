@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('enterprise_patient_no')->nullable();
             $table->string('national_identifier')->nullable();
             $table->string('first_name');
@@ -32,10 +32,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'enterprise_patient_no']);
-            $table->index(['company_id', 'last_name', 'first_name']);
-            $table->index(['company_id', 'phone']);
-            $table->index(['company_id', 'national_identifier']);
+            $table->unique(['organization_id', 'enterprise_patient_no']);
+            $table->index(['organization_id', 'last_name', 'first_name']);
+            $table->index(['organization_id', 'phone']);
+            $table->index(['organization_id', 'national_identifier']);
         });
     }
 

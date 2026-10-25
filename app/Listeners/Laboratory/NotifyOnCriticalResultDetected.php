@@ -29,7 +29,7 @@ class NotifyOnCriticalResultDetected
         $channels = is_array($channels) ? $channels : json_decode((string) $channels, true) ?? ['database'];
 
         LabCriticalResultAlert::create([
-            'company_id' => $result->company_id,
+            'organization_id' => $result->organization_id,
             'branch_id' => $result->branch_id,
             'result_id' => $result->id,
             'detected_at' => now(),

@@ -25,11 +25,11 @@ class PharmacyDispensingController extends Controller
     {
         $this->authorize('viewAny', PharmacyDispensing::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $dispensings = PharmacyDispensing::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'store'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('dispensed_at')
@@ -44,7 +44,7 @@ class PharmacyDispensingController extends Controller
         $this->authorize('create', PharmacyDispensing::class);
 
         $order->load(['patient', 'items.medication']);
-        $stores = PharmacyStore::query()->forTenant($order->company_id, $order->branch_id)->where('is_active', true)->orderBy('name')->get();
+        $stores = PharmacyStore::query()->forTenant($order->organization_id, $order->branch_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.pharmacy.dispensing.create', compact('order', 'stores'));
     }

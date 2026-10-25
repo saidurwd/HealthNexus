@@ -14,7 +14,7 @@ class IcuAssessment extends Model
     public const STATUS_FINAL = 'final';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'patient_id', 'sections', 'status',
+        'organization_id', 'branch_id', 'episode_id', 'patient_id', 'sections', 'status',
         'assessed_by', 'finalized_at', 'finalized_by',
     ];
 
