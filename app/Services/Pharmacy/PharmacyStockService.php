@@ -7,7 +7,10 @@ use App\Models\Pharmacy\PharmacyMedication;
 use App\Models\Pharmacy\PharmacyStock;
 use App\Models\Pharmacy\PharmacyStockTransaction;
 use App\Models\Pharmacy\PharmacyStore;
+use App\Contracts\Stock\StockLedger;
 use App\Models\User;
+use App\Services\Stock\LedgerEntry;
+use App\Services\Stock\PharmacyLedgerMapper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -19,6 +22,8 @@ use Illuminate\Validation\ValidationException;
  */
 class PharmacyStockService
 {
+    public function __construct(private readonly StockLedger $ledger) {}
+
     public function receiveNewBatch(PharmacyStore $store, PharmacyMedication $medication, array $batchData, int $quantity, User $user, string $type = PharmacyStockTransaction::TYPE_PURCHASE_RECEIPT, ?object $reference = null): PharmacyBatch
     {
         if ($quantity < 1) {
@@ -112,7 +117,7 @@ class PharmacyStockService
 
     private function recordTransaction(PharmacyStore $store, PharmacyMedication $medication, PharmacyBatch $batch, string $type, string $direction, int $quantity, int $balanceAfter, User $user, ?string $reason, ?object $reference): void
     {
-        PharmacyStockTransaction::create([
+        $transaction = PharmacyStockTransaction::create([
             'store_id' => $store->id,
             'medication_id' => $medication->id,
             'batch_id' => $batch->id,
@@ -125,5 +130,14 @@ class PharmacyStockService
             'performed_by' => $user->id,
             'reason' => $reason,
         ]);
+
+        // H-06: no stock change without a shared-ledger row. Same transaction as the balance update above.
+        $this->ledger->post(new LedgerEntry(
+            organizationId: $store->organization_id, storeKind: 'pharmacy', storeId: $store->id, itemId: $medication->id,
+            quantity: $direction === 'in' ? $quantity : -$quantity, txnType: PharmacyLedgerMapper::txnType($type, $direction),
+            batchId: $batch->id, branchId: $store->branch_id, unitCost: $batch->unit_cost,
+            referenceType: $reference ? $reference::class : null, referenceId: $reference?->id, reason: $reason,
+            performedBy: $user->id, idempotencyKey: 'PHM-TXN:'.$transaction->id,
+        ));
     }
 }

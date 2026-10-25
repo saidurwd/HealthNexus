@@ -15,7 +15,7 @@ return [
     'billing' => ['name' => 'Billing', 'phase' => 4, 'built' => true, 'always_on' => true, 'depends_on' => ['patient'], 'permissions' => ['billing'], 'tables' => ['billing', 'charge_event_log'], 'api' => ['billing']],
     'lab' => ['name' => 'Laboratory', 'phase' => 5, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['lab', 'laboratory'], 'tables' => ['lab'], 'api' => ['lab']],
     'radiology' => ['name' => 'Radiology', 'phase' => 6, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['radiology'], 'tables' => ['radiology'], 'api' => ['radiology']],
-    'pharmacy' => ['name' => 'Pharmacy', 'phase' => 7, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['pharmacy'], 'tables' => ['pharmacy', 'medications'], 'api' => ['pharmacy']],
+    'pharmacy' => ['name' => 'Pharmacy', 'phase' => 7, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['pharmacy'], 'tables' => ['pharmacy', 'medications', 'stock_ledger'], 'api' => ['pharmacy']],
     'ipd' => ['name' => 'IPD / Admission / Beds', 'phase' => 8, 'built' => true, 'always_on' => false, 'depends_on' => ['opd', 'billing'], 'permissions' => ['ipd', 'bed'], 'tables' => ['ipd'], 'api' => ['ipd']],
     'nursing' => ['name' => 'Nursing & MAR', 'phase' => 9, 'built' => true, 'always_on' => false, 'depends_on' => ['ipd'], 'permissions' => ['nursing'], 'tables' => ['nursing'], 'api' => ['nursing']],
     'ot' => ['name' => 'OT / Surgery', 'phase' => 10, 'built' => true, 'always_on' => false, 'depends_on' => ['ipd', 'nursing'], 'permissions' => ['ot'], 'tables' => ['ot'], 'api' => ['ot']],

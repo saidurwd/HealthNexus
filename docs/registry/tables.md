@@ -282,7 +282,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `patient_types`
 - `patients`
 
-## pharmacy (26)
+## pharmacy (27)
 
 - `pharmacy_batches`
 - `pharmacy_brands`
@@ -310,6 +310,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `pharmacy_stores`
 - `pharmacy_transfer_items`
 - `pharmacy_transfers`
+- `stock_ledger`
 
 ## radiology (19)
 

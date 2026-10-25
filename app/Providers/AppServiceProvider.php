@@ -110,6 +110,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(\App\Services\ModuleManager::class);
+        $this->app->bind(\App\Contracts\Stock\StockLedger::class, \App\Services\Stock\DatabaseStockLedger::class);
         $this->app->bind(\App\Contracts\Billing\ChargeEventPublisher::class, \App\Services\Billing\Events\BillingChargeEventPublisher::class);
 
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
