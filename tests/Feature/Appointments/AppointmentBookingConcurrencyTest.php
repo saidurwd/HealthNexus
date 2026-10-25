@@ -125,11 +125,15 @@ class AppointmentBookingConcurrencyTest extends TestCase
 
         $branchId = (int) $pdoA->query("SELECT id FROM branches WHERE organization_id = {$organizationId} LIMIT 1")->fetchColumn();
         if (! $branchId) {
-            $pdoA->exec("INSERT INTO branches (organization_id, name, code, created_at, updated_at) VALUES ({$organizationId}, 'CTC Branch', 'CTCB', NOW(), NOW())");
+            $pdoA->exec("INSERT INTO branches (organization_id, name, code, slug, created_at, updated_at) VALUES ({$organizationId}, 'CTC Branch', 'CTCB', 'ctc-branch', NOW(), NOW())");
             $branchId = (int) $pdoA->lastInsertId();
         }
 
         $doctorId = (int) $pdoA->query('SELECT id FROM users LIMIT 1')->fetchColumn();
+        if (! $doctorId) {
+            $pdoA->exec("INSERT INTO users (name, email, password, created_at, updated_at) VALUES ('Concurrency Doctor', 'concurrency-doctor@example.invalid', 'x', NOW(), NOW())");
+            $doctorId = (int) $pdoA->lastInsertId();
+        }
 
         $pdoA->exec("INSERT INTO doctor_schedules (organization_id, branch_id, doctor_id, name, day_of_week, start_time, end_time, created_at, updated_at)
             VALUES ({$organizationId}, {$branchId}, {$doctorId}, 'Lock Test Session', 'monday', '09:00:00', '13:00:00', NOW(), NOW())");

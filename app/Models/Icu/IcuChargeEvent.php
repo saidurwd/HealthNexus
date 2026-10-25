@@ -11,7 +11,7 @@ class IcuChargeEvent extends Model
 
     protected function casts(): array
     {
-        return ['charge_date' => 'date'];
+        return ['charge_date' => 'date:Y-m-d'];
     }
 
     public function episode(): BelongsTo

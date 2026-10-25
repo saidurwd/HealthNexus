@@ -42,3 +42,6 @@ Audit-table immutability, final-record immutability (lab results, signed notes, 
 - Rename company→organization, Hospital level, API authorization gaps: done (see git log).
 - H-01 done: `config/modules.php` registry, module enablement (`module:<key>` middleware, menu filter, `organization_modules`), Integration Stub Registry (`config/integrations.php`, null adapters), generated `docs/registry/*` and `docs/events.md` (`php artisan registry:export`), CI gate `RegistryConformanceTest`.
 - Findings: events carry Eloquent models, not ids (guideline 7.3) — fix when touched. Legacy permission prefixes (`laboratory`, `emr`, `bed`, `doctor`, …) are registered as aliases.
+- H-02…H-15 done to the level recorded in `docs/gate-h-report.md` (Gate H review, 2026-10-25). Open Blockers after the sprint: public IDs for remaining record types (D-E03); switching the old vitals/alert/charge writers to the shared services (D-E04…D-E06).
+- Finding 15 (scope tests): `tests/Feature/Security/RouteAuthorizationMatrixTest.php` added for parameterless routes; routes with ids still rely on module tenant-isolation tests.
+- Finding 17 (CI/static analysis): `.github/workflows/ci.yml` with Pint, registry gate, composer audit, tests, and a MySQL migrate job. Larastan not installed (needs your approval).

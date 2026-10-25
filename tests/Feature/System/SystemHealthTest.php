@@ -5,6 +5,7 @@ namespace Tests\Feature\System;
 use App\Models\User;
 use App\Services\SystemHealthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Redis;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -51,7 +52,9 @@ class SystemHealthTest extends TestCase
 
     public function test_a_down_dependency_does_not_crash_the_page(): void
     {
-        // Redis is not running in this environment, so this exercises the real down-path.
+        // Force the Redis dependency to fail, whatever this machine runs.
+        Redis::shouldReceive('connection')->andThrow(new \RuntimeException('Connection refused'));
+
         $response = $this->get('/admin/system/health');
 
         $response->assertOk();

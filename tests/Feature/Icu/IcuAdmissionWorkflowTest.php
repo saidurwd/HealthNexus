@@ -34,8 +34,13 @@ class IcuAdmissionWorkflowTest extends IcuTestCase
 
         $request = $this->makeAdmissionRequest();
 
+        // A configured workflow with an approval step holds the request until the approver acts.
         $this->assertNotNull($request->workflow_instance_id);
-        $this->assertSame(IcuAdmissionRequest::STATUS_ACCEPTED, $request->status);
+        $this->assertSame(IcuAdmissionRequest::STATUS_PENDING_APPROVAL, $request->status);
+
+        $accepted = app(IcuAdmissionRequestService::class)->accept($request, $this->user);
+
+        $this->assertSame(IcuAdmissionRequest::STATUS_ACCEPTED, $accepted->status);
     }
 
     public function test_pending_approval_fallback_when_approval_required_but_no_workflow_configured(): void

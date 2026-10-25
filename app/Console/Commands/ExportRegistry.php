@@ -31,6 +31,13 @@ class ExportRegistry extends Command
         file_put_contents("$dir/tables.md", $inspector->tablesMarkdown());
         file_put_contents(base_path('docs/events.md'), $inspector->eventsMarkdown());
 
+        $charters = base_path('docs/charters');
+        is_dir($charters) || mkdir($charters, 0755, true);
+        foreach (config('modules') as $key => $module) {
+            // Never overwrite a charter a person has started to fill in: only create the missing ones.
+            is_file("$charters/$key.md") || file_put_contents("$charters/$key.md", $inspector->charterMarkdown($key));
+        }
+
         $this->info('Registry written to docs/registry and docs/events.md');
 
         foreach ($problems as $problem) {
