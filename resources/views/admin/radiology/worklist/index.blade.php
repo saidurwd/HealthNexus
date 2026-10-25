@@ -4,12 +4,12 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Radiologist Worklist</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Radiologist Worklist') }}</h3></div>
         <div class="card-body p-0">
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3">
                     <select name="modality_id" class="form-control">
-                        <option value="">All Modalities</option>
+                        <option value="">{{ __('All Modalities') }}</option>
                         @foreach($modalities as $modality)
                             <option value="{{ $modality->id }}" {{ request('modality_id') == $modality->id ? 'selected' : '' }}>{{ $modality->name }}</option>
                         @endforeach
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-md-3">
                     <select name="priority" class="form-control">
-                        <option value="">All Priorities</option>
+                        <option value="">{{ __('All Priorities') }}</option>
                         @foreach(['stat','urgent','routine'] as $priority)
                             <option value="{{ $priority }}" {{ request('priority') == $priority ? 'selected' : '' }}>{{ ucfirst($priority) }}</option>
                         @endforeach
@@ -26,13 +26,13 @@
                 <div class="col-md-2">
                     <div class="form-check mt-2">
                         <input type="checkbox" name="unassigned" value="1" class="form-check-input" id="unassigned" {{ request('unassigned') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="unassigned">Unassigned only</label>
+                        <label class="form-check-label" for="unassigned">{{ __('Unassigned only') }}</label>
                     </div>
                 </div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Accession #</th><th>Patient</th><th>Procedure</th><th>Modality</th><th>Assigned To</th><th>Actions</th></tr></thead>
+                <thead><tr><th>{{ __('Accession #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Procedure') }}</th><th>{{ __('Modality') }}</th><th>{{ __('Assigned To') }}</th><th>{{ __('Actions') }}</th></tr></thead>
                 <tbody>
                     @forelse($examinations as $examination)
                         <tr>
@@ -46,21 +46,21 @@
                                     <form method="post" action="{{ route('admin.radiology.worklist.assign', $examination) }}" class="d-flex gap-1">
                                         @csrf
                                         <select name="radiologist_id" class="form-control form-control-sm" required>
-                                            <option value="">Assign to...</option>
+                                            <option value="">{{ __('Assign to...') }}</option>
                                             @foreach($radiologists as $radiologist)
                                                 <option value="{{ $radiologist->id }}">{{ $radiologist->name }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="btn btn-xs btn-primary">Assign</button>
+                                        <button type="submit" class="btn btn-xs btn-primary">{{ __('Assign') }}</button>
                                     </form>
                                 @endcan
                                 @can('radiology.report.create')
-                                    <a href="{{ route('admin.radiology.reports.create', $examination) }}" class="btn btn-xs btn-warning">Report</a>
+                                    <a href="{{ route('admin.radiology.reports.create', $examination) }}" class="btn btn-xs btn-warning">{{ __('Report') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">Worklist is empty.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('Worklist is empty.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

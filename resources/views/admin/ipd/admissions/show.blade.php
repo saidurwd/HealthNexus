@@ -15,12 +15,12 @@
         <div>
             @can('ipd.transfer.create')
                 @if(in_array($admission->status, ['active', 'admitted', 'transferred']))
-                    <a href="{{ route('admin.ipd.transfers.create', $admission) }}" class="btn btn-warning">Transfer</a>
+                    <a href="{{ route('admin.ipd.transfers.create', $admission) }}" class="btn btn-warning">{{ __('Transfer') }}</a>
                 @endif
             @endcan
             @can('ipd.discharge.create')
                 @if(!in_array($admission->status, ['discharged', 'closed']))
-                    <a href="{{ route('admin.ipd.discharge.create', $admission) }}" class="btn btn-primary">Discharge</a>
+                    <a href="{{ route('admin.ipd.discharge.create', $admission) }}" class="btn btn-primary">{{ __('Discharge') }}</a>
                 @endif
             @endcan
         </div>
@@ -29,33 +29,33 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Current Location</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Current Location') }}</h3></div>
                 <div class="card-body">
                     @if($admission->currentAllocation?->bed)
-                        <p class="mb-1"><strong>Ward:</strong> {{ $admission->currentAllocation->bed->room?->ward?->name }}</p>
-                        <p class="mb-1"><strong>Room:</strong> {{ $admission->currentAllocation->bed->room?->room_number }}</p>
-                        <p class="mb-0"><strong>Bed:</strong> {{ $admission->currentAllocation->bed->bed_code }}</p>
+                        <p class="mb-1"><strong>{{ __('Ward:') }}</strong> {{ $admission->currentAllocation->bed->room?->ward?->name }}</p>
+                        <p class="mb-1"><strong>{{ __('Room:') }}</strong> {{ $admission->currentAllocation->bed->room?->room_number }}</p>
+                        <p class="mb-0"><strong>{{ __('Bed:') }}</strong> {{ $admission->currentAllocation->bed->bed_code }}</p>
                     @else
-                        <p class="text-muted mb-0">No active bed allocation.</p>
+                        <p class="text-muted mb-0">{{ __('No active bed allocation.') }}</p>
                     @endif
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Care Team</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Care Team') }}</h3></div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>Admitting:</strong> {{ $admission->admittingProvider?->name ?? '—' }}</p>
-                    <p class="mb-0"><strong>Attending:</strong> {{ $admission->attendingProvider?->name ?? '—' }}</p>
+                    <p class="mb-1"><strong>{{ __('Admitting:') }}</strong> {{ $admission->admittingProvider?->name ?? '—' }}</p>
+                    <p class="mb-0"><strong>{{ __('Attending:') }}</strong> {{ $admission->attendingProvider?->name ?? '—' }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Discharge Plan</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Discharge Plan') }}</h3></div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>Expected:</strong> {{ $admission->expected_discharge_date?->format('Y-m-d') ?? '—' }}</p>
-                    <p class="mb-0"><strong>Actual:</strong> {{ $admission->actual_discharge_date?->format('Y-m-d H:i') ?? '—' }}</p>
+                    <p class="mb-1"><strong>{{ __('Expected:') }}</strong> {{ $admission->expected_discharge_date?->format('Y-m-d') ?? '—' }}</p>
+                    <p class="mb-0"><strong>{{ __('Actual:') }}</strong> {{ $admission->actual_discharge_date?->format('Y-m-d H:i') ?? '—' }}</p>
                 </div>
             </div>
         </div>
@@ -64,16 +64,16 @@
     <div class="row">
         <div class="col-md-6">
             @if($admission->encounter)
-                <a href="{{ route('admin.encounters.show', $admission->encounter) }}" class="btn btn-outline-primary mb-3">View Clinical Encounter</a>
+                <a href="{{ route('admin.encounters.show', $admission->encounter) }}" class="btn btn-outline-primary mb-3">{{ __('View Clinical Encounter') }}</a>
             @endif
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Movement History</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Movement History') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-sm mb-0">
-                <thead><tr><th>Type</th><th>From</th><th>To</th><th>Status</th><th>Moved At</th></tr></thead>
+                <thead><tr><th>{{ __('Type') }}</th><th>{{ __('From') }}</th><th>{{ __('To') }}</th><th>{{ __('Status') }}</th><th>{{ __('Moved At') }}</th></tr></thead>
                 <tbody>
                     @forelse($admission->movements as $movement)
                         <tr>
@@ -84,7 +84,7 @@
                             <td>{{ $movement->moved_at?->format('Y-m-d H:i') ?? '—' }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center text-muted py-3">No movements recorded.</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-3">{{ __('No movements recorded.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -93,10 +93,10 @@
 
     @if($admission->leaves->isNotEmpty())
         <div class="card">
-            <div class="card-header"><h3 class="card-title">Leave History</h3></div>
+            <div class="card-header"><h3 class="card-title">{{ __('Leave History') }}</h3></div>
             <div class="card-body p-0">
                 <table class="table table-sm mb-0">
-                    <thead><tr><th>Type</th><th>Expected Return</th><th>Actual Return</th><th>Status</th><th></th></tr></thead>
+                    <thead><tr><th>{{ __('Type') }}</th><th>{{ __('Expected Return') }}</th><th>{{ __('Actual Return') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                     <tbody>
                         @foreach($admission->leaves as $leave)
                             <tr>
@@ -104,7 +104,7 @@
                                 <td>{{ $leave->expected_return_at?->format('Y-m-d H:i') }}</td>
                                 <td>{{ $leave->actual_return_at?->format('Y-m-d H:i') ?? '—' }}</td>
                                 <td><span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $leave->status)) }}</span></td>
-                                <td><a href="{{ route('admin.ipd.leave.show', $leave) }}" class="btn btn-xs btn-info">View</a></td>
+                                <td><a href="{{ route('admin.ipd.leave.show', $leave) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -115,26 +115,26 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Patient Leave</h3>
+            <h3 class="card-title">{{ __('Patient Leave') }}</h3>
         </div>
         @can('ipd.leave.create')
             @if(in_array($admission->status, ['active', 'admitted']))
                 <form method="POST" action="{{ route('admin.ipd.leave.store', $admission) }}" class="card-body row g-2">
                     @csrf
                     <div class="col-md-3">
-                        <input type="text" name="leave_type" class="form-control" placeholder="Leave type" value="temporary_pass" required>
+                        <input type="text" name="leave_type" class="form-control" placeholder="{{ __('Leave type') }}" value="temporary_pass" required>
                     </div>
                     <div class="col-md-3">
                         <input type="datetime-local" name="expected_return_at" class="form-control" required>
                     </div>
                     <div class="col-md-3">
                         <select name="bed_handling" class="form-control">
-                            <option value="retain">Retain bed</option>
-                            <option value="release">Release bed</option>
+                            <option value="retain">{{ __('Retain bed') }}</option>
+                            <option value="release">{{ __('Release bed') }}</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <button type="submit" class="btn btn-warning w-100">Request Leave</button>
+                        <button type="submit" class="btn btn-warning w-100">{{ __('Request Leave') }}</button>
                     </div>
                 </form>
             @endif

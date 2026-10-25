@@ -4,10 +4,10 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Corporate Receivables</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Corporate Receivables') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Corporate</th><th>Invoices</th><th>Total Due</th></tr></thead>
+                <thead><tr><th>{{ __('Corporate') }}</th><th>{{ __('Invoices') }}</th><th>{{ __('Total Due') }}</th></tr></thead>
                 <tbody>
                     @forelse($receivables as $row)
                         <tr>
@@ -16,7 +16,7 @@
                             <td>{{ number_format($row->total_due, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="3" class="text-center">No outstanding corporate receivables.</td></tr>
+                        <tr><td colspan="3" class="text-center">{{ __('No outstanding corporate receivables.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

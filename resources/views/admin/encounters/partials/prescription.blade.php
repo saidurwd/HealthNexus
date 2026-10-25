@@ -1,24 +1,24 @@
 <div class="tab-pane fade" id="prescription" role="tabpanel">
     <div class="card card-success card-outline">
         <div class="card-header">
-            <h3 class="card-title">Prescriptions</h3>
+            <h3 class="card-title">{{ __('Prescriptions') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->prescriptions->isNotEmpty())
                 @foreach($encounter->prescriptions as $prescription)
                     <div class="callout callout-success">
                         <h5>Prescription #{{ $prescription->prescription_no }}</h5>
-                        <p class="mb-1"><strong>Notes:</strong> {{ $prescription->clinical_notes ?? '-' }}</p>
-                        <p class="mb-0"><strong>Advice:</strong> {{ $prescription->advice ?? '-' }}</p>
+                        <p class="mb-1"><strong>{{ __('Notes:') }}</strong> {{ $prescription->clinical_notes ?? '-' }}</p>
+                        <p class="mb-0"><strong>{{ __('Advice:') }}</strong> {{ $prescription->advice ?? '-' }}</p>
                         @if($prescription->items->isNotEmpty())
                             <table class="table table-sm mt-2">
                                 <thead>
                                     <tr>
-                                        <th>Medicine</th>
-                                        <th>Dose</th>
-                                        <th>Frequency</th>
-                                        <th>Duration</th>
-                                        <th>Qty</th>
+                                        <th>{{ __('Medicine') }}</th>
+                                        <th>{{ __('Dose') }}</th>
+                                        <th>{{ __('Frequency') }}</th>
+                                        <th>{{ __('Duration') }}</th>
+                                        <th>{{ __('Qty') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -37,7 +37,7 @@
                     </div>
                 @endforeach
             @else
-                <p class="text-muted">No prescriptions recorded.</p>
+                <p class="text-muted">{{ __('No prescriptions recorded.') }}</p>
             @endif
         </div>
     </div>

@@ -12,10 +12,10 @@
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">
-                        <tr><th>Patient</th><td>{{ $report->examination->orderItem->radiologyOrder->patient?->full_name }}</td></tr>
-                        <tr><th>Procedure</th><td>{{ $report->examination->orderItem->procedure?->name }}</td></tr>
-                        <tr><th>Modality</th><td>{{ $report->examination->modality?->name }}</td></tr>
-                        <tr><th>Radiologist</th><td>{{ $report->radiologist?->name }}</td></tr>
+                        <tr><th>{{ __('Patient') }}</th><td>{{ $report->examination->orderItem->radiologyOrder->patient?->full_name }}</td></tr>
+                        <tr><th>{{ __('Procedure') }}</th><td>{{ $report->examination->orderItem->procedure?->name }}</td></tr>
+                        <tr><th>{{ __('Modality') }}</th><td>{{ $report->examination->modality?->name }}</td></tr>
+                        <tr><th>{{ __('Radiologist') }}</th><td>{{ $report->radiologist?->name }}</td></tr>
                     </table>
 
                     @if($report->isMutable())
@@ -23,36 +23,36 @@
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
-                                <label class="form-label">Clinical Indication</label>
+                                <label class="form-label">{{ __('Clinical Indication') }}</label>
                                 <textarea name="clinical_indication" class="form-control">{{ $report->clinical_indication }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Technique</label>
+                                <label class="form-label">{{ __('Technique') }}</label>
                                 <textarea name="technique" class="form-control">{{ $report->technique }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Findings</label>
+                                <label class="form-label">{{ __('Findings') }}</label>
                                 <textarea name="findings" rows="6" class="form-control">{{ $report->findings }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Impression</label>
+                                <label class="form-label">{{ __('Impression') }}</label>
                                 <textarea name="impression" rows="3" class="form-control">{{ $report->impression }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Recommendation</label>
+                                <label class="form-label">{{ __('Recommendation') }}</label>
                                 <textarea name="recommendation" class="form-control">{{ $report->recommendation }}</textarea>
                             </div>
                             @can('radiology.report.update')
-                                <button type="submit" class="btn btn-secondary">Save Draft</button>
+                                <button type="submit" class="btn btn-secondary">{{ __('Save Draft') }}</button>
                             @endcan
                         </form>
                     @else
-                        <h5>Findings</h5>
+                        <h5>{{ __('Findings') }}</h5>
                         <p>{{ $report->findings }}</p>
-                        <h5>Impression</h5>
+                        <h5>{{ __('Impression') }}</h5>
                         <p>{{ $report->impression }}</p>
                         @if($report->recommendation)
-                            <h5>Recommendation</h5>
+                            <h5>{{ __('Recommendation') }}</h5>
                             <p>{{ $report->recommendation }}</p>
                         @endif
                     @endif
@@ -62,7 +62,7 @@
                         @can('radiology.report.submit')
                             <form method="post" action="{{ route('admin.radiology.reports.submit', $report) }}" class="d-inline">
                                 @csrf
-                                <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                                <button type="submit" class="btn btn-primary">{{ __('Submit for Approval') }}</button>
                             </form>
                         @endcan
                     @endif
@@ -74,12 +74,12 @@
                             </form>
                         @endcan
                         @can('radiology.critical_finding.create')
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#flagCriticalModal">Flag Critical Finding</button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#flagCriticalModal">{{ __('Flag Critical Finding') }}</button>
                         @endcan
                     @endif
                     @if($report->isFinal())
                         @can('radiology.report.amend')
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#amendModal">Amend Report</button>
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#amendModal">{{ __('Amend Report') }}</button>
                         @endcan
                     @endif
                 </div>
@@ -87,7 +87,7 @@
 
             @if($report->criticalFindings->isNotEmpty())
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Critical Findings</h3></div>
+                    <div class="card-header"><h3 class="card-title">{{ __('Critical Findings') }}</h3></div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             @foreach($report->criticalFindings as $finding)
@@ -108,18 +108,18 @@
             <div class="modal-content">
                 <form method="post" action="{{ route('admin.radiology.reports.amend', $report) }}">
                     @csrf
-                    <div class="modal-header"><h5 class="modal-title">Amend Report</h5></div>
+                    <div class="modal-header"><h5 class="modal-title">{{ __('Amend Report') }}</h5></div>
                     <div class="modal-body">
-                        <label class="form-label">Findings</label>
+                        <label class="form-label">{{ __('Findings') }}</label>
                         <textarea name="findings" class="form-control mb-2">{{ $report->findings }}</textarea>
-                        <label class="form-label">Impression</label>
+                        <label class="form-label">{{ __('Impression') }}</label>
                         <textarea name="impression" class="form-control mb-2">{{ $report->impression }}</textarea>
-                        <label class="form-label">Reason for amendment</label>
+                        <label class="form-label">{{ __('Reason for amendment') }}</label>
                         <textarea name="reason" class="form-control" required minlength="10"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-warning">Save Amendment</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-warning">{{ __('Save Amendment') }}</button>
                     </div>
                 </form>
             </div>
@@ -131,12 +131,12 @@
             <div class="modal-content">
                 <form method="post" action="{{ route('admin.radiology.critical-findings.store', $report) }}">
                     @csrf
-                    <div class="modal-header"><h5 class="modal-title">Flag Critical Finding</h5></div>
+                    <div class="modal-header"><h5 class="modal-title">{{ __('Flag Critical Finding') }}</h5></div>
                     <div class="modal-body">
                         <textarea name="finding_text" class="form-control" required placeholder="Describe the critical finding..."></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                         <button type="submit" class="btn btn-danger">Flag &amp; Notify</button>
                     </div>
                 </form>

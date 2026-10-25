@@ -5,10 +5,10 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Stock On Hand</h3>
+            <h3 class="card-title">{{ __('Stock On Hand') }}</h3>
             <div class="card-tools">
                 @can('receive', $stores->firstWhere('id', $storeId) ?? new \App\Models\Pharmacy\PharmacyStore)
-                    <a href="{{ route('admin.pharmacy.stock.receive-form') }}" class="btn btn-primary btn-sm">Receive Stock</a>
+                    <a href="{{ route('admin.pharmacy.stock.receive-form') }}" class="btn btn-primary btn-sm">{{ __('Receive Stock') }}</a>
                 @endcan
             </div>
         </div>
@@ -22,12 +22,12 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search medication...">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search medication...') }}">
                 </div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Medication</th><th>Batch</th><th>Expiry</th><th>Qty Available</th></tr></thead>
+                <thead><tr><th>{{ __('Medication') }}</th><th>{{ __('Batch') }}</th><th>{{ __('Expiry') }}</th><th>{{ __('Qty Available') }}</th></tr></thead>
                 <tbody>
                     @forelse($stockRows as $row)
                         <tr>
@@ -35,12 +35,12 @@
                             <td>{{ $row->batch?->batch_number }}</td>
                             <td>
                                 {{ $row->batch?->expiry_date?->format('Y-m-d') }}
-                                @if($row->batch?->is_quarantined)<span class="badge bg-danger">Quarantined</span>@endif
+                                @if($row->batch?->is_quarantined)<span class="badge bg-danger">{{ __('Quarantined') }}</span>@endif
                             </td>
                             <td>{{ $row->quantity_available }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center">No stock found for this store.</td></tr>
+                        <tr><td colspan="4" class="text-center">{{ __('No stock found for this store.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -50,35 +50,35 @@
 
     @can('adjust', $stores->firstWhere('id', $storeId) ?? new \App\Models\Pharmacy\PharmacyStore)
         <div class="card">
-            <div class="card-header"><h3 class="card-title">Adjust Stock</h3></div>
+            <div class="card-header"><h3 class="card-title">{{ __('Adjust Stock') }}</h3></div>
             <form method="POST" action="{{ route('admin.pharmacy.stock.adjust') }}" class="row g-2 p-3">
                 @csrf
                 <input type="hidden" name="store_id" value="{{ $storeId }}">
                 <div class="col-md-3">
                     <select name="batch_id" class="form-control" required>
-                        <option value="">Batch...</option>
+                        <option value="">{{ __('Batch...') }}</option>
                         @foreach($stockRows as $row)
                             <option value="{{ $row->batch_id }}">{{ $row->medication?->name }} — {{ $row->batch?->batch_number }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="quantity_delta" class="form-control" placeholder="+/- Qty" required>
+                    <input type="number" name="quantity_delta" class="form-control" placeholder="{{ __('+/- Qty') }}" required>
                 </div>
                 <div class="col-md-2">
                     <select name="type" class="form-control" required>
-                        <option value="adjustment">Adjustment</option>
-                        <option value="damage">Damage</option>
-                        <option value="expired">Expired</option>
-                        <option value="wastage">Wastage</option>
-                        <option value="correction">Correction</option>
+                        <option value="adjustment">{{ __('Adjustment') }}</option>
+                        <option value="damage">{{ __('Damage') }}</option>
+                        <option value="expired">{{ __('Expired') }}</option>
+                        <option value="wastage">{{ __('Wastage') }}</option>
+                        <option value="correction">{{ __('Correction') }}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="reason" class="form-control" placeholder="Reason" required>
+                    <input type="text" name="reason" class="form-control" placeholder="{{ __('Reason') }}" required>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-warning w-100">Adjust</button>
+                    <button type="submit" class="btn btn-warning w-100">{{ __('Adjust') }}</button>
                 </div>
             </form>
         </div>

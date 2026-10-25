@@ -5,16 +5,16 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Modalities</h3>
+            <h3 class="card-title">{{ __('Modalities') }}</h3>
             <div class="card-tools">
                 @can('radiology.modality.create')
-                    <a href="{{ route('admin.radiology.modalities.create') }}" class="btn btn-primary btn-sm">Register Modality</a>
+                    <a href="{{ route('admin.radiology.modalities.create') }}" class="btn btn-primary btn-sm">{{ __('Register Modality') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Section</th><th>Room</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Code') }}</th><th>{{ __('Name') }}</th><th>{{ __('Type') }}</th><th>{{ __('Section') }}</th><th>{{ __('Room') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($modalities as $modality)
                         <tr>
@@ -26,12 +26,12 @@
                             <td><span class="badge {{ $modality->status === 'online' ? 'bg-success' : ($modality->status === 'disabled' ? 'bg-secondary' : 'bg-warning') }}">{{ ucfirst($modality->status) }}</span></td>
                             <td>
                                 @can('radiology.modality.update')
-                                    <a href="{{ route('admin.radiology.modalities.edit', $modality) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.radiology.modalities.edit', $modality) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No modalities registered.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No modalities registered.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

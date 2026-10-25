@@ -5,17 +5,17 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Refunds</h3>
+            <h3 class="card-title">{{ __('Refunds') }}</h3>
             <div class="card-tools">
                 @can('request', \App\Models\Billing\BillingRefund::class)
-                    <a href="{{ route('admin.billing.refunds.create') }}" class="btn btn-primary btn-sm">Request Refund</a>
+                    <a href="{{ route('admin.billing.refunds.create') }}" class="btn btn-primary btn-sm">{{ __('Request Refund') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <form method="GET" class="p-3">
                 <select name="status" class="form-control" style="max-width: 200px; display:inline-block;" onchange="this.form.submit()">
-                    <option value="">All Statuses</option>
+                    <option value="">{{ __('All Statuses') }}</option>
                     @foreach(['requested','approved','processed'] as $status)
                         <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
                     @endforeach
@@ -23,7 +23,7 @@
             </form>
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Refund #</th><th>Patient</th><th>Amount</th><th>Status</th><th>Requested At</th><th></th></tr>
+                    <tr><th>{{ __('Refund #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Amount') }}</th><th>{{ __('Status') }}</th><th>{{ __('Requested At') }}</th><th></th></tr>
                 </thead>
                 <tbody>
                     @forelse($refunds as $refund)
@@ -33,10 +33,10 @@
                             <td>{{ number_format($refund->amount, 2) }}</td>
                             <td><span class="badge bg-info">{{ ucfirst($refund->status) }}</span></td>
                             <td>{{ $refund->requested_at?->format('Y-m-d H:i') }}</td>
-                            <td><a href="{{ route('admin.billing.refunds.show', $refund) }}" class="btn btn-xs btn-info">View</a></td>
+                            <td><a href="{{ route('admin.billing.refunds.show', $refund) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No refunds found.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No refunds found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

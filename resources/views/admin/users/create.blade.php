@@ -5,7 +5,7 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Create User</h3>
+            <h3 class="card-title">{{ __('Create User') }}</h3>
         </div>
         <form action="{{ route('admin.users.store') }}" method="post" enctype="multipart/form-data">
             @csrf
@@ -13,54 +13,54 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label">{{ __('Name') }}</label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" required>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label">{{ __('Email') }}</label>
                             <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" required>
                             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label">{{ __('Password') }}</label>
                             <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required>
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                            <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
                             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
+                            <label for="phone" class="form-label">{{ __('Phone') }}</label>
                             <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="form-control @error('phone') is-invalid @enderror">
                             @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="timezone" class="form-label">Timezone</label>
+                            <label for="timezone" class="form-label">{{ __('Timezone') }}</label>
                             <input type="text" name="timezone" id="timezone" value="{{ old('timezone') }}" class="form-control @error('timezone') is-invalid @enderror">
                             @error('timezone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="locale" class="form-label">Locale</label>
+                            <label for="locale" class="form-label">{{ __('Locale') }}</label>
                             <input type="text" name="locale" id="locale" value="{{ old('locale') }}" class="form-control @error('locale') is-invalid @enderror">
                             @error('locale') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <label for="profile_picture" class="form-label">{{ __('Profile Picture') }}</label>
                             <input type="file" name="profile_picture" id="profile_picture" class="form-control @error('profile_picture') is-invalid @enderror">
                             @error('profile_picture') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
                                 <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="form-check-input">
-                                <label for="is_active" class="form-check-label">Active</label>
+                                <label for="is_active" class="form-check-label">{{ __('Active') }}</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Organizations</label>
+                            <label class="form-label">{{ __('Organizations') }}</label>
                             @foreach($organizations as $organization)
                                 <div class="form-check">
                                     <input type="checkbox" name="organizations[]" value="{{ $organization->id }}" id="organization_{{ $organization->id }}" class="form-check-input" {{ in_array($organization->id, old('organizations', [])) ? 'checked' : '' }}>
@@ -69,7 +69,7 @@
                             @endforeach
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Branches</label>
+                            <label class="form-label">{{ __('Branches') }}</label>
                             @foreach($branches as $branch)
                                 <div class="form-check">
                                     <input type="checkbox" name="branches[]" value="{{ $branch->id }}" id="branch_{{ $branch->id }}" class="form-check-input" {{ in_array($branch->id, old('branches', [])) ? 'checked' : '' }}>
@@ -78,7 +78,7 @@
                             @endforeach
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Roles</label>
+                            <label class="form-label">{{ __('Roles') }}</label>
                             <input type="hidden" name="roles_present" value="1">
                             @foreach($roles as $role)
                                 <div class="form-check">
@@ -92,8 +92,8 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Create User</button>
+                <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Create User') }}</button>
             </div>
         </form>
     </div>

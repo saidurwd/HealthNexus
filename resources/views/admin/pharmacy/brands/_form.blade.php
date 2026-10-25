@@ -4,17 +4,17 @@
     @unless($b)
     @endunless
     <div class="mb-3">
-        <label class="form-label">Code</label>
+        <label class="form-label">{{ __('Code') }}</label>
         <input type="text" name="code" value="{{ old('code', $b?->code) }}" class="form-control @error('code') is-invalid @enderror" required>
         @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="mb-3">
-        <label class="form-label">Name</label>
+        <label class="form-label">{{ __('Name') }}</label>
         <input type="text" name="name" value="{{ old('name', $b?->name) }}" class="form-control @error('name') is-invalid @enderror" required>
         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="mb-3">
-        <label class="form-label">Generic</label>
+        <label class="form-label">{{ __('Generic') }}</label>
         <select name="generic_id" class="form-control">
             <option value="">-</option>
             @foreach($generics as $generic)
@@ -23,11 +23,11 @@
         </select>
     </div>
     <div class="mb-3">
-        <label class="form-label">Manufacturer</label>
+        <label class="form-label">{{ __('Manufacturer') }}</label>
         <input type="text" name="manufacturer" value="{{ old('manufacturer', $b?->manufacturer) }}" class="form-control">
     </div>
     <div class="form-check mb-2">
         <input type="checkbox" name="is_active" value="1" class="form-check-input" id="is_active" {{ old('is_active', $b?->is_active ?? true) ? 'checked' : '' }}>
-        <label class="form-check-label" for="is_active">Active</label>
+        <label class="form-check-label" for="is_active">{{ __('Active') }}</label>
     </div>
 </div>

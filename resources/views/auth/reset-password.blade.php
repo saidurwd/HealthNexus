@@ -8,12 +8,12 @@
         <input type="hidden" name="token" value="{{ $token }}">
         <input type="hidden" name="email" value="{{ $email }}">
 
-        <label for="password" class="visually-hidden">Password</label>
+        <label for="password" class="visually-hidden">{{ __('Password') }}</label>
 
         <div class="input-group mb-3">
             <input type="password" name="password" id="password"
                 class="form-control @error('password') is-invalid @enderror"
-                placeholder="New Password" required>
+                placeholder="{{ __('New Password') }}" required>
 
             <div class="input-group-text">
                 <span class="bi bi-lock-fill"></span>
@@ -26,12 +26,12 @@
             @enderror
         </div>
 
-        <label for="password_confirmation" class="visually-hidden">Confirm Password</label>
+        <label for="password_confirmation" class="visually-hidden">{{ __('Confirm Password') }}</label>
 
         <div class="input-group mb-3">
             <input type="password" name="password_confirmation" id="password_confirmation"
                 class="form-control"
-                placeholder="Confirm New Password" required>
+                placeholder="{{ __('Confirm New Password') }}" required>
 
             <div class="input-group-text">
                 <span class="bi bi-lock-fill"></span>
@@ -42,7 +42,7 @@
             <div class="col-12">
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">
-                        Reset Password
+                        {{ __('Reset Password') }}
                     </button>
                 </div>
             </div>

@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Queue Management</h2>
+            <h2 class="mb-0">{{ __('Queue Management') }}</h2>
             <button class="btn btn-primary" onclick="callNext()">
-                <i class="bi bi-telephone-outgoing me-1"></i>Call Next Patient
+                <i class="bi bi-telephone-outgoing me-1"></i>{{ __('Call Next Patient') }}
             </button>
         </div>
 
@@ -15,17 +15,17 @@
             <div class="col-lg-4 mb-4">
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Current Token</h5>
+                        <h5 class="mb-0">{{ __('Current Token') }}</h5>
                     </div>
                     <div class="card-body text-center" id="current-token">
-                        <p class="text-muted">No patient called yet.</p>
+                        <p class="text-muted">{{ __('No patient called yet.') }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Today's Queue</h5>
+                        <h5 class="mb-0">{{ __('Today\'s Queue') }}</h5>
                         <span class="badge bg-info">{{ $queue->count() }} Patients</span>
                     </div>
                     <div class="card-body p-0">
@@ -33,12 +33,12 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-secondary">
                                     <tr>
-                                        <th>Token #</th>
-                                        <th>Patient</th>
-                                        <th>Doctor</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Actions</th>
+                                        <th>{{ __('Token #') }}</th>
+                                        <th>{{ __('Patient') }}</th>
+                                        <th>{{ __('Doctor') }}</th>
+                                        <th>{{ __('Time') }}</th>
+                                        <th>{{ __('Status') }}</th>
+                                        <th class="text-center">{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,17 +63,17 @@
                                             </td>
                                             <td class="text-center">
                                                 @if($item->token && $item->token->status === 'waiting')
-                                                    <button class="btn btn-sm btn-outline-success" onclick="callToken({{ $item->token->id }})" title="Call">
+                                                    <button class="btn btn-sm btn-outline-success" onclick="callToken({{ $item->token->id }})" title="{{ __('Call') }}">
                                                         <i class="bi bi-telephone"></i>
                                                     </button>
                                                 @endif
                                                 @if($item->token && $item->token->status === 'called')
-                                                    <button class="btn btn-sm btn-outline-primary" onclick="startToken({{ $item->token->id }})" title="Start">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="startToken({{ $item->token->id }})" title="{{ __('Start') }}">
                                                         <i class="bi bi-play"></i>
                                                     </button>
                                                 @endif
                                                 @if($item->token && $item->token->status === 'in_progress')
-                                                    <button class="btn btn-sm btn-outline-success" onclick="completeToken({{ $item->token->id }})" title="Complete">
+                                                    <button class="btn btn-sm btn-outline-success" onclick="completeToken({{ $item->token->id }})" title="{{ __('Complete') }}">
                                                         <i class="bi bi-check"></i>
                                                     </button>
                                                 @endif
@@ -81,7 +81,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center py-4 text-muted">No patients in queue.</td>
+                                            <td colspan="6" class="text-center py-4 text-muted">{{ __('No patients in queue.') }}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

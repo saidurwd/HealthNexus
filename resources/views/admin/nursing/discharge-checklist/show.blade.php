@@ -18,12 +18,12 @@
                 @endforeach
             </div>
             @if($checklist->status !== 'completed')
-                <div class="card-footer"><button class="btn btn-primary">Save</button></div>
+                <div class="card-footer"><button class="btn btn-primary">{{ __('Save') }}</button></div>
             @endif
         </form>
         @if($checklist->status !== 'completed')
             <div class="card-footer">
-                <form action="{{ route('admin.nursing.discharge-checklist.complete', $checklist) }}" method="post">@csrf<button class="btn btn-success">Complete Nursing Clearance</button></form>
+                <form action="{{ route('admin.nursing.discharge-checklist.complete', $checklist) }}" method="post">@csrf<button class="btn btn-success">{{ __('Complete Nursing Clearance') }}</button></form>
             </div>
         @endif
     </div>

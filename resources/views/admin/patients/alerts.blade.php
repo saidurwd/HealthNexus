@@ -5,13 +5,13 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Patient Alerts</h2>
+            <h2 class="mb-0">{{ __('Patient Alerts') }}</h2>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAlertModal">
-                    <i class="bi bi-plus me-1"></i>Add Alert
+                    <i class="bi bi-plus me-1"></i>{{ __('Add Alert') }}
                 </button>
                 <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
                 </a>
             </div>
         </div>
@@ -22,15 +22,15 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Type</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Severity</th>
-                                <th>Status</th>
-                                <th>Start</th>
-                                <th>Expiry</th>
-                                <th>Created</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Type') }}</th>
+                                <th>{{ __('Title') }}</th>
+                                <th>{{ __('Description') }}</th>
+                                <th>{{ __('Severity') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Start') }}</th>
+                                <th>{{ __('Expiry') }}</th>
+                                <th>{{ __('Created') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,7 +50,7 @@
                                     </td>
                                     <td>
                                         @if($alert->isActive())
-                                            <span class="badge bg-success">Active</span>
+                                            <span class="badge bg-success">{{ __('Active') }}</span>
                                         @else
                                             <span class="badge bg-secondary">{{ ucfirst($alert->status) }}</span>
                                         @endif
@@ -62,14 +62,14 @@
                                         @if($alert->status !== 'resolved')
                                             <form action="{{ route('admin.patients.alerts.resolve', [$patient, $alert]) }}" method="POST" class="d-inline">
                                                 @csrf @method('PUT')
-                                                <button class="btn btn-sm btn-outline-success" title="Resolve" onclick="return confirm('Mark this alert as resolved?')">
-                                                    <i class="bi bi-check"></i> Resolve
+                                                <button class="btn btn-sm btn-outline-success" title="{{ __('Resolve') }}" onclick="return confirm('Mark this alert as resolved?')">
+                                                    <i class="bi bi-check"></i> {{ __('Resolve') }}
                                                 </button>
                                             </form>
                                         @endif
                                         <form action="{{ route('admin.patients.alerts.delete', [$patient, $alert]) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this alert?')">
                                             @csrf @method('delete')
-                                            <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <button class="btn btn-sm btn-outline-danger" title="{{ __('Delete') }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
@@ -77,7 +77,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4 text-muted">No alerts recorded.</td>
+                                    <td colspan="9" class="text-center py-4 text-muted">{{ __('No alerts recorded.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -93,42 +93,42 @@
                 <form method="POST" action="{{ route('admin.patients.alerts.add', $patient) }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Alert</h5>
+                        <h5 class="modal-title">{{ __('Add Alert') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Type *</label>
+                            <label class="form-label">{{ __('Type *') }}</label>
                             <input type="text" name="alert_type" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Title *</label>
+                            <label class="form-label">{{ __('Title *') }}</label>
                             <input type="text" name="title" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">{{ __('Description') }}</label>
                             <textarea name="description" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Severity</label>
+                            <label class="form-label">{{ __('Severity') }}</label>
                             <select name="severity" class="form-select">
-                                <option value="info">Info</option>
-                                <option value="warning" selected>Warning</option>
-                                <option value="critical">Critical</option>
+                                <option value="info">{{ __('Info') }}</option>
+                                <option value="warning" selected>{{ __('Warning') }}</option>
+                                <option value="critical">{{ __('Critical') }}</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Start Date</label>
+                            <label class="form-label">{{ __('Start Date') }}</label>
                             <input type="date" name="start_at" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Expiry Date</label>
+                            <label class="form-label">{{ __('Expiry Date') }}</label>
                             <input type="date" name="expires_at" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Alert</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save Alert') }}</button>
                     </div>
                 </form>
             </div>

@@ -27,18 +27,18 @@ class LocalizationTest extends TestCase
     public function test_lang_files_load_and_resolve_keys(): void
     {
         App::setLocale('en');
-        $this->assertSame('Save', __('core.save'));
+        $this->assertSame('Save', __('ui_core.save'));
 
         App::setLocale('bn');
-        $this->assertSame('সংরক্ষণ করুন', __('core.save'));
+        $this->assertSame('সংরক্ষণ করুন', __('ui_core.save'));
     }
 
     public function test_missing_key_in_partial_locale_falls_back_to_default_locale(): void
     {
         App::setLocale('ar');
 
-        // 'update' is intentionally not translated in lang/ar/core.php yet.
-        $this->assertSame('Update', __('core.update'));
+        // 'update' is intentionally not translated in lang/ar/ui_core.php yet.
+        $this->assertSame('Update', __('ui_core.update'));
     }
 
     public function test_middleware_defaults_to_app_locale_when_nothing_else_is_set(): void

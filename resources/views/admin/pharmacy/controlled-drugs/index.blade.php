@@ -4,7 +4,7 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Controlled Drug Register</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Controlled Drug Register') }}</h3></div>
         <div class="card-body p-0">
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3">
@@ -16,7 +16,7 @@
                 </div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Date</th><th>Medication</th><th>Batch</th><th>Type</th><th>Direction</th><th>Qty</th><th>Balance</th><th>Performed By</th><th>Witness</th></tr></thead>
+                <thead><tr><th>{{ __('Date') }}</th><th>{{ __('Medication') }}</th><th>{{ __('Batch') }}</th><th>{{ __('Type') }}</th><th>{{ __('Direction') }}</th><th>{{ __('Qty') }}</th><th>{{ __('Balance') }}</th><th>{{ __('Performed By') }}</th><th>{{ __('Witness') }}</th></tr></thead>
                 <tbody>
                     @forelse($transactions as $txn)
                         <tr>
@@ -31,7 +31,7 @@
                             <td>{{ $txn->witnessedBy?->name }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="9" class="text-center">No controlled-drug transactions found.</td></tr>
+                        <tr><td colspan="9" class="text-center">{{ __('No controlled-drug transactions found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

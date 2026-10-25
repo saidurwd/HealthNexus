@@ -8,10 +8,10 @@
             <h2 class="mb-0">Appointment #{{ $appointment->appointment_no }}</h2>
             <div class="d-flex gap-2">
                 <a href="{{ route('admin.opd.consultation', $appointment) }}" class="btn btn-primary">
-                    <i class="bi bi-clipboard-medical me-1"></i>Open Consultation
+                    <i class="bi bi-clipboard-medical me-1"></i>{{ __('Open Consultation') }}
                 </a>
                 <a href="{{ route('admin.appointments.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back') }}
                 </a>
             </div>
         </div>
@@ -20,37 +20,37 @@
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Appointment Details</h5>
+                        <h5 class="mb-0">{{ __('Appointment Details') }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Patient</dt>
+                                    <dt class="col-sm-4">{{ __('Patient') }}</dt>
                                     <dd class="col-sm-8">{{ $appointment->patient->full_name ?? '-' }}</dd>
                                 </dl>
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Doctor</dt>
+                                    <dt class="col-sm-4">{{ __('Doctor') }}</dt>
                                     <dd class="col-sm-8">{{ $appointment->doctor->name ?? '-' }}</dd>
                                 </dl>
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Date</dt>
+                                    <dt class="col-sm-4">{{ __('Date') }}</dt>
                                     <dd class="col-sm-8">{{ $appointment->appointment_date->format('M d, Y') }}</dd>
                                 </dl>
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Time</dt>
+                                    <dt class="col-sm-4">{{ __('Time') }}</dt>
                                     <dd class="col-sm-8">{{ $appointment->appointment_time->format('g:i A') }}</dd>
                                 </dl>
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Status</dt>
+                                    <dt class="col-sm-4">{{ __('Status') }}</dt>
                                     <dd class="col-sm-8">
                                         @php
                                             $statusClass = match($appointment->status) {
@@ -70,13 +70,13 @@
                             </div>
                             <div class="col-md-6">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-4">Token</dt>
+                                    <dt class="col-sm-4">{{ __('Token') }}</dt>
                                     <dd class="col-sm-8">{{ $appointment->token->token_number ?? '-' }}</dd>
                                 </dl>
                             </div>
                             <div class="col-12">
                                 <dl class="row mb-0">
-                                    <dt class="col-sm-2">Reason</dt>
+                                    <dt class="col-sm-2">{{ __('Reason') }}</dt>
                                     <dd class="col-sm-10">{{ $appointment->reason ?? '-' }}</dd>
                                 </dl>
                             </div>
@@ -87,21 +87,21 @@
                 @if($appointment->vitalSigns->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Vital Signs</h5>
+                            <h5 class="mb-0">{{ __('Vital Signs') }}</h5>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-secondary">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Temp (°C)</th>
-                                            <th>BP (mmHg)</th>
-                                            <th>Pulse</th>
-                                            <th>RR</th>
-                                            <th>Height (cm)</th>
-                                            <th>Weight (kg)</th>
-                                            <th>Oxygen %</th>
+                                            <th>{{ __('Date') }}</th>
+                                            <th>{{ __('Temp (°C)') }}</th>
+                                            <th>{{ __('BP (mmHg)') }}</th>
+                                            <th>{{ __('Pulse') }}</th>
+                                            <th>{{ __('RR') }}</th>
+                                            <th>{{ __('Height (cm)') }}</th>
+                                            <th>{{ __('Weight (kg)') }}</th>
+                                            <th>{{ __('Oxygen %') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -127,7 +127,7 @@
                 @if($appointment->diagnoses->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Diagnoses</h5>
+                            <h5 class="mb-0">{{ __('Diagnoses') }}</h5>
                         </div>
                         <div class="card-body">
                             @foreach($appointment->diagnoses as $diagnosis)
@@ -147,7 +147,7 @@
                 @if($appointment->prescriptions->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Prescriptions</h5>
+                            <h5 class="mb-0">{{ __('Prescriptions') }}</h5>
                         </div>
                         <div class="card-body">
                             @foreach($appointment->prescriptions as $prescription)
@@ -162,11 +162,11 @@
                                     <table class="table table-sm table-bordered mt-2">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>Medicine</th>
-                                                <th>Dose</th>
-                                                <th>Frequency</th>
-                                                <th>Duration</th>
-                                                <th>Qty</th>
+                                                <th>{{ __('Medicine') }}</th>
+                                                <th>{{ __('Dose') }}</th>
+                                                <th>{{ __('Frequency') }}</th>
+                                                <th>{{ __('Duration') }}</th>
+                                                <th>{{ __('Qty') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -190,7 +190,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Investigation Orders</h5>
+                        <h5 class="mb-0">{{ __('Investigation Orders') }}</h5>
                     </div>
                     <div class="card-body">
                         @forelse($appointment->investigationOrders as $order)
@@ -202,14 +202,14 @@
                                 <small class="text-muted">{{ $order->category ?? 'General' }}</small>
                             </div>
                         @empty
-                            <p class="text-muted">No investigation orders.</p>
+                            <p class="text-muted">{{ __('No investigation orders.') }}</p>
                         @endforelse
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Documents</h5>
+                        <h5 class="mb-0">{{ __('Documents') }}</h5>
                         <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#uploadDocModal">
                             <i class="bi bi-upload"></i>
                         </button>
@@ -230,7 +230,7 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr><td class="text-center py-3 text-muted">No documents attached.</td></tr>
+                                    <tr><td class="text-center py-3 text-muted">{{ __('No documents attached.') }}</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -246,27 +246,27 @@
                 <form method="POST" action="{{ route('admin.appointments.documents.upload', $appointment) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Upload Document</h5>
+                        <h5 class="modal-title">{{ __('Upload Document') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Document Type *</label>
+                            <label class="form-label">{{ __('Document Type *') }}</label>
                             <select name="document_type" class="form-select" required>
-                                <option value="referral_letter">Referral Letter</option>
-                                <option value="booking_confirmation">Booking Confirmation</option>
-                                <option value="external_medical_record">External Medical Record</option>
-                                <option value="supporting_document">Supporting Document</option>
+                                <option value="referral_letter">{{ __('Referral Letter') }}</option>
+                                <option value="booking_confirmation">{{ __('Booking Confirmation') }}</option>
+                                <option value="external_medical_record">{{ __('External Medical Record') }}</option>
+                                <option value="supporting_document">{{ __('Supporting Document') }}</option>
                             </select>
                         </div>
                         <div class="mb-0">
-                            <label class="form-label">File *</label>
+                            <label class="form-label">{{ __('File *') }}</label>
                             <input type="file" name="document" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Upload') }}</button>
                     </div>
                 </form>
             </div>

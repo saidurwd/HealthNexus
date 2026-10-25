@@ -9,7 +9,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Radiology Settings</h3>
+            <h3 class="card-title">{{ __('Radiology Settings') }}</h3>
         </div>
         <div class="card-body">
             @foreach($settings as $key => $value)
@@ -30,8 +30,8 @@
             @endforeach
         </div>
         <div class="card-footer">
-            <a href="{{ route('admin.radiology.dashboard') }}" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <a href="{{ route('admin.radiology.dashboard') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+            <button type="submit" class="btn btn-primary">{{ __('Save Settings') }}</button>
         </div>
     </div>
 </form>

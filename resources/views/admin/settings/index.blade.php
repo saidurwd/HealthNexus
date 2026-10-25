@@ -52,8 +52,8 @@
     </div>
 
     <div class="card-footer">
-        <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-primary">Save Settings</button>
+        <a href="{{ route('home') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+        <button type="submit" class="btn btn-primary">{{ __('Save Settings') }}</button>
     </div>
 </form>
 @stop

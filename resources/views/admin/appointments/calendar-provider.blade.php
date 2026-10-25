@@ -5,10 +5,10 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Provider Calendar</h2>
+            <h2 class="mb-0">{{ __('Provider Calendar') }}</h2>
             <form method="GET" class="d-flex gap-2">
                 <select name="provider_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">Select Provider</option>
+                    <option value="">{{ __('Select Provider') }}</option>
                     @foreach($providers as $provider)
                         <option value="{{ $provider->id }}" {{ (string) $providerId === (string) $provider->id ? 'selected' : '' }}>{{ $provider->name }}</option>
                     @endforeach
@@ -22,10 +22,10 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Time</th>
-                            <th>Patient</th>
-                            <th>Token</th>
-                            <th class="text-center">Status</th>
+                            <th>{{ __('Time') }}</th>
+                            <th>{{ __('Patient') }}</th>
+                            <th>{{ __('Token') }}</th>
+                            <th class="text-center">{{ __('Status') }}</th>
                         </tr>
                     </thead>
                     <tbody>

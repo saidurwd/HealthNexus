@@ -7,7 +7,7 @@
 
     @if($allergies->isNotEmpty())
         <div class="alert alert-danger">
-            <strong>Allergies:</strong>
+            <strong>{{ __('Allergies:') }}</strong>
             @foreach($allergies as $allergy)
                 <span class="badge bg-danger">{{ $allergy->substance }} @if($allergy->severity)({{ ucfirst($allergy->severity) }})@endif</span>
             @endforeach
@@ -15,10 +15,10 @@
     @endif
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Prescriptions / Pharmacy Orders</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Prescriptions / Pharmacy Orders') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
-                <thead><tr><th>Order #</th><th>Ordered</th><th>Status</th><th># Items</th></tr></thead>
+                <thead><tr><th>{{ __('Order #') }}</th><th>{{ __('Ordered') }}</th><th>{{ __('Status') }}</th><th>{{ __('# Items') }}</th></tr></thead>
                 <tbody>
                     @forelse($orders as $order)
                         <tr>
@@ -28,7 +28,7 @@
                             <td>{{ $order->items->count() }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center">No pharmacy orders for this patient.</td></tr>
+                        <tr><td colspan="4" class="text-center">{{ __('No pharmacy orders for this patient.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -36,10 +36,10 @@
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Dispensed Medications</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Dispensed Medications') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
-                <thead><tr><th>Medication</th><th>Batch</th><th>Quantity</th><th>Dispensed At</th></tr></thead>
+                <thead><tr><th>{{ __('Medication') }}</th><th>{{ __('Batch') }}</th><th>{{ __('Quantity') }}</th><th>{{ __('Dispensed At') }}</th></tr></thead>
                 <tbody>
                     @forelse($dispensedItems as $item)
                         <tr>
@@ -49,7 +49,7 @@
                             <td>{{ $item->dispensing?->dispensed_at?->format('Y-m-d H:i') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center">No dispensed medications for this patient.</td></tr>
+                        <tr><td colspan="4" class="text-center">{{ __('No dispensed medications for this patient.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

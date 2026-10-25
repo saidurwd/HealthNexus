@@ -10,11 +10,11 @@
     </div>
     <div class="card-body">
         <table class="table table-sm">
-            <tr><th>Subject</th><td>{{ class_basename($instance->subject_type) }} #{{ $instance->subject_id }}</td></tr>
-            <tr><th>Initiated By</th><td>{{ $instance->initiatedBy?->name }}</td></tr>
-            <tr><th>Current Step</th><td>{{ $instance->currentStep?->name ?? '-' }}</td></tr>
-            <tr><th>Submitted At</th><td>{{ $instance->submitted_at?->format('Y-m-d H:i') ?? '-' }}</td></tr>
-            <tr><th>Notes</th><td>{{ $instance->notes ?? '-' }}</td></tr>
+            <tr><th>{{ __('Subject') }}</th><td>{{ class_basename($instance->subject_type) }} #{{ $instance->subject_id }}</td></tr>
+            <tr><th>{{ __('Initiated By') }}</th><td>{{ $instance->initiatedBy?->name }}</td></tr>
+            <tr><th>{{ __('Current Step') }}</th><td>{{ $instance->currentStep?->name ?? '-' }}</td></tr>
+            <tr><th>{{ __('Submitted At') }}</th><td>{{ $instance->submitted_at?->format('Y-m-d H:i') ?? '-' }}</td></tr>
+            <tr><th>{{ __('Notes') }}</th><td>{{ $instance->notes ?? '-' }}</td></tr>
         </table>
 
         @can('workflow.act')
@@ -22,24 +22,24 @@
                 <div class="d-flex gap-2 mt-3">
                     <form action="{{ route('admin.workflow.approve', $instance) }}" method="post">
                         @csrf
-                        <button class="btn btn-success">Approve</button>
+                        <button class="btn btn-success">{{ __('Approve') }}</button>
                     </form>
-                    <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#returnForm">Return for Revision</button>
-                    <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#rejectForm">Reject</button>
+                    <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#returnForm">{{ __('Return for Revision') }}</button>
+                    <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#rejectForm">{{ __('Reject') }}</button>
                 </div>
 
                 <div class="collapse mt-3" id="rejectForm">
                     <form action="{{ route('admin.workflow.reject', $instance) }}" method="post">
                         @csrf
                         <div class="mb-2"><textarea name="reason" class="form-control" placeholder="Reason for rejection" required></textarea></div>
-                        <button class="btn btn-danger">Confirm Reject</button>
+                        <button class="btn btn-danger">{{ __('Confirm Reject') }}</button>
                     </form>
                 </div>
                 <div class="collapse mt-3" id="returnForm">
                     <form action="{{ route('admin.workflow.return', $instance) }}" method="post">
                         @csrf
                         <div class="mb-2"><textarea name="reason" class="form-control" placeholder="What needs to change?" required></textarea></div>
-                        <button class="btn btn-warning">Confirm Return</button>
+                        <button class="btn btn-warning">{{ __('Confirm Return') }}</button>
                     </form>
                 </div>
             @endif
@@ -48,11 +48,11 @@
 </div>
 
 <div class="card">
-    <div class="card-header"><h3 class="card-title">Timeline</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('Timeline') }}</h3></div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead>
-                <tr><th>Action</th><th>Step</th><th>By</th><th>Note</th><th>At</th></tr>
+                <tr><th>{{ __('Action') }}</th><th>{{ __('Step') }}</th><th>{{ __('By') }}</th><th>{{ __('Note') }}</th><th>{{ __('At') }}</th></tr>
             </thead>
             <tbody>
                 @forelse($instance->actions as $action)
@@ -64,7 +64,7 @@
                         <td>{{ $action->created_at?->format('Y-m-d H:i') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="text-center">No actions recorded yet.</td></tr>
+                    <tr><td colspan="5" class="text-center">{{ __('No actions recorded yet.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -72,10 +72,10 @@
 </div>
 
 <div class="card">
-    <div class="card-header"><h3 class="card-title">Workflow Steps</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('Workflow Steps') }}</h3></div>
     <div class="card-body p-0">
         <table class="table table-striped mb-0">
-            <thead><tr><th>#</th><th>Step</th><th>Eligible Approvers</th></tr></thead>
+            <thead><tr><th>#</th><th>{{ __('Step') }}</th><th>{{ __('Eligible Approvers') }}</th></tr></thead>
             <tbody>
                 @foreach($instance->workflow->steps as $step)
                     <tr class="{{ $instance->current_step_id === $step->id ? 'table-active' : '' }}">

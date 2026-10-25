@@ -5,17 +5,17 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Bed Board</h3>
+            <h3 class="card-title">{{ __('Bed Board') }}</h3>
             <div class="card-tools">
                 <form method="GET" class="d-flex gap-2">
                     <select name="ward_id" class="form-control form-control-sm" onchange="this.form.submit()">
-                        <option value="">All Wards</option>
+                        <option value="">{{ __('All Wards') }}</option>
                         @foreach($wards as $ward)
                             <option value="{{ $ward->id }}" {{ request('ward_id') == $ward->id ? 'selected' : '' }}>{{ $ward->name }}</option>
                         @endforeach
                     </select>
                     <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
-                        <option value="">All Statuses</option>
+                        <option value="">{{ __('All Statuses') }}</option>
                         @foreach(['available','reserved','occupied','cleaning','blocked','maintenance','isolation','out_of_service'] as $status)
                             <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
                         @endforeach
@@ -46,7 +46,7 @@
                                                 <span class="badge {{ $statusColor }}">{{ ucfirst(str_replace('_', ' ', $bed->status)) }}</span>
                                             </div>
                                             @if($bed->isolation_capable)
-                                                <span class="badge bg-dark">Isolation</span>
+                                                <span class="badge bg-dark">{{ __('Isolation') }}</span>
                                             @endif
                                             @if($bed->currentAllocation && $bed->currentAllocation->admission)
                                                 @can('ipd.admission.view')
@@ -67,7 +67,7 @@
                     @endforeach
                 </div>
             @empty
-                <p class="text-muted">No beds match the current filters.</p>
+                <p class="text-muted">{{ __('No beds match the current filters.') }}</p>
             @endforelse
         </div>
     </div>

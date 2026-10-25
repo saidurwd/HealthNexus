@@ -9,12 +9,12 @@
             @if($stockCount->status === 'in_progress')
                 <form method="POST" action="{{ route('admin.pharmacy.stock-count.complete', $stockCount) }}" class="d-inline">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Complete Count</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Complete Count') }}</button>
                 </form>
             @elseif($stockCount->status === 'completed')
                 <form method="POST" action="{{ route('admin.pharmacy.stock-count.apply-adjustments', $stockCount) }}" class="d-inline">
                     @csrf
-                    <button type="submit" class="btn btn-warning" onclick="return confirm('Apply all variances to stock?')">Apply Adjustments</button>
+                    <button type="submit" class="btn btn-warning" onclick="return confirm('Apply all variances to stock?')">{{ __('Apply Adjustments') }}</button>
                 </form>
             @endif
         </div>
@@ -26,7 +26,7 @@
             <div class="card-header"><h3 class="card-title">Items — {{ $stockCount->store?->name }}</h3></div>
             <div class="card-body p-0">
                 <table class="table table-striped mb-0">
-                    <thead><tr><th>Medication</th><th>Batch</th><th>Expected</th><th>Counted</th><th>Variance</th></tr></thead>
+                    <thead><tr><th>{{ __('Medication') }}</th><th>{{ __('Batch') }}</th><th>{{ __('Expected') }}</th><th>{{ __('Counted') }}</th><th>{{ __('Variance') }}</th></tr></thead>
                     <tbody>
                         @foreach($stockCount->items as $item)
                             <tr>
@@ -44,7 +44,7 @@
                                 <td>
                                     @if($item->variance !== null)
                                         <span class="badge {{ $item->variance == 0 ? 'bg-success' : 'bg-warning' }}">{{ $item->variance }}</span>
-                                        @if($item->is_adjusted)<span class="badge bg-secondary">Adjusted</span>@endif
+                                        @if($item->is_adjusted)<span class="badge bg-secondary">{{ __('Adjusted') }}</span>@endif
                                     @endif
                                 </td>
                             </tr>
@@ -54,7 +54,7 @@
             </div>
             @if($stockCount->status === 'in_progress')
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Save Counts</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Save Counts') }}</button>
                 </div>
             @endif
         </div>

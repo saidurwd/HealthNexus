@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Providers</h2>
+            <h2 class="mb-0">{{ __('Providers') }}</h2>
             <a href="{{ route('admin.providers.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus me-1"></i>Add Provider
+                <i class="bi bi-plus me-1"></i>{{ __('Add Provider') }}
             </a>
         </div>
 
@@ -17,13 +17,13 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Department</th>
-                                <th>Specialty</th>
-                                <th>Linked User</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Type') }}</th>
+                                <th>{{ __('Department') }}</th>
+                                <th>{{ __('Specialty') }}</th>
+                                <th>{{ __('Linked User') }}</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">No providers found.</td>
+                                    <td colspan="7" class="text-center py-4 text-muted">{{ __('No providers found.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

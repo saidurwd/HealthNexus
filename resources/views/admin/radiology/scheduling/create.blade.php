@@ -10,9 +10,9 @@
             <div class="card-body row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Modality</label>
+                        <label class="form-label">{{ __('Modality') }}</label>
                         <select name="modality_id" class="form-control @error('modality_id') is-invalid @enderror" required>
-                            <option value="">Select Modality</option>
+                            <option value="">{{ __('Select Modality') }}</option>
                             @foreach($modalities as $modality)
                                 <option value="{{ $modality->id }}" {{ old('modality_id') == $modality->id ? 'selected' : '' }}>{{ $modality->name }} ({{ $modality->modality_type }})</option>
                             @endforeach
@@ -20,32 +20,32 @@
                         @error('modality_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Technologist / Radiologist</label>
+                        <label class="form-label">{{ __('Technologist / Radiologist') }}</label>
                         <select name="technologist_id" class="form-control @error('technologist_id') is-invalid @enderror" required>
-                            <option value="">Select Staff</option>
+                            <option value="">{{ __('Select Staff') }}</option>
                             @foreach($technologists as $technologist)
                                 <option value="{{ $technologist->id }}" {{ old('technologist_id') == $technologist->id ? 'selected' : '' }}>{{ $technologist->name }}</option>
                             @endforeach
                         </select>
                         @error('technologist_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small class="text-muted">Must have a linked user account to be scheduled.</small>
+                        <small class="text-muted">{{ __('Must have a linked user account to be scheduled.') }}</small>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Date/Time</label>
+                        <label class="form-label">{{ __('Date/Time') }}</label>
                         <input type="datetime-local" name="scheduled_at" value="{{ old('scheduled_at') }}" class="form-control @error('scheduled_at') is-invalid @enderror" required>
                         @error('scheduled_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Duration (minutes)</label>
+                        <label class="form-label">{{ __('Duration (minutes)') }}</label>
                         <input type="number" min="5" max="240" name="duration_minutes" value="{{ old('duration_minutes', $item->procedure?->duration_minutes ?? 30) }}" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.radiology.orders.show', $item->radiologyOrder) }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Schedule Examination</button>
+                <a href="{{ route('admin.radiology.orders.show', $item->radiologyOrder) }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Schedule Examination') }}</button>
             </div>
         </form>
     </div>

@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Audit Trail</h2>
+            <h2 class="mb-0">{{ __('Audit Trail') }}</h2>
             <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
             </a>
         </div>
 
@@ -17,10 +17,10 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Action</th>
-                                <th>User</th>
-                                <th>When</th>
-                                <th>Request</th>
+                                <th>{{ __('Action') }}</th>
+                                <th>{{ __('User') }}</th>
+                                <th>{{ __('When') }}</th>
+                                <th>{{ __('Request') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,7 +33,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">No audit entries recorded.</td>
+                                    <td colspan="4" class="text-center py-4 text-muted">{{ __('No audit entries recorded.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

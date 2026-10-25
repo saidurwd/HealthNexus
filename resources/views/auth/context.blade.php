@@ -5,9 +5,9 @@
         @csrf
 
         <div class="mb-3">
-            <label for="organization_id" class="form-label">Organization</label>
+            <label for="organization_id" class="form-label">{{ __('Organization') }}</label>
             <select name="organization_id" id="organization_id" class="form-control @error('organization_id') is-invalid @enderror" required>
-                <option value="">Select Organization</option>
+                <option value="">{{ __('Select Organization') }}</option>
                 @foreach($organizations as $organization)
                     <option value="{{ $organization->id }}" data-branches='@json($organization->branches()->get(["id", "name", "code"]))' {{ old('organization_id') == $organization->id ? 'selected' : '' }}>
                         {{ $organization->name }} ({{ $organization->code }})
@@ -20,9 +20,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="branch_id" class="form-label">Branch</label>
+            <label for="branch_id" class="form-label">{{ __('Branch') }}</label>
             <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror" required {{ old('organization_id') ? '' : 'disabled' }}>
-                <option value="">Select Branch</option>
+                <option value="">{{ __('Select Branch') }}</option>
             </select>
             @error('branch_id')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-7">
                 <a href="{{ route('login') }}" class="btn btn-secondary">
-                    Back
+                    {{ __('Back') }}
                 </a>
             </div>
 
@@ -40,7 +40,7 @@
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-box-arrow-in-right me-1"></i>
-                        Sign in
+                        {{ __('Sign in') }}
                     </button>
                 </div>
             </div>

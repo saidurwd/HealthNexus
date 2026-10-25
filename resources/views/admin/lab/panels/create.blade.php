@@ -4,13 +4,13 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Test Panel</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('New Test Panel') }}</h3></div>
         <form action="{{ route('admin.lab.panels.store') }}" method="post">
             @csrf
             @include('admin.lab.panels._form', ['panel' => null])
             <div class="card-footer">
-                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Panel</button>
+                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Save Panel') }}</button>
             </div>
         </form>
     </div>

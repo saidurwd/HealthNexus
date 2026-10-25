@@ -7,7 +7,7 @@
         <div class="card-header"><h3 class="card-title">{{ $episode->episode_number }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-sm table-bordered">
-                <thead><tr><th>Time</th><th>Observations</th><th>Ventilator</th><th>Fluid Balance</th></tr></thead>
+                <thead><tr><th>{{ __('Time') }}</th><th>{{ __('Observations') }}</th><th>{{ __('Ventilator') }}</th><th>{{ __('Fluid Balance') }}</th></tr></thead>
                 <tbody>
                     @foreach($grid as $time => $bucket)
                         <tr>

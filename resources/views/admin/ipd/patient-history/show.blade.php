@@ -6,10 +6,10 @@
     <h3>{{ $patient->full_name }} — Inpatient History</h3>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Admissions</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Admissions') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
-                <thead><tr><th>Admission #</th><th>Type</th><th>Location</th><th>Attending</th><th>Admitted</th><th>Discharged</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Admission #') }}</th><th>{{ __('Type') }}</th><th>{{ __('Location') }}</th><th>{{ __('Attending') }}</th><th>{{ __('Admitted') }}</th><th>{{ __('Discharged') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($admissions as $admission)
                         <tr>
@@ -28,12 +28,12 @@
                             <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $admission->status)) }}</span></td>
                             <td>
                                 @can('ipd.admission.view')
-                                    <a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-xs btn-info">View</a>
+                                    <a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="text-center">No admissions for this patient.</td></tr>
+                        <tr><td colspan="8" class="text-center">{{ __('No admissions for this patient.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

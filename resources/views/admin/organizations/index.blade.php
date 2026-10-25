@@ -5,21 +5,21 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Organizations</h3>
+            <h3 class="card-title">{{ __('Organizations') }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.organizations.create') }}" class="btn btn-primary btn-sm">New Organization</a>
+                <a href="{{ route('admin.organizations.create') }}" class="btn btn-primary btn-sm">{{ __('New Organization') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Branches</th>
-                        <th>Actions</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Email') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Branches') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,18 +39,18 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="{{ route('admin.organizations.show', $organization) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.organizations.edit', $organization) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.organizations.show', $organization) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
+                                <a href="{{ route('admin.organizations.edit', $organization) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 <form action="{{ route('admin.organizations.destroy', $organization) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('delete')
-                                    <button class="btn btn-xs btn-danger">Delete</button>
+                                    <button class="btn btn-xs btn-danger">{{ __('Delete') }}</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No organizations found.</td>
+                            <td colspan="6" class="text-center">{{ __('No organizations found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

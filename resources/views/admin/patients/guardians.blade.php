@@ -5,13 +5,13 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Patient Guardians</h2>
+            <h2 class="mb-0">{{ __('Patient Guardians') }}</h2>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGuardianModal">
-                    <i class="bi bi-plus me-1"></i>Add Guardian
+                    <i class="bi bi-plus me-1"></i>{{ __('Add Guardian') }}
                 </button>
                 <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
                 </a>
             </div>
         </div>
@@ -22,11 +22,11 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Name</th>
-                                <th>Relationship</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th class="text-center">Primary</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Relationship') }}</th>
+                                <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Email') }}</th>
+                                <th class="text-center">{{ __('Primary') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,13 +38,13 @@
                                     <td>{{ $guardian->email ?? '-' }}</td>
                                     <td class="text-center">
                                         @if($guardian->is_primary)
-                                            <span class="badge bg-success">Primary</span>
+                                            <span class="badge bg-success">{{ __('Primary') }}</span>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-muted">No guardians recorded.</td>
+                                    <td colspan="5" class="text-center py-4 text-muted">{{ __('No guardians recorded.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -60,38 +60,38 @@
                 <form method="POST" action="{{ route('admin.patients.guardians.add', $patient) }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Guardian</h5>
+                        <h5 class="modal-title">{{ __('Add Guardian') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Name *</label>
+                            <label class="form-label">{{ __('Name *') }}</label>
                             <input type="text" name="name" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Relationship</label>
+                            <label class="form-label">{{ __('Relationship') }}</label>
                             <input type="text" name="relationship" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Phone</label>
+                            <label class="form-label">{{ __('Phone') }}</label>
                             <input type="text" name="phone" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{ __('Email') }}</label>
                             <input type="email" name="email" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">National ID</label>
+                            <label class="form-label">{{ __('National ID') }}</label>
                             <input type="text" name="national_identifier" class="form-control">
                         </div>
                         <div class="form-check">
                             <input type="checkbox" name="is_primary" value="1" class="form-check-input" id="guardian_is_primary">
-                            <label class="form-check-label" for="guardian_is_primary">Primary guardian</label>
+                            <label class="form-check-label" for="guardian_is_primary">{{ __('Primary guardian') }}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Guardian</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save Guardian') }}</button>
                     </div>
                 </form>
             </div>

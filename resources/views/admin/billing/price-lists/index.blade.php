@@ -5,10 +5,10 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Price Lists</h3>
+            <h3 class="card-title">{{ __('Price Lists') }}</h3>
             <div class="card-tools">
                 @can('billing.pricing.manage')
-                    <a href="{{ route('admin.billing.price-lists.create') }}" class="btn btn-primary btn-sm">New Price List</a>
+                    <a href="{{ route('admin.billing.price-lists.create') }}" class="btn btn-primary btn-sm">{{ __('New Price List') }}</a>
                 @endcan
             </div>
         </div>
@@ -16,13 +16,13 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Currency</th>
-                        <th>Priority</th>
-                        <th>Effective</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Currency') }}</th>
+                        <th>{{ __('Priority') }}</th>
+                        <th>{{ __('Effective') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,14 +37,14 @@
                                 <span class="badge {{ $priceList->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($priceList->status) }}</span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.billing.price-lists.show', $priceList) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.billing.price-lists.show', $priceList) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
                                 @can('billing.pricing.manage')
-                                    <a href="{{ route('admin.billing.price-lists.edit', $priceList) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.billing.price-lists.edit', $priceList) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No price lists found.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No price lists found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

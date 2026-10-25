@@ -4,15 +4,15 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Stock Transfer</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('New Stock Transfer') }}</h3></div>
         <form method="POST" action="{{ route('admin.pharmacy.transfers.store') }}">
             @csrf
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Source Store</label>
+                        <label class="form-label">{{ __('Source Store') }}</label>
                         <select name="source_store_id" class="form-control @error('source_store_id') is-invalid @enderror" required>
-                            <option value="">Select</option>
+                            <option value="">{{ __('Select') }}</option>
                             @foreach($stores as $store)
                                 <option value="{{ $store->id }}">{{ $store->name }}</option>
                             @endforeach
@@ -20,9 +20,9 @@
                         @error('source_store_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Destination Store</label>
+                        <label class="form-label">{{ __('Destination Store') }}</label>
                         <select name="destination_store_id" class="form-control @error('destination_store_id') is-invalid @enderror" required>
-                            <option value="">Select</option>
+                            <option value="">{{ __('Select') }}</option>
                             @foreach($stores as $store)
                                 <option value="{{ $store->id }}">{{ $store->name }}</option>
                             @endforeach
@@ -32,7 +32,7 @@
                 </div>
 
                 <table class="table table-bordered">
-                    <thead><tr><th>Batch</th><th>Transfer?</th><th>Quantity</th></tr></thead>
+                    <thead><tr><th>{{ __('Batch') }}</th><th>{{ __('Transfer?') }}</th><th>{{ __('Quantity') }}</th></tr></thead>
                     <tbody>
                         @foreach($batches as $batch)
                             <tr>
@@ -49,8 +49,8 @@
                 </table>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.pharmacy.transfers.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Request Transfer</button>
+                <a href="{{ route('admin.pharmacy.transfers.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Request Transfer') }}</button>
             </div>
         </form>
     </div>

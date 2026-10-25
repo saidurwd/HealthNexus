@@ -9,10 +9,10 @@
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3"><input type="date" name="from" value="{{ $from }}" class="form-control"></div>
                 <div class="col-md-3"><input type="date" name="to" value="{{ $to }}" class="form-control"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Admission #</th><th>Patient</th><th>Type</th><th>Department</th><th>Attending</th><th>Admitted</th></tr></thead>
+                <thead><tr><th>{{ __('Admission #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Type') }}</th><th>{{ __('Department') }}</th><th>{{ __('Attending') }}</th><th>{{ __('Admitted') }}</th></tr></thead>
                 <tbody>
                     @forelse($admissions as $admission)
                         <tr>
@@ -24,7 +24,7 @@
                             <td>{{ $admission->admitted_at?->format('Y-m-d H:i') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No admissions in this range.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No admissions in this range.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

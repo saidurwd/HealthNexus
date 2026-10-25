@@ -5,13 +5,13 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Patient Consents</h2>
+            <h2 class="mb-0">{{ __('Patient Consents') }}</h2>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grantConsentModal">
-                    <i class="bi bi-plus me-1"></i>Record Consent
+                    <i class="bi bi-plus me-1"></i>{{ __('Record Consent') }}
                 </button>
                 <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
                 </a>
             </div>
         </div>
@@ -22,12 +22,12 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Type</th>
-                                <th>Version</th>
-                                <th class="text-center">Status</th>
-                                <th>Granted By</th>
-                                <th>Granted At</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Type') }}</th>
+                                <th>{{ __('Version') }}</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th>{{ __('Granted By') }}</th>
+                                <th>{{ __('Granted At') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,14 +45,14 @@
                                             <form action="{{ route('admin.patients.consents.withdraw', [$patient, $consent]) }}" method="POST" class="d-inline" onsubmit="return confirm('Withdraw this consent?')">
                                                 @csrf
                                                 @method('put')
-                                                <button class="btn btn-sm btn-outline-danger">Withdraw</button>
+                                                <button class="btn btn-sm btn-outline-danger">{{ __('Withdraw') }}</button>
                                             </form>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">No consents recorded.</td>
+                                    <td colspan="6" class="text-center py-4 text-muted">{{ __('No consents recorded.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -68,22 +68,22 @@
                 <form method="POST" action="{{ route('admin.patients.consents.grant', $patient) }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Record Consent</h5>
+                        <h5 class="modal-title">{{ __('Record Consent') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Consent Type *</label>
-                            <input type="text" name="consent_type" class="form-control" placeholder="e.g. treatment, data_sharing, photography" required>
+                            <label class="form-label">{{ __('Consent Type *') }}</label>
+                            <input type="text" name="consent_type" class="form-control" placeholder="{{ __('e.g. treatment, data_sharing, photography') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Notes</label>
+                            <label class="form-label">{{ __('Notes') }}</label>
                             <textarea name="notes" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Record Consent</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Record Consent') }}</button>
                     </div>
                 </form>
             </div>

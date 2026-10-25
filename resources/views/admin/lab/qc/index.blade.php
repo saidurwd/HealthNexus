@@ -5,16 +5,16 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Quality Control Runs</h3>
+            <h3 class="card-title">{{ __('Quality Control Runs') }}</h3>
             <div class="card-tools">
                 @can('lab.qc.create')
-                    <a href="{{ route('admin.lab.qc.create') }}" class="btn btn-primary btn-sm">Record QC Run</a>
+                    <a href="{{ route('admin.lab.qc.create') }}" class="btn btn-primary btn-sm">{{ __('Record QC Run') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Material</th><th>Test</th><th>Observed</th><th>Expected Range</th><th>Status</th><th>Run At</th></tr></thead>
+                <thead><tr><th>{{ __('Material') }}</th><th>{{ __('Test') }}</th><th>{{ __('Observed') }}</th><th>{{ __('Expected Range') }}</th><th>{{ __('Status') }}</th><th>{{ __('Run At') }}</th></tr></thead>
                 <tbody>
                     @forelse($runs as $run)
                         <tr>
@@ -28,7 +28,7 @@
                             <td>{{ $run->run_at?->format('Y-m-d H:i') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No QC runs recorded.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No QC runs recorded.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

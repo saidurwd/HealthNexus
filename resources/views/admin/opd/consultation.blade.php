@@ -16,19 +16,19 @@
                     <form method="POST" action="{{ route('admin.opd.status.in-progress', $appointment) }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-play-circle me-1"></i>Start Consultation
+                            <i class="bi bi-play-circle me-1"></i>{{ __('Start Consultation') }}
                         </button>
                     </form>
                 @else
                     <form method="POST" action="{{ route('admin.opd.status.completed', $appointment) }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle me-1"></i>Complete Consultation
+                            <i class="bi bi-check-circle me-1"></i>{{ __('Complete Consultation') }}
                         </button>
                     </form>
                 @endif
                 <a href="{{ route('admin.appointments.show', $appointment) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back') }}
                 </a>
             </div>
 
@@ -36,7 +36,7 @@
                 <form method="POST" action="{{ route('admin.appointments.check-in', $appointment) }}" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-warning">
-                        <i class="bi bi-door-open me-1"></i>Check-in Patient
+                        <i class="bi bi-door-open me-1"></i>{{ __('Check-in Patient') }}
                     </button>
                 </form>
             @endif
@@ -47,7 +47,7 @@
             <div class="alert alert-danger d-flex align-items-start mb-4">
                 <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
                 <div>
-                    <strong>Allergy Alert:</strong>
+                    <strong>{{ __('Allergy Alert:') }}</strong>
                     @foreach($activeAllergies as $allergy)
                         <span class="badge bg-danger me-1">
                             {{ $allergy->substance }}
@@ -61,27 +61,27 @@
         <ul class="nav nav-pills mb-4 flex-wrap" id="consultationTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <a href="#vitals" class="nav-link active" data-bs-toggle="pill" data-bs-target="#vitals" role="tab">
-                    <i class="bi bi-heart-pulse me-1"></i>Vital Signs
+                    <i class="bi bi-heart-pulse me-1"></i>{{ __('Vital Signs') }}
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#diagnosis" class="nav-link" data-bs-toggle="pill" data-bs-target="#diagnosis" role="tab">
-                    <i class="bi bi-clipboard-data me-1"></i>Diagnosis
+                    <i class="bi bi-clipboard-data me-1"></i>{{ __('Diagnosis') }}
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#prescription" class="nav-link" data-bs-toggle="pill" data-bs-target="#prescription" role="tab">
-                    <i class="bi bi-capsule me-1"></i>Prescription
+                    <i class="bi bi-capsule me-1"></i>{{ __('Prescription') }}
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#investigations" class="nav-link" data-bs-toggle="pill" data-bs-target="#investigations" role="tab">
-                    <i class="bi bi-test-tube me-1"></i>Investigations
+                    <i class="bi bi-test-tube me-1"></i>{{ __('Investigations') }}
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#followup" class="nav-link" data-bs-toggle="pill" data-bs-target="#followup" role="tab">
-                    <i class="bi bi-calendar-check me-1"></i>Follow-up
+                    <i class="bi bi-calendar-check me-1"></i>{{ __('Follow-up') }}
                 </a>
             </li>
         </ul>
@@ -91,22 +91,22 @@
                 @if($appointment->vitalSigns->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Recorded Vitals</h5>
+                            <h5 class="mb-0">{{ __('Recorded Vitals') }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-secondary">
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Temp (°C)</th>
-                                            <th>BP (mmHg)</th>
-                                            <th>Pulse</th>
-                                            <th>RR</th>
-                                            <th>Height</th>
-                                            <th>Weight</th>
-                                            <th>BMI</th>
-                                            <th>O₂ Sat</th>
+                                            <th>{{ __('Date') }}</th>
+                                            <th>{{ __('Temp (°C)') }}</th>
+                                            <th>{{ __('BP (mmHg)') }}</th>
+                                            <th>{{ __('Pulse') }}</th>
+                                            <th>{{ __('RR') }}</th>
+                                            <th>{{ __('Height') }}</th>
+                                            <th>{{ __('Weight') }}</th>
+                                            <th>{{ __('BMI') }}</th>
+                                            <th>{{ __('O₂ Sat') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,7 +132,7 @@
 
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Record Vitals</h5>
+                        <h5 class="mb-0">{{ __('Record Vitals') }}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.opd.vital-signs') }}">
@@ -140,45 +140,45 @@
                             <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Temperature (°C)</label>
+                                    <label class="form-label">{{ __('Temperature (°C)') }}</label>
                                     <input type="number" step="0.1" name="temperature" class="form-control" min="30" max="45">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Systolic (mmHg)</label>
+                                    <label class="form-label">{{ __('Systolic (mmHg)') }}</label>
                                     <input type="number" name="systolic" class="form-control" min="50" max="300">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Diastolic (mmHg)</label>
+                                    <label class="form-label">{{ __('Diastolic (mmHg)') }}</label>
                                     <input type="number" name="diastolic" class="form-control" min="30" max="200">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Pulse Rate (bpm)</label>
+                                    <label class="form-label">{{ __('Pulse Rate (bpm)') }}</label>
                                     <input type="number" name="pulse_rate" class="form-control" min="30" max="250">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Respiratory Rate</label>
+                                    <label class="form-label">{{ __('Respiratory Rate') }}</label>
                                     <input type="number" name="respiratory_rate" class="form-control" min="8" max="50">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Height (cm)</label>
+                                    <label class="form-label">{{ __('Height (cm)') }}</label>
                                     <input type="number" step="0.1" name="height" class="form-control" min="50" max="300">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Weight (kg)</label>
+                                    <label class="form-label">{{ __('Weight (kg)') }}</label>
                                     <input type="number" step="0.1" name="weight" class="form-control" min="20" max="500">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Oxygen Saturation (%)</label>
+                                    <label class="form-label">{{ __('Oxygen Saturation (%)') }}</label>
                                     <input type="number" name="oxygen_saturation" class="form-control" min="0" max="100">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Notes</label>
+                                    <label class="form-label">{{ __('Notes') }}</label>
                                     <textarea name="notes" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-secondary">
-                                    <i class="bi bi-save me-1"></i>Save Vitals
+                                    <i class="bi bi-save me-1"></i>{{ __('Save Vitals') }}
                                 </button>
                             </div>
                         </form>
@@ -190,7 +190,7 @@
                 @if($appointment->diagnoses->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Recorded Diagnoses</h5>
+                            <h5 class="mb-0">{{ __('Recorded Diagnoses') }}</h5>
                         </div>
                         <div class="card-body">
                             @foreach($appointment->diagnoses as $diagnosis)
@@ -210,7 +210,7 @@
 
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Add Diagnosis</h5>
+                        <h5 class="mb-0">{{ __('Add Diagnosis') }}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.opd.diagnoses') }}">
@@ -219,38 +219,38 @@
                             <input type="hidden" name="patient_id" value="{{ $appointment->patient_id }}">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Code Type</label>
-                                    <input type="text" name="code_type" class="form-control" placeholder="e.g., ICD-10">
+                                    <label class="form-label">{{ __('Code Type') }}</label>
+                                    <input type="text" name="code_type" class="form-control" placeholder="{{ __('e.g., ICD-10') }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Code</label>
+                                    <label class="form-label">{{ __('Code') }}</label>
                                     <input type="text" name="code" class="form-control">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Description *</label>
+                                    <label class="form-label">{{ __('Description *') }}</label>
                                     <input type="text" name="description" class="form-control" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Status</label>
+                                    <label class="form-label">{{ __('Status') }}</label>
                                     <select name="status" class="form-select">
-                                        <option value="confirmed">Confirmed</option>
-                                        <option value="provisional">Provisional</option>
-                                        <option value="rule_out">Rule Out</option>
-                                        <option value="resolved">Resolved</option>
+                                        <option value="confirmed">{{ __('Confirmed') }}</option>
+                                        <option value="provisional">{{ __('Provisional') }}</option>
+                                        <option value="rule_out">{{ __('Rule Out') }}</option>
+                                        <option value="resolved">{{ __('Resolved') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Recorded At</label>
+                                    <label class="form-label">{{ __('Recorded At') }}</label>
                                     <input type="date" name="recorded_at" class="form-control" value="{{ date('Y-m-d') }}">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Notes</label>
+                                    <label class="form-label">{{ __('Notes') }}</label>
                                     <textarea name="notes" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-secondary">
-                                    <i class="bi bi-save me-1"></i>Add Diagnosis
+                                    <i class="bi bi-save me-1"></i>{{ __('Add Diagnosis') }}
                                 </button>
                             </div>
                         </form>
@@ -262,7 +262,7 @@
                 @if($appointment->prescriptions->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Prescriptions</h5>
+                            <h5 class="mb-0">{{ __('Prescriptions') }}</h5>
                         </div>
                         <div class="card-body">
                             @foreach($appointment->prescriptions as $prescription)
@@ -277,13 +277,13 @@
                                     <table class="table table-sm table-bordered mt-2">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>Medicine</th>
-                                                <th>Strength</th>
-                                                <th>Dose Form</th>
-                                                <th>Frequency</th>
-                                                <th>Duration</th>
-                                                <th>Qty</th>
-                                                <th>Instructions</th>
+                                                <th>{{ __('Medicine') }}</th>
+                                                <th>{{ __('Strength') }}</th>
+                                                <th>{{ __('Dose Form') }}</th>
+                                                <th>{{ __('Frequency') }}</th>
+                                                <th>{{ __('Duration') }}</th>
+                                                <th>{{ __('Qty') }}</th>
+                                                <th>{{ __('Instructions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -308,7 +308,7 @@
 
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Add Prescription</h5>
+                        <h5 class="mb-0">{{ __('Add Prescription') }}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.opd.prescriptions') }}" id="prescription-form">
@@ -316,39 +316,39 @@
                             <input type="hidden" name="appointment_id" value="{{ $appointment->id }}">
                             <input type="hidden" name="patient_id" value="{{ $appointment->patient_id }}">
                             <div class="mb-3">
-                                <label class="form-label">Clinical Notes</label>
+                                <label class="form-label">{{ __('Clinical Notes') }}</label>
                                 <textarea name="clinical_notes" class="form-control" rows="2"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">General Advice</label>
+                                <label class="form-label">{{ __('General Advice') }}</label>
                                 <textarea name="advice" class="form-control" rows="2"></textarea>
                             </div>
                             <div id="prescription-items">
                                 <div class="row g-2 mb-2 item-row">
                                     <div class="col-md-3">
-                                        <input type="text" name="items[0][medicine_name]" class="form-control" placeholder="Medicine name" required>
+                                        <input type="text" name="items[0][medicine_name]" class="form-control" placeholder="{{ __('Medicine name') }}" required>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" name="items[0][strength]" class="form-control" placeholder="Strength">
+                                        <input type="text" name="items[0][strength]" class="form-control" placeholder="{{ __('Strength') }}">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" name="items[0][dosage_form]" class="form-control" placeholder="Dosage form">
+                                        <input type="text" name="items[0][dosage_form]" class="form-control" placeholder="{{ __('Dosage form') }}">
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" name="items[0][frequency]" class="form-control" placeholder="e.g., BID" required>
+                                        <input type="text" name="items[0][frequency]" class="form-control" placeholder="{{ __('e.g., BID') }}" required>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" name="items[0][duration]" class="form-control" placeholder="e.g., 7 days" required>
+                                        <input type="text" name="items[0][duration]" class="form-control" placeholder="{{ __('e.g., 7 days') }}" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addPrescriptionItem()">
-                                    <i class="bi bi-plus me-1"></i>Add Medicine
+                                    <i class="bi bi-plus me-1"></i>{{ __('Add Medicine') }}
                                 </button>
                             </div>
                             <button type="submit" class="btn btn-secondary">
-                                <i class="bi bi-save me-1"></i>Save Prescription
+                                <i class="bi bi-save me-1"></i>{{ __('Save Prescription') }}
                             </button>
                         </form>
                     </div>
@@ -359,18 +359,18 @@
                 @if($appointment->investigationOrders->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Investigation Orders</h5>
+                            <h5 class="mb-0">{{ __('Investigation Orders') }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-secondary">
                                         <tr>
-                                            <th>Test</th>
-                                            <th>Category</th>
-                                            <th>Priority</th>
-                                            <th>Status</th>
-                                            <th>Ordered</th>
+                                            <th>{{ __('Test') }}</th>
+                                            <th>{{ __('Category') }}</th>
+                                            <th>{{ __('Priority') }}</th>
+                                            <th>{{ __('Status') }}</th>
+                                            <th>{{ __('Ordered') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -392,7 +392,7 @@
 
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Add Investigation Order</h5>
+                        <h5 class="mb-0">{{ __('Add Investigation Order') }}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.opd.investigation-orders') }}">
@@ -401,29 +401,29 @@
                             <input type="hidden" name="patient_id" value="{{ $appointment->patient_id }}">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Test Name *</label>
-                                    <input type="text" name="test_name" class="form-control" required placeholder="e.g., CBC, Blood Sugar">
+                                    <label class="form-label">{{ __('Test Name *') }}</label>
+                                    <input type="text" name="test_name" class="form-control" required placeholder="{{ __('e.g., CBC, Blood Sugar') }}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Category</label>
-                                    <input type="text" name="category" class="form-control" placeholder="e.g., Laboratory">
+                                    <label class="form-label">{{ __('Category') }}</label>
+                                    <input type="text" name="category" class="form-control" placeholder="{{ __('e.g., Laboratory') }}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label">Priority</label>
+                                    <label class="form-label">{{ __('Priority') }}</label>
                                     <select name="priority" class="form-select">
-                                        <option value="routine">Routine</option>
-                                        <option value="urgent">Urgent</option>
-                                        <option value="stat">Stat</option>
+                                        <option value="routine">{{ __('Routine') }}</option>
+                                        <option value="urgent">{{ __('Urgent') }}</option>
+                                        <option value="stat">{{ __('Stat') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Clinical Notes</label>
+                                    <label class="form-label">{{ __('Clinical Notes') }}</label>
                                     <textarea name="clinical_notes" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-secondary">
-                                    <i class="bi bi-save me-1"></i>Order Investigation
+                                    <i class="bi bi-save me-1"></i>{{ __('Order Investigation') }}
                                 </button>
                             </div>
                         </form>
@@ -433,32 +433,32 @@
             <div class="tab-pane fade" id="followup" role="tabpanel">
                 <div class="card">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0">Schedule Follow-up Appointment</h5>
+                        <h5 class="mb-0">{{ __('Schedule Follow-up Appointment') }}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.appointments.follow-up', $appointment) }}">
                             @csrf
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Follow-up Date *</label>
+                                    <label class="form-label">{{ __('Follow-up Date *') }}</label>
                                     <input type="date" name="appointment_date" class="form-control" value="{{ old('appointment_date', now()->addDays(7)->toDateString()) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Follow-up Time *</label>
+                                    <label class="form-label">{{ __('Follow-up Time *') }}</label>
                                     <input type="time" name="appointment_time" class="form-control" value="{{ old('appointment_time', $appointment->appointment_time->format('H:i')) }}" required>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Reason</label>
-                                    <input type="text" name="reason" class="form-control" value="{{ old('reason', $appointment->reason) }}" placeholder="Reason for follow-up...">
+                                    <label class="form-label">{{ __('Reason') }}</label>
+                                    <input type="text" name="reason" class="form-control" value="{{ old('reason', $appointment->reason) }}" placeholder="{{ __('Reason for follow-up...') }}">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Notes</label>
+                                    <label class="form-label">{{ __('Notes') }}</label>
                                     <textarea name="notes" class="form-control" rows="2" placeholder="Additional notes..."></textarea>
                                 </div>
                             </div>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-secondary">
-                                    <i class="bi bi-calendar-check me-1"></i>Create Follow-up
+                                    <i class="bi bi-calendar-check me-1"></i>{{ __('Create Follow-up') }}
                                 </button>
                             </div>
                         </form>

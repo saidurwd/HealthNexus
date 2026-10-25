@@ -5,18 +5,18 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Test Panels</h3>
+            <h3 class="card-title">{{ __('Test Panels') }}</h3>
             <div class="card-tools">
                 @can('lab.test.create')
-                    <a href="{{ route('admin.lab.panels.create') }}" class="btn btn-primary btn-sm">New Panel</a>
+                    <a href="{{ route('admin.lab.panels.create') }}" class="btn btn-primary btn-sm">{{ __('New Panel') }}</a>
                 @endcan
-                <a href="{{ route('admin.lab.tests.index') }}" class="btn btn-secondary btn-sm">Tests</a>
+                <a href="{{ route('admin.lab.tests.index') }}" class="btn btn-secondary btn-sm">{{ __('Tests') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Code</th><th>Name</th><th># Tests</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>{{ __('Code') }}</th><th>{{ __('Name') }}</th><th>{{ __('# Tests') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th></tr>
                 </thead>
                 <tbody>
                     @forelse($panels as $panel)
@@ -27,12 +27,12 @@
                             <td><span class="badge {{ $panel->is_active ? 'bg-success' : 'bg-secondary' }}">{{ $panel->is_active ? 'Active' : 'Inactive' }}</span></td>
                             <td>
                                 @can('lab.test.update')
-                                    <a href="{{ route('admin.lab.panels.edit', $panel) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.lab.panels.edit', $panel) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center">No panels found.</td></tr>
+                        <tr><td colspan="5" class="text-center">{{ __('No panels found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

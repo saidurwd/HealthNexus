@@ -1,7 +1,7 @@
 <div class="tab-pane fade" id="examination" role="tabpanel">
     <div class="card card-success card-outline">
         <div class="card-header">
-            <h3 class="card-title">Clinical Examination</h3>
+            <h3 class="card-title">{{ __('Clinical Examination') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->examinations->isNotEmpty())
@@ -15,7 +15,7 @@
                     </div>
                 @endforeach
             @else
-                <p class="text-muted">No examination recorded.</p>
+                <p class="text-muted">{{ __('No examination recorded.') }}</p>
             @endif
 
             @if(!$encounter->locked_at)
@@ -24,22 +24,22 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Section</label>
-                                <input type="text" name="section_name" class="form-control" required placeholder="General, CVS, RS, etc.">
+                                <label>{{ __('Section') }}</label>
+                                <input type="text" name="section_name" class="form-control" required placeholder="{{ __('General, CVS, RS, etc.') }}">
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label>Findings</label>
+                                <label>{{ __('Findings') }}</label>
                                 <textarea name="findings" class="form-control" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="form-group mt-2">
-                        <label>Notes</label>
+                        <label>{{ __('Notes') }}</label>
                         <textarea name="notes" class="form-control" rows="1"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Add Examination</button>
+                    <button type="submit" class="btn btn-primary mt-2">{{ __('Add Examination') }}</button>
                 </form>
             @endif
         </div>

@@ -5,20 +5,20 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Generic Catalog</h3>
+            <h3 class="card-title">{{ __('Generic Catalog') }}</h3>
             <div class="card-tools">
                 @can('pharmacy.generic.create')
-                    <a href="{{ route('admin.pharmacy.generics.create') }}" class="btn btn-primary btn-sm">New Generic</a>
+                    <a href="{{ route('admin.pharmacy.generics.create') }}" class="btn btn-primary btn-sm">{{ __('New Generic') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <form method="GET" class="p-3">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by generic name...">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search by generic name...') }}">
             </form>
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Code</th><th>Generic Name</th><th>Therapeutic Class</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>{{ __('Code') }}</th><th>{{ __('Generic Name') }}</th><th>{{ __('Therapeutic Class') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th></tr>
                 </thead>
                 <tbody>
                     @forelse($generics as $generic)
@@ -33,12 +33,12 @@
                             </td>
                             <td>
                                 @can('pharmacy.generic.update')
-                                    <a href="{{ route('admin.pharmacy.generics.edit', $generic) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.pharmacy.generics.edit', $generic) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center">No generics found.</td></tr>
+                        <tr><td colspan="5" class="text-center">{{ __('No generics found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

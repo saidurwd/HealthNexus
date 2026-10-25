@@ -8,7 +8,7 @@
         <div>
             @can('review', $order)
                 @if(!in_array($order->status, ['fully_dispensed', 'cancelled', 'rejected']))
-                    <a href="{{ route('admin.pharmacy.dispensing.create', $order) }}" class="btn btn-success">Dispense</a>
+                    <a href="{{ route('admin.pharmacy.dispensing.create', $order) }}" class="btn btn-success">{{ __('Dispense') }}</a>
                 @endif
             @endcan
         </div>
@@ -17,13 +17,13 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Patient</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Patient') }}</h3></div>
                 <div class="card-body">
                     <p><strong>{{ $order->patient?->full_name }}</strong></p>
                     <p class="text-muted mb-1">{{ $order->patient?->enterprise_patient_no }}</p>
                     @if($order->patient?->allergies->where('is_active', true)->isNotEmpty())
                         <div class="alert alert-danger p-2 mb-0">
-                            <strong>Allergies:</strong>
+                            <strong>{{ __('Allergies:') }}</strong>
                             @foreach($order->patient->allergies->where('is_active', true) as $allergy)
                                 <span class="badge bg-danger">{{ $allergy->substance }}</span>
                             @endforeach
@@ -34,11 +34,11 @@
         </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Order Details</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Order Details') }}</h3></div>
                 <div class="card-body">
                     <table class="table table-sm mb-0">
-                        <tr><th>Prescription</th><td>{{ $order->prescription?->prescription_no }}</td></tr>
-                        <tr><th>Ordered At</th><td>{{ $order->ordered_at?->format('Y-m-d H:i') }}</td></tr>
+                        <tr><th>{{ __('Prescription') }}</th><td>{{ $order->prescription?->prescription_no }}</td></tr>
+                        <tr><th>{{ __('Ordered At') }}</th><td>{{ $order->ordered_at?->format('Y-m-d H:i') }}</td></tr>
                     </table>
                 </div>
             </div>
@@ -46,10 +46,10 @@
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Order Items</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Order Items') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
-                <thead><tr><th>Requested</th><th>Matched Medication</th><th>Qty Prescribed</th><th>Qty Dispensed</th><th>Status</th><th>Safety Alerts</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Requested') }}</th><th>{{ __('Matched Medication') }}</th><th>{{ __('Qty Prescribed') }}</th><th>{{ __('Qty Dispensed') }}</th><th>{{ __('Status') }}</th><th>{{ __('Safety Alerts') }}</th><th></th></tr></thead>
                 <tbody>
                     @foreach($order->items as $item)
                         <tr>
@@ -70,12 +70,12 @@
                                             @csrf
                                             <input type="hidden" name="item_id" value="{{ $item->id }}">
                                             <select name="medication_id" class="form-control form-control-sm" required>
-                                                <option value="">Match to...</option>
+                                                <option value="">{{ __('Match to...') }}</option>
                                                 @foreach($availableMedications as $medication)
                                                     <option value="{{ $medication->id }}">{{ $medication->name }}</option>
                                                 @endforeach
                                             </select>
-                                            <button type="submit" class="btn btn-xs btn-primary">Match</button>
+                                            <button type="submit" class="btn btn-xs btn-primary">{{ __('Match') }}</button>
                                         </form>
                                     @endcan
                                 @endif
@@ -89,17 +89,17 @@
 
     @if($order->dispensings->isNotEmpty())
         <div class="card">
-            <div class="card-header"><h3 class="card-title">Dispensing History</h3></div>
+            <div class="card-header"><h3 class="card-title">{{ __('Dispensing History') }}</h3></div>
             <div class="card-body p-0">
                 <table class="table table-sm mb-0">
-                    <thead><tr><th>Dispensing #</th><th>Status</th><th>Dispensed At</th><th></th></tr></thead>
+                    <thead><tr><th>{{ __('Dispensing #') }}</th><th>{{ __('Status') }}</th><th>{{ __('Dispensed At') }}</th><th></th></tr></thead>
                     <tbody>
                         @foreach($order->dispensings as $dispensing)
                             <tr>
                                 <td>{{ $dispensing->dispensing_number }}</td>
                                 <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $dispensing->status)) }}</span></td>
                                 <td>{{ $dispensing->dispensed_at?->format('Y-m-d H:i') }}</td>
-                                <td><a href="{{ route('admin.pharmacy.dispensing.show', $dispensing) }}" class="btn btn-xs btn-info">View</a></td>
+                                <td><a href="{{ route('admin.pharmacy.dispensing.show', $dispensing) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -112,8 +112,8 @@
         @if(!in_array($order->status, ['fully_dispensed', 'cancelled', 'rejected']))
             <form method="POST" action="{{ route('admin.pharmacy.orders.cancel', $order) }}" onsubmit="return confirm('Cancel this order?')">
                 @csrf
-                <input type="text" name="reason" class="form-control d-inline-block w-auto" placeholder="Cancellation reason" required style="max-width: 300px;">
-                <button type="submit" class="btn btn-danger">Cancel Order</button>
+                <input type="text" name="reason" class="form-control d-inline-block w-auto" placeholder="{{ __('Cancellation reason') }}" required style="max-width: 300px;">
+                <button type="submit" class="btn btn-danger">{{ __('Cancel Order') }}</button>
             </form>
         @endif
     @endcan

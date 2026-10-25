@@ -5,26 +5,26 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Select Organization and Branch</h3>
+            <h3 class="card-title">{{ __('Select Organization and Branch') }}</h3>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('admin.organizations.branches.departments.create') }}" id="departmentCreateForm">
                 <div class="mb-3">
-                    <label for="organization_id" class="form-label">Organization</label>
+                    <label for="organization_id" class="form-label">{{ __('Organization') }}</label>
                     <select class="form-control" id="organization_id" name="organization" required>
-                        <option value="">Select Organization</option>
+                        <option value="">{{ __('Select Organization') }}</option>
                         @foreach ($organizations as $organization)
                             <option value="{{ $organization->id }}">{{ $organization->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="branch_id" class="form-label">Branch</label>
+                    <label for="branch_id" class="form-label">{{ __('Branch') }}</label>
                     <select class="form-control" id="branch_id" name="branch" required disabled>
-                        <option value="">Select Organization First</option>
+                        <option value="">{{ __('Select Organization First') }}</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" id="continueBtn" disabled>Continue</button>
+                <button type="submit" class="btn btn-primary" id="continueBtn" disabled>{{ __('Continue') }}</button>
             </form>
         </div>
     </div>

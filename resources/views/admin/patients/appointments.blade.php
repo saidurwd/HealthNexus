@@ -5,15 +5,15 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Appointment History</h2>
+            <h2 class="mb-0">{{ __('Appointment History') }}</h2>
             <div class="d-flex gap-2">
                 @can('create', \App\Models\Appointment::class)
                     <a href="{{ route('admin.appointments.create', ['patient_id' => $patient->id]) }}" class="btn btn-primary">
-                        <i class="bi bi-calendar-plus me-1"></i>Book Appointment
+                        <i class="bi bi-calendar-plus me-1"></i>{{ __('Book Appointment') }}
                     </a>
                 @endcan
                 <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
                 </a>
             </div>
         </div>
@@ -24,12 +24,12 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Appointment No.</th>
-                                <th>Date</th>
-                                <th>Provider</th>
-                                <th>Type</th>
-                                <th class="text-center">Status</th>
-                                <th>Source</th>
+                                <th>{{ __('Appointment No.') }}</th>
+                                <th>{{ __('Date') }}</th>
+                                <th>{{ __('Provider') }}</th>
+                                <th>{{ __('Type') }}</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th>{{ __('Source') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,7 +43,7 @@
                                     <td>{{ ucfirst($appointment->source) }}</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="6" class="text-center py-4 text-muted">No appointments recorded.</td></tr>
+                                <tr><td colspan="6" class="text-center py-4 text-muted">{{ __('No appointments recorded.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>

@@ -11,11 +11,11 @@
                     <p class="mb-4">{{ __('Scan the QR code with your authenticator app or enter the secret key manually.') }}</p>
 
                     <div class="text-center mb-4">
-                        <img src="{{ $qrCode }}" alt="QR Code" width="200" height="200">
+                        <img src="{{ $qrCode }}" alt="{{ __('QR Code') }}" width="200" height="200">
                     </div>
 
                     <div class="alert alert-info">
-                        <strong>Secret Key:</strong> <code>{{ $secret }}</code>
+                        <strong>{{ __('Secret Key:') }}</strong> <code>{{ $secret }}</code>
                     </div>
 
                     <form method="POST" action="{{ route('mfa.setup.store') }}">

@@ -7,18 +7,18 @@
         <div class="card-header">
             <h3 class="card-title">Branches - {{ $organization->name }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.organizations.branches.create', $organization) }}" class="btn btn-primary btn-sm">New Branch</a>
+                <a href="{{ route('admin.organizations.branches.create', $organization) }}" class="btn btn-primary btn-sm">{{ __('New Branch') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Email') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,25 +33,25 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.organizations.branches.show', [$organization, $branch]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.organizations.branches.edit', [$organization, $branch]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.organizations.branches.show', [$organization, $branch]) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
+                                <a href="{{ route('admin.organizations.branches.edit', [$organization, $branch]) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 <form action="{{ route('admin.organizations.branches.destroy', [$organization, $branch]) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('delete')
-                                    <button class="btn btn-xs btn-danger">Delete</button>
+                                    <button class="btn btn-xs btn-danger">{{ __('Delete') }}</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">No branches found.</td>
+                            <td colspan="5" class="text-center">{{ __('No branches found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         <div class="card-footer">
-            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">Back to Organizations</a>
+            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">{{ __('Back to Organizations') }}</a>
         </div>
     </div>
 @stop

@@ -9,10 +9,10 @@
             <div class="card-body">
                 <div class="form-group form-check">
                     <input type="checkbox" name="admission_requires_approval" value="1" class="form-check-input" id="admission_requires_approval" {{ $settings['admission_requires_approval'] ? 'checked' : '' }}>
-                    <label class="form-check-label" for="admission_requires_approval">ICU admission requires approval</label>
+                    <label class="form-check-label" for="admission_requires_approval">{{ __('ICU admission requires approval') }}</label>
                 </div>
                 <hr>
-                <h5>Configured Clinical Scores</h5>
+                <h5>{{ __('Configured Clinical Scores') }}</h5>
                 <ul>
                     @foreach($settings['scoring_definitions'] as $code => $definition)
                         <li>{{ $definition['label'] ?? $code }} (v{{ $definition['version'] ?? 1 }})</li>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Save Settings</button>
+                <button type="submit" class="btn btn-primary">{{ __('Save Settings') }}</button>
             </div>
         </div>
     </form>

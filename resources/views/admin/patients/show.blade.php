@@ -54,17 +54,17 @@
             <div class="d-flex gap-2">
                 @can('create', \App\Models\Appointment::class)
                     <a href="{{ route('admin.appointments.create', ['patient_id' => $patient->id]) }}" class="btn btn-primary">
-                        <i class="bi bi-calendar-plus me-1"></i>Book Appointment
+                        <i class="bi bi-calendar-plus me-1"></i>{{ __('Book Appointment') }}
                     </a>
                 @endcan
                 <a href="{{ route('admin.patients.print', $patient) }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-printer me-1"></i>Print
+                    <i class="bi bi-printer me-1"></i>{{ __('Print') }}
                 </a>
                 <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-outline-warning">
-                    <i class="bi bi-pencil me-1"></i>Edit Patient
+                    <i class="bi bi-pencil me-1"></i>{{ __('Edit Patient') }}
                 </a>
                 <a href="{{ route('admin.patients.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to List
+                    <i class="bi bi-arrow-left me-1"></i>{{ __('Back to List') }}
                 </a>
             </div>
         </div>
@@ -99,43 +99,43 @@
                 <div class="col-lg-8">
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Patient Information</h5>
+                            <h5 class="mb-0">{{ __('Patient Information') }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">Patient No</dt>
+                                        <dt class="col-sm-5">{{ __('Patient No') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->enterprise_patient_no ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">National ID</dt>
+                                        <dt class="col-sm-5">{{ __('National ID') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->national_identifier ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">DOB</dt>
+                                        <dt class="col-sm-5">{{ __('DOB') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->date_of_birth?->format('Y-m-d') ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">Age</dt>
+                                        <dt class="col-sm-5">{{ __('Age') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->date_of_birth ? \Carbon\Carbon::parse($patient->date_of_birth)->age.' years' : '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">Sex</dt>
+                                        <dt class="col-sm-5">{{ __('Sex') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->sex ? ['M' => 'Male', 'F' => 'Female', 'O' => 'Other'][$patient->sex] : '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">Blood Group</dt>
+                                        <dt class="col-sm-5">{{ __('Blood Group') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->blood_group ?? '-' }}</dd>
                                     </dl>
                                 </div>
@@ -145,37 +145,37 @@
 
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Contact Information</h5>
+                            <h5 class="mb-0">{{ __('Contact Information') }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-3 col-md-2">Address</dt>
+                                        <dt class="col-sm-3 col-md-2">{{ __('Address') }}</dt>
                                         <dd class="col-sm-9 col-md-10">{{ $patient->address ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">City</dt>
+                                        <dt class="col-sm-5">{{ __('City') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->city ?? '-' }}</dd>
-                                        <dt class="col-sm-5">State</dt>
+                                        <dt class="col-sm-5">{{ __('State') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->state ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-md-6">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-5">Country</dt>
+                                        <dt class="col-sm-5">{{ __('Country') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->country ?? '-' }}</dd>
-                                        <dt class="col-sm-5">Postal Code</dt>
+                                        <dt class="col-sm-5">{{ __('Postal Code') }}</dt>
                                         <dd class="col-sm-7">{{ $patient->postal_code ?? '-' }}</dd>
                                     </dl>
                                 </div>
                                 <div class="col-12">
                                     <dl class="row mb-0">
-                                        <dt class="col-sm-3 col-md-2">Phone</dt>
+                                        <dt class="col-sm-3 col-md-2">{{ __('Phone') }}</dt>
                                         <dd class="col-sm-9 col-md-10">{{ $patient->phone ?? '-' }}</dd>
-                                        <dt class="col-sm-3 col-md-2">Email</dt>
+                                        <dt class="col-sm-3 col-md-2">{{ __('Email') }}</dt>
                                         <dd class="col-sm-9 col-md-10">{{ $patient->email ?? '-' }}</dd>
                                     </dl>
                                 </div>
@@ -185,7 +185,7 @@
 
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Contact Persons</h5>
+                            <h5 class="mb-0">{{ __('Contact Persons') }}</h5>
                         </div>
                         <div class="card-body">
                             @forelse($patient->contacts as $contact)
@@ -207,11 +207,11 @@
                                         </small>
                                     </div>
                                     @if($contact->is_emergency)
-                                        <span class="badge bg-danger">Emergency Contact</span>
+                                        <span class="badge bg-danger">{{ __('Emergency Contact') }}</span>
                                     @endif
                                 </div>
                             @empty
-                                <p class="text-muted mb-0">No contacts recorded.</p>
+                                <p class="text-muted mb-0">{{ __('No contacts recorded.') }}</p>
                             @endforelse
                         </div>
                     </div>
@@ -219,19 +219,19 @@
                     @if($patient->identifiers->isNotEmpty())
                         <div class="card mb-4">
                             <div class="card-header bg-secondary text-white">
-                                <h5 class="mb-0">Identification Documents</h5>
+                                <h5 class="mb-0">{{ __('Identification Documents') }}</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>Type</th>
-                                                <th>Value</th>
-                                                <th>Authority</th>
-                                                <th class="text-end">Issued</th>
-                                                <th class="text-end">Expires</th>
-                                                <th>Primary</th>
+                                                <th>{{ __('Type') }}</th>
+                                                <th>{{ __('Value') }}</th>
+                                                <th>{{ __('Authority') }}</th>
+                                                <th class="text-end">{{ __('Issued') }}</th>
+                                                <th class="text-end">{{ __('Expires') }}</th>
+                                                <th>{{ __('Primary') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -255,18 +255,18 @@
                     @if($patient->allergies->isNotEmpty())
                         <div class="card mb-4">
                             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Recent Allergies</h5>
-                                <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-light">Manage Allergies</a>
+                                <h5 class="mb-0">{{ __('Recent Allergies') }}</h5>
+                                <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-sm btn-outline-light">{{ __('Manage Allergies') }}</a>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>Substance</th>
-                                                <th>Severity</th>
-                                                <th>Reaction</th>
-                                                <th class="text-end">Active</th>
+                                                <th>{{ __('Substance') }}</th>
+                                                <th>{{ __('Severity') }}</th>
+                                                <th>{{ __('Reaction') }}</th>
+                                                <th class="text-end">{{ __('Active') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -277,9 +277,9 @@
                                                     <td>{{ ucfirst($allergy->reaction ?? '') }}</td>
                                                     <td class="text-end">
                                                         @if($allergy->is_active)
-                                                            <span class="badge bg-success">Active</span>
+                                                            <span class="badge bg-success">{{ __('Active') }}</span>
                                                         @else
-                                                            <span class="badge bg-secondary">Inactive</span>
+                                                            <span class="badge bg-secondary">{{ __('Inactive') }}</span>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -294,18 +294,18 @@
                     @if($patient->documents->isNotEmpty())
                         <div class="card mb-4">
                             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Recent Documents</h5>
-                                <a href="{{ route('admin.patients.documents', $patient) }}" class="btn btn-sm btn-outline-light">View All</a>
+                                <h5 class="mb-0">{{ __('Recent Documents') }}</h5>
+                                <a href="{{ route('admin.patients.documents', $patient) }}" class="btn btn-sm btn-outline-light">{{ __('View All') }}</a>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>File Name</th>
-                                                <th>Type</th>
-                                                <th class="text-end">Size</th>
-                                                <th class="text-end">Date</th>
+                                                <th>{{ __('File Name') }}</th>
+                                                <th>{{ __('Type') }}</th>
+                                                <th class="text-end">{{ __('Size') }}</th>
+                                                <th class="text-end">{{ __('Date') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -327,17 +327,17 @@
                     @if($patient->histories->isNotEmpty())
                         <div class="card mb-4">
                             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Medical History</h5>
-                                <a href="{{ route('admin.patients.history', $patient) }}" class="btn btn-sm btn-outline-light">Manage History</a>
+                                <h5 class="mb-0">{{ __('Medical History') }}</h5>
+                                <a href="{{ route('admin.patients.history', $patient) }}" class="btn btn-sm btn-outline-light">{{ __('Manage History') }}</a>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover mb-0">
                                         <thead class="table-secondary">
                                             <tr>
-                                                <th>Condition</th>
-                                                <th>Diagnosed</th>
-                                                <th class="text-center">Status</th>
+                                                <th>{{ __('Condition') }}</th>
+                                                <th>{{ __('Diagnosed') }}</th>
+                                                <th class="text-center">{{ __('Status') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -352,9 +352,9 @@
                                                     <td>{{ $history->diagnosed_at ? $history->diagnosed_at->format('M d, Y') : '-' }}</td>
                                                     <td class="text-center">
                                                         @if($history->is_active)
-                                                            <span class="badge bg-success">Active</span>
+                                                            <span class="badge bg-success">{{ __('Active') }}</span>
                                                         @else
-                                                            <span class="badge bg-secondary">Inactive</span>
+                                                            <span class="badge bg-secondary">{{ __('Inactive') }}</span>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -370,24 +370,24 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0">Quick Stats</h5>
+                            <h5 class="mb-0">{{ __('Quick Stats') }}</h5>
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-3">
-                                <div class="text-muted small">Allergies</div>
+                                <div class="text-muted small">{{ __('Allergies') }}</div>
                                 <div class="h4 mb-0 text-danger">{{ $patient->allergies->count() }}</div>
                             </div>
                             <div class="mb-3">
-                                <div class="text-muted small">Medical History</div>
+                                <div class="text-muted small">{{ __('Medical History') }}</div>
                                 <div class="h4 mb-0 text-primary">{{ $patient->histories->count() }}</div>
                             </div>
                             <div class="mb-3">
-                                <div class="text-muted small">Documents</div>
+                                <div class="text-muted small">{{ __('Documents') }}</div>
                                 <div class="h4 mb-0 text-info">{{ $patient->documents->count() }}</div>
                             </div>
                             <hr>
                             <div>
-                                <div class="text-muted small">Created</div>
+                                <div class="text-muted small">{{ __('Created') }}</div>
                                 <div class="small">{{ $patient->created_at->format('M d, Y') }}</div>
                             </div>
                         </div>
@@ -395,13 +395,13 @@
 
                     <div class="d-grid gap-2">
                         <a href="{{ route('admin.patients.history', $patient) }}" class="btn btn-outline-primary">
-                            <i class="bi bi-journal-medical me-1"></i>View Medical History
+                            <i class="bi bi-journal-medical me-1"></i>{{ __('View Medical History') }}
                         </a>
                         <a href="{{ route('admin.patients.documents', $patient) }}" class="btn btn-outline-primary">
-                            <i class="bi bi-file-earmark me-1"></i>View Documents
+                            <i class="bi bi-file-earmark me-1"></i>{{ __('View Documents') }}
                         </a>
                         <a href="{{ route('admin.patients.allergies', $patient) }}" class="btn btn-outline-primary">
-                            <i class="bi bi-bug me-1"></i>View Allergies
+                            <i class="bi bi-bug me-1"></i>{{ __('View Allergies') }}
                         </a>
                     </div>
                 </div>

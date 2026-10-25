@@ -1,17 +1,17 @@
 <div class="tab-pane fade" id="referral" role="tabpanel">
     <div class="card card-warning card-outline">
         <div class="card-header">
-            <h3 class="card-title">Referrals</h3>
+            <h3 class="card-title">{{ __('Referrals') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->referrals->isNotEmpty())
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Referred To</th>
-                            <th>Reason</th>
-                            <th>Status</th>
+                            <th>{{ __('Type') }}</th>
+                            <th>{{ __('Referred To') }}</th>
+                            <th>{{ __('Reason') }}</th>
+                            <th>{{ __('Status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,7 +26,7 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-muted">No referrals recorded.</p>
+                <p class="text-muted">{{ __('No referrals recorded.') }}</p>
             @endif
 
             @if(!$encounter->locked_at)
@@ -35,29 +35,29 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Referral Type</label>
+                                <label>{{ __('Referral Type') }}</label>
                                 <select name="referral_type" class="form-control" required>
-                                    <option value="internal">Internal</option>
-                                    <option value="external">External</option>
-                                    <option value="department">Department</option>
-                                    <option value="provider">Provider</option>
+                                    <option value="internal">{{ __('Internal') }}</option>
+                                    <option value="external">{{ __('External') }}</option>
+                                    <option value="department">{{ __('Department') }}</option>
+                                    <option value="provider">{{ __('Provider') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Referred To</label>
+                                <label>{{ __('Referred To') }}</label>
                                 <input type="text" name="referred_to" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Reason</label>
+                                <label>{{ __('Reason') }}</label>
                                 <textarea name="reason" class="form-control" rows="1"></textarea>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Create Referral</button>
+                    <button type="submit" class="btn btn-primary mt-2">{{ __('Create Referral') }}</button>
                 </form>
             @endif
         </div>

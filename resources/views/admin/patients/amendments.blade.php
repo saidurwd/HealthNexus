@@ -5,7 +5,7 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Pending Patient Amendments</h2>
+            <h2 class="mb-0">{{ __('Pending Patient Amendments') }}</h2>
         </div>
 
         <div class="card">
@@ -14,12 +14,12 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Patient</th>
-                                <th>Proposed Changes</th>
-                                <th>Reason</th>
-                                <th>Requested By</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Patient') }}</th>
+                                <th>{{ __('Proposed Changes') }}</th>
+                                <th>{{ __('Reason') }}</th>
+                                <th>{{ __('Requested By') }}</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,9 +45,9 @@
                                             <form action="{{ route('admin.patients.amendments.approve', $amendment) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('put')
-                                                <button class="btn btn-sm btn-outline-success">Approve</button>
+                                                <button class="btn btn-sm btn-outline-success">{{ __('Approve') }}</button>
                                             </form>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $amendment->id }}">Reject</button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $amendment->id }}">{{ __('Reject') }}</button>
 
                                             <div class="modal fade" id="rejectModal{{ $amendment->id }}" tabindex="-1">
                                                 <div class="modal-dialog">
@@ -56,16 +56,16 @@
                                                             @csrf
                                                             @method('put')
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title">Reject Amendment</h5>
+                                                                <h5 class="modal-title">{{ __('Reject Amendment') }}</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <label class="form-label">Reason *</label>
+                                                                <label class="form-label">{{ __('Reason *') }}</label>
                                                                 <textarea name="reason" class="form-control" required></textarea>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                                                                <button type="submit" class="btn btn-danger">{{ __('Reject') }}</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -76,7 +76,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">No amendments pending review.</td>
+                                    <td colspan="6" class="text-center py-4 text-muted">{{ __('No amendments pending review.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

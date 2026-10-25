@@ -144,8 +144,8 @@ class DocumentService
     /** @return array<string, string> */
     private function labels(string $language): array
     {
-        $en = Lang::get('documents', [], 'en');
-        $bn = Lang::get('documents', [], 'bn');
+        $en = Lang::get('doc_labels', [], 'en');
+        $bn = Lang::get('doc_labels', [], 'bn');
 
         return match ($language) {
             'bn' => $bn,

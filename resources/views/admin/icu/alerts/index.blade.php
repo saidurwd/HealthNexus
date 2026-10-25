@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Patient</th><th>Rule</th><th>Severity</th><th>Triggered</th><th>Acknowledged</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Patient') }}</th><th>{{ __('Rule') }}</th><th>{{ __('Severity') }}</th><th>{{ __('Triggered') }}</th><th>{{ __('Acknowledged') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($alerts as $alert)
                         <tr>
@@ -19,13 +19,13 @@
                                 @unless($alert->acknowledged_at)
                                     <form method="POST" action="{{ route('admin.icu.alerts.acknowledge', $alert) }}" class="d-inline">
                                         @csrf
-                                        <button class="btn btn-xs btn-success">Acknowledge</button>
+                                        <button class="btn btn-xs btn-success">{{ __('Acknowledge') }}</button>
                                     </form>
                                 @endunless
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No critical alerts.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No critical alerts.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

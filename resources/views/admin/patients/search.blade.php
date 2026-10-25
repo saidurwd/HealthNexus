@@ -5,21 +5,21 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Patient Search</h2>
+            <h2 class="mb-0">{{ __('Patient Search') }}</h2>
             <a href="{{ route('admin.patients.index') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Patient List
+                <i class="bi bi-arrow-left me-1"></i>{{ __('Patient List') }}
             </a>
         </div>
 
         <form method="GET" action="{{ route('admin.patients.search') }}" class="mb-4">
             <div class="input-group input-group-lg">
-                <input type="text" name="q" class="form-control" placeholder="Search by name, patient ID, phone, or national ID..." value="{{ $search ?? '' }}">
+                <input type="text" name="q" class="form-control" placeholder="{{ __('Search by name, patient ID, phone, or national ID...') }}" value="{{ $search ?? '' }}">
                 <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-search me-1"></i>Search
+                    <i class="bi bi-search me-1"></i>{{ __('Search') }}
                 </button>
                 @if(!empty($search))
                     <a href="{{ route('admin.patients.search') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-x me-1"></i>Clear
+                        <i class="bi bi-x me-1"></i>{{ __('Clear') }}
                     </a>
                 @endif
             </div>
@@ -38,13 +38,13 @@
                         <table class="table table-hover align-middle mb-0">
                                 <thead class="table-secondary">
                                 <tr>
-                                    <th>Patient</th>
-                                    <th>Patient No</th>
-                                    <th>Gender</th>
-                                    <th>Age</th>
-                                    <th>Phone</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-end">Created</th>
+                                    <th>{{ __('Patient') }}</th>
+                                    <th>{{ __('Patient No') }}</th>
+                                    <th>{{ __('Gender') }}</th>
+                                    <th>{{ __('Age') }}</th>
+                                    <th>{{ __('Phone') }}</th>
+                                    <th class="text-center">{{ __('Status') }}</th>
+                                    <th class="text-end">{{ __('Created') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

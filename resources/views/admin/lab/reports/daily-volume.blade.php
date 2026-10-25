@@ -9,15 +9,15 @@
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3"><input type="date" name="from" value="{{ $from }}" class="form-control"></div>
                 <div class="col-md-3"><input type="date" name="to" value="{{ $to }}" class="form-control"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Day</th><th>Orders</th></tr></thead>
+                <thead><tr><th>{{ __('Day') }}</th><th>{{ __('Orders') }}</th></tr></thead>
                 <tbody>
                     @forelse($volume as $row)
                         <tr><td>{{ $row->day }}</td><td>{{ $row->total }}</td></tr>
                     @empty
-                        <tr><td colspan="2" class="text-center">No data.</td></tr>
+                        <tr><td colspan="2" class="text-center">{{ __('No data.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

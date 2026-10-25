@@ -3,18 +3,18 @@
 <div class="tab-pane fade" id="medications" role="tabpanel">
     <div class="card card-secondary card-outline">
         <div class="card-header">
-            <h3 class="card-title">Medications</h3>
+            <h3 class="card-title">{{ __('Medications') }}</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-sm mb-0">
                 <thead>
                     <tr>
-                        <th>Medication</th>
-                        <th>Prescribed</th>
-                        <th>Dispensed</th>
-                        <th>Status</th>
-                        <th>Safety Alerts</th>
-                        <th>Order</th>
+                        <th>{{ __('Medication') }}</th>
+                        <th>{{ __('Prescribed') }}</th>
+                        <th>{{ __('Dispensed') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Safety Alerts') }}</th>
+                        <th>{{ __('Order') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,7 @@
                         @empty
                         @endforelse
                     @empty
-                        <tr><td colspan="6" class="text-center text-muted py-3">No pharmacy orders for this encounter.</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-3">{{ __('No pharmacy orders for this encounter.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

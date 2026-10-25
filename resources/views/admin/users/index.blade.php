@@ -7,19 +7,19 @@
         <div class="card-header">
             <h3 class="card-title">Users - {{ $organization->name }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">New User</a>
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">{{ __('New User') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Photo</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Photo') }}</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Email') }}</th>
+                        <th>{{ __('Phone') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,20 +37,20 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.users.organization-edit', [$organization, $user]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
+                                <a href="{{ route('admin.users.organization-edit', [$organization, $user]) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No users found.</td>
+                            <td colspan="6" class="text-center">{{ __('No users found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         <div class="card-footer">
-            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">Back to Organizations</a>
+            <a href="{{ route('admin.organizations.index') }}" class="btn btn-secondary">{{ __('Back to Organizations') }}</a>
         </div>
     </div>
 @stop

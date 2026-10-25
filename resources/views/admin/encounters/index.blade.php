@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">All Encounters</h3>
+            <h3 class="card-title">{{ __('All Encounters') }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.encounters.create') }}" class="btn btn-primary btn-sm">New Encounter</a>
+                <a href="{{ route('admin.encounters.create') }}" class="btn btn-primary btn-sm">{{ __('New Encounter') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
@@ -15,11 +15,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Patient</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Started At</th>
-                        <th>Actions</th>
+                        <th>{{ __('Patient') }}</th>
+                        <th>{{ __('Type') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Started At') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,13 +31,13 @@
                             <td>{{ $encounter->status }}</td>
                             <td>{{ $encounter->started_at?->format('Y-m-d H:i') }}</td>
                             <td>
-                                <a href="{{ route('admin.encounters.show', $encounter) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.encounters.edit', $encounter) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.encounters.show', $encounter) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
+                                <a href="{{ route('admin.encounters.edit', $encounter) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No encounters found.</td>
+                            <td colspan="6" class="text-center">{{ __('No encounters found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

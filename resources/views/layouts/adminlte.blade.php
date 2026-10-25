@@ -30,7 +30,7 @@
     <li class="nav-item d-none d-md-flex align-items-center">
         <form method="GET" action="{{ route('admin.search') }}" class="mb-0">
             <input type="search" name="q" id="global-search" class="form-control form-control-sm" style="width:260px"
-                   placeholder="Search or scan…  (Ctrl+K / F3)" autocomplete="off">
+                   placeholder="{{ __('Search or scan… (Ctrl+K / F3)') }}" autocomplete="off">
         </form>
     </li>
 @stop
@@ -54,7 +54,7 @@
     <small>v{{ config('app.version', '1.0.0') }}</small>
     <span class="d-none d-md-inline">
         <span class="mx-2">|</span>
-        <a href="https://github.com/Kilo-Org/kilocode" class="text-reset text-decoration-none" target="_blank">Support</a>
+        <a href="https://github.com/Kilo-Org/kilocode" class="text-reset text-decoration-none" target="_blank">{{ __('Support') }}</a>
     </span>
 @stop
 

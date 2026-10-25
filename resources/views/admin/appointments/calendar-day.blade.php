@@ -5,7 +5,7 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Day Calendar</h2>
+            <h2 class="mb-0">{{ __('Day Calendar') }}</h2>
             <form method="GET" class="d-flex gap-2">
                 <input type="date" name="date" value="{{ $date }}" class="form-control" onchange="this.form.submit()">
             </form>
@@ -16,11 +16,11 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Time</th>
-                            <th>Patient</th>
-                            <th>Provider</th>
-                            <th>Token</th>
-                            <th class="text-center">Status</th>
+                            <th>{{ __('Time') }}</th>
+                            <th>{{ __('Patient') }}</th>
+                            <th>{{ __('Provider') }}</th>
+                            <th>{{ __('Token') }}</th>
+                            <th class="text-center">{{ __('Status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +35,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="text-center py-4 text-muted">No appointments for this date.</td></tr>
+                            <tr><td colspan="5" class="text-center py-4 text-muted">{{ __('No appointments for this date.') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

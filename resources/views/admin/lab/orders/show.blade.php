@@ -14,21 +14,21 @@
                 </div>
                 <div class="card-body">
                     <table class="table table-sm">
-                        <tr><th>Patient</th><td>{{ $order->patient?->full_name }} ({{ $order->patient?->enterprise_patient_no ?? $order->patient_id }})</td></tr>
-                        <tr><th>Encounter</th><td>{{ $order->encounter?->encounter_no }}</td></tr>
-                        <tr><th>Priority</th><td>{{ ucfirst($order->priority) }}</td></tr>
-                        <tr><th>Ordered At</th><td>{{ $order->ordered_at?->format('Y-m-d H:i') }}</td></tr>
-                        <tr><th>Clinical Notes</th><td>{{ $order->clinical_notes }}</td></tr>
+                        <tr><th>{{ __('Patient') }}</th><td>{{ $order->patient?->full_name }} ({{ $order->patient?->enterprise_patient_no ?? $order->patient_id }})</td></tr>
+                        <tr><th>{{ __('Encounter') }}</th><td>{{ $order->encounter?->encounter_no }}</td></tr>
+                        <tr><th>{{ __('Priority') }}</th><td>{{ ucfirst($order->priority) }}</td></tr>
+                        <tr><th>{{ __('Ordered At') }}</th><td>{{ $order->ordered_at?->format('Y-m-d H:i') }}</td></tr>
+                        <tr><th>{{ __('Clinical Notes') }}</th><td>{{ $order->clinical_notes }}</td></tr>
                     </table>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Requested Tests</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Requested Tests') }}</h3></div>
                 <div class="card-body p-0">
                     <table class="table table-striped">
                         <thead>
-                            <tr><th>Test</th><th>Status</th><th>Specimen</th><th>Result</th><th>Actions</th></tr>
+                            <tr><th>{{ __('Test') }}</th><th>{{ __('Status') }}</th><th>{{ __('Specimen') }}</th><th>{{ __('Result') }}</th><th>{{ __('Actions') }}</th></tr>
                         </thead>
                         <tbody>
                             @forelse($order->items as $item)
@@ -36,7 +36,7 @@
                                     <td>
                                         {{ $item->test?->name ?? $item->requested_test_name }}
                                         @if($item->isUnmatched())
-                                            <span class="badge bg-warning">Unmatched</span>
+                                            <span class="badge bg-warning">{{ __('Unmatched') }}</span>
                                         @endif
                                     </td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $item->status)) }}</td>
@@ -58,12 +58,12 @@
                                                     @csrf
                                                     <input type="hidden" name="item_id" value="{{ $item->id }}">
                                                     <select name="test_id" class="form-control form-control-sm" required>
-                                                        <option value="">Match to test...</option>
+                                                        <option value="">{{ __('Match to test...') }}</option>
                                                         @foreach($availableTests as $test)
                                                             <option value="{{ $test->id }}">{{ $test->code }} — {{ $test->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    <button type="submit" class="btn btn-xs btn-primary">Match</button>
+                                                    <button type="submit" class="btn btn-xs btn-primary">{{ __('Match') }}</button>
                                                 </form>
                                             @endcan
                                         @elseif(in_array($item->status, ['received', 'processing']) && ! $result)
@@ -71,34 +71,34 @@
                                                 <form method="post" action="{{ route('admin.lab.results.store', $item) }}" class="d-flex gap-1">
                                                     @csrf
                                                     @if(in_array($item->test->test_type, ['quantitative', 'semi_quantitative', 'calculated']))
-                                                        <input type="number" step="0.0001" name="numeric_value" class="form-control form-control-sm" placeholder="Value" required>
+                                                        <input type="number" step="0.0001" name="numeric_value" class="form-control form-control-sm" placeholder="{{ __('Value') }}" required>
                                                     @elseif(in_array($item->test->test_type, ['qualitative']))
-                                                        <input type="text" name="qualitative_value" class="form-control form-control-sm" placeholder="Positive/Negative" required>
+                                                        <input type="text" name="qualitative_value" class="form-control form-control-sm" placeholder="{{ __('Positive/Negative') }}" required>
                                                     @else
-                                                        <input type="text" name="text_value" class="form-control form-control-sm" placeholder="Result" required>
+                                                        <input type="text" name="text_value" class="form-control form-control-sm" placeholder="{{ __('Result') }}" required>
                                                     @endif
-                                                    <button type="submit" class="btn btn-xs btn-primary">Enter</button>
+                                                    <button type="submit" class="btn btn-xs btn-primary">{{ __('Enter') }}</button>
                                                 </form>
                                             @endcan
                                         @elseif($result && $result->result_status === 'entered')
                                             @can('lab.result.validate')
                                                 <form method="post" action="{{ route('admin.lab.results.technical-validate', $result) }}">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-xs btn-success">Technical Validate</button>
+                                                    <button type="submit" class="btn btn-xs btn-success">{{ __('Technical Validate') }}</button>
                                                 </form>
                                             @endcan
                                         @elseif($result && $result->result_status === 'technically_validated')
                                             @can('lab.result.approve')
                                                 <form method="post" action="{{ route('admin.lab.results.approve', $result) }}">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-xs btn-success">Pathologist Approve</button>
+                                                    <button type="submit" class="btn btn-xs btn-success">{{ __('Pathologist Approve') }}</button>
                                                 </form>
                                             @endcan
                                         @endif
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="text-center">No items.</td></tr>
+                                <tr><td colspan="5" class="text-center">{{ __('No items.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -106,10 +106,10 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Specimens</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Specimens') }}</h3></div>
                 <div class="card-body p-0">
                     <table class="table table-striped">
-                        <thead><tr><th>Accession #</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>{{ __('Accession #') }}</th><th>{{ __('Type') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th></tr></thead>
                         <tbody>
                             @forelse($order->specimens as $specimen)
                                 <tr>
@@ -121,14 +121,14 @@
                                             @can('lab.specimen.receive')
                                                 <form method="post" action="{{ route('admin.lab.specimens.receive', $specimen) }}">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-xs btn-success">Receive</button>
+                                                    <button type="submit" class="btn btn-xs btn-success">{{ __('Receive') }}</button>
                                                 </form>
                                             @endcan
                                         @endif
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="4" class="text-center">No specimens collected yet.</td></tr>
+                                <tr><td colspan="4" class="text-center">{{ __('No specimens collected yet.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -139,10 +139,10 @@
                             <form method="post" action="{{ route('admin.lab.specimens.collect', $order) }}" class="row g-2">
                                 @csrf
                                 <div class="col-md-4">
-                                    <input type="text" name="storage_location" class="form-control" placeholder="Storage location (optional)">
+                                    <input type="text" name="storage_location" class="form-control" placeholder="{{ __('Storage location (optional)') }}">
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary">Collect Specimen</button>
+                                    <button type="submit" class="btn btn-primary">{{ __('Collect Specimen') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -153,13 +153,13 @@
 
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header"><h3 class="card-title">Actions</h3></div>
+                <div class="card-header"><h3 class="card-title">{{ __('Actions') }}</h3></div>
                 <div class="card-body">
                     @if($order->status === 'validated')
                         @can('lab.report.generate')
                             <form method="post" action="{{ route('admin.lab.reports.finalize', $order) }}">
                                 @csrf
-                                <button type="submit" class="btn btn-success w-100 mb-2">Finalize Report</button>
+                                <button type="submit" class="btn btn-success w-100 mb-2">{{ __('Finalize Report') }}</button>
                             </form>
                         @endcan
                     @endif
@@ -168,8 +168,8 @@
                         @can('lab.order.cancel')
                             <form method="post" action="{{ route('admin.lab.orders.cancel', $order) }}" onsubmit="return confirm('Cancel this lab order?');">
                                 @csrf
-                                <input type="text" name="reason" class="form-control mb-2" placeholder="Cancellation reason" required>
-                                <button type="submit" class="btn btn-danger w-100">Cancel Order</button>
+                                <input type="text" name="reason" class="form-control mb-2" placeholder="{{ __('Cancellation reason') }}" required>
+                                <button type="submit" class="btn btn-danger w-100">{{ __('Cancel Order') }}</button>
                             </form>
                         @endcan
                     @endif
@@ -178,7 +178,7 @@
 
             @if($order->reports->isNotEmpty())
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Reports</h3></div>
+                    <div class="card-header"><h3 class="card-title">{{ __('Reports') }}</h3></div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             @foreach($order->reports as $report)

@@ -8,28 +8,28 @@
         @if($recall->status === 'initiated')
             <form method="POST" action="{{ route('admin.pharmacy.recalls.close', $recall) }}">
                 @csrf
-                <button type="submit" class="btn btn-secondary">Close Recall</button>
+                <button type="submit" class="btn btn-secondary">{{ __('Close Recall') }}</button>
             </form>
         @endif
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Details</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Details') }}</h3></div>
         <div class="card-body">
             <table class="table table-sm mb-0">
-                <tr><th>Medication</th><td>{{ $recall->medication?->name }}</td></tr>
-                <tr><th>Batch</th><td>{{ $recall->batch?->batch_number }}</td></tr>
-                <tr><th>Reason</th><td>{{ $recall->reason }}</td></tr>
-                <tr><th>Initiated By</th><td>{{ $recall->initiatedBy?->name }} at {{ $recall->initiated_at?->format('Y-m-d H:i') }}</td></tr>
+                <tr><th>{{ __('Medication') }}</th><td>{{ $recall->medication?->name }}</td></tr>
+                <tr><th>{{ __('Batch') }}</th><td>{{ $recall->batch?->batch_number }}</td></tr>
+                <tr><th>{{ __('Reason') }}</th><td>{{ $recall->reason }}</td></tr>
+                <tr><th>{{ __('Initiated By') }}</th><td>{{ $recall->initiatedBy?->name }} at {{ $recall->initiated_at?->format('Y-m-d H:i') }}</td></tr>
             </table>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Affected Dispensings</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Affected Dispensings') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
-                <thead><tr><th>Patient</th><th>Dispensing #</th><th>Quantity</th><th>Date</th></tr></thead>
+                <thead><tr><th>{{ __('Patient') }}</th><th>{{ __('Dispensing #') }}</th><th>{{ __('Quantity') }}</th><th>{{ __('Date') }}</th></tr></thead>
                 <tbody>
                     @forelse($affectedItems as $item)
                         <tr>
@@ -39,7 +39,7 @@
                             <td>{{ $item->dispensing?->dispensed_at?->format('Y-m-d') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center">No patients received this batch.</td></tr>
+                        <tr><td colspan="4" class="text-center">{{ __('No patients received this batch.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

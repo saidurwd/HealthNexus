@@ -4,7 +4,7 @@
 
 @section('auth_body')
     <p class="text-center">
-        Thanks for signing up! Before continuing, please check your email for a verification link.
+        {{ __('Thanks for signing up! Before continuing, please check your email for a verification link.') }}
     </p>
 
     @if(session('success'))
@@ -18,14 +18,14 @@
     <form action="{{ route('verification.send') }}" method="post">
         @csrf
         <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Resend Verification Email</button>
+            <button type="submit" class="btn btn-primary">{{ __('Resend Verification Email') }}</button>
         </div>
     </form>
 
     <form action="{{ route('logout') }}" method="post" class="mt-2">
         @csrf
         <div class="d-grid">
-            <button type="submit" class="btn btn-link">Log Out</button>
+            <button type="submit" class="btn btn-link">{{ __('Log Out') }}</button>
         </div>
     </form>
 @stop

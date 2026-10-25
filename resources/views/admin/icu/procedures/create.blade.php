@@ -8,20 +8,20 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group">
-                    <label>Code</label>
+                    <label>{{ __('Code') }}</label>
                     <input type="text" name="code" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Name</label>
+                    <label>{{ __('Name') }}</label>
                     <input type="text" name="name" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Category</label>
+                    <label>{{ __('Category') }}</label>
                     <input type="text" name="category" class="form-control">
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
             </div>
         </div>
     </form>

@@ -5,17 +5,17 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Payments</h3>
+            <h3 class="card-title">{{ __('Payments') }}</h3>
             <div class="card-tools">
                 @can('create', \App\Models\Billing\BillingPayment::class)
-                    <a href="{{ route('admin.billing.payments.create') }}" class="btn btn-primary btn-sm">Collect Payment</a>
+                    <a href="{{ route('admin.billing.payments.create') }}" class="btn btn-primary btn-sm">{{ __('Collect Payment') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Payment #</th><th>Patient</th><th>Invoice</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th></th></tr>
+                    <tr><th>{{ __('Payment #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Invoice') }}</th><th>{{ __('Amount') }}</th><th>{{ __('Method') }}</th><th>{{ __('Status') }}</th><th>{{ __('Date') }}</th><th></th></tr>
                 </thead>
                 <tbody>
                     @forelse($payments as $payment)
@@ -27,10 +27,10 @@
                             <td>{{ $payment->method?->name }}</td>
                             <td><span class="badge bg-info">{{ ucfirst($payment->status) }}</span></td>
                             <td>{{ $payment->payment_date?->format('Y-m-d') }}</td>
-                            <td><a href="{{ route('admin.billing.payments.show', $payment) }}" class="btn btn-xs btn-info">View</a></td>
+                            <td><a href="{{ route('admin.billing.payments.show', $payment) }}" class="btn btn-xs btn-info">{{ __('View') }}</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="text-center">No payments found.</td></tr>
+                        <tr><td colspan="8" class="text-center">{{ __('No payments found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -17,10 +17,10 @@
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Today's Operating List</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Today\'s Operating List') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Time</th><th>Theatre</th><th>Patient</th><th>Procedure</th><th>Surgeon</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Time') }}</th><th>{{ __('Theatre') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Procedure') }}</th><th>{{ __('Surgeon') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($todaysList as $surgery)
                         <tr>
@@ -30,10 +30,10 @@
                             <td>{{ $surgery->primaryProcedure?->name ?? '—' }}</td>
                             <td>{{ $surgery->primarySurgeon?->name ?? '—' }}</td>
                             <td><span class="badge bg-info">{{ ucwords(str_replace('_', ' ', $surgery->status)) }}</span></td>
-                            <td><a href="{{ route('admin.ot.surgeries.show', $surgery) }}" class="btn btn-xs btn-info">Open</a></td>
+                            <td><a href="{{ route('admin.ot.surgeries.show', $surgery) }}" class="btn btn-xs btn-info">{{ __('Open') }}</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No surgeries scheduled today.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No surgeries scheduled today.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

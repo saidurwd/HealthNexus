@@ -4,10 +4,10 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Patient Outstanding</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Patient Outstanding') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Invoice #</th><th>Patient</th><th>Date</th><th>Grand Total</th><th>Paid</th><th>Due</th></tr></thead>
+                <thead><tr><th>{{ __('Invoice #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Date') }}</th><th>{{ __('Grand Total') }}</th><th>{{ __('Paid') }}</th><th>{{ __('Due') }}</th></tr></thead>
                 <tbody>
                     @forelse($byPatient as $invoice)
                         <tr>
@@ -19,7 +19,7 @@
                             <td>{{ number_format($invoice->due_amount, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No outstanding patient balances.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No outstanding patient balances.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -27,10 +27,10 @@
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Corporate Outstanding</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Corporate Outstanding') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Corporate</th><th>Invoices</th><th>Total Due</th></tr></thead>
+                <thead><tr><th>{{ __('Corporate') }}</th><th>{{ __('Invoices') }}</th><th>{{ __('Total Due') }}</th></tr></thead>
                 <tbody>
                     @forelse($byCorporate as $row)
                         <tr>
@@ -39,7 +39,7 @@
                             <td>{{ number_format($row->total_due, 2) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="3" class="text-center">No outstanding corporate balances.</td></tr>
+                        <tr><td colspan="3" class="text-center">{{ __('No outstanding corporate balances.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

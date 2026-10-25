@@ -4,15 +4,15 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Bed Availability Search</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Bed Availability Search') }}</h3></div>
         <div class="card-body p-0">
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search bed code...">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search bed code...') }}">
                 </div>
                 <div class="col-md-2">
                     <select name="status" class="form-control">
-                        <option value="">All Statuses</option>
+                        <option value="">{{ __('All Statuses') }}</option>
                         @foreach(['available','reserved','occupied','cleaning','blocked','maintenance','isolation'] as $status)
                             <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
                         @endforeach
@@ -20,21 +20,21 @@
                 </div>
                 <div class="col-md-2">
                     <select name="gender" class="form-control">
-                        <option value="">Any Gender</option>
-                        <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Male</option>
-                        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                        <option value="">{{ __('Any Gender') }}</option>
+                        <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>{{ __('Male') }}</option>
+                        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check mt-2">
                         <input type="checkbox" name="isolation" value="1" class="form-check-input" id="isolation" {{ request('isolation') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="isolation">Isolation only</label>
+                        <label class="form-check-label" for="isolation">{{ __('Isolation only') }}</label>
                     </div>
                 </div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Search</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Search') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Bed Code</th><th>Room</th><th>Ward</th><th>Type</th><th>Gender</th><th>Status</th></tr></thead>
+                <thead><tr><th>{{ __('Bed Code') }}</th><th>{{ __('Room') }}</th><th>{{ __('Ward') }}</th><th>{{ __('Type') }}</th><th>{{ __('Gender') }}</th><th>{{ __('Status') }}</th></tr></thead>
                 <tbody>
                     @forelse($beds as $bed)
                         <tr>
@@ -46,7 +46,7 @@
                             <td><span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $bed->status)) }}</span></td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No beds match the search.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No beds match the search.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

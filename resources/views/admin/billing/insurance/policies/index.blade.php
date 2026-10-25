@@ -5,16 +5,16 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Insurance Policies</h3>
+            <h3 class="card-title">{{ __('Insurance Policies') }}</h3>
             <div class="card-tools">
                 @can('billing.insurance.policy.manage')
-                    <a href="{{ route('admin.billing.insurance.policies.create') }}" class="btn btn-primary btn-sm">New Policy</a>
+                    <a href="{{ route('admin.billing.insurance.policies.create') }}" class="btn btn-primary btn-sm">{{ __('New Policy') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Policy #</th><th>Patient</th><th>Provider</th><th>Coverage Limit</th><th>Copay %</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Policy #') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Provider') }}</th><th>{{ __('Coverage Limit') }}</th><th>{{ __('Copay %') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($policies as $policy)
                         <tr>
@@ -26,12 +26,12 @@
                             <td><span class="badge {{ $policy->status === 'active' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($policy->status) }}</span></td>
                             <td>
                                 @can('billing.insurance.policy.manage')
-                                    <a href="{{ route('admin.billing.insurance.policies.edit', $policy) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.billing.insurance.policies.edit', $policy) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No insurance policies found.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No insurance policies found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

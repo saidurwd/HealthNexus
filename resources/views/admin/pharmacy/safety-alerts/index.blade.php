@@ -4,20 +4,20 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Safety Alerts</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Safety Alerts') }}</h3></div>
         <div class="card-body p-0">
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3">
                     <select name="status" class="form-control">
-                        <option value="">All</option>
-                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Unresolved</option>
-                        <option value="overridden" {{ request('status') === 'overridden' ? 'selected' : '' }}>Overridden</option>
+                        <option value="">{{ __('All') }}</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('Unresolved') }}</option>
+                        <option value="overridden" {{ request('status') === 'overridden' ? 'selected' : '' }}>{{ __('Overridden') }}</option>
                     </select>
                 </div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Type</th><th>Severity</th><th>Medication</th><th>Explanation</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Type') }}</th><th>{{ __('Severity') }}</th><th>{{ __('Medication') }}</th><th>{{ __('Explanation') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($alerts as $alert)
                         <tr>
@@ -27,9 +27,9 @@
                             <td>{{ $alert->explanation }}</td>
                             <td>
                                 @if($alert->is_overridden)
-                                    <span class="badge bg-success">Overridden</span>
+                                    <span class="badge bg-success">{{ __('Overridden') }}</span>
                                 @else
-                                    <span class="badge bg-danger">Unresolved</span>
+                                    <span class="badge bg-danger">{{ __('Unresolved') }}</span>
                                 @endif
                             </td>
                             <td>
@@ -37,15 +37,15 @@
                                     @unless($alert->is_overridden)
                                         <form method="POST" action="{{ route('admin.pharmacy.safety-alerts.override', $alert) }}" class="d-flex gap-1">
                                             @csrf
-                                            <input type="text" name="reason" class="form-control form-control-sm" placeholder="Override reason" required>
-                                            <button type="submit" class="btn btn-xs btn-warning">Override</button>
+                                            <input type="text" name="reason" class="form-control form-control-sm" placeholder="{{ __('Override reason') }}" required>
+                                            <button type="submit" class="btn btn-xs btn-warning">{{ __('Override') }}</button>
                                         </form>
                                     @endunless
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No safety alerts found.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No safety alerts found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

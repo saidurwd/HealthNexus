@@ -5,7 +5,7 @@
 @section('page_content')
     @can('nursing.notes.create')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Note</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('New Note') }}</h3></div>
         <form action="{{ route('admin.nursing.notes.store', $episode) }}" method="post">
             @csrf
             <div class="card-body">
@@ -14,7 +14,7 @@
                 </select>
                 <textarea name="content" class="form-control" rows="3" required></textarea>
             </div>
-            <div class="card-footer"><button class="btn btn-primary">Save Draft</button></div>
+            <div class="card-footer"><button class="btn btn-primary">{{ __('Save Draft') }}</button></div>
         </form>
     </div>
     @endcan
@@ -37,8 +37,8 @@
                     @can('nursing.notes.amend')
                         <form action="{{ route('admin.nursing.notes.amend', $note) }}" method="post" class="mt-2">
                             @csrf
-                            <input name="content" class="form-control mb-1" placeholder="Addendum" required>
-                            <button class="btn btn-sm btn-secondary">Add Addendum</button>
+                            <input name="content" class="form-control mb-1" placeholder="{{ __('Addendum') }}" required>
+                            <button class="btn btn-sm btn-secondary">{{ __('Add Addendum') }}</button>
                         </form>
                     @endcan
                 @endif

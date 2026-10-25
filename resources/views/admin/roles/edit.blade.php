@@ -5,19 +5,19 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Edit Role</h3>
+            <h3 class="card-title">{{ __('Edit Role') }}</h3>
         </div>
         <form action="{{ route('admin.roles.update', $role) }}" method="post">
             @csrf
             @method('put')
             <div class="card-body">
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('Name') }}</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $role->name) }}" class="form-control @error('name') is-invalid @enderror" required>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Permissions</label>
+                    <label class="form-label">{{ __('Permissions') }}</label>
                     @php
                         $allPermissions = \Spatie\Permission\Models\Permission::orderBy('name')->get(['id', 'name']);
                         $oldPermissions = old('permissions', $role->permissions->pluck('name')->toArray());
@@ -31,8 +31,8 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Role</button>
+                <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Update Role') }}</button>
             </div>
         </form>
     </div>

@@ -5,20 +5,20 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Procedure Catalog</h3>
+            <h3 class="card-title">{{ __('Procedure Catalog') }}</h3>
             <div class="card-tools">
                 @can('radiology.procedure.create')
-                    <a href="{{ route('admin.radiology.procedures.create') }}" class="btn btn-primary btn-sm">New Procedure</a>
+                    <a href="{{ route('admin.radiology.procedures.create') }}" class="btn btn-primary btn-sm">{{ __('New Procedure') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <form method="GET" class="p-3">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name or code...">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search by name or code...') }}">
             </form>
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Code</th><th>Name</th><th>Modality</th><th>Body Part</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>{{ __('Code') }}</th><th>{{ __('Name') }}</th><th>{{ __('Modality') }}</th><th>{{ __('Body Part') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th></tr>
                 </thead>
                 <tbody>
                     @forelse($procedures as $procedure)
@@ -34,12 +34,12 @@
                             </td>
                             <td>
                                 @can('radiology.procedure.update')
-                                    <a href="{{ route('admin.radiology.procedures.edit', $procedure) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.radiology.procedures.edit', $procedure) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No radiology procedures found.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No radiology procedures found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

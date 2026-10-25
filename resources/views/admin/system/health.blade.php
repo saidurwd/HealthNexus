@@ -4,15 +4,15 @@
 
 @section('page_content')
 <div class="card">
-    <div class="card-header"><h3 class="card-title">System Health</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('System Health') }}</h3></div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Component</th>
-                    <th>Status</th>
-                    <th>Details</th>
-                    <th class="text-end">Latency</th>
+                    <th>{{ __('Component') }}</th>
+                    <th>{{ __('Status') }}</th>
+                    <th>{{ __('Details') }}</th>
+                    <th class="text-end">{{ __('Latency') }}</th>
                 </tr>
             </thead>
             <tbody>

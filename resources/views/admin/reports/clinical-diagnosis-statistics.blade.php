@@ -3,19 +3,19 @@
 @section('title', 'Diagnosis Statistics')
 
 @section('content_header')
-    <h1>Diagnosis Statistics</h1>
+    <h1>{{ __('Diagnosis Statistics') }}</h1>
 @stop
 
 @section('content')
     <div class="card mb-3">
         <div class="card-body">
             <form method="GET" class="form-inline">
-                <label class="mr-2">From</label>
+                <label class="mr-2">{{ __('From') }}</label>
                 <input type="date" name="from" value="{{ $from }}" class="form-control mr-3">
-                <label class="mr-2">To</label>
+                <label class="mr-2">{{ __('To') }}</label>
                 <input type="date" name="to" value="{{ $to }}" class="form-control mr-3">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{{ route('admin.reports.clinical') }}" class="btn btn-outline-secondary ml-2">Back to Clinical Reports</a>
+                <button type="submit" class="btn btn-primary">{{ __('Filter') }}</button>
+                <a href="{{ route('admin.reports.clinical') }}" class="btn btn-outline-secondary ml-2">{{ __('Back to Clinical Reports') }}</a>
             </form>
         </div>
     </div>
@@ -28,9 +28,9 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Diagnosis</th>
-                        <th>Coding System</th>
-                        <th>Count</th>
+                        <th>{{ __('Diagnosis') }}</th>
+                        <th>{{ __('Coding System') }}</th>
+                        <th>{{ __('Count') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,7 +42,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="text-center">No data for this range.</td>
+                            <td colspan="3" class="text-center">{{ __('No data for this range.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

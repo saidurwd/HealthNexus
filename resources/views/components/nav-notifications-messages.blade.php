@@ -21,12 +21,12 @@
         <div class="dropdown-divider"></div>
         <div class="text-center mt-2 pb-2">
             <i class="bi bi-info-circle display-4 text-muted"></i>
-            <p class="text-muted mt-2 mb-0">No new notifications</p>
+            <p class="text-muted mt-2 mb-0">{{ __('No new notifications') }}</p>
         </div>
         <div class="dropdown-divider"></div>
         <a href="{{ route('admin.notifications.index') }}"
            class="dropdown-item dropdown-footer text-center">
-            <i class="bi bi-arrow-right-circle"></i> See All
+            <i class="bi bi-arrow-right-circle"></i> {{ __('See All') }}
         </a>
     </div>
 </li>
@@ -49,11 +49,11 @@
         <div class="dropdown-divider"></div>
         <div class="text-center mt-2 pb-2">
             <i class="bi bi-chat-left display-4 text-muted"></i>
-            <p class="text-muted mt-2 mb-0">No new messages</p>
+            <p class="text-muted mt-2 mb-0">{{ __('No new messages') }}</p>
         </div>
         <div class="dropdown-divider"></div>
         <a href="#" class="dropdown-item dropdown-footer text-center">
-            <i class="bi bi-arrow-right-circle"></i> See All
+            <i class="bi bi-arrow-right-circle"></i> {{ __('See All') }}
         </a>
     </div>
 </li>

@@ -5,14 +5,14 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Critical Results</h3>
+            <h3 class="card-title">{{ __('Critical Results') }}</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.lab.critical-results.index', ['status' => 'unacknowledged']) }}" class="btn btn-sm btn-outline-danger">Unacknowledged only</a>
+                <a href="{{ route('admin.lab.critical-results.index', ['status' => 'unacknowledged']) }}" class="btn btn-sm btn-outline-danger">{{ __('Unacknowledged only') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Test</th><th>Patient</th><th>Value</th><th>Detected At</th><th>Notified To</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Test') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Value') }}</th><th>{{ __('Detected At') }}</th><th>{{ __('Notified To') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($alerts as $alert)
                         <tr>
@@ -23,9 +23,9 @@
                             <td>{{ $alert->notifiedTo?->name }}</td>
                             <td>
                                 @if($alert->isAcknowledged())
-                                    <span class="badge bg-success">Acknowledged</span>
+                                    <span class="badge bg-success">{{ __('Acknowledged') }}</span>
                                 @else
-                                    <span class="badge bg-danger">Pending</span>
+                                    <span class="badge bg-danger">{{ __('Pending') }}</span>
                                 @endif
                             </td>
                             <td>
@@ -33,14 +33,14 @@
                                     @can('lab.critical_result.acknowledge')
                                         <form method="post" action="{{ route('admin.lab.critical-results.acknowledge', $alert) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-xs btn-success">Acknowledge</button>
+                                            <button type="submit" class="btn btn-xs btn-success">{{ __('Acknowledge') }}</button>
                                         </form>
                                     @endcan
                                 @endif
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No critical results.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No critical results.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

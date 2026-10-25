@@ -3,15 +3,15 @@
 @section('title', 'Search')
 
 @section('content_header')
-    <h1>Search</h1>
+    <h1>{{ __('Search') }}</h1>
 @stop
 
 @section('content')
     <form method="GET" action="{{ route('admin.search') }}" class="mb-3">
         <div class="input-group">
             <input type="search" name="q" value="{{ $term }}" class="form-control form-control-lg" autofocus autocomplete="off"
-                   placeholder="MRN, mobile number, NID, name (Bangla or English), or scan a barcode">
-            <button class="btn btn-primary" type="submit">Search</button>
+                   placeholder="{{ __('MRN, mobile number, NID, name (Bangla or English), or scan a barcode') }}">
+            <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
         </div>
     </form>
 

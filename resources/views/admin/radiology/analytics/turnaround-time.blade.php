@@ -9,10 +9,10 @@
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3"><input type="date" name="from" value="{{ $from }}" class="form-control"></div>
                 <div class="col-md-3"><input type="date" name="to" value="{{ $to }}" class="form-control"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Procedure</th><th>Modality</th><th>Started</th><th>Completed</th><th>TAT (minutes)</th></tr></thead>
+                <thead><tr><th>{{ __('Procedure') }}</th><th>{{ __('Modality') }}</th><th>{{ __('Started') }}</th><th>{{ __('Completed') }}</th><th>{{ __('TAT (minutes)') }}</th></tr></thead>
                 <tbody>
                     @forelse($examinations as $row)
                         <tr>
@@ -23,7 +23,7 @@
                             <td>{{ $row['tat_minutes'] }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center">No data.</td></tr>
+                        <tr><td colspan="5" class="text-center">{{ __('No data.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -5,16 +5,16 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Analyzers</h3>
+            <h3 class="card-title">{{ __('Analyzers') }}</h3>
             <div class="card-tools">
                 @can('lab.analyzer.configure')
-                    <a href="{{ route('admin.lab.analyzers.create') }}" class="btn btn-primary btn-sm">Register Analyzer</a>
+                    <a href="{{ route('admin.lab.analyzers.create') }}" class="btn btn-primary btn-sm">{{ __('Register Analyzer') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Code</th><th>Name</th><th>Section</th><th>Vendor</th><th>Connection</th><th>Status</th></tr></thead>
+                <thead><tr><th>{{ __('Code') }}</th><th>{{ __('Name') }}</th><th>{{ __('Section') }}</th><th>{{ __('Vendor') }}</th><th>{{ __('Connection') }}</th><th>{{ __('Status') }}</th></tr></thead>
                 <tbody>
                     @forelse($analyzers as $analyzer)
                         <tr>
@@ -26,7 +26,7 @@
                             <td><span class="badge {{ $analyzer->is_active ? 'bg-success' : 'bg-secondary' }}">{{ $analyzer->is_active ? 'Active' : 'Inactive' }}</span></td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center">No analyzers registered.</td></tr>
+                        <tr><td colspan="6" class="text-center">{{ __('No analyzers registered.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

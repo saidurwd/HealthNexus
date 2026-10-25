@@ -5,21 +5,21 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Departments</h3>
+            <h3 class="card-title">{{ __('Departments') }}</h3>
             <div class="card-tools">
-                <span class="text-muted small">Create departments from within a Organization → Branch</span>
+                <span class="text-muted small">{{ __('Create departments from within a Organization → Branch') }}</span>
             </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Organization</th>
-                        <th>Branch</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Organization') }}</th>
+                        <th>{{ __('Branch') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,13 +35,13 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.organizations.branches.departments.show', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-info">View</a>
-                                <a href="{{ route('admin.organizations.branches.departments.edit', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('admin.organizations.branches.departments.show', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
+                                <a href="{{ route('admin.organizations.branches.departments.edit', [$department->organization, $department->branch, $department]) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No departments found.</td>
+                            <td colspan="6" class="text-center">{{ __('No departments found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

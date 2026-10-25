@@ -4,51 +4,51 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Price List</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('New Price List') }}</h3></div>
         <form action="{{ route('admin.billing.price-lists.store') }}" method="post">
             @csrf
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">{{ __('Name') }}</label>
                     <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" required>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Code</label>
+                    <label class="form-label">{{ __('Code') }}</label>
                     <input type="text" name="code" value="{{ old('code') }}" class="form-control @error('code') is-invalid @enderror" required>
                     @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Currency</label>
+                    <label class="form-label">{{ __('Currency') }}</label>
                     <input type="text" name="currency" value="{{ old('currency', 'BDT') }}" maxlength="3" class="form-control @error('currency') is-invalid @enderror" required>
                     @error('currency') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Priority (lower number = higher priority)</label>
+                    <label class="form-label">{{ __('Priority (lower number = higher priority)') }}</label>
                     <input type="number" name="priority" value="{{ old('priority', 100) }}" class="form-control @error('priority') is-invalid @enderror" required>
                     @error('priority') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">{{ __('Status') }}</label>
                     <select name="status" class="form-control" required>
-                        <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
                     </select>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Effective From</label>
+                        <label class="form-label">{{ __('Effective From') }}</label>
                         <input type="date" name="effective_from" value="{{ old('effective_from') }}" class="form-control">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Effective To</label>
+                        <label class="form-label">{{ __('Effective To') }}</label>
                         <input type="date" name="effective_to" value="{{ old('effective_to') }}" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.billing.price-lists.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Price List</button>
+                <a href="{{ route('admin.billing.price-lists.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Save Price List') }}</button>
             </div>
         </form>
     </div>

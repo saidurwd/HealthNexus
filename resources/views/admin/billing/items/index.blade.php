@@ -5,30 +5,30 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Service Catalog</h3>
+            <h3 class="card-title">{{ __('Service Catalog') }}</h3>
             <div class="card-tools">
                 @can('billing.item.manage')
-                    <a href="{{ route('admin.billing.items.create') }}" class="btn btn-primary btn-sm">New Item</a>
+                    <a href="{{ route('admin.billing.items.create') }}" class="btn btn-primary btn-sm">{{ __('New Item') }}</a>
                 @endcan
             </div>
         </div>
         <div class="card-body p-0">
             <form method="GET" class="p-3">
                 <div class="input-group">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name or code...">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search by name or code...') }}">
+                    <button type="submit" class="btn btn-primary">{{ __('Search') }}</button>
                 </div>
             </form>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Base Price</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Category') }}</th>
+                        <th>{{ __('Type') }}</th>
+                        <th>{{ __('Base Price') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,14 +45,14 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.billing.items.show', $item) }}" class="btn btn-xs btn-info">View</a>
+                                <a href="{{ route('admin.billing.items.show', $item) }}" class="btn btn-xs btn-info">{{ __('View') }}</a>
                                 @can('billing.item.manage')
-                                    <a href="{{ route('admin.billing.items.edit', $item) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.billing.items.edit', $item) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No billing items found.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No billing items found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

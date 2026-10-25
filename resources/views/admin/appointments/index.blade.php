@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h2 class="mb-0">Appointments</h2>
+            <h2 class="mb-0">{{ __('Appointments') }}</h2>
             <a href="{{ route('admin.appointments.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus me-1"></i>Book Appointment
+                <i class="bi bi-plus me-1"></i>{{ __('Book Appointment') }}
             </a>
         </div>
 
@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-md-3">
                     <select name="doctor_id" class="form-select">
-                        <option value="">All Doctors</option>
+                        <option value="">{{ __('All Doctors') }}</option>
                         @foreach($doctors ?? [] as $doctor)
                             <option value="{{ $doctor->id }}" {{ request('doctor_id') == $doctor->id ? 'selected' : '' }}>{{ $doctor->name }}</option>
                         @endforeach
@@ -26,16 +26,16 @@
                 </div>
                 <div class="col-md-3">
                     <select name="status" class="form-select">
-                        <option value="">All Statuses</option>
-                        <option value="scheduled" {{ request('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
-                        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                        <option value="checked_in" {{ request('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        <option value="">{{ __('All Statuses') }}</option>
+                        <option value="scheduled" {{ request('status') == 'scheduled' ? 'selected' : '' }}>{{ __('Scheduled') }}</option>
+                        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>{{ __('Confirmed') }}</option>
+                        <option value="checked_in" {{ request('status') == 'checked_in' ? 'selected' : '' }}>{{ __('Checked In') }}</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('Cancelled') }}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+                    <button type="submit" class="btn btn-outline-primary w-100">{{ __('Filter') }}</button>
                 </div>
             </div>
         </form>
@@ -46,14 +46,14 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Patient</th>
-                                <th>Doctor</th>
-                                <th>Date & Time</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Token</th>
-                                <th class="text-end">Created</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Patient') }}</th>
+                                <th>{{ __('Doctor') }}</th>
+                                <th>{{ __('Date & Time') }}</th>
+                                <th>{{ __('Type') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Token') }}</th>
+                                <th class="text-end">{{ __('Created') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,13 +81,13 @@
                                     <td>{{ $appointment->token->token_number ?? '-' }}</td>
                                     <td class="text-end"><small class="text-muted">{{ $appointment->created_at->format('M d, Y') }}</small></td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.appointments.show', $appointment) }}" class="btn btn-sm btn-outline-info" title="View">
+                                        <a href="{{ route('admin.appointments.show', $appointment) }}" class="btn btn-sm btn-outline-info" title="{{ __('View') }}">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         @if(in_array($appointment->status, ['scheduled', 'confirmed']))
                                             <form method="POST" action="{{ route('admin.appointments.check-in', $appointment) }}" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-outline-warning" title="Check-in">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" title="{{ __('Check-in') }}">
                                                     <i class="bi bi-door-open"></i>
                                                 </button>
                                             </form>
@@ -96,7 +96,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">No appointments found.</td>
+                                    <td colspan="8" class="text-center py-4 text-muted">{{ __('No appointments found.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

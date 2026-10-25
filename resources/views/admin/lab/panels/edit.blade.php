@@ -10,8 +10,8 @@
             @method('PUT')
             @include('admin.lab.panels._form', ['panel' => $panel])
             <div class="card-footer">
-                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Panel</button>
+                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Update Panel') }}</button>
             </div>
         </form>
     </div>

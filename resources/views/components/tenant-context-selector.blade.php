@@ -14,7 +14,7 @@
     <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50" style="display: none;">
         <div class="py-1">
             <div class="px-4 py-2 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                Organizations
+                {{ __('Organizations') }}
             </div>
             <template x-for="organization in organizations" :key="organization.id">
                 <button @click="selectOrganization(organization)" 
@@ -26,7 +26,7 @@
 
             <div x-show="currentOrganizationId" class="border-t border-gray-100">
                 <div class="px-4 py-2 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                    Branches
+                    {{ __('Branches') }}
                 </div>
                 <template x-for="branch in branches" :key="branch.id">
                     <button @click="selectBranch(branch)"

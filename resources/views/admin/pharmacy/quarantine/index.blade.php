@@ -4,12 +4,12 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Quarantine Stock</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Quarantine Stock') }}</h3></div>
         <form method="POST" action="{{ route('admin.pharmacy.quarantine.store') }}" class="row g-2 p-3">
             @csrf
             <div class="col-md-2">
                 <select name="store_id" class="form-control" required>
-                    <option value="">Store</option>
+                    <option value="">{{ __('Store') }}</option>
                     @foreach(\App\Models\Pharmacy\PharmacyStore::query()->forTenant(app(\App\Services\TenantContextResolver::class)->getOrganizationId())->where('is_active', true)->get() as $store)
                         <option value="{{ $store->id }}">{{ $store->name }}</option>
                     @endforeach
@@ -17,38 +17,38 @@
             </div>
             <div class="col-md-3">
                 <select name="batch_id" class="form-control" required>
-                    <option value="">Batch</option>
+                    <option value="">{{ __('Batch') }}</option>
                     @foreach(\App\Models\Pharmacy\PharmacyBatch::query()->where('organization_id', app(\App\Services\TenantContextResolver::class)->getOrganizationId())->where('is_quarantined', false)->with('medication')->get() as $batch)
                         <option value="{{ $batch->id }}">{{ $batch->medication?->name }} — {{ $batch->batch_number }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-1">
-                <input type="number" name="quantity" min="1" class="form-control" placeholder="Qty" required>
+                <input type="number" name="quantity" min="1" class="form-control" placeholder="{{ __('Qty') }}" required>
             </div>
             <div class="col-md-2">
                 <select name="reason_type" class="form-control" required>
-                    <option value="damage">Damage</option>
-                    <option value="recall">Recall</option>
-                    <option value="quality">Quality Concern</option>
-                    <option value="temperature_excursion">Temp. Excursion</option>
-                    <option value="other">Other</option>
+                    <option value="damage">{{ __('Damage') }}</option>
+                    <option value="recall">{{ __('Recall') }}</option>
+                    <option value="quality">{{ __('Quality Concern') }}</option>
+                    <option value="temperature_excursion">{{ __('Temp. Excursion') }}</option>
+                    <option value="other">{{ __('Other') }}</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="text" name="reason" class="form-control" placeholder="Reason" required>
+                <input type="text" name="reason" class="form-control" placeholder="{{ __('Reason') }}" required>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-danger w-100">Quarantine</button>
+                <button type="submit" class="btn btn-danger w-100">{{ __('Quarantine') }}</button>
             </div>
         </form>
     </div>
 
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Quarantine Records</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Quarantine Records') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Store</th><th>Medication</th><th>Batch</th><th>Qty</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Store') }}</th><th>{{ __('Medication') }}</th><th>{{ __('Batch') }}</th><th>{{ __('Qty') }}</th><th>{{ __('Reason') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($quarantineRecords as $record)
                         <tr>
@@ -62,17 +62,17 @@
                                 @if($record->status === 'quarantined')
                                     <form method="POST" action="{{ route('admin.pharmacy.quarantine.release', $record) }}" class="d-inline">
                                         @csrf
-                                        <button type="submit" class="btn btn-xs btn-success">Release</button>
+                                        <button type="submit" class="btn btn-xs btn-success">{{ __('Release') }}</button>
                                     </form>
                                     <form method="POST" action="{{ route('admin.pharmacy.quarantine.dispose', $record) }}" class="d-inline" onsubmit="return confirm('Dispose this quarantined stock permanently?')">
                                         @csrf
-                                        <button type="submit" class="btn btn-xs btn-dark">Dispose</button>
+                                        <button type="submit" class="btn btn-xs btn-dark">{{ __('Dispose') }}</button>
                                     </form>
                                 @endif
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No quarantine records found.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No quarantine records found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

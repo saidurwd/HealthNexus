@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-body p-0">
             <table class="table table-striped">
-                <thead><tr><th>Patient</th><th>Type</th><th>Time</th><th>Status</th><th></th></tr></thead>
+                <thead><tr><th>{{ __('Patient') }}</th><th>{{ __('Type') }}</th><th>{{ __('Time') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
                 <tbody>
                     @forelse($events as $event)
                         <tr>
@@ -18,13 +18,13 @@
                                 @if($event->status === 'draft')
                                     <form method="POST" action="{{ route('admin.icu.critical-events.finalize', $event) }}" class="d-inline">
                                         @csrf
-                                        <button class="btn btn-xs btn-success">Finalize</button>
+                                        <button class="btn btn-xs btn-success">{{ __('Finalize') }}</button>
                                     </form>
                                 @endif
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center">No critical events documented.</td></tr>
+                        <tr><td colspan="5" class="text-center">{{ __('No critical events documented.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

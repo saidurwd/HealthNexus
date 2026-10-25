@@ -16,13 +16,13 @@
                 @can('nursing.handover.create')
                     <form action="{{ route('admin.nursing.handover.finalize', $handover) }}" method="post">
                         @csrf
-                        <input type="number" name="incoming_nurse_id" class="form-control mb-2" placeholder="Incoming nurse user ID">
+                        <input type="number" name="incoming_nurse_id" class="form-control mb-2" placeholder="{{ __('Incoming nurse user ID') }}">
                         <button class="btn btn-primary">Finalize &amp; Send</button>
                     </form>
                 @endcan
             @elseif($handover->status === 'pending_acknowledgement')
                 @can('nursing.handover.acknowledge')
-                    <form action="{{ route('admin.nursing.handover.acknowledge', $handover) }}" method="post">@csrf<button class="btn btn-success">Acknowledge</button></form>
+                    <form action="{{ route('admin.nursing.handover.acknowledge', $handover) }}" method="post">@csrf<button class="btn btn-success">{{ __('Acknowledge') }}</button></form>
                 @endcan
             @endif
         </div>
