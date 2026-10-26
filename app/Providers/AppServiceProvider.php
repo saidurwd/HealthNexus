@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Documents\PdfRenderer;
+use App\Contracts\Integration\BloodRequestGateway;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
 use App\Contracts\Stock\StockLedger;
@@ -58,11 +59,13 @@ use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
 use App\Events\Radiology\RadiologyReportFinalized;
+use App\Integrations\BloodBankRequestGateway;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
 use App\Listeners\Billing\ReverseChargeOnReversalRequested;
+use App\Listeners\Blood\SyncDonationTestsOnLabReport;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
 use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
 use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
@@ -132,6 +135,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(StockLedger::class, DatabaseStockLedger::class);
         $this->app->bind(ChargeEventPublisher::class, BillingChargeEventPublisher::class);
 
+        // Phase 13: the real Blood Bank answers the gateway (it replies "not enabled" itself when the module is off for the organization).
+        $this->app->bind(BloodRequestGateway::class, BloodBankRequestGateway::class);
+
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);
         }
@@ -183,6 +189,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LabReportFinalized::class, [RecordLabReportOnPatientTimeline::class, 'handleFinalized']);
         Event::listen(LabReportAmended::class, [RecordLabReportOnPatientTimeline::class, 'handleAmended']);
         Event::listen(LabReportFinalized::class, [NotifyOnLabReportEvents::class, 'handleFinalized']);
+        Event::listen(LabReportFinalized::class, [SyncDonationTestsOnLabReport::class, 'handle']);
         Event::listen(LabReportAmended::class, [NotifyOnLabReportEvents::class, 'handleAmended']);
 
         Event::listen(ClinicalOrderCreated::class, CreateRadiologyOrderOnClinicalOrderCreated::class);

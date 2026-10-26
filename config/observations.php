@@ -32,5 +32,5 @@ return [
         'blood_pressure' => ['code' => '85354-9', 'members' => ['systolic_bp', 'diastolic_bp']],
     ],
 
-    'contexts' => ['opd', 'ipd', 'icu', 'ed', 'nursing', 'ot'],
+    'contexts' => ['opd', 'ipd', 'icu', 'ed', 'nursing', 'ot', 'transfusion'],
 ];

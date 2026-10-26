@@ -16,6 +16,12 @@ final class IntegrationResult
         return new self(true, 'ok', $data);
     }
 
+    /** The module is there but refused the request (a rule said no); the reason is meant for the person at the screen. */
+    public static function refused(string $gateway, string $reason): self
+    {
+        return new self(false, "{$gateway}: {$reason}");
+    }
+
     /** The module behind the gateway is not built or not enabled yet. */
     public static function notEnabled(string $gateway): self
     {

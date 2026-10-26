@@ -599,6 +599,42 @@ class PermissionSeeder extends Seeder
             'icu.audit.view',
             'icu.settings.manage',
 
+            // Blood Bank (Phase 13)
+            'bloodbank.dashboard.view',
+            'bloodbank.donor.view',
+            'bloodbank.donor.create',
+            'bloodbank.donor.update',
+            'bloodbank.screening.perform',
+            'bloodbank.donation.view',
+            'bloodbank.donation.collect',
+            'bloodbank.unit.view',
+            'bloodbank.unit.process',
+            'bloodbank.unit.release',
+            'bloodbank.unit.discard',
+            'bloodbank.test.record',
+            'bloodbank.inventory.view',
+            'bloodbank.inventory.manage',
+            'bloodbank.temperature.record',
+            'bloodbank.request.view',
+            'bloodbank.request.create',
+            'bloodbank.request.cancel',
+            'bloodbank.sample.receive',
+            'bloodbank.crossmatch.perform',
+            'bloodbank.issue.perform',
+            'bloodbank.issue.emergency',
+            'bloodbank.return.accept',
+            'bloodbank.transfusion.view',
+            'bloodbank.transfusion.record',
+            'bloodbank.reaction.record',
+            'bloodbank.incident.view',
+            'bloodbank.incident.manage',
+            'bloodbank.recall.manage',
+            'bloodbank.lookback.view',
+            'bloodbank.mtp.activate',
+            'bloodbank.report.view',
+            'bloodbank.report.export',
+            'bloodbank.settings.manage',
+
             // Insurance
             'insurance.view',
             'insurance.create',
@@ -681,7 +717,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
                 'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
                 'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
@@ -814,7 +850,7 @@ class PermissionSeeder extends Seeder
                 'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.transfusion.view', 'bloodbank.reaction.record', 'bloodbank.issue.emergency', 'bloodbank.mtp.activate', 'bloodbank.lookback.view', 'bloodbank.incident.view',
                 'patients.view', 'patients.create', 'patients.update',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.amend.request',
@@ -862,7 +898,7 @@ class PermissionSeeder extends Seeder
             // to the same permission set as 'staff_nurse' rather than left orphaned on the old
             // generic 'nursing.*' stub permissions (still granted below for backward compatibility).
             'nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.view', 'nursing.create', 'nursing.update', 'nursing.administer',
                 'nursing.dashboard.view',
@@ -1169,7 +1205,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'staff_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view',
@@ -1199,7 +1235,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'senior_staff_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1229,7 +1265,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'charge_nurse' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.disposition.decide', 'ed.kpi.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.disposition.decide', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1572,6 +1608,19 @@ class PermissionSeeder extends Seeder
                 'icu.billing.view',
                 'icu.reports.view', 'icu.reports.export',
                 'icu.audit.view', 'icu.settings.manage',
+                'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'blood_bank_technician' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.lookback.view', 'bloodbank.report.view',
+            ],
+            'blood_bank_medical_officer' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
+            ],
+            'blood_bank_manager' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
                 'reporting.view', 'reporting.export', 'reporting.print',
             ],
         ];

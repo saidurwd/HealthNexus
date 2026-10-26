@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             NursingSeeder::class,
             OtSeeder::class,
             IcuSeeder::class,
+            BloodBankSeeder::class,
             WorkflowSeeder::class,
             ClinicalMasterDataSeeder::class,
         ]);
