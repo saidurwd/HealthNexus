@@ -5,6 +5,9 @@ namespace Tests\Feature\Demo;
 use App\Models\Appointment;
 use App\Models\Branch;
 use App\Models\Encounter;
+use App\Models\Laboratory\LabOrder;
+use App\Models\Laboratory\LabOrderItem;
+use App\Models\Laboratory\LabResult;
 use App\Models\Organization;
 use App\Models\Patient;
 use Carbon\Carbon;
@@ -57,11 +60,15 @@ class DemoHistoryTest extends TestCase
     public function test_history_is_created_across_the_period_with_test_users(): void
     {
         $output = $this->run_();
+        fwrite(STDERR, $output.json_encode(LabOrder::query()->selectRaw('status,count(*) c')->groupBy('status')->pluck('c', 'status')).json_encode(LabResult::query()->selectRaw('result_status,count(*) c')->groupBy('result_status')->pluck('c', 'result_status')).json_encode(LabOrderItem::query()->selectRaw('status,count(*) c')->groupBy('status')->pluck('c', 'status')));
 
         $this->assertStringContainsString('superuser@demoh.example.invalid', $output);
         $this->assertGreaterThan(20, Patient::where('organization_id', $this->organization->id)->count());
         $this->assertGreaterThan(20, Appointment::where('organization_id', $this->organization->id)->count());
         $this->assertGreaterThan(15, Encounter::where('organization_id', $this->organization->id)->where('status', 'locked')->orWhere('status', 'completed')->count());
+
+        $this->assertGreaterThan(5, LabOrder::where('organization_id', $this->organization->id)->where('status', 'reported')->count());
+        $this->assertGreaterThan(5, LabResult::where('organization_id', $this->organization->id)->count());
 
         $dates = Encounter::where('organization_id', $this->organization->id)->pluck('encounter_date')->map(fn ($d) => Carbon::parse($d));
         $this->assertGreaterThan(20, $dates->min()->diffInDays($dates->max()), 'encounters are spread over the month');
