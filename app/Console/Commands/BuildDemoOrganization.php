@@ -25,7 +25,7 @@ use Spatie\Permission\Models\Permission;
 class BuildDemoOrganization extends Command
 {
     protected $signature = 'demo:build {--patients=300 : Number of fake patients} {--password= : Password for the training admin (generated if omitted)}
-        {--retire-old : Deactivate earlier training organizations} {--allow-production : Run even when APP_ENV=production}';
+        {--retire-old : Deactivate earlier training organizations} {--history= : Also give every module this many months of history (use 6) and create test users by module} {--allow-production : Run even when APP_ENV=production}';
 
     protected $description = 'Create a training organization full of clearly fake data (names, numbers and e-mails are invented)';
 
@@ -82,6 +82,14 @@ class BuildDemoOrganization extends Command
             $batch = $imports->commit($imports->validate($imports->upload($admin, $context, $key, $path, "demo-$key.csv")), $admin);
             unlink($path);
             $this->line(sprintf('  %-14s %4d imported, %d skipped', $key, $batch->imported_rows, $batch->total_rows - $batch->imported_rows));
+        }
+
+        if ($months = (int) $this->option('history')) {
+            // The catalogue seeders are idempotent; they give the new organization the wards, theatres, ICU beds, imaging and drug catalogues the history needs.
+            foreach ([\Database\Seeders\BillingSeeder::class, \Database\Seeders\LabSeeder::class, \Database\Seeders\RadiologySeeder::class, \Database\Seeders\PharmacySeeder::class, \Database\Seeders\IpdSeeder::class, \Database\Seeders\NursingSeeder::class, \Database\Seeders\OtSeeder::class, \Database\Seeders\IcuSeeder::class, \Database\Seeders\WorkflowSeeder::class] as $seeder) {
+                $this->callSilent('db:seed', ['--class' => $seeder, '--force' => true]);
+            }
+            $this->call('demo:history', ['organization' => $organization->code, '--months' => $months, '--password' => $password]);
         }
 
         $this->newLine();

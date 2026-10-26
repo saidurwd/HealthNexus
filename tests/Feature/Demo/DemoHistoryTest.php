@@ -5,9 +5,6 @@ namespace Tests\Feature\Demo;
 use App\Models\Appointment;
 use App\Models\Branch;
 use App\Models\Encounter;
-use App\Models\Laboratory\LabOrder;
-use App\Models\Laboratory\LabOrderItem;
-use App\Models\Laboratory\LabResult;
 use App\Models\Organization;
 use App\Models\Patient;
 use Carbon\Carbon;
@@ -21,9 +18,11 @@ use Database\Seeders\OtSeeder;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\PharmacySeeder;
 use Database\Seeders\RadiologySeeder;
+use Database\Seeders\SettingsTableSeeder;
 use Database\Seeders\WorkflowSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /**
@@ -41,7 +40,7 @@ class DemoHistoryTest extends TestCase
         parent::setUp();
         $this->organization = Organization::factory()->create(['code' => 'DEMOH']);
         Branch::factory()->create(['organization_id' => $this->organization->id]);
-        $this->seed([PermissionSeeder::class, BillingSeeder::class, LabSeeder::class, RadiologySeeder::class, PharmacySeeder::class, IpdSeeder::class, NursingSeeder::class, OtSeeder::class, IcuSeeder::class, WorkflowSeeder::class, ClinicalMasterDataSeeder::class]);
+        $this->seed([PermissionSeeder::class, SettingsTableSeeder::class, BillingSeeder::class, LabSeeder::class, RadiologySeeder::class, PharmacySeeder::class, IpdSeeder::class, NursingSeeder::class, OtSeeder::class, IcuSeeder::class, WorkflowSeeder::class, ClinicalMasterDataSeeder::class]);
     }
 
     protected function tearDown(): void
@@ -60,26 +59,49 @@ class DemoHistoryTest extends TestCase
     public function test_history_is_created_across_the_period_with_test_users(): void
     {
         $output = $this->run_();
-        fwrite(STDERR, $output.json_encode(LabOrder::query()->selectRaw('status,count(*) c')->groupBy('status')->pluck('c', 'status')).json_encode(LabResult::query()->selectRaw('result_status,count(*) c')->groupBy('result_status')->pluck('c', 'result_status')).json_encode(LabOrderItem::query()->selectRaw('status,count(*) c')->groupBy('status')->pluck('c', 'status')));
+        $org = $this->organization->id;
 
         $this->assertStringContainsString('superuser@demoh.example.invalid', $output);
-        $this->assertGreaterThan(20, Patient::where('organization_id', $this->organization->id)->count());
-        $this->assertGreaterThan(20, Appointment::where('organization_id', $this->organization->id)->count());
-        $this->assertGreaterThan(15, Encounter::where('organization_id', $this->organization->id)->where('status', 'locked')->orWhere('status', 'completed')->count());
+        $this->assertGreaterThan(20, Patient::where('organization_id', $org)->count());
+        $this->assertGreaterThan(20, Appointment::where('organization_id', $org)->count());
+        $this->assertGreaterThan(15, Encounter::where('organization_id', $org)->whereIn('status', ['locked', 'completed'])->count());
 
-        $this->assertGreaterThan(5, LabOrder::where('organization_id', $this->organization->id)->where('status', 'reported')->count());
-        $this->assertGreaterThan(5, LabResult::where('organization_id', $this->organization->id)->count());
+        $has = fn (string $table, int $min, array $where = []) => $this->assertGreaterThanOrEqual($min, DB::table($table)->where('organization_id', $org)->where($where)->count(), "$table has history");
 
-        $dates = Encounter::where('organization_id', $this->organization->id)->pluck('encounter_date')->map(fn ($d) => Carbon::parse($d));
+        // every built module has data
+        $has('lab_orders', 10, ['status' => 'reported']);
+        $has('lab_results', 10);
+        $has('radiology_orders', 1);
+        $has('pharmacy_dispensings', 5);
+        $has('pharmacy_batches', 10);
+        $has('ipd_admissions', 10);
+        $has('ipd_bed_allocations', 10);
+        $has('nursing_episodes', 10);
+        $has('nursing_medication_administrations', 20);
+        $has('ot_surgeries', 3);
+        $has('icu_episodes', 3);
+        $has('icu_observations', 20);
+        $has('ed_visits', 15);
+        $has('ed_dispositions', 10);
+        $has('billing_invoices', 30);
+        $has('billing_payments', 20);
+        $has('billing_cashier_sessions', 10);
+        $has('billing_charges', 50);
+
+        // the money adds up, no bed holds two patients, no ED visit is closed twice
+        $this->assertSame(0, DB::table('billing_invoices')->where('organization_id', $org)->whereRaw('ABS(paid_amount + due_amount - grand_total) > 0.01')->count());
+        $this->assertSame(0, DB::table('ipd_bed_allocations')->whereNull('released_at')->groupBy('bed_id')->havingRaw('count(*) > 1')->get()->count());
+        $this->assertSame(0, DB::table('ed_dispositions')->groupBy('visit_id')->havingRaw('count(*) > 1')->get()->count());
+
+        // running it again is refused instead of duplicating the history
+        $appointments = Appointment::count();
+        $this->assertSame(1, Artisan::call('demo:history', ['organization' => 'DEMOH', '--months' => 1, '--visits-per-day' => 2]));
+        $this->assertStringContainsString('already has demo history', Artisan::output());
+        $this->assertSame($appointments, Appointment::count());
+
+        $dates = Encounter::where('organization_id', $org)->pluck('encounter_date')->map(fn ($d) => Carbon::parse($d));
         $this->assertGreaterThan(20, $dates->min()->diffInDays($dates->max()), 'encounters are spread over the month');
         $this->assertTrue($dates->max()->lt(now()->startOfDay()), 'history ends before today');
-    }
-
-    public function test_it_can_be_run_again_without_failing(): void
-    {
-        $this->run_();
-        $this->run_();
-        $this->assertTrue(true);
     }
 
     public function test_production_is_refused(): void

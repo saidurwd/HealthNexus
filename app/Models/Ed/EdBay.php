@@ -3,12 +3,13 @@
 namespace App\Models\Ed;
 
 use App\Models\Concerns\HasPublicId;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EdBay extends Model
 {
-    use HasPublicId;
+    use HasFactory, HasPublicId;
 
     public const AVAILABLE = 'available';
 

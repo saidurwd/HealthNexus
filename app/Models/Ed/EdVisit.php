@@ -7,6 +7,7 @@ use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class EdVisit extends Model
 {
-    use HasPublicId;
+    use HasFactory, HasPublicId;
 
     public const AWAITING_TRIAGE = 'awaiting_triage';
 

@@ -20,7 +20,7 @@ class BuildDemoHistory extends Command
 {
     protected $signature = 'demo:history {organization? : Organization code (default: the first organization)} {--months= : Months of history (default 6)}
         {--visits-per-day= : Outpatient visits per working day (default 8)} {--password= : Password for every demo login (generated if omitted)}
-        {--only=* : Run only these history classes (short name, e.g. PatientsHistory)} {--skip-access : Do not create the test users} {--allow-production : Run even when APP_ENV=production}';
+        {--only=* : Run only these history classes (short name, e.g. PatientsHistory)} {--skip-access : Do not create the test users} {--force : Build again even if history exists} {--allow-production : Run even when APP_ENV=production}';
 
     protected $description = 'Create six months of demo history for every module, and test users by module, permission and feature';
 
@@ -35,6 +35,11 @@ class BuildDemoHistory extends Command
         $organization = $this->argument('organization') ? Organization::where('code', $this->argument('organization'))->first() : Organization::query()->orderBy('id')->first();
         if (! $organization) {
             $this->error('No such organization.');
+
+            return self::FAILURE;
+        }
+        if (data_get($organization->settings, 'demo_history.built_at') && ! $this->option('force')) {
+            $this->error(sprintf('%s already has demo history (built %s). Use a new training organization (demo:build), or --force to add another period on top.', $organization->code, data_get($organization->settings, 'demo_history.built_at')));
 
             return self::FAILURE;
         }
@@ -72,6 +77,10 @@ class BuildDemoHistory extends Command
             $started = microtime(true);
             $this->line(sprintf('  %-26s %s  [%.1fs]', $history->name(), $history->run($context), microtime(true) - $started));
         }
+
+        $organization->update([
+            'settings' => array_merge($organization->settings ?? [], ['demo_history' => ['built_at' => now()->toDateTimeString(), 'months' => $context->months]]),
+        ]);
 
         if ($access) {
             $this->newLine();
