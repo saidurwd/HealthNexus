@@ -4,10 +4,12 @@ namespace Tests\Feature\Blood;
 
 use App\Models\Blood\BloodDonor;
 use App\Models\Blood\BloodUnit;
+use App\Models\Laboratory\LabOrder;
 use App\Services\Blood\BloodDonationService;
 use App\Services\Blood\BloodDonorService;
 use App\Services\Blood\BloodProcessingService;
 use App\Services\Blood\BloodTestingService;
+use App\Services\SettingsService;
 use Illuminate\Validation\ValidationException;
 
 class BloodDonorAndDonationTest extends BloodTestCase
@@ -45,7 +47,7 @@ class BloodDonorAndDonationTest extends BloodTestCase
 
     public function test_the_eligibility_rules_are_editable_policy_not_code(): void
     {
-        app(\App\Services\SettingsService::class)->set('blood.eligibility', ['min_age' => 18, 'max_age' => 60, 'min_weight_kg' => 50, 'min_hb' => ['M' => 9.0, 'F' => 9.0], 'min_interval_days' => ['M' => 90, 'F' => 120],
+        app(SettingsService::class)->set('blood.eligibility', ['min_age' => 18, 'max_age' => 60, 'min_weight_kg' => 50, 'min_hb' => ['M' => 9.0, 'F' => 9.0], 'min_interval_days' => ['M' => 90, 'F' => 120],
             'pulse' => [50, 100], 'systolic' => [100, 180], 'diastolic' => [60, 100], 'max_temp_c' => 37.5], 'blood');
         $this->assertSame('eligible', $this->goodScreening($this->donor(), ['hemoglobin' => 10.0])->outcome);
     }
@@ -92,7 +94,7 @@ class BloodDonorAndDonationTest extends BloodTestCase
 
         // the tests are a Laboratory order, not a second result store
         $this->assertDatabaseHas('clinical_orders', ['id' => $donation->clinical_order_id, 'order_type' => 'laboratory']);
-        $this->assertSame(7, \App\Models\Laboratory\LabOrder::where('clinical_order_id', $donation->clinical_order_id)->firstOrFail()->items()->count());
+        $this->assertSame(7, LabOrder::where('clinical_order_id', $donation->clinical_order_id)->firstOrFail()->items()->count());
         $this->assertSame(7, $donation->tests()->count());
     }
 

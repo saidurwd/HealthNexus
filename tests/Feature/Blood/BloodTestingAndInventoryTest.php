@@ -6,10 +6,18 @@ use App\Models\Blood\BloodDonor;
 use App\Models\Blood\BloodStorageLocation;
 use App\Models\Blood\BloodUnit;
 use App\Models\Clinical\ClinicalAlert;
+use App\Models\Laboratory\LabOrder;
+use App\Models\Laboratory\LabOrderItem;
+use App\Models\Laboratory\LabTest;
 use App\Services\Blood\BloodDonationService;
 use App\Services\Blood\BloodInventoryService;
 use App\Services\Blood\BloodProcessingService;
 use App\Services\Blood\BloodTestingService;
+use App\Services\Blood\BloodUnitService;
+use App\Services\Laboratory\LabReportService;
+use App\Services\Laboratory\ResultEntryService;
+use App\Services\Laboratory\ResultValidationService;
+use App\Services\Laboratory\SpecimenService;
 use Illuminate\Validation\ValidationException;
 
 class BloodTestingAndInventoryTest extends BloodTestCase
@@ -78,21 +86,21 @@ class BloodTestingAndInventoryTest extends BloodTestCase
     public function test_results_are_read_from_the_laboratory_not_typed_twice(): void
     {
         $donation = $this->quarantined();
-        $order = \App\Models\Laboratory\LabOrder::where('clinical_order_id', $donation->clinical_order_id)->firstOrFail();
+        $order = LabOrder::where('clinical_order_id', $donation->clinical_order_id)->firstOrFail();
         $analyst = $this->staff(['super_admin']);
         $reviewer = $this->staff(['super_admin']);
-        $specimen = app(\App\Services\Laboratory\SpecimenService::class)->collect($order, ['order_item_ids' => $order->items()->pluck('id')->all()], $analyst);
-        app(\App\Services\Laboratory\SpecimenService::class)->receive($specimen, $analyst);
+        $specimen = app(SpecimenService::class)->collect($order, ['order_item_ids' => $order->items()->pluck('id')->all()], $analyst);
+        app(SpecimenService::class)->receive($specimen, $analyst);
         $values = ['BB-ABO' => 'A', 'BB-RH' => 'positive'];
-        foreach (\App\Models\Laboratory\LabOrderItem::where('lab_order_id', $order->id)->get() as $item) {
-            $code = \App\Models\Laboratory\LabTest::whereKey($item->test_id)->value('code');
-            $result = app(\App\Services\Laboratory\ResultEntryService::class)->enter($item->refresh(), ['qualitative_value' => $values[$code] ?? 'Negative'], $analyst);
+        foreach (LabOrderItem::where('lab_order_id', $order->id)->get() as $item) {
+            $code = LabTest::whereKey($item->test_id)->value('code');
+            $result = app(ResultEntryService::class)->enter($item->refresh(), ['qualitative_value' => $values[$code] ?? 'Negative'], $analyst);
             $entered[] = $result;
         }
         foreach ($entered as $result) {
-            app(\App\Services\Laboratory\ResultValidationService::class)->technicalValidate($result->refresh(), $reviewer);
+            app(ResultValidationService::class)->technicalValidate($result->refresh(), $reviewer);
         }
-        app(\App\Services\Laboratory\LabReportService::class)->finalize($order->refresh(), $reviewer);
+        app(LabReportService::class)->finalize($order->refresh(), $reviewer);
 
         $units = BloodUnit::where('donation_id', $donation->id)->get();
         $this->assertTrue($units->every(fn ($u) => $u->abo === 'A' && $u->rh === 'positive'), 'the lab result reached the units through the event');
@@ -124,7 +132,7 @@ class BloodTestingAndInventoryTest extends BloodTestCase
         $this->assertSame(BloodUnit::EXPIRED, $unit->refresh()->status);
 
         $this->expectException(ValidationException::class);
-        app(\App\Services\Blood\BloodUnitService::class)->move($unit, BloodUnit::AVAILABLE, $this->user);
+        app(BloodUnitService::class)->move($unit, BloodUnit::AVAILABLE, $this->user);
     }
 
     public function test_fefo_lists_soonest_expiry_first_and_the_summary_counts_by_group(): void

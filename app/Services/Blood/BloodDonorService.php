@@ -9,7 +9,7 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Services\Numbering\NumberSeriesService;
 use App\Services\Patients\PatientService;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -134,7 +134,7 @@ class BloodDonorService
         return [$failed, $reason];
     }
 
-    private function nextEligibleDate(BloodDonor $donor, Patient $patient): ?\Carbon\CarbonInterface
+    private function nextEligibleDate(BloodDonor $donor, Patient $patient): ?CarbonInterface
     {
         $days = (int) $this->policy->get('eligibility')['min_interval_days'][$patient->sex === 'F' ? 'F' : 'M'];
 

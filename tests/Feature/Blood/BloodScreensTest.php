@@ -4,11 +4,11 @@ namespace Tests\Feature\Blood;
 
 use App\Contracts\Integration\BloodRequestGateway;
 use App\Models\Blood\BloodDonation;
+use App\Models\Blood\BloodDonor;
+use App\Models\Blood\BloodDonorScreening;
 use App\Models\Blood\BloodIncident;
-use App\Models\Blood\BloodIssue;
 use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodStorageLocation;
-use App\Models\Blood\BloodTransfusion;
 use App\Models\Blood\BloodUnit;
 use App\Models\Branch;
 use App\Models\Organization;
@@ -16,6 +16,8 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Services\Blood\BloodIssueService;
 use App\Services\Blood\BloodTransfusionService;
+use App\Services\Demo\DemoAccess;
+use App\Services\ModuleManager;
 use Database\Seeders\PermissionSeeder;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -46,9 +48,9 @@ class BloodScreensTest extends BloodTestCase
     {
         $base = '/admin/blood-bank';
         $this->post("$base/donors", ['first_name' => 'Nadia', 'last_name' => 'Akter', 'sex' => 'F', 'date_of_birth' => now()->subYears(28)->toDateString(), 'consent' => 1])->assertRedirect();
-        $donor = \App\Models\Blood\BloodDonor::firstOrFail();
+        $donor = BloodDonor::firstOrFail();
         $this->post("$base/donors/{$donor->public_id}/screening", ['weight_kg' => 60, 'hemoglobin' => 13.5, 'systolic' => 118, 'diastolic' => 76, 'pulse' => 70, 'temperature_c' => 36.7])->assertRedirect()->assertSessionHas('success');
-        $screening = \App\Models\Blood\BloodDonorScreening::firstOrFail();
+        $screening = BloodDonorScreening::firstOrFail();
         $this->post("$base/donors/{$donor->public_id}/donations", ['screening' => $screening->public_id])->assertRedirect();
         $donation = BloodDonation::firstOrFail();
         $this->post("$base/donations/{$donation->public_id}/complete", ['volume_ml' => 450])->assertRedirect()->assertSessionHas('success');
@@ -81,7 +83,7 @@ class BloodScreensTest extends BloodTestCase
         $bad = $gateway->requestUnits(['patient_id' => $patient->id, 'user_id' => $this->user->id, 'component' => 'prbc', 'units' => 99]);
         $this->assertFalse($bad->handled);
 
-        app(\App\Services\ModuleManager::class)->set('bloodbank', false, $this->organization->id);
+        app(ModuleManager::class)->set('bloodbank', false, $this->organization->id);
         $off = $gateway->requestUnits(['patient_id' => $patient->id, 'user_id' => $this->user->id, 'component' => 'prbc', 'units' => 1]);
         $this->assertFalse($off->handled);
         $this->assertStringContainsString('not enabled', $off->reason);
@@ -94,7 +96,7 @@ class BloodScreensTest extends BloodTestCase
         $result = app(BloodRequestGateway::class)->releaseEmergencyUnits(['patient_id' => $this->patient()->id, 'user_id' => $this->user->id, 'authorised_by' => 'Dr. Karim', 'reason' => 'Trauma, massive bleeding', 'source_module' => 'ed']);
 
         $this->assertTrue($result->handled);
-        $this->assertSame(2, $result->data["issued"], "one O-negative red cell and one platelet bag; no AB plasma");
+        $this->assertSame(2, $result->data['issued'], 'one O-negative red cell and one platelet bag; no AB plasma');
     }
 
     private function routes(): array
@@ -158,7 +160,7 @@ class BloodScreensTest extends BloodTestCase
     {
         $this->seed(PermissionSeeder::class);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        app(\App\Services\Demo\DemoAccess::class)->build($this->organization, $this->branch, 'x-pass-123');
+        app(DemoAccess::class)->build($this->organization, $this->branch, 'x-pass-123');
         $viewer = User::where('email', 'bloodbank.viewer@'.strtolower($this->organization->code).'.example.invalid')->firstOrFail();
         $this->actingAs($viewer);
 

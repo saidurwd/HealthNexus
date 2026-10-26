@@ -43,7 +43,7 @@ return [
         'awaiting_triage' => ['warning', 'bi-clipboard-pulse'], 'in_treatment' => ['primary', 'bi-activity'], 'observation' => ['info', 'bi-eye'],
         'awaiting_disposition' => ['warning', 'bi-signpost-split'],
         // blood bank
-        'available' => ['success', 'bi-check-circle'], 'reserved' => ['info', 'bi-bookmark-check'], 
+        'available' => ['success', 'bi-check-circle'], 'reserved' => ['info', 'bi-bookmark-check'],
         'transfused' => ['secondary', 'bi-droplet-fill'], 'blocked' => ['danger', 'bi-slash-octagon'], 'discarded' => ['secondary', 'bi-trash'],
         'processed' => ['secondary', 'bi-diagram-2'], 'eligible' => ['success', 'bi-person-check'], 'deferred' => ['warning', 'bi-person-dash'], 'permanently_deferred' => ['danger', 'bi-person-x'],
         'collecting' => ['primary', 'bi-droplet-half'], 'aborted' => ['secondary', 'bi-x-circle'], 'sample_received' => ['info', 'bi-eyedropper'],

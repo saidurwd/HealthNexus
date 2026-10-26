@@ -2,9 +2,13 @@
 
 namespace Tests\Feature\Blood;
 
+use App\Models\Blood\BloodCrossmatch;
 use App\Models\Blood\BloodIncident;
+use App\Models\Blood\BloodIssue;
+use App\Models\Blood\BloodReservation;
 use App\Models\Blood\BloodUnit;
 use App\Models\Clinical\ClinicalAlert;
+use App\Models\Clinical\ClinicalObservation;
 use App\Models\Patient;
 use App\Services\Blood\BloodCompatibilityService;
 use App\Services\Blood\BloodInventoryService;
@@ -79,8 +83,8 @@ class BloodTransfusionChainTest extends BloodTestCase
             }
             $this->assertSame(BloodUnit::AVAILABLE, $unit->refresh()->status);
         }
-        $this->assertSame(2, \App\Models\Blood\BloodCrossmatch::where('request_id', $request->id)->where('result', 'incompatible')->count());
-        $this->assertSame(0, \App\Models\Blood\BloodReservation::count());
+        $this->assertSame(2, BloodCrossmatch::where('request_id', $request->id)->where('result', 'incompatible')->count());
+        $this->assertSame(0, BloodReservation::count());
     }
 
     public function test_a_compatible_unit_is_reserved_charged_for_the_crossmatch_and_the_reservation_lapses_and_frees_it(): void
@@ -207,7 +211,7 @@ class BloodTransfusionChainTest extends BloodTestCase
         $transfusion = $service->start($issue, $a, $b, $patient->enterprise_patient_no, $unit->unit_number, null, ['pulse' => 80, 'temperature' => 36.9, 'systolic' => 120, 'diastolic' => 78]);
         $this->assertFalse($transfusion->verification_override);
         $service->recordObservations($transfusion, $a, ['pulse' => 84, 'temperature' => 37.0]);
-        $this->assertSame(6, \App\Models\Clinical\ClinicalObservation::where('patient_id', $patient->id)->where('context_type', 'transfusion')->count());
+        $this->assertSame(6, ClinicalObservation::where('patient_id', $patient->id)->where('context_type', 'transfusion')->count());
 
         $service->complete($transfusion, $a, 270);
         $this->assertSame(BloodUnit::TRANSFUSED, $unit->refresh()->status);
@@ -335,7 +339,7 @@ class BloodTransfusionChainTest extends BloodTestCase
 
         $this->assertCount(3, $result['requests']);
         $this->assertTrue(collect($result['requests'])->every(fn ($r) => $r->priority === 'massive'));
-        $this->assertSame(2, \App\Models\Blood\BloodIssue::where('patient_id', $patient->id)->whereHas('unit', fn ($q) => $q->where('component', 'prbc'))->count());
+        $this->assertSame(2, BloodIssue::where('patient_id', $patient->id)->whereHas('unit', fn ($q) => $q->where('component', 'prbc'))->count());
         $this->assertSame(['prbc' => 2, 'ffp' => 4], $result['short'], 'two O-negative bags and no AB plasma: the shortage is reported, not hidden');
         $this->assertGreaterThanOrEqual(1, BloodIncident::where('incident_type', 'emergency_release')->count());
         $this->assertNotNull(app(BloodInventoryService::class));
