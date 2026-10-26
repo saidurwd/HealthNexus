@@ -100,10 +100,19 @@ _Generated from the Schema::create calls in database/migrations._
 - `workflow_steps`
 - `workflows`
 
-## ed (6)
+## ed (15)
 
 - `ed_bay_assignments`
 - `ed_bays`
+- `ed_consults`
+- `ed_dispositions`
+- `ed_injuries`
+- `ed_mci_activations`
+- `ed_medication_administrations`
+- `ed_observation_stays`
+- `ed_protocol_runs`
+- `ed_protocol_steps`
+- `ed_resus_events`
 - `ed_status_history`
 - `ed_triage_records`
 - `ed_visits`

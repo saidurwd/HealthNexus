@@ -15,6 +15,7 @@ use App\Models\Prescription;
 use App\Models\Radiology\RadiologyOrder;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\BreakGlassService;
 use App\Services\Ed\EdBayService;
 use App\Services\Ed\EdProtocolService;
 use App\Services\Ed\EdTriageService;
@@ -69,7 +70,8 @@ class EdVisitController extends Controller
 
     public function show(Request $request, EdVisit $visit)
     {
-        $this->authorizeVisit($request, $visit, 'ed.visit.view');
+        // Reading a visit of another branch of the same organization is possible only with an active, logged break-glass grant on its encounter.
+        $this->authorizeVisit($request, $visit, 'ed.visit.view', allowBreakGlass: true);
 
         return view('admin.ed.visit', [
             'visit' => $visit->load(['patient', 'bay.zone', 'zone', 'doctor', 'nurse', 'triageRecords.assessor', 'statusHistory', 'resusEvents.recorder', 'protocolRuns.steps', 'injuries', 'consults.responder', 'observationStays', 'disposition']),
@@ -142,10 +144,11 @@ class EdVisitController extends Controller
     }
 
     /** A visit of another organization or branch does not exist for this caller (404). */
-    private function authorizeVisit(Request $request, EdVisit $visit, string $permission): void
+    private function authorizeVisit(Request $request, EdVisit $visit, string $permission, bool $allowBreakGlass = false): void
     {
         abort_unless($visit->organization_id === $this->tenant->getOrganizationId(), 404);
-        abort_unless(! $this->tenant->getBranchId() || $visit->branch_id === $this->tenant->getBranchId(), 404);
+        $otherBranch = $this->tenant->getBranchId() && $visit->branch_id !== $this->tenant->getBranchId();
+        abort_unless(! $otherBranch || ($allowBreakGlass && app(BreakGlassService::class)->hasActiveAccess($request->user(), $visit->encounter)), 404);
         abort_unless($request->user()->can($permission), 403);
     }
 }
