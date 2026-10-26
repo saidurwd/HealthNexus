@@ -4,11 +4,13 @@ namespace App\Services\Demo\History\Modules;
 
 use App\Models\Pharmacy\PharmacyDispensing;
 use App\Models\Pharmacy\PharmacyOrder;
+use App\Models\Pharmacy\PharmacyOrderItem;
 use App\Models\Pharmacy\PharmacyStore;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
 use App\Services\Pharmacy\PharmacyDispensingService;
 use App\Services\Pharmacy\PharmacyReturnService;
+use Carbon\CarbonImmutable;
 use Illuminate\Validation\ValidationException;
 
 /** Dispenses the prescriptions OPD issued — first-in-first-out from the monthly stock, some only partly — verifies them, and takes a few returns. */
@@ -35,14 +37,14 @@ class PharmacyHistory implements DemoHistoryModule
 
         PharmacyOrder::query()->where('organization_id', $context->organization->id)->with('items')->orderBy('id')->each(function (PharmacyOrder $order) use ($context, $store, $pharmacists, $recent, &$counts) {
             $counts['orders']++;
-            $start = $order->ordered_at->toImmutable();
+            $start = CarbonImmutable::parse($order->ordered_at);
             if (($start->gte($recent) && $context->chance(50)) || $context->chance(4)) {
                 $counts['waiting']++;
 
                 return;
             }
 
-            $lines = $order->items->where('status', 'pending')->map(function ($item) use ($context) {
+            $lines = PharmacyOrderItem::query()->where('order_id', $order->id)->where('status', 'pending')->get()->map(function (PharmacyOrderItem $item) use ($context) {
                 $wanted = $item->remainingQuantity() ?? 10;
 
                 return ['order_item_id' => $item->id, 'quantity' => max(1, $context->chance(15) ? intdiv($wanted, 2) : $wanted)];

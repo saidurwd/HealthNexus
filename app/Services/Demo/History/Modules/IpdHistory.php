@@ -5,6 +5,7 @@ namespace App\Services\Demo\History\Modules;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdAdmissionType;
 use App\Models\Ipd\IpdBed;
+use App\Models\Ipd\IpdBedAllocation;
 use App\Models\Provider;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
@@ -84,13 +85,13 @@ class IpdHistory implements DemoHistoryModule
 
             // 3. daily bed charge for everyone inside, and the odd transfer
             foreach (array_keys($active) as $id) {
-                $admission = IpdAdmission::with('currentAllocation.bed')->find($id);
-                $bed = $admission?->currentAllocation?->bed;
-                if (! $bed) {
+                $admission = IpdAdmission::find($id);
+                $bed = $admission ? $this->currentBed($admission) : null;
+                if (! $admission || ! $bed) {
                     continue;
                 }
                 $context->at($day->setTime(6, 0), fn () => $this->charges->chargeBedDay($admission, $bed, $day->toDateString(), $context->actor));
-                if ($context->chance(4) && $admission->admitted_at->lt($day->startOfDay())) {
+                if ($context->chance(4) && CarbonImmutable::parse($admission->admitted_at)->lt($day->startOfDay())) {
                     $counts['transfers'] += $this->transfer($context, $admission, $day) ? 1 : 0;
                 }
             }
@@ -101,9 +102,16 @@ class IpdHistory implements DemoHistoryModule
         return sprintf('%d admissions (%d discharged, %d still inside), %d transfers, %d refused for lack of a bed', $counts['admitted'], $counts['discharged'], count($active), $counts['transfers'], $counts['no_bed']);
     }
 
+    private function currentBed(IpdAdmission $admission): ?IpdBed
+    {
+        $bedId = IpdBedAllocation::query()->where('admission_id', $admission->id)->whereNull('released_at')->latest('id')->value('bed_id');
+
+        return $bedId ? IpdBed::find($bedId) : null;
+    }
+
     private function admit(HistoryContext $context, int $patientId, CarbonImmutable $time, ?Provider $doctor, $type): ?IpdAdmission
     {
-        $beds = IpdBed::where('organization_id', $context->organization->id)->where('status', IpdBed::STATUS_AVAILABLE)->where('is_active', true)->inRandomOrder()->limit(5)->get();
+        $beds = IpdBed::where('organization_id', $context->organization->id)->where('status', IpdBed::STATUS_AVAILABLE)->where('is_active', true)->where(fn ($q) => $q->whereNull('icu_capable')->orWhere('icu_capable', false))->inRandomOrder()->limit(5)->get();
         foreach ($beds as $bed) {
             try {
                 return $context->at($time, fn () => $this->admissions->admit([
@@ -121,7 +129,7 @@ class IpdHistory implements DemoHistoryModule
     private function discharge(HistoryContext $context, IpdAdmission $admission, CarbonImmutable $day, $coordinator): void
     {
         $at = $day->setTime(11, 0);
-        $bed = $admission->currentAllocation?->bed;
+        $bed = $this->currentBed($admission);
         $request = $context->at($at, fn () => $this->discharges->request($admission, ['discharge_type' => 'routine'], $coordinator));
         foreach (['clinical', 'billing', 'pharmacy'] as $i => $type) {
             $request = $context->at($at->addMinutes(20 * ($i + 1)), fn () => $this->discharges->recordClearance($request->refresh(), $type, $coordinator));
@@ -134,7 +142,8 @@ class IpdHistory implements DemoHistoryModule
 
     private function transfer(HistoryContext $context, IpdAdmission $admission, CarbonImmutable $day): bool
     {
-        $target = IpdBed::where('organization_id', $admission->organization_id)->where('status', IpdBed::STATUS_AVAILABLE)->where('is_active', true)->inRandomOrder()->first();
+        $target = IpdBed::where('organization_id', $admission->organization_id)->where('status', IpdBed::STATUS_AVAILABLE)->where('is_active', true)->where(fn ($q) => $q->whereNull('icu_capable')->orWhere('icu_capable', false))->inRandomOrder()->first();
+        $source = $this->currentBed($admission);
         if (! $target) {
             return false;
         }
@@ -143,6 +152,10 @@ class IpdHistory implements DemoHistoryModule
             $movement = $context->at($at, fn () => $this->transfers->request($admission, $target, $context->actor, reason: 'Moved for clinical reasons'));
             $context->at($at->addMinutes(15), fn () => $this->transfers->approve($movement, $context->actor));
             $context->at($at->addMinutes(30), fn () => $this->transfers->complete($movement->refresh(), $context->actor));
+            // the bed the patient left is cleaned and put back into use
+            if ($source && $source->refresh()->status === IpdBed::STATUS_CLEANING) {
+                $context->at($at->addHours(2), fn () => $this->bedStatus->transitionTo($source, IpdBed::STATUS_AVAILABLE, $context->actor, 'Cleaned'));
+            }
         } catch (ValidationException) {
             return false;
         }

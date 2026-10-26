@@ -2,9 +2,9 @@
 
 namespace App\Services\Demo\History\Modules;
 
+use App\Models\Ipd\IpdAdmission;
 use App\Models\Nursing\NursingAssignment;
 use App\Models\Nursing\NursingEpisode;
-use App\Models\Nursing\NursingMedicationAdministration;
 use App\Models\Pharmacy\PharmacyMedication;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
@@ -50,8 +50,8 @@ class NursingHistory implements DemoHistoryModule
 
         NursingEpisode::query()->where('organization_id', $context->organization->id)->with('admission')->orderBy('id')->each(function (NursingEpisode $episode) use ($context, $nurses, $medicines, &$counts) {
             $counts['episodes']++;
-            $admission = $episode->admission;
-            $first = $admission->admitted_at->toImmutable();
+            $admission = IpdAdmission::findOrFail($episode->admission_id);
+            $first = CarbonImmutable::parse($admission->admitted_at);
             $last = ($admission->actual_discharge_date ? CarbonImmutable::parse($admission->actual_discharge_date) : $context->to->addDay())->min($context->to->addDay());
             $primary = $context->pick($nurses);
 

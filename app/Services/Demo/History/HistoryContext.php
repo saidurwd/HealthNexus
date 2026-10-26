@@ -64,7 +64,7 @@ final class HistoryContext
         return mt_rand(1, 100) <= $percent;
     }
 
-    /** @template T @param  array<int, T>|Collection<int, T>  $items @return T */
+    /** @param  array<int, mixed>|Collection<int, mixed>  $items */
     public function pick(array|Collection $items): mixed
     {
         $items = $items instanceof Collection ? $items->values()->all() : array_values($items);

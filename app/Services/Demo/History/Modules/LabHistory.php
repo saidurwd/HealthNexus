@@ -4,6 +4,8 @@ namespace App\Services\Demo\History\Modules;
 
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabOrderItem;
+use App\Models\Laboratory\LabTest;
+use App\Models\Patient;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
 use App\Services\Laboratory\LabReferenceRangeResolver;
@@ -11,6 +13,7 @@ use App\Services\Laboratory\LabReportService;
 use App\Services\Laboratory\ResultEntryService;
 use App\Services\Laboratory\ResultValidationService;
 use App\Services\Laboratory\SpecimenService;
+use Carbon\CarbonImmutable;
 
 /** Moves the lab orders the OPD history created through collection, receipt, result entry, validation and the final report. */
 class LabHistory implements DemoHistoryModule
@@ -43,7 +46,7 @@ class LabHistory implements DemoHistoryModule
 
         LabOrder::query()->where('organization_id', $context->organization->id)->orderBy('id')->each(function (LabOrder $order) use ($context, $tech, $validators, $pathologist, $recent, &$counts) {
             $counts['orders']++;
-            $start = $order->ordered_at->toImmutable();
+            $start = CarbonImmutable::parse($order->ordered_at);
             $analyst = $context->pick($tech);
             $reviewer = $validators->firstWhere(fn ($u) => $u->id !== $analyst->id) ?? $analyst;
 
@@ -75,7 +78,7 @@ class LabHistory implements DemoHistoryModule
             }
 
             $entered = [];
-            foreach ($order->items()->where('status', 'received')->with('test')->get() as $item) {
+            foreach (LabOrderItem::query()->where('lab_order_id', $order->id)->where('status', 'received')->with('test')->get() as $item) {
                 $result = $context->at($start->addHours(2), fn () => $this->results->enter($item->refresh(), $this->value($item, $context), $analyst));
                 $result->abnormal_flag !== 'normal' && $result->abnormal_flag !== 'not_applicable' && $counts['abnormal']++;
                 $entered[] = $result;
@@ -104,9 +107,9 @@ class LabHistory implements DemoHistoryModule
     /** @return array<string, string> a plausible value for the test: mostly inside its reference range, sometimes outside */
     private function value(LabOrderItem $item, HistoryContext $context): array
     {
-        $test = $item->test;
+        $test = LabTest::findOrFail($item->test_id);
         if (in_array($test->test_type, ['quantitative', 'semi_quantitative', 'calculated'], true)) {
-            $range = $this->ranges->resolve($test, $item->labOrder->patient);
+            $range = $this->ranges->resolve($test, Patient::findOrFail(LabOrder::whereKey($item->lab_order_id)->value('patient_id')));
             $low = (float) ($range['low'] ?? 1);
             $high = (float) ($range['high'] ?? max($low + 1, 100));
             $span = max($high - $low, 0.1);

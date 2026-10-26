@@ -5,6 +5,7 @@ namespace App\Services\Demo\History\Modules;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ot\OtProcedure;
 use App\Models\Ot\OtSurgicalSafetyChecklist;
+use App\Models\Ot\OtSurgicalSafetyChecklistItem;
 use App\Models\Ot\OtTheatre;
 use App\Models\Provider;
 use App\Models\User;
@@ -155,7 +156,7 @@ class OtHistory implements DemoHistoryModule
         $surgery = $context->at($start->subMinutes(30), fn () => $this->reception->receive($surgery->refresh(), $user));
         $context->at($start->subMinutes(15), function () use ($surgery, $user) {
             $signIn = $this->safety->initializePhase($surgery->refresh(), OtSurgicalSafetyChecklist::PHASE_SIGN_IN);
-            foreach ($signIn->items as $item) {
+            foreach (OtSurgicalSafetyChecklistItem::query()->where('checklist_id', $signIn->id)->get() as $item) {
                 $this->safety->completeItem($item, $user, 'confirmed');
             }
             $this->safety->completePhase($signIn, $user);
@@ -170,7 +171,7 @@ class OtHistory implements DemoHistoryModule
         });
         $context->at($start->addMinutes(95), function () use ($surgery, $user) {
             $signOut = $this->safety->initializePhase($surgery->refresh(), OtSurgicalSafetyChecklist::PHASE_SIGN_OUT);
-            foreach ($signOut->items as $item) {
+            foreach (OtSurgicalSafetyChecklistItem::query()->where('checklist_id', $signOut->id)->get() as $item) {
                 $this->safety->completeItem($item, $user, 'confirmed');
             }
             $this->safety->completePhase($signOut, $user);

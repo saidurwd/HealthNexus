@@ -3,6 +3,7 @@
 namespace App\Services\Demo\History\Modules;
 
 use App\Models\Patient;
+use App\Models\PatientBranchRegistration;
 use App\Models\User;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
@@ -35,8 +36,8 @@ class PatientsHistory implements DemoHistoryModule
         for ($i = 0; $i < $missing; $i++) {
             $registered = $context->from->addDays(mt_rand(0, max(1, (int) $context->from->diffInDays($context->to) - 1)));
             $context->at($registered->setTime(9, 0), function () use ($context, &$created) {
-                $patient = Patient::factory()->create(['organization_id' => $context->organization->id, 'middle_name' => null, 'registered_at' => now(), 'registered_by' => $context->actor->id]);
-                $patient->branchRegistrations()->create(['organization_id' => $context->organization->id, 'branch_id' => $context->branch->id, 'registered_by' => $context->actor->id, 'registered_at' => now()]);
+                $patient = Patient::query()->create(Patient::factory()->raw(['organization_id' => $context->organization->id, 'middle_name' => null, 'registered_at' => now(), 'registered_by' => $context->actor->id]));
+                PatientBranchRegistration::create(['patient_id' => $patient->id, 'organization_id' => $context->organization->id, 'branch_id' => $context->branch->id, 'registered_by' => $context->actor->id, 'registered_at' => now()]);
                 $created++;
             });
         }

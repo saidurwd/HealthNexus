@@ -3,6 +3,7 @@
 namespace App\Services\Demo\History\Modules;
 
 use App\Models\Billing\BillingCharge;
+use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingPaymentMethod;
 use App\Models\Patient;
@@ -77,7 +78,8 @@ class BillingHistory implements DemoHistoryModule
     /** @param Collection<int, BillingCharge> $charges */
     private function invoice(HistoryContext $context, Patient $patient, $charges, CarbonImmutable $at, $cashier, $session, $methods, bool $settle, array &$counts): void
     {
-        $inpatient = $charges->contains(fn ($c) => str_contains((string) $c->billingItem?->clinical_event_type, 'ipd') || str_contains((string) $c->billingItem?->clinical_event_type, 'icu') || str_contains((string) $c->billingItem?->clinical_event_type, 'ot_'));
+        $eventTypes = BillingItem::query()->whereIn('id', $charges->pluck('billing_item_id'))->pluck('clinical_event_type');
+        $inpatient = $eventTypes->contains(fn ($t) => str_contains((string) $t, 'ipd') || str_contains((string) $t, 'icu') || str_contains((string) $t, 'ot_'));
         $invoice = $context->at($at, function () use ($context, $patient, $charges, $inpatient, $cashier) {
             $invoice = $this->invoices->createDraft($patient, ['organization_id' => $context->organization->id, 'branch_id' => $context->branch->id, 'invoice_type' => $inpatient ? 'ipd' : 'opd', 'encounter_id' => $charges->first()->encounter_id], $cashier);
             $invoice = $this->invoices->addCharges($invoice, new Collection($charges->all()));

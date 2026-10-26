@@ -42,29 +42,30 @@ class RadiologyHistory implements DemoHistoryModule
 
     public function run(HistoryContext $context): string
     {
-        $technologist = $this->provider($context, $context->staff('radiology_technician')->first(), 'radiology_technician');
+        $technologistUser = $context->staff('radiology_technician')->first();
+        $technologist = $this->provider($context, $technologistUser, 'radiology_technician');
         $radiologist = $this->provider($context, $context->staff('radiologist')->first(), 'radiologist');
         $approver = $this->provider($context, $context->staff('radiologist')->first() === $context->actor ? $context->actor : User::query()->role('senior_radiologist')->first() ?? $this->seniorUser($context), 'senior_radiologist');
         $recent = $context->to->subDay()->startOfDay();
         $counts = ['orders' => 0, 'reported' => 0, 'in_progress' => 0, 'critical' => 0];
 
-        RadiologyOrder::query()->where('organization_id', $context->organization->id)->with('items.procedure')->orderBy('id')->each(function (RadiologyOrder $order) use ($context, $technologist, $radiologist, $approver, $recent, &$counts) {
+        RadiologyOrder::query()->where('organization_id', $context->organization->id)->with('items.procedure')->orderBy('id')->each(function (RadiologyOrder $order) use ($context, $technologist, $technologistUser, $radiologist, $approver, $recent, &$counts) {
             $counts['orders']++;
-            $start = $order->ordered_at->toImmutable();
+            $start = CarbonImmutable::parse($order->ordered_at);
             $stage = $start->gte($recent) ? mt_rand(0, 2) : 9;
 
-            foreach ($order->items as $item) {
-                $modality = $this->modality($context, $item->procedure?->modality_type ?? 'XR');
+            foreach (RadiologyOrderItem::query()->where('radiology_order_id', $order->id)->with('procedure')->get() as $item) {
+                $modality = $this->modality($context, $item->procedure->modality_type ?? 'XR');
                 $exam = $this->schedule($context, $item, $modality, $technologist, $start->addHour());
                 if ($stage === 0) {
                     $counts['in_progress']++;
 
                     continue;
                 }
-                $at = $exam->scheduled_at->toImmutable();
-                $exam = $context->at($at, fn () => $this->examinations->checkIn($exam, $technologist->user));
-                $exam = $context->at($at->addMinutes(5), fn () => $this->examinations->start($exam, $technologist->user));
-                $exam = $context->at($at->addMinutes(25), fn () => $this->examinations->complete($exam, $technologist->user, ['technical_notes' => 'Routine acquisition.']));
+                $at = CarbonImmutable::parse($exam->scheduled_at);
+                $exam = $context->at($at, fn () => $this->examinations->checkIn($exam, $technologistUser));
+                $exam = $context->at($at->addMinutes(5), fn () => $this->examinations->start($exam, $technologistUser));
+                $exam = $context->at($at->addMinutes(25), fn () => $this->examinations->complete($exam, $technologistUser, ['technical_notes' => 'Routine acquisition.']));
                 if ($stage === 1) {
                     $counts['in_progress']++;
 
@@ -120,7 +121,7 @@ class RadiologyHistory implements DemoHistoryModule
         return Provider::query()->firstOrCreate(
             ['organization_id' => $context->organization->id, 'user_id' => $user->id, 'provider_type' => $type],
             ['branch_id' => $context->branch->id, 'provider_code' => strtoupper(substr($type, 0, 4)).'-'.$user->id, 'name' => $user->name, 'status' => 'active'],
-        )->setRelation('user', $user);
+        );
     }
 
     private function seniorUser(HistoryContext $context): User

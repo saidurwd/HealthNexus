@@ -60,6 +60,9 @@ class IcuHistory implements DemoHistoryModule
         if ($encounters->isEmpty()) {
             return 'skipped: no outpatient encounters to refer from';
         }
+        // A bed left in 'cleaning' by an earlier module's last movement is cleaned before the unit opens its books.
+        IpdBed::where('organization_id', $context->organization->id)->where('icu_capable', true)->where('status', IpdBed::STATUS_CLEANING)->get()
+            ->each(fn (IpdBed $b) => $this->bedStatus->transitionTo($b, IpdBed::STATUS_AVAILABLE, $context->actor, 'Cleaned'));
         $physician = $context->staff('icu_physician')->first();
         $nurse = $context->staff('charge_nurse')->first();
         $coordinator = $context->staff('ipd_coordinator')->first();
@@ -127,7 +130,7 @@ class IcuHistory implements DemoHistoryModule
 
     private function firstDay(HistoryContext $context, IcuEpisode $episode, CarbonImmutable $day, $physician, $nurse, bool $ventilated): void
     {
-        $at = $episode->admitted_at->toImmutable();
+        $at = CarbonImmutable::parse($episode->admitted_at);
         $context->at($at->addMinutes(20), function () use ($episode, $physician, $ventilated) {
             $assessment = $this->assessments->create($episode, ['sections' => ['general' => 'Critically ill, monitored', 'airway' => $ventilated ? 'Intubated' : 'Patent']], $physician);
             $this->assessments->finalize($assessment, $physician);
@@ -140,7 +143,7 @@ class IcuHistory implements DemoHistoryModule
 
     private function routineDay(HistoryContext $context, IcuEpisode $episode, CarbonImmutable $day, $nurse, $physician): void
     {
-        $from = $episode->admitted_at->toImmutable();
+        $from = CarbonImmutable::parse($episode->admitted_at);
         foreach ([2, 6, 10, 14, 18, 22] as $hour) {
             $at = $day->setTime($hour, 0);
             if ($at->lt($from->addMinutes(30))) {
