@@ -1766,6 +1766,22 @@ return [
             ],
         ],
         [
+            'text' => 'Blood bank',
+            'module' => 'bloodbank',
+            'icon' => 'bi bi-droplet-fill',
+            'can' => 'bloodbank.dashboard.view',
+            'submenu' => [
+                ['text' => 'Overview', 'url' => '/admin/blood-bank', 'icon' => 'bi bi-speedometer2', 'can' => 'bloodbank.dashboard.view'],
+                ['text' => 'Requests', 'url' => '/admin/blood-bank/requests', 'icon' => 'bi bi-clipboard2-pulse', 'can' => 'bloodbank.request.view'],
+                ['text' => 'Transfusions', 'url' => '/admin/blood-bank/transfusions', 'icon' => 'bi bi-activity', 'can' => 'bloodbank.transfusion.view'],
+                ['text' => 'Blood stock', 'url' => '/admin/blood-bank/inventory', 'icon' => 'bi bi-boxes', 'can' => 'bloodbank.inventory.view'],
+                ['text' => 'Donors', 'url' => '/admin/blood-bank/donors', 'icon' => 'bi bi-people', 'can' => 'bloodbank.donor.view'],
+                ['text' => 'Lookback and recall', 'url' => '/admin/blood-bank/lookback', 'icon' => 'bi bi-diagram-3', 'can' => 'bloodbank.lookback.view'],
+                ['text' => 'Incidents', 'url' => '/admin/blood-bank/incidents', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'bloodbank.incident.view'],
+                ['text' => 'Use and wastage', 'url' => '/admin/blood-bank/reports', 'icon' => 'bi bi-bar-chart', 'can' => 'bloodbank.report.view'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',
