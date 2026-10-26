@@ -11,7 +11,16 @@ use App\Models\Pharmacy\PharmacyStore;
 use App\Models\User;
 use App\Services\Import\ImportContext;
 use App\Services\Import\ImportService;
+use Database\Seeders\BillingSeeder;
+use Database\Seeders\IcuSeeder;
+use Database\Seeders\IpdSeeder;
+use Database\Seeders\LabSeeder;
+use Database\Seeders\NursingSeeder;
+use Database\Seeders\OtSeeder;
 use Database\Seeders\PermissionSeeder;
+use Database\Seeders\PharmacySeeder;
+use Database\Seeders\RadiologySeeder;
+use Database\Seeders\WorkflowSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -86,7 +95,7 @@ class BuildDemoOrganization extends Command
 
         if ($months = (int) $this->option('history')) {
             // The catalogue seeders are idempotent; they give the new organization the wards, theatres, ICU beds, imaging and drug catalogues the history needs.
-            foreach ([\Database\Seeders\BillingSeeder::class, \Database\Seeders\LabSeeder::class, \Database\Seeders\RadiologySeeder::class, \Database\Seeders\PharmacySeeder::class, \Database\Seeders\IpdSeeder::class, \Database\Seeders\NursingSeeder::class, \Database\Seeders\OtSeeder::class, \Database\Seeders\IcuSeeder::class, \Database\Seeders\WorkflowSeeder::class] as $seeder) {
+            foreach ([BillingSeeder::class, LabSeeder::class, RadiologySeeder::class, PharmacySeeder::class, IpdSeeder::class, NursingSeeder::class, OtSeeder::class, IcuSeeder::class, WorkflowSeeder::class] as $seeder) {
                 $this->callSilent('db:seed', ['--class' => $seeder, '--force' => true]);
             }
             $this->call('demo:history', ['organization' => $organization->code, '--months' => $months, '--password' => $password]);
