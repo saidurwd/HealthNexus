@@ -6,6 +6,7 @@ use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\IpdHistory;
 use App\Services\Demo\History\Modules\LabHistory;
 use App\Services\Demo\History\Modules\NursingHistory;
+use App\Services\Demo\History\Modules\OtHistory;
 use App\Services\Demo\History\Modules\PatientsHistory;
 use App\Services\Demo\History\Modules\PharmacyHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
@@ -25,6 +26,7 @@ return [
         PharmacyHistory::class,
         IpdHistory::class,
         NursingHistory::class,
+        OtHistory::class,
     ],
 
     'months' => 6,
