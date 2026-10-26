@@ -56,7 +56,7 @@ class BloodSafetyController extends BloodController
                 $recipients = $this->trace->recipientsOfUnit($unit);
                 $link = $this->trace->donorOfUnit($unit);
             }
-            $this->audit->log('BLOOD_LOOKBACK', BloodUnit::class, $unit?->id ?? $donor?->id ?? 0, null, ['query' => $term], $request);
+            $this->audit->log('BLOOD_LOOKBACK', BloodUnit::class, $unit ? $unit->id : ($donor ? $donor->id : 0), null, ['query' => $term], $request);
         }
 
         return view('admin.blood.safety.lookback', ['q' => $term, 'donor' => $donor, 'unit' => $unit, 'recipients' => $recipients, 'link' => $link, 'recalls' => BloodRecall::query()->where('organization_id', $org)->latest('initiated_at')->limit(10)->get()]);

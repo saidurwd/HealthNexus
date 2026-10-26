@@ -1483,12 +1483,6 @@ parameters:
 			path: app/Services/Documents/Providers/ReceiptDocument.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$public_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Documents/Providers/WristbandDocument.php
-
-		-
 			message: '#^Method App\\Services\\Documents\\SafeTemplate\:\:parse\(\) should return list\<array\> but returns array\<mixed\>\|string\|false\.$#'
 			identifier: return.type
 			count: 1
@@ -3089,24 +3083,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Services/Radiology/RadiologyStudyService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$public_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Search/GlobalSearchService.php
-
-		-
-			message: '#^Method App\\Services\\Search\\GlobalSearchService\:\:search\(\) should return Illuminate\\Support\\Collection\<int, array\{type\: string, id\: string, label\: string, number\: string\|null, matched_on\: string, url\: string\}\> but returns Illuminate\\Support\\Collection\<int, array\{type\: string, id\: mixed, label\: string, number\: string\|null, matched_on\: string, url\: string\}\>\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Services/Search/GlobalSearchService.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,array\<string, int\|string\>\>\:\:map\(\) contains unresolvable type\.$#'
-			identifier: argument.unresolvableType
-			count: 1
-			path: app/Services/Search/GlobalSearchService.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'

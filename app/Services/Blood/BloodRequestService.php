@@ -4,12 +4,14 @@ namespace App\Services\Blood;
 
 use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodSample;
+use App\Models\Branch;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Clinical\Alerts\AlertRequest;
 use App\Services\Clinical\Alerts\AlertService;
 use App\Services\Numbering\NumberSeriesService;
+use App\Services\TenantContextResolver;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -43,7 +45,7 @@ class BloodRequestService
         }
 
         $request = BloodRequest::create([
-            'organization_id' => $patient->organization_id, 'branch_id' => $options['branch_id'] ?? $encounter?->branch_id ?? app(\App\Services\TenantContextResolver::class)->getBranchId() ?? \App\Models\Branch::query()->where('organization_id', $patient->organization_id)->orderBy('id')->value('id'), 'patient_id' => $patient->id, 'encounter_id' => $encounter?->id,
+            'organization_id' => $patient->organization_id, 'branch_id' => $this->branchFor($patient, $encounter, $options), 'patient_id' => $patient->id, 'encounter_id' => $encounter?->id,
             'request_number' => $this->numbers->next('blood.request', $patient->organization_id, null, prefix: 'BRQ', format: '{PREFIX}-{YEAR}-{SEQ:8}', userId: $by->id),
             'source_module' => $sourceModule, 'component' => $component, 'units_requested' => $units, 'priority' => $priority, 'indication' => $options['indication'] ?? null,
             'replacement_donor_offered' => $options['replacement_donor_offered'] ?? false, 'required_by' => $options['required_by'] ?? null, 'requested_by' => $by->id, 'requested_at' => now(),
@@ -91,7 +93,7 @@ class BloodRequestService
             $rh = strtolower($data['rh']);
 
             $rejection = match (true) {
-                ($data['patient_public_id'] ?? null) !== $patient->public_id => 'wrong_patient',
+                $data['patient_public_id'] !== $patient->public_id => 'wrong_patient',
                 ! ($data['labelled'] ?? true) => 'unlabelled',
                 (bool) ($data['haemolysed'] ?? false) => 'haemolysed',
                 ! in_array($abo, $this->policy->get('abo'), true) || ! in_array($rh, $this->policy->get('rh'), true) => 'other',
@@ -148,6 +150,16 @@ class BloodRequestService
 
             return $sample->refresh();
         });
+    }
+
+    /** @param  array<string, mixed>  $options */
+    private function branchFor(Patient $patient, ?Encounter $encounter, array $options): ?int
+    {
+        $branch = $options['branch_id'] ?? null;
+        $branch ??= $encounter ? $encounter->getAttribute('branch_id') : null;
+        $branch ??= app(TenantContextResolver::class)->getBranchId();
+
+        return $branch ?? Branch::query()->where('organization_id', $patient->organization_id)->orderBy('id')->value('id');
     }
 
     /** @return array{abo: string, rh: string}|null the group confirmed by an accepted sample, if any */

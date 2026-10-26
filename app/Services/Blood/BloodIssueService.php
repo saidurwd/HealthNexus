@@ -27,7 +27,6 @@ class BloodIssueService
         private readonly ChargeEventPublisher $charges,
         private readonly BloodIncidentService $incidents,
         private readonly BloodCompatibilityService $compatibility,
-        private readonly BloodRequestService $requests,
     ) {}
 
     public function issue(BloodRequest $request, BloodUnit $unit, User $by, ?string $issuedTo = null, ?float $tempC = null): BloodIssue

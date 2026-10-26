@@ -83,10 +83,21 @@ class DemoHistoryTest extends TestCase
         $has('icu_observations', 20);
         $has('ed_visits', 15);
         $has('ed_dispositions', 10);
+        $has('blood_donors', 5);
+        $has('blood_donations', 10, ['status' => 'collected']);
+        $has('blood_units', 30);
+        $has('blood_requests', 5);
+        $has('blood_issues', 2);
+        $has('blood_transfusions', 2);
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
         $has('billing_charges', 50);
+
+        // every bag is accounted for: no bag is issued twice at once, and none transfused twice
+        $this->assertSame(0, DB::table('blood_issues')->whereIn('status', ['issued', 'transfusing'])->groupBy('unit_id')->havingRaw('count(*) > 1')->get()->count());
+        $this->assertSame(0, DB::table('blood_units')->where('status', 'available')->where('expires_at', '<=', now())->count(), 'no expired bag is left on the shelf');
+        $this->assertSame(0, DB::table('blood_issues as i')->join('blood_units as u', 'u.id', '=', 'i.unit_id')->where('i.crossmatched', true)->whereNull('u.abo')->count());
 
         // the money adds up, no bed holds two patients, no ED visit is closed twice
         $this->assertSame(0, DB::table('billing_invoices')->where('organization_id', $org)->whereRaw('ABS(paid_amount + due_amount - grand_total) > 0.01')->count());

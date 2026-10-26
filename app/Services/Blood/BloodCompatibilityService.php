@@ -20,7 +20,6 @@ class BloodCompatibilityService
     public function __construct(
         private readonly BloodPolicy $policy,
         private readonly BloodUnitService $units,
-        private readonly BloodRequestService $requests,
         private readonly ChargeEventPublisher $charges,
     ) {}
 

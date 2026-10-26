@@ -17,7 +17,6 @@ abstract class BloodController extends Controller
         abort_unless($request->user()->can('bloodbank.'.$permission), 403);
     }
 
-    /** @template T of Model @param T $record @return T */
     protected function scoped(Request $request, Model $record, string $permission): Model
     {
         abort_unless($record->getAttribute('organization_id') === $this->tenant->getOrganizationId(), 404);

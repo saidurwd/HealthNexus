@@ -107,7 +107,7 @@ class BloodInventoryService
     /** @return array<string, array<string, int>> "A positive" => component => available units */
     public function summary(int $organizationId): array
     {
-        $rows = BloodUnit::query()->where('organization_id', $organizationId)->where('status', BloodUnit::AVAILABLE)->where('expires_at', '>', now())
+        $rows = DB::table('blood_units')->where('organization_id', $organizationId)->where('status', BloodUnit::AVAILABLE)->where('expires_at', '>', now())
             ->selectRaw('abo, rh, component, count(*) as total')->groupBy('abo', 'rh', 'component')->get();
         $out = [];
         foreach ($rows as $row) {

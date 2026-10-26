@@ -38,7 +38,7 @@ class BloodTestingService
     /** @return list<string> every test a donation needs, from the screening policy plus ABO and Rh */
     public function requiredTests(): array
     {
-        return array_values(array_merge(array_keys($this->policy->get('screening_tests')), array_values($this->policy->get('grouping_tests'))));
+        return array_merge(array_keys($this->policy->get('screening_tests')), array_values($this->policy->get('grouping_tests')));
     }
 
     public function orderTests(BloodDonation $donation, User $by): void
@@ -185,7 +185,7 @@ class BloodTestingService
         }
         $kind = $this->policy->component($unit->component)['storage'];
         $location = BloodStorageLocation::query()->where('organization_id', $unit->organization_id)->where('kind', $kind)->where('is_active', true)->first();
-        $this->units->move($unit, BloodUnit::AVAILABLE, $by, 'Released after testing', null, ['released_at' => now(), 'released_by' => $by->id, 'location_id' => $location?->id ?? $unit->location_id]);
+        $this->units->move($unit, BloodUnit::AVAILABLE, $by, 'Released after testing', null, ['released_at' => now(), 'released_by' => $by->id, 'location_id' => $location ? $location->id : $unit->location_id]);
     }
 
     /** @return list<int> */

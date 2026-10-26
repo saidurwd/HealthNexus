@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 /**
  * Public ULID for records that identify a person or a clinical event (guideline 9.1, H-12).
  * Routes and API payloads use public_id; the numeric id never leaves the server.
+ *
+ * @property string $public_id
  */
 trait HasPublicId
 {

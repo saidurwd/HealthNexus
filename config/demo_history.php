@@ -3,6 +3,8 @@
 use App\Services\Demo\History\Modules\AppointmentsAndOpdHistory;
 use App\Services\Demo\History\Modules\BillingCatalogHistory;
 use App\Services\Demo\History\Modules\BillingHistory;
+use App\Services\Demo\History\Modules\BloodDonationsHistory;
+use App\Services\Demo\History\Modules\BloodTransfusionHistory;
 use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\EdHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
@@ -25,6 +27,7 @@ return [
         BillingCatalogHistory::class,
         AppointmentsAndOpdHistory::class,
         EdHistory::class,
+        BloodDonationsHistory::class,
         LabHistory::class,
         RadiologyHistory::class,
         PharmacyHistory::class,
@@ -32,6 +35,7 @@ return [
         NursingHistory::class,
         OtHistory::class,
         IcuHistory::class,
+        BloodTransfusionHistory::class,
         BillingHistory::class,
     ],
 

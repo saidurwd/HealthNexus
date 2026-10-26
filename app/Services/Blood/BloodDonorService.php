@@ -99,7 +99,8 @@ class BloodDonorService
             $reason ??= $why;
         };
 
-        $age = $patient->date_of_birth?->age ?? ($patient->estimated_age ?? null);
+        $dob = $patient->getAttribute('date_of_birth');
+        $age = $dob ? $dob->age : $patient->getAttribute('estimated_age');
         if ($age !== null && ($age < $rules['min_age'] || $age > $rules['max_age'])) {
             $fail('age', 'other');
         }
@@ -133,7 +134,7 @@ class BloodDonorService
         return [$failed, $reason];
     }
 
-    private function nextEligibleDate(BloodDonor $donor, Patient $patient): ?Carbon
+    private function nextEligibleDate(BloodDonor $donor, Patient $patient): ?\Carbon\CarbonInterface
     {
         $days = (int) $this->policy->get('eligibility')['min_interval_days'][$patient->sex === 'F' ? 'F' : 'M'];
 

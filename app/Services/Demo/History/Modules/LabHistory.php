@@ -2,6 +2,7 @@
 
 namespace App\Services\Demo\History\Modules;
 
+use App\Models\Blood\BloodDonation;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabOrderItem;
 use App\Models\Laboratory\LabTest;
@@ -108,6 +109,9 @@ class LabHistory implements DemoHistoryModule
     private function value(LabOrderItem $item, HistoryContext $context): array
     {
         $test = LabTest::findOrFail($item->test_id);
+        if (str_starts_with($test->code, 'BB-')) {
+            return $this->bloodBankValue($test->code, $item, $context);
+        }
         if (in_array($test->test_type, ['quantitative', 'semi_quantitative', 'calculated'], true)) {
             $range = $this->ranges->resolve($test, Patient::findOrFail(LabOrder::whereKey($item->lab_order_id)->value('patient_id')));
             $low = (float) ($range['low'] ?? 1);
@@ -122,5 +126,19 @@ class LabHistory implements DemoHistoryModule
         }
 
         return ['text_value' => 'Within normal limits'];
+    }
+
+    /** Blood-bank tests: the group the donor was assigned, and almost always a negative screen (a rare reactive one blocks the donation). */
+    private function bloodBankValue(string $code, LabOrderItem $item, HistoryContext $context): array
+    {
+        if (in_array($code, ['BB-ABO', 'BB-RH'], true)) {
+            $clinicalOrderId = LabOrder::whereKey($item->lab_order_id)->value('clinical_order_id');
+            $donationId = BloodDonation::where('clinical_order_id', $clinicalOrderId)->value('id');
+            [$abo, $rh] = $context->shared('blood_groups')[$donationId] ?? ['O', 'positive'];
+
+            return ['qualitative_value' => $code === 'BB-ABO' ? $abo : $rh];
+        }
+
+        return ['qualitative_value' => $context->chance(2) ? 'Reactive' : 'Negative'];
     }
 }

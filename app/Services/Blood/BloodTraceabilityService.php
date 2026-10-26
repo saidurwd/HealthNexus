@@ -99,7 +99,7 @@ class BloodTraceabilityService
         return $query->orderBy('i.issued_at')->get(['i.patient_id', 'i.status', 'i.issued_at', 'u.unit_number', 'u.component'])->map(function ($row) {
             $patient = Patient::find($row->patient_id);
 
-            return ['patient_id' => (int) $row->patient_id, 'patient' => $patient?->full_name ?? '—', 'mrn' => $patient?->enterprise_patient_no, 'unit_number' => $row->unit_number,
+            return ['patient_id' => (int) $row->patient_id, 'patient' => $patient ? $patient->full_name : '—', 'mrn' => $patient ? $patient->enterprise_patient_no : null, 'unit_number' => $row->unit_number,
                 'component' => $row->component, 'issued_at' => (string) $row->issued_at, 'state' => $row->status === 'transfused' ? 'transfused' : 'issued'];
         });
     }

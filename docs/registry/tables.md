@@ -45,6 +45,28 @@ _Generated from the Schema::create calls in database/migrations._
 - `billing_tax_categories`
 - `charge_event_log`
 
+## bloodbank (19)
+
+- `blood_crossmatches`
+- `blood_discards`
+- `blood_donations`
+- `blood_donor_adverse_events`
+- `blood_donor_screenings`
+- `blood_donors`
+- `blood_incidents`
+- `blood_issues`
+- `blood_recalls`
+- `blood_requests`
+- `blood_reservations`
+- `blood_samples`
+- `blood_storage_locations`
+- `blood_temperature_logs`
+- `blood_transfusion_reactions`
+- `blood_transfusions`
+- `blood_unit_events`
+- `blood_unit_tests`
+- `blood_units`
+
 ## core (52)
 
 - `activity_logs`
