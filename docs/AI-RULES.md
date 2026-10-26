@@ -22,6 +22,7 @@ PHP 8.4+, Laravel 13, MySQL 8 (SQLite only for the fast test run), Blade + Admin
 13. Secrets never in code, logs or prompts. No real patient data in seeders, fixtures or demo data (`php artisan demo:build` makes fake data).
 14. Do not edit merged migrations (except to fix a defect that stops a fresh MySQL install); add new ones. Index names over 64 characters fail on MySQL: give long ones an explicit name.
 15. Do not touch other modules' tables/code; propose a separate slice instead.
+16. Every phase ships demo data (owner instruction, 2026-10-26): a `DemoHistoryModule` class registered in `config/demo_history.php` that gives the module six months of history through the module's own services, factories for any new model, and test users by module / permission / feature plus a super user (`App\Services\Demo\DemoAccess` builds them from `config/modules.php`). Extend `tests/Feature/Demo/DemoHistoryTest.php` and list the module in the phase gate report.
 
 ## Commands
 - test (fast, SQLite): `php artisan test`  ·  style: `./vendor/bin/pint` (CI runs `pint --test`)  ·  registry gate: `php artisan registry:export --check`
