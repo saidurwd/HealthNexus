@@ -43,7 +43,7 @@ class BloodRequestService
         }
 
         $request = BloodRequest::create([
-            'organization_id' => $patient->organization_id, 'branch_id' => $options['branch_id'] ?? $encounter?->branch_id, 'patient_id' => $patient->id, 'encounter_id' => $encounter?->id,
+            'organization_id' => $patient->organization_id, 'branch_id' => $options['branch_id'] ?? $encounter?->branch_id ?? app(\App\Services\TenantContextResolver::class)->getBranchId() ?? \App\Models\Branch::query()->where('organization_id', $patient->organization_id)->orderBy('id')->value('id'), 'patient_id' => $patient->id, 'encounter_id' => $encounter?->id,
             'request_number' => $this->numbers->next('blood.request', $patient->organization_id, null, prefix: 'BRQ', format: '{PREFIX}-{YEAR}-{SEQ:8}', userId: $by->id),
             'source_module' => $sourceModule, 'component' => $component, 'units_requested' => $units, 'priority' => $priority, 'indication' => $options['indication'] ?? null,
             'replacement_donor_offered' => $options['replacement_donor_offered'] ?? false, 'required_by' => $options['required_by'] ?? null, 'requested_by' => $by->id, 'requested_at' => now(),
@@ -82,7 +82,8 @@ class BloodRequestService
     {
         return DB::transaction(function () use ($request, $receivedBy, $data) {
             $locked = BloodRequest::query()->lockForUpdate()->findOrFail($request->id);
-            if (! $locked->isOpen()) {
+            // A request closed by an emergency release still takes a sample: the cross-match is owed afterwards.
+            if (! $locked->isOpen() && ! $locked->issues()->where('crossmatched', false)->exists()) {
                 throw ValidationException::withMessages(['request' => 'This request is closed.']);
             }
             $patient = Patient::findOrFail($locked->patient_id);
@@ -115,7 +116,7 @@ class BloodRequestService
 
             if ($confirmed) {
                 $sample->update(['status' => 'accepted']);
-                $locked->update(['status' => 'sample_received']);
+                $locked->isOpen() && $locked->update(['status' => 'sample_received']);
 
                 return $sample->refresh();
             }
@@ -123,7 +124,7 @@ class BloodRequestService
             // No confirmed group yet: a second, separate and agreeing sample is needed (when the policy asks for it).
             if (! $this->policy->get('second_sample_required_when_no_group_on_file')) {
                 $this->confirm($patient, $abo, $rh, $sample);
-                $locked->update(['status' => 'sample_received']);
+                $locked->isOpen() && $locked->update(['status' => 'sample_received']);
 
                 return $sample->refresh();
             }
@@ -138,7 +139,7 @@ class BloodRequestService
                 $first->update(['status' => 'accepted']);
                 $sample->update(['sequence' => 2]);
                 $this->confirm($patient, $abo, $rh, $sample);
-                $locked->update(['status' => 'sample_received']);
+                $locked->isOpen() && $locked->update(['status' => 'sample_received']);
             } else {
                 $first->update(['status' => 'rejected', 'rejection_reason' => 'group_discordant']);
                 $sample->update(['status' => 'rejected', 'rejection_reason' => 'group_discordant']);
