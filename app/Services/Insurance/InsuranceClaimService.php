@@ -188,6 +188,56 @@ class InsuranceClaimService
         });
     }
 
+    /**
+     * Coordination of benefits: after the primary payer has been billed, what the patient would owe goes to the patient's second policy (coverage
+     * order 2). The secondary claim is built from the primary claim's patient share, line by line, and split by the second plan's own rules.
+     */
+    public function generateSecondary(InsuranceClaim $primary, User $by): InsuranceClaim
+    {
+        if (! in_array($primary->status, ['partially_paid', 'paid', 'denied', 'written_off'], true)) {
+            throw ValidationException::withMessages(['claim' => 'Bill the second policy after the first payer has answered.']);
+        }
+        $policy = $this->policies->activeFor($primary->patient, $primary->service_date->toDateString())->first(fn ($p) => (int) $p->coverage_order === 2 && $p->payer_id && $p->plan_id)
+            ?? throw ValidationException::withMessages(['policy' => 'The patient has no second policy that was active on the service date.']);
+        if (InsuranceClaim::where('parent_claim_id', $primary->id)->where('payer_id', $policy->payer_id)->whereNotIn('status', ['cancelled'])->exists()) {
+            throw ValidationException::withMessages(['claim' => 'The second policy has already been billed for this claim.']);
+        }
+
+        return DB::transaction(function () use ($primary, $by, $policy) {
+            $payer = InsurancePayer::findOrFail($policy->payer_id);
+            $plan = InsurancePlan::findOrFail($policy->plan_id);
+            $source = InsuranceClaimLine::where('claim_id', $primary->id)->where('patient_share', '>', 0)->orderBy('id')->get();
+            if ($source->isEmpty()) {
+                throw ValidationException::withMessages(['claim' => 'There is nothing left to bill the second policy for.']);
+            }
+            $lines = $source->map(fn ($l) => ['key' => $l->id, 'item_code' => $l->item_code, 'description' => $l->description, 'quantity' => 1, 'gross' => (string) $l->patient_share, 'category' => null, 'item_type' => null])->all();
+            $result = $this->engine->split($plan, $lines, $this->engine->state($policy, $plan));
+
+            $claim = InsuranceClaim::create([
+                'organization_id' => $primary->organization_id, 'branch_id' => $primary->branch_id, 'payer_id' => $payer->id, 'policy_id' => $policy->id, 'plan_id' => $plan->id, 'corporate_id' => $payer->corporate_id,
+                'patient_id' => $primary->patient_id, 'encounter_id' => $primary->encounter_id, 'invoice_id' => $primary->invoice_id, 'parent_claim_id' => $primary->id, 'version' => 1,
+                'claim_number' => $this->numbers->next('insurance.claim', $primary->organization_id, null, prefix: 'CLM', format: '{PREFIX}-{YEAR}-{SEQ:8}', userId: $by->id),
+                'claim_type' => $primary->claim_type, 'status' => 'draft', 'service_date' => $primary->service_date, 'diagnoses' => $primary->diagnoses, 'procedures' => $primary->procedures,
+                'gross_amount' => $result['totals']['gross'], 'non_covered_amount' => $result['totals']['non_covered'], 'deductible_amount' => $result['totals']['deductible'], 'copay_amount' => $result['totals']['copay'],
+                'payer_share' => $result['totals']['payer'], 'patient_share' => $result['totals']['patient'], 'filing_deadline' => date('Y-m-d', strtotime($primary->service_date->toDateString().' +'.$this->masters->filingDays($payer).' days')), 'created_by' => $by->id,
+            ]);
+            foreach ($source as $l) {
+                $r = $result['lines'][$l->id];
+                InsuranceClaimLine::create([
+                    'organization_id' => $claim->organization_id, 'claim_id' => $claim->id, 'invoice_item_id' => $l->invoice_item_id, 'billing_item_id' => $l->billing_item_id, 'item_code' => $l->item_code, 'description' => $l->description,
+                    'quantity' => $l->quantity, 'gross_amount' => $r['gross'], 'contract_amount' => $r['contract'], 'non_covered_amount' => $r['non_covered'], 'deductible_amount' => $r['deductible'], 'copay_amount' => $r['copay'],
+                    'payer_share' => $r['payer'], 'patient_share' => $r['patient'], 'note' => trim('Second policy. '.$r['note']),
+                ]);
+            }
+            foreach (config("insurance.document_checklist.{$claim->claim_type}", []) as [$type, $required]) {
+                InsuranceClaimDocument::create(['organization_id' => $claim->organization_id, 'claim_id' => $claim->id, 'document_type' => $type, 'required' => $required, 'received' => $type === 'invoice']);
+            }
+            $this->event($claim, 'created', $by, "Second policy, from {$primary->claim_number}", null, 'draft', $claim->payer_share);
+
+            return $claim->load('lines');
+        });
+    }
+
     /** A claim that was rejected or denied is corrected as a NEW version in draft; the old one stays as evidence. */
     public function newVersion(InsuranceClaim $claim, User $by): InsuranceClaim
     {
