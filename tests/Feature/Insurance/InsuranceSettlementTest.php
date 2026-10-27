@@ -135,7 +135,7 @@ class InsuranceSettlementTest extends InsuranceTestCase
         $this->assertSame('2400.00', (string) $claim->paid_amount);
         $this->assertSame('600.00', $remittances->patientDue($invoice->refresh()), 'the patient still owes their 20%');
         $this->assertSame('2400.00', number_format((float) $claim->lines()->sum('paid_amount'), 2, '.', ''), 'the payment is spread over the lines');
-        $this->assertSame('2400.00', (string) \App\Models\Billing\BillingInsurancePolicy::find($claim->policy_id)->annual_used, 'the policy benefits are used');
+        $this->assertSame('2400.00', (string) BillingInsurancePolicy::find($claim->policy_id)->annual_used, 'the policy benefits are used');
     }
 
     public function test_an_allocation_cannot_exceed_the_remittance_the_claim_or_belong_to_another_payer(): void
