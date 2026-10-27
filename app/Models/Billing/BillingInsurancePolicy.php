@@ -15,11 +15,11 @@ class BillingInsurancePolicy extends Model
 {
     use HasFactory, HasPublicId;
 
-    protected $fillable = ['organization_id', 'branch_id', 'insurance_provider_id', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
+    protected $fillable = ['organization_id', 'branch_id', 'insurance_provider_id', 'payer_id', 'plan_id', 'subscriber_patient_id', 'relationship_to_subscriber', 'coverage_order', 'annual_used', 'deductible_met', 'benefit_year_start', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
 
     protected function casts(): array
     {
-        return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date'];
+        return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date', 'annual_used' => 'decimal:2', 'deductible_met' => 'decimal:2', 'benefit_year_start' => 'date'];
     }
 
     public function organization(): BelongsTo

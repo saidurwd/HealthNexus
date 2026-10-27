@@ -635,6 +635,36 @@ class PermissionSeeder extends Seeder
             'bloodbank.report.export',
             'bloodbank.settings.manage',
 
+            // Insurance and corporate claims (Phase 14)
+            'insurance.dashboard.view',
+            'insurance.payer.view',
+            'insurance.payer.manage',
+            'insurance.plan.view',
+            'insurance.plan.manage',
+            'insurance.policy.view',
+            'insurance.policy.manage',
+            'insurance.eligibility.verify',
+            'insurance.preauth.view',
+            'insurance.preauth.request',
+            'insurance.preauth.decide',
+            'insurance.claim.view',
+            'insurance.claim.create',
+            'insurance.claim.edit',
+            'insurance.claim.submit',
+            'insurance.claim.cancel',
+            'insurance.query.manage',
+            'insurance.appeal.manage',
+            'insurance.remittance.view',
+            'insurance.remittance.record',
+            'insurance.writeoff.request',
+            'insurance.writeoff.approve',
+            'insurance.corporate.view',
+            'insurance.corporate.manage',
+            'insurance.aging.view',
+            'insurance.report.view',
+            'insurance.report.export',
+            'insurance.settings.manage',
+
             // Insurance
             'insurance.view',
             'insurance.create',
@@ -717,7 +747,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage', 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
                 'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
                 'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
@@ -850,7 +880,7 @@ class PermissionSeeder extends Seeder
                 'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
-                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.transfusion.view', 'bloodbank.reaction.record', 'bloodbank.issue.emergency', 'bloodbank.mtp.activate', 'bloodbank.lookback.view', 'bloodbank.incident.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.transfusion.view', 'bloodbank.reaction.record', 'bloodbank.issue.emergency', 'bloodbank.mtp.activate', 'bloodbank.lookback.view', 'bloodbank.incident.view', 'insurance.policy.view', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.claim.view',
                 'patients.view', 'patients.create', 'patients.update',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.amend.request',
@@ -932,6 +962,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'receptionist' => [
+                'insurance.policy.view', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create',
                 'patients.view', 'patients.create', 'patients.update', 'patients.print',
                 'patients.documents.view', 'patients.documents.manage', 'patients.consents.view', 'patients.consents.manage',
@@ -1153,6 +1184,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export', 'reporting.print',
             ],
             'cashier' => [
+                'insurance.policy.view', 'insurance.claim.view',
                 'billing.view', 'billing.create', 'billing.update', 'billing.payment',
                 'billing.dashboard.view', 'billing.charge.view', 'billing.invoice.view',
                 'billing.payment.view', 'billing.payment.create', 'billing.receipt.view',
@@ -1622,6 +1654,16 @@ class PermissionSeeder extends Seeder
                 'patients.view',
                 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
                 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'insurance_officer' => [
+                'patients.view',
+                'insurance.dashboard.view', 'insurance.payer.view', 'insurance.plan.view', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export',
+                'billing.view',
+            ],
+            'claims_manager' => [
+                'patients.view',
+                'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
+                'billing.view', 'reporting.view', 'reporting.export', 'reporting.print',
             ],
         ];
 
