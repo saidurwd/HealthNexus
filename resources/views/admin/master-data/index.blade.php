@@ -28,7 +28,7 @@
                                     <p>{{ __('Manage states') }}</p>
                                 </div>
                                 <div class="small-box-footer">
-                                    <a href="{{ route('admin.master-data.states', ['country' => \App\Models\Country::first()?->id ?? 0]) }}" class="text-white">{{ __('Manage') }} <i class="bi bi-arrow-right"></i></a>
+                                    <a href="{{ route('admin.master-data.all-states') }}" class="text-white">{{ __('Manage') }} <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

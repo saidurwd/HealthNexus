@@ -8,7 +8,7 @@
             <h3 class="card-title">{{ __('Select Organization and Branch') }}</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.organizations.branches.departments.create') }}" id="departmentCreateForm">
+            <form method="GET" action="#" id="departmentCreateForm">
                 <div class="mb-3">
                     <label for="organization_id" class="form-label">{{ __('Organization') }}</label>
                     <select class="form-control" id="organization_id" name="organization" required>
@@ -30,8 +30,15 @@
     </div>
 @endsection
 
-@push('scripts')
+@push('js')
 <script>
+// The page needs both ids in its address, so Continue builds it from the two choices.
+document.getElementById('departmentCreateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    window.location = '/admin/organizations/' + encodeURIComponent(document.getElementById('organization_id').value)
+        + '/branches/' + encodeURIComponent(document.getElementById('branch_id').value) + '/departments/create';
+});
+
 document.getElementById('organization_id').addEventListener('change', function() {
     const organizationId = this.value;
     const branchSelect = document.getElementById('branch_id');
@@ -61,6 +68,9 @@ document.getElementById('organization_id').addEventListener('change', function()
 document.getElementById('branch_id').addEventListener('change', function() {
     const continueBtn = document.getElementById('continueBtn');
     continueBtn.disabled = !this.value;
+});
+document.getElementById('branch_id').addEventListener('change', function () {
+    document.getElementById('continueBtn').disabled = ! this.value;
 });
 </script>
 @endpush
