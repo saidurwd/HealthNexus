@@ -169,6 +169,29 @@ _Generated from the Schema::create calls in database/migrations._
 - `icu_respiratory_support`
 - `icu_ventilator_events`
 
+## insurance (20)
+
+- `corporate_batch_invoices`
+- `corporate_batches`
+- `insurance_appeals`
+- `insurance_claim_documents`
+- `insurance_claim_events`
+- `insurance_claim_lines`
+- `insurance_claim_queries`
+- `insurance_claims`
+- `insurance_contract_rates`
+- `insurance_eligibility_checks`
+- `insurance_payers`
+- `insurance_plan_rules`
+- `insurance_plans`
+- `insurance_policy_dependents`
+- `insurance_preauths`
+- `insurance_remittance_lines`
+- `insurance_remittances`
+- `insurance_submission_claims`
+- `insurance_submissions`
+- `insurance_writeoffs`
+
 ## ipd (20)
 
 - `ipd_admission_requests`

@@ -7,6 +7,7 @@ use App\Models\Billing\BillingInsuranceProvider;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -61,6 +62,6 @@ class InsurancePolicyService
 
     public function isActiveOn(BillingInsurancePolicy $policy, string $date): bool
     {
-        return $policy->status === 'active' && $policy->effective_from->toDateString() <= $date && ($policy->effective_to === null || $policy->effective_to->toDateString() >= $date);
+        return $policy->status === 'active' && Carbon::parse($policy->effective_from)->toDateString() <= $date && (! $policy->getAttribute('effective_to') || Carbon::parse($policy->effective_to)->toDateString() >= $date);
     }
 }

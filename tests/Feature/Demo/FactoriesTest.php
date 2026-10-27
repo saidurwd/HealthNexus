@@ -8,6 +8,11 @@ use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodUnit;
 use App\Models\Ed\EdBay;
 use App\Models\Ed\EdVisit;
+use App\Models\Insurance\InsurancePayer;
+use App\Models\Insurance\InsurancePlan;
+use App\Models\Insurance\InsurancePreauth;
+use App\Models\Patient;
+use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -42,5 +47,19 @@ class FactoriesTest extends TestCase
 
         $request = BloodRequest::factory()->priority('urgent')->create();
         $this->assertSame($request->organization_id, $request->patient->organization_id);
+    }
+
+    public function test_insurance_factories_build_consistent_records(): void
+    {
+        $plan = InsurancePlan::factory()->create();
+        $this->assertSame($plan->organization_id, $plan->payer->organization_id);
+
+        $payer = InsurancePayer::factory()->type('tpa')->create();
+        $this->assertSame('tpa', $payer->payer_type);
+
+        $patient = Patient::factory()->create(['organization_id' => $plan->organization_id]);
+        $policy = app(InsurancePolicyService::class)->attach($patient, $plan->payer, $plan, ['policy_number' => 'P1', 'member_number' => 'M1', 'effective_from' => now()->subMonth()->toDateString()]);
+        $preauth = InsurancePreauth::factory()->forPolicy($policy)->approved('3000.00')->create();
+        $this->assertSame('3000.00', $preauth->remaining());
     }
 }

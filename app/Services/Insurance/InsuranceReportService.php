@@ -13,7 +13,7 @@ class InsuranceReportService
 {
     private const OPEN = ['submitted', 'acknowledged', 'queried', 'accepted', 'appealed', 'partially_paid'];
 
-    /** @return Collection<int, array{payer: string, buckets: array<string, string>, total: string, claims: int}> Receivable by payer, in buckets of days since submission. */
+    /** @return Collection<int, array<string, mixed>> Receivable by payer, in buckets of days since submission. */
     public function aging(int $organizationId, ?CarbonInterface $asOf = null): Collection
     {
         $asOf ??= now();
@@ -42,13 +42,16 @@ class InsuranceReportService
             $rows[$key]['claims']++;
         });
 
-        return collect(array_values($rows))->sortByDesc(fn ($r) => (float) $r['total'])->values();
+        /** @var list<array<string, mixed>> $list */
+        $list = array_values($rows);
+
+        return collect($list)->sortByDesc(fn ($r) => (float) $r['total'])->values();
     }
 
     /** @return array<string, mixed> */
     public function dashboard(int $organizationId): array
     {
-        $byStatus = InsuranceClaim::query()->where('organization_id', $organizationId)->selectRaw('status, count(*) c, sum(payer_share) amount')->groupBy('status')->get()->keyBy('status');
+        $byStatus = DB::table('insurance_claims')->where('organization_id', $organizationId)->selectRaw('status, count(*) c, sum(payer_share) amount')->groupBy('status')->get()->keyBy('status');
         $submittedThisMonth = InsuranceClaim::query()->where('organization_id', $organizationId)->where('submitted_at', '>=', now()->startOfMonth());
         $decided = InsuranceClaim::query()->where('organization_id', $organizationId)->whereNotNull('submitted_at')->whereIn('status', ['denied', 'rejected', 'paid', 'partially_paid', 'written_off', 'closed'])->count();
         $failed = InsuranceClaim::query()->where('organization_id', $organizationId)->whereIn('status', ['denied', 'rejected', 'written_off'])->count();

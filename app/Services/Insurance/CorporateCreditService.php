@@ -22,11 +22,15 @@ class CorporateCreditService
     public function position(BillingCorporate $corporate): array
     {
         $contract = BillingCorporateContract::query()->where('corporate_id', $corporate->id)->where('status', 'active')->whereNotNull('credit_limit')->where('credit_limit', '>', 0)->latest('id')->first();
-        $limit = $contract?->credit_limit ?? ($corporate->credit_limit !== null && bccomp((string) $corporate->credit_limit, '0', 2) > 0 ? $corporate->credit_limit : null);
+        $limit = $contract ? (string) $contract->credit_limit : null;
+        if ($limit === null) {
+            $own = (string) $corporate->getAttribute('credit_limit');
+            $limit = $own !== '' && bccomp($own, '0', 2) > 0 ? $own : null;
+        }
         $owed = (string) BillingInvoice::query()->where('corporate_id', $corporate->id)->whereIn('status', ['finalized', 'partially_paid'])->sum('due_amount');
         $owed = number_format((float) $owed, 2, '.', '');
 
-        return ['limit' => $limit !== null ? (string) $limit : null, 'owed' => $owed, 'available' => $limit !== null ? bcsub((string) $limit, $owed, 2) : null];
+        return ['limit' => $limit, 'owed' => $owed, 'available' => $limit !== null ? bcsub((string) $limit, $owed, 2) : null];
     }
 
     /** Refuses a new corporate bill that would take the client over its credit limit. */

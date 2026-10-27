@@ -18,8 +18,10 @@ use App\Models\Insurance\InsuranceClaimLine;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Insurance\InsurancePreauth;
+use App\Models\Patient;
 use App\Models\User;
 use App\Services\Numbering\NumberSeriesService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -44,7 +46,7 @@ class InsuranceClaimService
         if (! in_array($invoice->status, ['finalized', 'partially_paid', 'paid'], true)) {
             throw ValidationException::withMessages(['invoice' => 'A claim is made from a finalised invoice.']);
         }
-        $policy ??= $invoice->insurance_policy_id ? BillingInsurancePolicy::find($invoice->insurance_policy_id) : $this->policies->activeFor($invoice->patient, $invoice->invoice_date->toDateString())->first();
+        $policy ??= $invoice->insurance_policy_id ? BillingInsurancePolicy::find($invoice->insurance_policy_id) : $this->policies->activeFor(Patient::findOrFail($invoice->patient_id), Carbon::parse($invoice->invoice_date)->toDateString())->first();
         if (! $policy || ! $policy->payer_id || ! $policy->plan_id) {
             throw ValidationException::withMessages(['policy' => 'The invoice has no policy with a payer and a plan.']);
         }
@@ -57,7 +59,7 @@ class InsuranceClaimService
             $payer = InsurancePayer::findOrFail($policy->payer_id);
             $plan = InsurancePlan::findOrFail($policy->plan_id);
             $encounter = $invoice->encounter_id ? Encounter::find($invoice->encounter_id) : null;
-            $date = $invoice->invoice_date->toDateString();
+            $date = Carbon::parse($invoice->invoice_date)->toDateString();
             $preauth = $this->preauths->usable($policy, $date, $encounter);
 
             $items = BillingInvoiceItem::query()->where('invoice_id', $invoice->id)->orderBy('id')->get();
@@ -68,7 +70,7 @@ class InsuranceClaimService
             $claim = InsuranceClaim::create([
                 'organization_id' => $invoice->organization_id, 'branch_id' => $invoice->branch_id, 'payer_id' => $payer->id, 'policy_id' => $policy->id, 'plan_id' => $plan->id,
                 'corporate_id' => $payer->corporate_id, 'patient_id' => $invoice->patient_id, 'encounter_id' => $encounter?->id, 'invoice_id' => $invoice->id, 'preauth_id' => $preauth?->id,
-                'parent_claim_id' => $parent?->id, 'version' => ($parent?->version ?? 0) + 1,
+                'parent_claim_id' => $parent?->id, 'version' => ($parent ? $parent->version : 0) + 1,
                 'claim_number' => $parent ? $this->nextVersionNumber($parent) : $this->numbers->next('insurance.claim', $invoice->organization_id, null, prefix: 'CLM', format: '{PREFIX}-{YEAR}-{SEQ:8}', userId: $by->id),
                 'claim_type' => $this->claimType($invoice, $encounter), 'status' => 'draft', 'service_date' => $date, 'diagnoses' => $this->diagnoses($encounter), 'procedures' => $this->procedures($encounter),
                 'gross_amount' => $result['totals']['gross'], 'non_covered_amount' => $result['totals']['non_covered'], 'deductible_amount' => $result['totals']['deductible'], 'copay_amount' => $result['totals']['copay'],
@@ -113,7 +115,7 @@ class InsuranceClaimService
         }
         $needs = $claim->lines()->where('note', 'like', '%pre-authorization%')->exists() || ($claim->plan_id && $claim->claim_type === 'inpatient' && InsurancePlan::whereKey($claim->plan_id)->value('requires_preauth_for_admission'));
         $payer = InsurancePayer::find($claim->payer_id);
-        $threshold = $payer?->preauth_required_above ?? $this->settings->get('preauth')['required_above'];
+        $threshold = ($payer ? $payer->getAttribute('preauth_required_above') : null) ?? $this->settings->get('preauth')['required_above'];
         if (($needs || ($threshold !== null && bccomp((string) $claim->payer_share, (string) $threshold, 2) > 0)) && ! $claim->preauth_id) {
             $add('preauth_present', 'Request a pre-authorization, then rebuild the claim.');
         }
@@ -124,7 +126,7 @@ class InsuranceClaimService
             $missing = $claim->documents()->where('required', true)->where('received', false)->pluck('document_type')->implode(', ');
             $add('documents_complete', "Attach: $missing.");
         }
-        $net = $claim->lines()->selectRaw('sum(payer_share) p, sum(patient_share) t, sum(gross_amount) g, sum(contract_amount) c')->first();
+        $net = DB::table('insurance_claim_lines')->where('claim_id', $claim->id)->selectRaw('sum(payer_share) p, sum(patient_share) t, sum(gross_amount) g, sum(contract_amount) c')->first();
         $invoiceTotal = BillingInvoice::whereKey($claim->invoice_id)->value('subtotal');
         if (bccomp(bcadd((string) $net->p, (string) $net->t, 2), (string) $net->c, 2) !== 0 || ($invoiceTotal !== null && bccomp((string) $net->g, (string) $invoiceTotal, 2) > 0)) {
             $add('lines_tie_to_invoice', 'Rebuild the claim from the invoice.');

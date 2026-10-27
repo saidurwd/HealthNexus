@@ -37,7 +37,7 @@ class InsuranceCoverageEngine
         foreach ($lines as $line) {
             $gross = $this->money($line['gross']);
             $contract = $gross;
-            if (isset($line['agreed_unit_rate']) && $line['agreed_unit_rate'] !== null) {
+            if (isset($line['agreed_unit_rate'])) {
                 $agreed = bcmul($this->money($line['agreed_unit_rate']), (string) ($line['quantity'] ?? 1), 2);
                 $contract = bccomp($agreed, $gross, 2) < 0 ? $agreed : $gross;
             }
@@ -118,7 +118,8 @@ class InsuranceCoverageEngine
     {
         $deductible = $this->nonNegative(bcsub((string) $plan->deductible_amount, (string) $policy->deductible_met, 2));
         // Phase 4 stored "no limit" as 0.00, so a limit of zero on the policy means the plan's own annual limit applies.
-        $limit = $policy->coverage_limit !== null && bccomp((string) $policy->coverage_limit, '0', 2) > 0 ? $policy->coverage_limit : $plan->annual_limit;
+        $own = (string) $policy->getAttribute('coverage_limit');
+        $limit = $own !== '' && bccomp($own, '0', 2) > 0 ? $own : $plan->getAttribute('annual_limit');
 
         return ['deductible_remaining' => $deductible, 'annual_remaining' => $limit !== null ? $this->nonNegative(bcsub((string) $limit, (string) $policy->annual_used, 2)) : null];
     }
