@@ -134,6 +134,10 @@ class BloodTransfusionHistory implements DemoHistoryModule
             });
         }
 
+        // The hourly housekeeping job would have caught anything that expired since the last simulated day.
+        $counts['expired'] += $this->inventory->expireDue($orgId);
+        $this->issues->releaseLapsedReservations();
+
         return sprintf('%d bags released, %d requests (%d transfused, %d returned, %d unfilled), %d reactions, %d expired, %d discarded, %d fridge excursions, %d massive protocols',
             $counts['released'], $counts['requests'], $counts['transfused'], $counts['returned'], $counts['unfilled'], $counts['reactions'], $counts['expired'], $counts['discarded'], $counts['excursions'], $counts['mtp']);
     }

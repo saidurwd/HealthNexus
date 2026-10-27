@@ -13,7 +13,7 @@ use Spatie\Permission\Models\Role;
 /** Staff to act as (doctors, nurses, technicians …) and enough patients, registered over the whole period, with allergies and problems. */
 class PatientsHistory implements DemoHistoryModule
 {
-    private const STAFF = ['doctor' => 4, 'staff_nurse' => 3, 'lab_technician' => 2, 'senior_lab_technician' => 1, 'pathologist' => 1, 'radiology_technician' => 1, 'radiologist' => 1, 'pharmacist' => 2, 'cashier' => 2, 'receptionist' => 2, 'surgeon' => 2, 'anesthetist' => 1, 'icu_physician' => 1, 'charge_nurse' => 1, 'ipd_coordinator' => 1, 'ot_nurse' => 1, 'blood_bank_technician' => 3, 'blood_bank_medical_officer' => 1];
+    private const STAFF = ['doctor' => 4, 'staff_nurse' => 3, 'lab_technician' => 2, 'senior_lab_technician' => 1, 'pathologist' => 1, 'radiology_technician' => 1, 'radiologist' => 1, 'pharmacist' => 2, 'cashier' => 2, 'receptionist' => 2, 'surgeon' => 2, 'anesthetist' => 1, 'icu_physician' => 1, 'charge_nurse' => 1, 'ipd_coordinator' => 1, 'ot_nurse' => 1, 'blood_bank_technician' => 3, 'blood_bank_medical_officer' => 1, 'insurance_officer' => 2, 'claims_manager' => 1, 'accountant' => 1];
 
     public function name(): string
     {

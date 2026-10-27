@@ -8,6 +8,8 @@ use App\Services\Demo\History\Modules\BloodTransfusionHistory;
 use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\EdHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
+use App\Services\Demo\History\Modules\InsuranceClaimsHistory;
+use App\Services\Demo\History\Modules\InsuranceSetupHistory;
 use App\Services\Demo\History\Modules\IpdHistory;
 use App\Services\Demo\History\Modules\LabHistory;
 use App\Services\Demo\History\Modules\NursingHistory;
@@ -25,6 +27,7 @@ return [
         PatientsHistory::class,
         CatalogHistory::class,
         BillingCatalogHistory::class,
+        InsuranceSetupHistory::class,
         AppointmentsAndOpdHistory::class,
         EdHistory::class,
         BloodDonationsHistory::class,
@@ -37,6 +40,7 @@ return [
         IcuHistory::class,
         BloodTransfusionHistory::class,
         BillingHistory::class,
+        InsuranceClaimsHistory::class,
     ],
 
     'months' => 6,

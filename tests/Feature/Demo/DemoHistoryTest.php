@@ -89,6 +89,10 @@ class DemoHistoryTest extends TestCase
         $has('blood_requests', 5);
         $has('blood_issues', 2);
         $has('blood_transfusions', 2);
+        $has('insurance_payers', 5);
+        $has('insurance_plans', 5);
+        $has('insurance_claims', 5);
+        $has('insurance_submissions', 1);
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -98,6 +102,11 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('blood_issues')->whereIn('status', ['issued', 'transfusing'])->groupBy('unit_id')->havingRaw('count(*) > 1')->get()->count());
         $this->assertSame(0, DB::table('blood_units')->where('status', 'available')->where('expires_at', '<=', now())->count(), 'no expired bag is left on the shelf');
         $this->assertSame(0, DB::table('blood_issues as i')->join('blood_units as u', 'u.id', '=', 'i.unit_id')->where('i.crossmatched', true)->whereNull('u.abo')->count());
+
+        // claims: the shares add up to the contract amount on every claim, and no payer was paid beyond what it owed
+        $this->assertSame(0, DB::table('insurance_claims as c')->where('c.organization_id', $org)->whereRaw('ABS(c.payer_share + c.patient_share - (select coalesce(sum(l.contract_amount), 0) from insurance_claim_lines l where l.claim_id = c.id)) > 0.01')->count());
+        $this->assertSame(0, DB::table('insurance_claims')->where('organization_id', $org)->whereRaw('paid_amount + adjusted_amount > payer_share + 0.01')->count());
+        $this->assertSame(0, DB::table('insurance_remittances')->where('organization_id', $org)->whereRaw('allocated_amount > amount + 0.01')->count());
 
         // the money adds up, no bed holds two patients, no ED visit is closed twice
         $this->assertSame(0, DB::table('billing_invoices')->where('organization_id', $org)->whereRaw('ABS(paid_amount + due_amount - grand_total) > 0.01')->count());

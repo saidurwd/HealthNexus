@@ -6,6 +6,7 @@ use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingPaymentMethod;
+use App\Models\Insurance\InsuranceClaim;
 use App\Models\Patient;
 use App\Services\Billing\CashierSessionService;
 use App\Services\Billing\InvoiceLifecycleService;
@@ -81,7 +82,10 @@ class BillingHistory implements DemoHistoryModule
         $eventTypes = BillingItem::query()->whereIn('id', $charges->pluck('billing_item_id'))->pluck('clinical_event_type');
         $inpatient = $eventTypes->contains(fn ($t) => str_contains((string) $t, 'ipd') || str_contains((string) $t, 'icu') || str_contains((string) $t, 'ot_'));
         $invoice = $context->at($at, function () use ($context, $patient, $charges, $inpatient, $cashier) {
-            $invoice = $this->invoices->createDraft($patient, ['organization_id' => $context->organization->id, 'branch_id' => $context->branch->id, 'invoice_type' => $inpatient ? 'ipd' : 'opd', 'encounter_id' => $charges->first()->encounter_id], $cashier);
+            // A patient with a policy or a corporate account is billed to it (the Insurance history sets these up); the insurance hook drafts the claim when the invoice is finalised.
+            $cover = $context->shared('insured')[$patient->id] ?? [];
+            $invoice = $this->invoices->createDraft($patient, ['organization_id' => $context->organization->id, 'branch_id' => $context->branch->id, 'invoice_type' => $inpatient ? 'ipd' : 'opd', 'encounter_id' => $charges->first()->encounter_id,
+                'insurance_policy_id' => $cover['policy'] ?? null, 'corporate_id' => $cover['corporate'] ?? null], $cashier);
             $invoice = $this->invoices->addCharges($invoice, new Collection($charges->all()));
 
             return $this->lifecycle->finalize($invoice, $cashier);
@@ -89,13 +93,24 @@ class BillingHistory implements DemoHistoryModule
         $counts['invoices']++;
 
         $roll = mt_rand(1, 100);
-        if (! $settle || $roll > 90 || bccomp((string) $invoice->grand_total, '0', 2) <= 0) {
+        $payable = (string) $invoice->grand_total;
+        if ($invoice->corporate_id) {
+            $counts['unpaid']++; // goes on the corporate client's monthly statement
+
+            return;
+        }
+        if ($invoice->insurance_policy_id) {
+            // the patient pays only their share; the payer's part is collected from the payer later
+            $claim = InsuranceClaim::query()->where('invoice_id', $invoice->id)->latest('id')->first();
+            $claim && $payable = (string) $claim->patient_share;
+        }
+        if (! $settle || $roll > 90 || bccomp($payable, '0', 2) <= 0) {
             $counts['unpaid']++;
 
             return;
         }
         $method = $session ? $context->pick($methods) : $methods->first();
-        $amount = $roll <= 75 ? (string) $invoice->grand_total : bcdiv((string) $invoice->grand_total, '2', 2);
+        $amount = $roll <= 75 ? $payable : bcdiv($payable, '2', 2);
         $payment = $context->at($at->addMinutes(10), fn () => $this->payments->collect($invoice->refresh(), ['payment_method_id' => $method->id, 'amount' => $amount, 'transaction_reference' => $method->type === 'cash' ? null : 'TXN'.mt_rand(100000, 999999)], $cashier, $session));
         $roll <= 75 ? $counts['paid']++ : $counts['partial']++;
 
