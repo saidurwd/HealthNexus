@@ -62,7 +62,7 @@ class InsuranceMasterService
         }
         // A new rate closes the one it replaces the day before it starts, so rates never overlap.
         InsuranceContractRate::query()->where('payer_id', $payer->id)->where('billing_item_id', $billingItemId)->where('plan_id', $plan?->id)
-            ->whereNull('effective_to')->where('effective_from', '<', $from)->update(['effective_to' => date('Y-m-d', strtotime("$from -1 day"))]);
+            ->whereNull('effective_to')->whereDate('effective_from', '<', $from)->update(['effective_to' => date('Y-m-d', strtotime("$from -1 day"))]);
 
         return InsuranceContractRate::create([
             'organization_id' => $payer->organization_id, 'payer_id' => $payer->id, 'plan_id' => $plan?->id, 'billing_item_id' => $billingItemId,
@@ -74,7 +74,7 @@ class InsuranceMasterService
     public function agreedRate(InsurancePayer $payer, ?InsurancePlan $plan, int $billingItemId, string $date): ?string
     {
         $rates = InsuranceContractRate::query()->where('payer_id', $payer->id)->where('billing_item_id', $billingItemId)
-            ->where('effective_from', '<=', $date)->where(fn ($q) => $q->whereNull('effective_to')->orWhere('effective_to', '>=', $date))->get();
+            ->whereDate('effective_from', '<=', $date)->where(fn ($q) => $q->whereNull('effective_to')->orWhereDate('effective_to', '>=', $date))->get();
         $rate = $rates->firstWhere('plan_id', $plan?->id) ?? $rates->firstWhere('plan_id', null);
 
         return $rate ? (string) $rate->agreed_rate : null;

@@ -22,7 +22,7 @@ return [
         'acknowledged' => ['queried', 'accepted', 'rejected', 'denied', 'partially_paid', 'paid'],
         'queried' => ['submitted', 'cancelled'],
         'accepted' => ['partially_paid', 'paid', 'denied'],
-        'rejected' => ['draft', 'cancelled'],
+        'rejected' => ['cancelled'], // a rejected claim is replaced by a new version, never edited
         'denied' => ['appealed', 'written_off', 'cancelled'],
         'appealed' => ['accepted', 'denied', 'partially_paid', 'paid', 'written_off'],
         'partially_paid' => ['paid', 'written_off', 'denied'],

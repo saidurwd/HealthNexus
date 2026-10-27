@@ -32,7 +32,7 @@ class InsuranceCoverageEngine
         $preauth = $state['preauth_remaining'] ?? null;
         $ruleUsed = [];
         $out = [];
-        $totals = array_fill_keys(['gross', 'contract', 'adjustment', 'non_covered', 'deductible', 'copay', 'payer', 'patient'], '0.00');
+        $totals = array_fill_keys(['gross', 'contract', 'adjustment', 'non_covered', 'deductible', 'copay', 'payer', 'patient', 'preauth_used'], '0.00');
 
         foreach ($lines as $line) {
             $gross = $this->money($line['gross']);
@@ -99,6 +99,7 @@ class InsuranceCoverageEngine
             $annual !== null && $annual = bcsub($annual, $payer, 2);
             $preauth !== null && $needsPreauth && $preauth = bcsub($preauth, $payer, 2);
 
+            $needsPreauth && $totals['preauth_used'] = bcadd($totals['preauth_used'], $payer, 2);
             $patient = bcsub($contract, $payer, 2);
             $adjustment = bcsub($gross, $contract, 2);
             $out[$line['key']] = ['gross' => $gross, 'contract' => $contract, 'adjustment' => $adjustment, 'non_covered' => $nonCovered, 'deductible' => $ded, 'copay' => $copay, 'payer' => $payer, 'patient' => $patient, 'note' => implode('; ', $note)];
@@ -116,7 +117,8 @@ class InsuranceCoverageEngine
     public function state(BillingInsurancePolicy $policy, InsurancePlan $plan): array
     {
         $deductible = $this->nonNegative(bcsub((string) $plan->deductible_amount, (string) $policy->deductible_met, 2));
-        $limit = $policy->coverage_limit ?? $plan->annual_limit;
+        // Phase 4 stored "no limit" as 0.00, so a limit of zero on the policy means the plan's own annual limit applies.
+        $limit = $policy->coverage_limit !== null && bccomp((string) $policy->coverage_limit, '0', 2) > 0 ? $policy->coverage_limit : $plan->annual_limit;
 
         return ['deductible_remaining' => $deductible, 'annual_remaining' => $limit !== null ? $this->nonNegative(bcsub((string) $limit, (string) $policy->annual_used, 2)) : null];
     }

@@ -3,6 +3,7 @@
 namespace App\Services\Insurance;
 
 use App\Models\Billing\BillingInsurancePolicy;
+use App\Models\Billing\BillingInsuranceProvider;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Patient;
@@ -26,8 +27,11 @@ class InsurancePolicyService
             throw ValidationException::withMessages(['effective_to' => 'The end date is before the start date.']);
         }
 
+        // Phase 4's policy table needs an insurer row; any payer without one gets it now.
+        $providerId = $payer->insurance_provider_id ?? tap(BillingInsuranceProvider::firstOrCreate(['organization_id' => $payer->organization_id, 'code' => $payer->code], ['name' => $payer->name, 'status' => 'active'])->id, fn ($id) => $payer->update(['insurance_provider_id' => $id]));
+
         return BillingInsurancePolicy::create($data + [
-            'organization_id' => $holder->organization_id, 'insurance_provider_id' => $payer->insurance_provider_id, 'payer_id' => $payer->id, 'plan_id' => $plan?->id,
+            'organization_id' => $holder->organization_id, 'insurance_provider_id' => $providerId, 'payer_id' => $payer->id, 'plan_id' => $plan?->id,
             'patient_id' => $holder->id, 'relationship_to_subscriber' => 'self', 'coverage_order' => 1, 'status' => 'active', 'benefit_year_start' => $data['effective_from'],
         ]);
     }
@@ -51,7 +55,7 @@ class InsurancePolicyService
 
         return BillingInsurancePolicy::query()->where('organization_id', $patient->organization_id)->where('status', 'active')
             ->where(fn ($q) => $q->where('patient_id', $patient->id)->orWhereIn('id', $dependentOf))
-            ->where('effective_from', '<=', $date)->where(fn ($q) => $q->whereNull('effective_to')->orWhere('effective_to', '>=', $date))
+            ->whereDate('effective_from', '<=', $date)->where(fn ($q) => $q->whereNull('effective_to')->orWhereDate('effective_to', '>=', $date))
             ->orderBy('coverage_order')->get();
     }
 
