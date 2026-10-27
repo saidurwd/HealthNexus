@@ -48,7 +48,11 @@ return [
         'processed' => ['secondary', 'bi-diagram-2'], 'eligible' => ['success', 'bi-person-check'], 'deferred' => ['warning', 'bi-person-dash'], 'permanently_deferred' => ['danger', 'bi-person-x'],
         'collecting' => ['primary', 'bi-droplet-half'], 'aborted' => ['secondary', 'bi-x-circle'], 'sample_received' => ['info', 'bi-eyedropper'],
         'ready' => ['success', 'bi-check2-circle'], 'partially_issued' => ['warning', 'bi-box-arrow-right'], 'provisional' => ['warning', 'bi-hourglass-split'], 'accepted' => ['success', 'bi-check-circle'],
-        'transfusing' => ['primary', 'bi-activity'], 'stopped_reaction' => ['danger', 'bi-exclamation-octagon'], 'investigating' => ['warning', 'bi-search'], 'open' => ['danger', 'bi-exclamation-circle'], 'dispositioned' => ['secondary', 'bi-box-arrow-right'],
+        'transfusing' => ['primary', 'bi-activity'],
+        // insurance and corporate claims
+        'queried' => ['warning', 'bi-question-circle'], 'denied' => ['danger', 'bi-x-octagon'], 'appealed' => ['primary', 'bi-megaphone'],
+        'unallocated' => ['warning', 'bi-hourglass-split'], 'partly_allocated' => ['info', 'bi-cash'], 'allocated' => ['success', 'bi-check-all'],
+        'upheld' => ['danger', 'bi-hand-thumbs-down'], 'overturned' => ['success', 'bi-hand-thumbs-up'], 'answered' => ['success', 'bi-reply'], 'settled' => ['success', 'bi-check-all'], 'not_eligible' => ['danger', 'bi-person-x'], 'unknown' => ['secondary', 'bi-question'], 'stopped_reaction' => ['danger', 'bi-exclamation-octagon'], 'investigating' => ['warning', 'bi-search'], 'dispositioned' => ['secondary', 'bi-box-arrow-right'],
         'deceased' => ['dark', 'bi-heart-pulse'], 'success' => ['success', 'bi-check-circle'], 'failed' => ['danger', 'bi-x-circle'],
     ],
 

@@ -1782,6 +1782,22 @@ return [
             ],
         ],
         [
+            'text' => 'Insurance and corporate',
+            'module' => 'insurance',
+            'icon' => 'bi bi-shield-check',
+            'can' => 'insurance.dashboard.view',
+            'submenu' => [
+                ['text' => 'Overview', 'url' => '/admin/insurance', 'icon' => 'bi bi-speedometer2', 'can' => 'insurance.dashboard.view'],
+                ['text' => 'Claims', 'url' => '/admin/insurance/claims', 'icon' => 'bi bi-file-earmark-text', 'can' => 'insurance.claim.view'],
+                ['text' => 'Payments from payers', 'url' => '/admin/insurance/remittances', 'icon' => 'bi bi-cash-coin', 'can' => 'insurance.remittance.view'],
+                ['text' => 'Pre-authorizations', 'url' => '/admin/insurance/preauths', 'icon' => 'bi bi-patch-check', 'can' => 'insurance.preauth.view'],
+                ['text' => 'Patient policies', 'url' => '/admin/insurance/policies', 'icon' => 'bi bi-person-vcard', 'can' => 'insurance.policy.view'],
+                ['text' => 'Payers and plans', 'url' => '/admin/insurance/payers', 'icon' => 'bi bi-building', 'can' => 'insurance.payer.view'],
+                ['text' => 'Corporate clients', 'url' => '/admin/insurance/corporate', 'icon' => 'bi bi-briefcase', 'can' => 'insurance.corporate.view'],
+                ['text' => 'Denials to work', 'url' => '/admin/insurance/worklist', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'insurance.claim.view'],
+            ],
+        ],
+        [
             'text' => 'Master Data',
             'icon' => 'bi bi-database',
             'can' => 'settings.view',
