@@ -78,6 +78,10 @@ class BillingCatalogHistory implements DemoHistoryModule
             $ensure('PROC', 'OT-PROC-'.$category->code, 'Procedure fee — '.$category->name, 'procedure', 'ot_procedure_fee', $category->code, 15000 + (crc32($category->code) % 5) * 5000);
         }
 
+        foreach (InventoryHistory::CHARGED as $code => [$name, $price]) {
+            $ensure('CONS', $code, $name, 'service', 'inventory_consumable', $code, $price);
+        }
+
         $ensure('ROOM', 'ICU-BED', 'ICU bed day', 'room', 'icu_bed_day', 'general', 9000);
         $ensure('ROOM', 'ICU-VENT', 'Ventilator day', 'room', 'icu_ventilator_day', 'general', 6000);
         $ensure('ROOM', 'ICU-CARE', 'Critical care service', 'service', 'icu_critical_care_service', 'general', 3000);

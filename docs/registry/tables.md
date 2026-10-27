@@ -192,6 +192,50 @@ _Generated from the Schema::create calls in database/migrations._
 - `insurance_submissions`
 - `insurance_writeoffs`
 
+## inventory (41)
+
+- `inventory_adjustments`
+- `inventory_batches`
+- `inventory_categories`
+- `inventory_consumptions`
+- `inventory_count_lines`
+- `inventory_counts`
+- `inventory_issue_lines`
+- `inventory_issues`
+- `inventory_item_uoms`
+- `inventory_items`
+- `inventory_locations`
+- `inventory_recalls`
+- `inventory_request_lines`
+- `inventory_requests`
+- `inventory_serials`
+- `inventory_stock`
+- `inventory_stores`
+- `inventory_transfer_lines`
+- `inventory_transfers`
+- `procurement_approvals`
+- `procurement_budgets`
+- `procurement_contracts`
+- `procurement_goods_receipts`
+- `procurement_grn_lines`
+- `procurement_po_amendments`
+- `procurement_po_lines`
+- `procurement_purchase_orders`
+- `procurement_quotation_lines`
+- `procurement_quotations`
+- `procurement_requisition_lines`
+- `procurement_requisitions`
+- `procurement_rfq_lines`
+- `procurement_rfq_suppliers`
+- `procurement_rfqs`
+- `procurement_supplier_documents`
+- `procurement_supplier_evaluations`
+- `procurement_supplier_invoice_lines`
+- `procurement_supplier_invoices`
+- `procurement_supplier_return_lines`
+- `procurement_supplier_returns`
+- `procurement_suppliers`
+
 ## ipd (20)
 
 - `ipd_admission_requests`

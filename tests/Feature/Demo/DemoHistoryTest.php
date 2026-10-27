@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
+use App\Services\Inventory\InventoryLedgerReconciler;
 use Carbon\Carbon;
 use Database\Seeders\BillingSeeder;
 use Database\Seeders\ClinicalMasterDataSeeder;
@@ -93,6 +94,13 @@ class DemoHistoryTest extends TestCase
         $has('insurance_plans', 5);
         $has('insurance_claims', 5);
         $has('insurance_submissions', 1);
+        $has('inventory_items', 20);
+        $has('procurement_suppliers', 5);
+        $has('procurement_purchase_orders', 5);
+        $has('procurement_goods_receipts', 5, ['status' => 'posted']);
+        $has('inventory_issues', 3);
+        $has('inventory_transfers', 2, ['status' => 'received']);
+        $has('inventory_consumptions', 3);
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -107,6 +115,16 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('insurance_claims as c')->where('c.organization_id', $org)->whereRaw('ABS(c.payer_share + c.patient_share - (select coalesce(sum(l.contract_amount), 0) from insurance_claim_lines l where l.claim_id = c.id)) > 0.01')->count());
         $this->assertSame(0, DB::table('insurance_claims')->where('organization_id', $org)->whereRaw('paid_amount + adjusted_amount > payer_share + 0.01')->count());
         $this->assertSame(0, DB::table('insurance_remittances')->where('organization_id', $org)->whereRaw('allocated_amount > amount + 0.01')->count());
+
+        // inventory: the stock projection equals the ledger, nothing is negative, no expired batch is issuable, every order has an approval chain
+        $this->assertSame(0, app(InventoryLedgerReconciler::class)->drift($org)->count(), 'inventory stock equals the ledger');
+        $this->assertSame(0, DB::table('inventory_stock')->where('organization_id', $org)->where('quantity_on_hand', '<', 0)->count());
+        $this->assertSame(0, DB::table('procurement_purchase_orders as o')->where('o.organization_id', $org)->whereIn('o.status', ['approved', 'issued', 'partially_received', 'received', 'closed'])->where('o.po_type', 'standard')
+            ->whereNotExists(fn ($q) => $q->selectRaw('1')->from('procurement_approvals as a')->whereColumn('a.document_id', 'o.id')->where('a.document_type', 'purchase_order')->where('a.status', 'approved'))->count(), 'every standard order was approved');
+        $this->assertSame(0, DB::table('procurement_approvals as a')->join('procurement_purchase_orders as o', function ($j) {
+            $j->on('o.id', '=', 'a.document_id')->where('a.document_type', 'purchase_order');
+        })->where('a.status', 'approved')->whereColumn('a.decided_by', 'o.created_by')->count(), 'nobody approved their own order');
+        $this->assertSame(0, DB::table('procurement_supplier_invoices')->where('organization_id', $org)->where('status', 'mismatch')->whereNotNull('finance_reference')->count());
 
         // the money adds up, no bed holds two patients, no ED visit is closed twice
         $this->assertSame(0, DB::table('billing_invoices')->where('organization_id', $org)->whereRaw('ABS(paid_amount + due_amount - grand_total) > 0.01')->count());

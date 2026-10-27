@@ -11,6 +11,10 @@ use App\Models\Ed\EdVisit;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Insurance\InsurancePreauth;
+use App\Models\Inventory\InventoryBatch;
+use App\Models\Inventory\InventoryItem;
+use App\Models\Inventory\InventoryStore;
+use App\Models\Inventory\ProcurementSupplier;
 use App\Models\Patient;
 use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,5 +65,21 @@ class FactoriesTest extends TestCase
         $policy = app(InsurancePolicyService::class)->attach($patient, $plan->payer, $plan, ['policy_number' => 'P1', 'member_number' => 'M1', 'effective_from' => now()->subMonth()->toDateString()]);
         $preauth = InsurancePreauth::factory()->forPolicy($policy)->approved('3000.00')->create();
         $this->assertSame('3000.00', $preauth->remaining());
+    }
+
+    public function test_inventory_factories_build_consistent_records(): void
+    {
+        $item = InventoryItem::factory()->create();
+        $this->assertSame($item->organization_id, $item->category->organization_id);
+
+        $batch = InventoryBatch::factory()->create(['organization_id' => $item->organization_id, 'item_id' => $item->id]);
+        $this->assertSame($item->id, $batch->item_id);
+        $this->assertSame('active', $batch->status);
+
+        $store = InventoryStore::factory()->create(['organization_id' => $item->organization_id]);
+        $supplier = ProcurementSupplier::factory()->create(['organization_id' => $item->organization_id]);
+        $this->assertSame($store->organization_id, $supplier->organization_id);
+        $this->assertNotEmpty($store->public_id);
+        $this->assertNotEmpty($supplier->public_id);
     }
 }

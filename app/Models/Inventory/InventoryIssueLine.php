@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models\Inventory;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class InventoryIssueLine extends Model
+{
+    use HasFactory;
+
+    protected $table = 'inventory_issue_lines';
+
+    protected $guarded = ['id'];
+
+    protected $casts = ['quantity' => 'decimal:4', 'returned_quantity' => 'decimal:4', 'unit_cost' => 'decimal:4'];
+
+    /** @return BelongsTo<InventoryItem, $this> */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(InventoryItem::class, 'item_id');
+    }
+}

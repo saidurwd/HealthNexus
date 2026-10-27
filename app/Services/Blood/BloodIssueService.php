@@ -159,7 +159,7 @@ class BloodIssueService
             $locked->update(['status' => 'released', 'released_at' => now()]);
             $unit = BloodUnit::query()->find($locked->unit_id);
             if ($unit && $unit->status === BloodUnit::RESERVED) {
-                $this->units->move($unit, BloodUnit::AVAILABLE, null, $note);
+                $this->units->move($unit, $unit->isExpired() ? BloodUnit::EXPIRED : BloodUnit::AVAILABLE, null, $unit->isExpired() ? 'Reservation released after the unit expired' : $note);
             }
         });
     }
@@ -177,7 +177,7 @@ class BloodIssueService
                 $locked->update(['status' => 'expired', 'released_at' => now()]);
                 $unit = BloodUnit::query()->find($locked->unit_id);
                 if ($unit && $unit->status === BloodUnit::RESERVED) {
-                    $this->units->move($unit, BloodUnit::AVAILABLE, null, 'Reservation lapsed');
+                    $this->units->move($unit, $unit->isExpired() ? BloodUnit::EXPIRED : BloodUnit::AVAILABLE, null, $unit->isExpired() ? 'Reservation lapsed after the unit expired' : 'Reservation lapsed');
                 }
             });
             $count++;

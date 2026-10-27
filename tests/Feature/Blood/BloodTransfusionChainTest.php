@@ -110,6 +110,19 @@ class BloodTransfusionChainTest extends BloodTestCase
         $this->assertSame('expired', $reservation->refresh()->status);
     }
 
+    public function test_cancelling_a_request_whose_reserved_bag_has_expired_marks_the_bag_expired_instead_of_failing(): void
+    {
+        $request = $this->readyRequest('A', 'positive');
+        $unit = $this->unit('prbc', 'O', 'negative');
+        $this->reserve($request, $unit);
+        $unit->update(['expires_at' => now()->subMinute()]);
+
+        app(BloodRequestService::class)->cancel($request->refresh(), $this->user, 'Patient no longer needs blood');
+
+        $this->assertSame(BloodUnit::EXPIRED, $unit->refresh()->status);
+        $this->assertSame('cancelled', $request->refresh()->status);
+    }
+
     public function test_more_units_than_asked_for_cannot_be_reserved(): void
     {
         $request = $this->readyRequest('O', 'positive', 'prbc', 1);

@@ -49,6 +49,11 @@ return [
         'collecting' => ['primary', 'bi-droplet-half'], 'aborted' => ['secondary', 'bi-x-circle'], 'sample_received' => ['info', 'bi-eyedropper'],
         'ready' => ['success', 'bi-check2-circle'], 'partially_issued' => ['warning', 'bi-box-arrow-right'], 'provisional' => ['warning', 'bi-hourglass-split'], 'accepted' => ['success', 'bi-check-circle'],
         'transfusing' => ['primary', 'bi-activity'],
+        // inventory and procurement
+        'qualified' => ['success', 'bi-patch-check'], 'suspended' => ['warning', 'bi-pause-circle'], 'disqualified' => ['danger', 'bi-slash-circle'], 'prospective' => ['secondary', 'bi-hourglass'],
+        'matched' => ['success', 'bi-check2-all'], 'mismatch' => ['danger', 'bi-exclamation-diamond'], 'requested' => ['info', 'bi-send'], 'dispatched' => ['primary', 'bi-truck'], 'in_transit' => ['primary', 'bi-truck'],
+        'counting' => ['info', 'bi-list-check'], 'partially_received' => ['warning', 'bi-box-seam'], 'pending_inspection' => ['warning', 'bi-search'], 'posted' => ['success', 'bi-box-arrow-in-down'],
+        'recorded' => ['info', 'bi-receipt'], 'recalled' => ['danger', 'bi-arrow-return-left'], 'credited' => ['success', 'bi-cash-coin'], 'awarded' => ['success', 'bi-trophy'], 'sent' => ['info', 'bi-send'], 'selected' => ['success', 'bi-check-circle'],
         // insurance and corporate claims
         'queried' => ['warning', 'bi-question-circle'], 'denied' => ['danger', 'bi-x-octagon'], 'appealed' => ['primary', 'bi-megaphone'],
         'unallocated' => ['warning', 'bi-hourglass-split'], 'partly_allocated' => ['info', 'bi-cash'], 'allocated' => ['success', 'bi-check-all'],

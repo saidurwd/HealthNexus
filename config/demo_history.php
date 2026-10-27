@@ -10,6 +10,7 @@ use App\Services\Demo\History\Modules\EdHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
 use App\Services\Demo\History\Modules\InsuranceClaimsHistory;
 use App\Services\Demo\History\Modules\InsuranceSetupHistory;
+use App\Services\Demo\History\Modules\InventoryHistory;
 use App\Services\Demo\History\Modules\IpdHistory;
 use App\Services\Demo\History\Modules\LabHistory;
 use App\Services\Demo\History\Modules\NursingHistory;
@@ -39,6 +40,7 @@ return [
         OtHistory::class,
         IcuHistory::class,
         BloodTransfusionHistory::class,
+        InventoryHistory::class,
         BillingHistory::class,
         InsuranceClaimsHistory::class,
     ],

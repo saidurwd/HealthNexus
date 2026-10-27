@@ -679,6 +679,60 @@ class PermissionSeeder extends Seeder
             'finance.post',
             'finance.close',
 
+            // Inventory and procurement (Phase 15)
+            'inventory.dashboard.view',
+            'inventory.item.view',
+            'inventory.item.manage',
+            'inventory.store.view',
+            'inventory.store.manage',
+            'inventory.stock.view',
+            'inventory.expiry.view',
+            'inventory.expiry.manage',
+            'inventory.transfer.view',
+            'inventory.transfer.create',
+            'inventory.transfer.dispatch',
+            'inventory.transfer.receive',
+            'inventory.request.view',
+            'inventory.request.create',
+            'inventory.request.issue',
+            'inventory.consumption.record',
+            'inventory.count.view',
+            'inventory.count.perform',
+            'inventory.count.approve',
+            'inventory.adjustment.view',
+            'inventory.adjustment.request',
+            'inventory.adjustment.approve',
+            'inventory.valuation.view',
+            'inventory.report.view',
+            'inventory.report.export',
+            'inventory.settings.manage',
+            'procurement.supplier.view',
+            'procurement.supplier.manage',
+            'procurement.supplier.qualify',
+            'procurement.requisition.view',
+            'procurement.requisition.create',
+            'procurement.approval.level1',
+            'procurement.approval.level2',
+            'procurement.approval.level3',
+            'procurement.rfq.view',
+            'procurement.rfq.manage',
+            'procurement.po.view',
+            'procurement.po.create',
+            'procurement.po.issue',
+            'procurement.po.amend',
+            'procurement.emergency.create',
+            'procurement.grn.view',
+            'procurement.grn.receive',
+            'procurement.grn.inspect',
+            'procurement.invoice.view',
+            'procurement.invoice.record',
+            'procurement.invoice.approve',
+            'procurement.return.manage',
+            'procurement.budget.view',
+            'procurement.budget.manage',
+            'procurement.contract.manage',
+            'procurement.report.view',
+
             // Inventory
             'inventory.view',
             'inventory.create',
@@ -747,6 +801,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage', 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
                 'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
                 'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
@@ -928,6 +983,7 @@ class PermissionSeeder extends Seeder
             // to the same permission set as 'staff_nurse' rather than left orphaned on the old
             // generic 'nursing.*' stub permissions (still granted below for backward compatibility).
             'nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.view', 'nursing.create', 'nursing.update', 'nursing.administer',
@@ -1237,6 +1293,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'staff_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
@@ -1267,6 +1324,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'senior_staff_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
@@ -1297,6 +1355,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'charge_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.disposition.decide', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
@@ -1331,6 +1390,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'nursing_supervisor' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1664,6 +1724,18 @@ class PermissionSeeder extends Seeder
                 'patients.view',
                 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
                 'billing.view', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'storekeeper' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.adjustment.view', 'inventory.adjustment.request', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.return.manage',
+            ],
+            'inventory_manager' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.return.manage', 'procurement.po.view', 'procurement.budget.view', 'procurement.report.view', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'procurement_officer' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.valuation.view', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.contract.manage', 'procurement.budget.view', 'procurement.report.view',
+            ],
+            'procurement_manager' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view', 'reporting.view', 'reporting.export', 'reporting.print',
             ],
         ];
 
