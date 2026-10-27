@@ -166,6 +166,10 @@ class BloodTransfusionHistory implements DemoHistoryModule
         $filled = 0;
         $at = $start->addHour();
         for ($i = 0; $i < $units; $i++) {
+            // a reaction to the first bag stops the rest of this request until the blood-bank doctor has closed the incident
+            if (BloodIncident::where('patient_id', $patient->id)->where('incident_type', 'transfusion_reaction')->where('status', '!=', 'closed')->exists()) {
+                break;
+            }
             $candidate = BloodUnit::query()->where('organization_id', $patient->organization_id)->where('component', $component)->where('status', BloodUnit::AVAILABLE)->where('expires_at', '>', $at)->orderBy('expires_at')->get()
                 ->first(fn (BloodUnit $u) => $this->compatibility->incompatibility($request->refresh(), $u, ['abo' => $group[0], 'rh' => $group[1]]) === null);
             if (! $candidate) {
@@ -180,7 +184,7 @@ class BloodTransfusionHistory implements DemoHistoryModule
             $filled++;
             $this->bedside($context, $issue, $candidate, $patient, $nurses, $staff, $at->addMinutes(75), $counts);
         }
-        if ($filled === 0) {
+        if ($filled === 0 && ! BloodIncident::where('patient_id', $patient->id)->where('incident_type', 'transfusion_reaction')->exists()) {
             $context->at($start->addHours(6), fn () => $this->requests->cancel($request->refresh(), $doctor, 'No compatible blood available; request withdrawn'));
             $counts['unfilled']++;
         }

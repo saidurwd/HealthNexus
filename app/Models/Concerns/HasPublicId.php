@@ -2,6 +2,7 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 /**
@@ -17,6 +18,19 @@ trait HasPublicId
         static::creating(function ($model) {
             $model->setAttribute('public_id', $model->getAttribute('public_id') ?? (string) Str::ulid());
         });
+    }
+
+    /**
+     * Also assigned at insert time, not only by the `creating` event: seeders run with model events switched off (WithoutModelEvents),
+     * and a record without a public_id must never reach the database.
+     */
+    protected function performInsert(Builder $query)
+    {
+        if (! $this->getAttribute('public_id')) {
+            $this->setAttribute('public_id', (string) Str::ulid());
+        }
+
+        return parent::performInsert($query);
     }
 
     /** The numeric id never leaves the server in JSON: callers identify the record by `public_id` (guideline 9.1). */
