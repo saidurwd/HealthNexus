@@ -43,7 +43,9 @@ return new class extends Migration
         $this->backfillPharmacy();
         $this->protect();
 
-        DB::statement('CREATE OR REPLACE VIEW v_stock_on_hand_all_stores AS
+        // Dropped first (not CREATE OR REPLACE, which SQLite lacks) so a view left behind by an interrupted migrate cannot block a fresh install.
+        DB::statement('DROP VIEW IF EXISTS v_stock_on_hand_all_stores');
+        DB::statement('CREATE VIEW v_stock_on_hand_all_stores AS
             SELECT organization_id, store_kind, store_id, item_id, batch_id, SUM(quantity) AS on_hand
             FROM stock_ledger GROUP BY organization_id, store_kind, store_id, item_id, batch_id');
     }
