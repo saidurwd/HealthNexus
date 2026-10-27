@@ -98,7 +98,7 @@ class InsuranceClaimsHistory implements DemoHistoryModule
         }
 
         // 4. remittances: one lump per payer per week of payment
-        foreach (collect($payments)->groupBy(fn ($p) => $p['claim']->payer_id.'|'.$p['on']->startOfWeek()->toDateString()) as $group) {
+        foreach (collect($payments)->filter(fn ($p) => bccomp($p['paid'], '0', 2) > 0)->groupBy(fn ($p) => $p['claim']->payer_id.'|'.$p['on']->startOfWeek()->toDateString()) as $group) {
             $payer = InsurancePayer::findOrFail($group->first()['claim']->payer_id);
             $on = $group->max('on');
             if ($on->gt($context->to)) {

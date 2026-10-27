@@ -20,7 +20,7 @@ class BuildDemoHistory extends Command
 {
     protected $signature = 'demo:history {organization? : Organization code (default: the first organization)} {--months= : Months of history (default 6)}
         {--visits-per-day= : Outpatient visits per working day (default 8)} {--password= : Password for every demo login (generated if omitted)}
-        {--only=* : Run only these history classes (short name, e.g. PatientsHistory)} {--skip-access : Do not create the test users} {--force : Build again even if history exists} {--allow-production : Run even when APP_ENV=production}';
+        {--only=* : Run only these history classes (short name, e.g. PatientsHistory)} {--skip-access : Do not create the test users} {--force : Build again even if history exists} {--seed= : Random seed (default 2026; the same seed gives the same history)} {--allow-production : Run even when APP_ENV=production}';
 
     protected $description = 'Create six months of demo history for every module, and test users by module, permission and feature';
 
@@ -58,7 +58,7 @@ class BuildDemoHistory extends Command
 
         $context = new HistoryContext(
             $organization, $branch, $actor,
-            (int) ($this->option('months') ?: config('demo_history.months')), (int) ($this->option('visits-per-day') ?: config('demo_history.visits_per_day')),
+            (int) ($this->option('months') ?: config('demo_history.months')), (int) ($this->option('visits-per-day') ?: config('demo_history.visits_per_day')), (int) ($this->option('seed') ?: 2026),
         );
         $only = array_filter((array) $this->option('only'));
         $modules = app(ModuleManager::class);
@@ -75,7 +75,16 @@ class BuildDemoHistory extends Command
                 continue;
             }
             $started = microtime(true);
-            $this->line(sprintf('  %-26s %s  [%.1fs]', $history->name(), $history->run($context), microtime(true) - $started));
+            try {
+                $summary = $history->run($context);
+            } catch (\Throwable $e) {
+                // Say which step failed and where in OUR code, so a failure deep in a long build can be found without re-reading vendor frames.
+                $where = collect($e->getTrace())->filter(fn ($f) => isset($f['file']) && ! str_contains($f['file'], '/vendor/'))->take(6)->map(fn ($f) => str_replace(base_path().'/', '', $f['file']).':'.$f['line'])->implode(' ← ');
+                $this->error(sprintf('%s failed: %s [%s]', $history->name(), $e->getMessage(), $where));
+
+                return self::FAILURE;
+            }
+            $this->line(sprintf('  %-26s %s  [%.1fs]', $history->name(), $summary, microtime(true) - $started));
         }
 
         $organization->update([

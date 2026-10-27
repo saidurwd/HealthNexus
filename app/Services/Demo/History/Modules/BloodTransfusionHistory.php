@@ -77,8 +77,12 @@ class BloodTransfusionHistory implements DemoHistoryModule
                         }
                     }
                     BloodUnit::where('donation_id', $donation->id)->where('status', BloodUnit::BLOCKED)->where('blocked_reason', 'positive_screen')->get()->each(function (BloodUnit $unit) use ($staff, &$counts) {
-                        $this->issues->discard($unit, 'positive_screen', $staff, 'Reactive screening test');
-                        $counts['discarded']++;
+                        try {
+                            $this->issues->discard($unit, 'positive_screen', $staff, 'Reactive screening test');
+                            $counts['discarded']++;
+                        } catch (ValidationException) {
+                            // already expired in the meantime: the expiry sweep owns it now
+                        }
                     });
                 });
             });
@@ -96,8 +100,12 @@ class BloodTransfusionHistory implements DemoHistoryModule
             // after an excursion the medical officer discards what was blocked by it
             $context->at($day->setTime(11, 0), function () use ($orgId, $officer, &$counts) {
                 BloodUnit::where('organization_id', $orgId)->where('status', BloodUnit::BLOCKED)->where('blocked_reason', 'temperature_excursion')->get()->each(function (BloodUnit $unit) use ($officer, &$counts) {
-                    $this->issues->discard($unit, 'temperature_excursion', $officer, 'Held outside the safe range');
-                    $counts['discarded']++;
+                    try {
+                        $this->issues->discard($unit, 'temperature_excursion', $officer, 'Held outside the safe range');
+                        $counts['discarded']++;
+                    } catch (ValidationException) {
+                        // expired while blocked: the expiry sweep owns it now
+                    }
                 });
             });
 

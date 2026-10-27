@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('amount', 12, 2);
             $table->decimal('allocated_amount', 12, 2)->default(0);
             $table->date('received_on');
-            $table->string('status', 15)->default('unallocated'); // unallocated | partly_allocated | allocated
+            $table->string('status', 20)->default('unallocated'); // unallocated | partly_allocated | allocated
             $table->foreignId('recorded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
