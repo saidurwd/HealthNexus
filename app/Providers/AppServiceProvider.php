@@ -14,6 +14,7 @@ use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
 use App\Events\Appointments\AppointmentRescheduled;
 use App\Events\Billing\ChargeReversalRequested;
+use App\Events\Billing\InvoiceFinalized;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\EncounterCompleted;
@@ -71,6 +72,7 @@ use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
 use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
 use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
 use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
+use App\Listeners\Insurance\DraftClaimWhenInvoiceFinalized;
 use App\Listeners\Ipd\NotifyOnAdmissionEvents;
 use App\Listeners\Ipd\NotifyOnDischargeEvents;
 use App\Listeners\Ipd\NotifyOnTransferEvents;
@@ -190,6 +192,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LabReportAmended::class, [RecordLabReportOnPatientTimeline::class, 'handleAmended']);
         Event::listen(LabReportFinalized::class, [NotifyOnLabReportEvents::class, 'handleFinalized']);
         Event::listen(LabReportFinalized::class, [SyncDonationTestsOnLabReport::class, 'handle']);
+        Event::listen(InvoiceFinalized::class, [DraftClaimWhenInvoiceFinalized::class, 'handle']);
         Event::listen(LabReportAmended::class, [NotifyOnLabReportEvents::class, 'handleAmended']);
 
         Event::listen(ClinicalOrderCreated::class, CreateRadiologyOrderOnClinicalOrderCreated::class);
