@@ -43,7 +43,7 @@ return new class extends Migration
         $this->backfillPharmacy();
         $this->protect();
 
-        DB::statement('CREATE VIEW v_stock_on_hand_all_stores AS
+        DB::statement('CREATE OR REPLACE VIEW v_stock_on_hand_all_stores AS
             SELECT organization_id, store_kind, store_id, item_id, batch_id, SUM(quantity) AS on_hand
             FROM stock_ledger GROUP BY organization_id, store_kind, store_id, item_id, batch_id');
     }
