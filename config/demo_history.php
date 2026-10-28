@@ -18,6 +18,7 @@ use App\Services\Demo\History\Modules\NursingHistory;
 use App\Services\Demo\History\Modules\OtHistory;
 use App\Services\Demo\History\Modules\PatientsHistory;
 use App\Services\Demo\History\Modules\PharmacyHistory;
+use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
 
 /*
@@ -45,6 +46,7 @@ return [
         HrHistory::class,
         BillingHistory::class,
         InsuranceClaimsHistory::class,
+        PortalHistory::class,
     ],
 
     'months' => 6,

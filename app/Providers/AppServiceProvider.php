@@ -6,6 +6,7 @@ use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Documents\PdfRenderer;
 use App\Contracts\Integration\BloodRequestGateway;
+use App\Contracts\Integration\PaymentGateway;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
 use App\Contracts\Stock\StockLedger;
@@ -61,6 +62,8 @@ use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
 use App\Events\Radiology\RadiologyReportFinalized;
 use App\Integrations\BloodBankRequestGateway;
+use App\Integrations\Null\NullPaymentGateway;
+use App\Integrations\Sandbox\SandboxPaymentGateway;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
@@ -139,6 +142,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Phase 13: the real Blood Bank answers the gateway (it replies "not enabled" itself when the module is off for the organization).
         $this->app->bind(BloodRequestGateway::class, BloodBankRequestGateway::class);
+
+        // Phase 17: the payment gateway is the sandbox only where the config says so (development, tests, the demo); otherwise the null adapter answers.
+        $this->app->bind(PaymentGateway::class, fn () => config('portal.payments.driver') === 'sandbox' ? new SandboxPaymentGateway : new NullPaymentGateway);
 
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);

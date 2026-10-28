@@ -470,6 +470,36 @@ _Generated from the Schema::create calls in database/migrations._
 - `pharmacy_transfers`
 - `stock_ledger`
 
+## portal (27)
+
+- `crm_campaign_recipients`
+- `crm_campaigns`
+- `crm_complaint_events`
+- `crm_complaints`
+- `crm_feedback`
+- `crm_form_submissions`
+- `crm_forms`
+- `crm_interactions`
+- `crm_segments`
+- `portal_access_log`
+- `portal_comm_preferences`
+- `portal_devices`
+- `portal_documents`
+- `portal_messages`
+- `portal_notifications`
+- `portal_otps`
+- `portal_outbox`
+- `portal_payments`
+- `portal_proxies`
+- `portal_refill_requests`
+- `portal_release_policies`
+- `portal_result_releases`
+- `portal_security_events`
+- `portal_service_requests`
+- `portal_settlement_lines`
+- `portal_settlements`
+- `portal_threads`
+
 ## radiology (19)
 
 - `radiology_body_parts`

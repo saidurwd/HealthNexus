@@ -23,7 +23,7 @@ class RouteAuthorizationMatrixTest extends TestCase
     /** Screens every signed-in user may open (no data of their own organization beyond what they see anyway). */
     private const OPEN_TO_SIGNED_IN = [
         'admin/notifications', 'admin/messages', 'admin/help/quick-start', 'dashboard', 'change-password', 'admin/search',
-        'api/v1/auth/me', 'api/v1/organizations', /* lists only the caller's own organizations */ 'api/v1/tenant/context', 'mfa/setup', 'mfa/challenge', 'email/verify', 'login/context', 'admin/profile',
+        'api/v1/auth/me', 'api/v1/organizations', /* lists only the caller's own organizations */ 'api/v1/tenant/context', 'mfa/setup', 'mfa/challenge', 'email/verify', 'login/context', 'admin/profile', 'api/v1/portal/config',
     ];
 
     /** @return list<array{string, string}> [method, uri] */
@@ -36,7 +36,7 @@ class RouteAuthorizationMatrixTest extends TestCase
 
     public function test_signed_out_visitors_never_get_a_page_from_a_protected_route(): void
     {
-        $public = ['/', 'login', 'forgot-password', 'up', 'sanctum/csrf-cookie', 'api/v1/auth/login'];
+        $public = ['/', 'login', 'forgot-password', 'up', 'sanctum/csrf-cookie', 'api/v1/auth/login', 'api/v1/portal/config' /* app settings, no patient data */, 'portal/login', 'portal/register', 'portal/activate', 'portal/forgot' /* the patient sign-up and sign-in pages */];
         $checked = 0;
 
         foreach ($this->parameterlessRoutes('GET', fn ($r) => ! str_starts_with($r->uri(), '_') && ! str_starts_with($r->uri(), 'adminlte')) as [, $uri]) {

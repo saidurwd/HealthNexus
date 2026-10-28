@@ -92,3 +92,4 @@ Schedule::command('ed:check-timers')->everyMinute()->name('ed-check-timers')->wi
 Schedule::command('blood:check')->hourly()->name('blood-check')->withoutOverlapping();
 Schedule::command('inventory:check')->dailyAt('06:30')->name('inventory-check')->withoutOverlapping();
 Schedule::command('hr:check')->dailyAt('01:30')->name('hr-check')->withoutOverlapping();
+Schedule::command('portal:check')->everyFiveMinutes()->name('portal-check')->withoutOverlapping();

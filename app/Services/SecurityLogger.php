@@ -27,6 +27,7 @@ class SecurityLogger
     ): SecurityEvent {
         $request ??= request();
         $user ??= Auth::user();
+        $user = $user instanceof User ? $user : null; // a patient's login (Phase 17) is not a staff user
         $requestId = app()->bound('request_id') ? app('request_id') : null;
 
         $securityEvent = SecurityEvent::create([

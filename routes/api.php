@@ -19,11 +19,13 @@ use App\Http\Middleware\EnsureOrganizationAccess;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
-    Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+    require __DIR__.'/../modules/Portal/Routes/api.php';
 
-    Route::middleware(['auth:sanctum', ApplyTenantContextToInput::class])->group(function () {
+    Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+    Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'staff.only']);
+    Route::get('/auth/me', [AuthController::class, 'me'])->middleware(['auth:sanctum', 'staff.only']);
+
+    Route::middleware(['auth:sanctum', 'staff.only', ApplyTenantContextToInput::class])->group(function () {
         Route::get('/tenant/context', [TenantContextController::class, 'show']);
         Route::get('/codes/search', CodeSearchController::class);
         Route::get('/search', [GlobalSearchController::class, 'search']);

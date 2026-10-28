@@ -65,6 +65,11 @@ return [
         'queried' => ['warning', 'bi-question-circle'], 'denied' => ['danger', 'bi-x-octagon'], 'appealed' => ['primary', 'bi-megaphone'],
         'unallocated' => ['warning', 'bi-hourglass-split'], 'partly_allocated' => ['info', 'bi-cash'], 'allocated' => ['success', 'bi-check-all'],
         'upheld' => ['danger', 'bi-hand-thumbs-down'], 'overturned' => ['success', 'bi-hand-thumbs-up'], 'answered' => ['success', 'bi-reply'], 'settled' => ['success', 'bi-check-all'], 'not_eligible' => ['danger', 'bi-person-x'], 'unknown' => ['secondary', 'bi-question'], 'stopped_reaction' => ['danger', 'bi-exclamation-octagon'], 'investigating' => ['warning', 'bi-search'], 'dispositioned' => ['secondary', 'bi-box-arrow-right'],
+        // patient portal and relations
+        'invited' => ['info', 'bi-envelope-open'], 'held_critical' => ['danger', 'bi-exclamation-triangle-fill'], 'withheld' => ['warning', 'bi-eye-slash'], 'never' => ['secondary', 'bi-person-lines-fill'],
+        'needs_visit' => ['warning', 'bi-calendar-plus'], 'declined' => ['danger', 'bi-x-circle'], 'investigating' => ['primary', 'bi-search'], 'escalated' => ['danger', 'bi-arrow-up-circle'], 'assigned' => ['info', 'bi-person-check'],
+        'initiated' => ['info', 'bi-hourglass'], 'succeeded' => ['success', 'bi-check-circle-fill'], 'queued' => ['info', 'bi-inbox'], 'suppressed' => ['secondary', 'bi-slash-circle'], 'new' => ['info', 'bi-star'], 'reviewed' => ['success', 'bi-check2'],
+        'running' => ['primary', 'bi-play-circle'], 'unknown_payment' => ['danger', 'bi-question-diamond'], 'amount_differs' => ['danger', 'bi-exclamation-diamond'], 'not_succeeded' => ['warning', 'bi-x-diamond'],
         'deceased' => ['dark', 'bi-heart-pulse'], 'success' => ['success', 'bi-check-circle'], 'failed' => ['danger', 'bi-x-circle'],
     ],
 

@@ -1,0 +1,15 @@
+@extends('layouts.adminlte')
+
+@section('page_title', __('Results for the patient portal'))
+
+@section('page_content')
+    @include('admin.portal._flash')
+    <p class="text-muted small">{{ __('A result reaches the patient only when it is released here (or by the hospital\'s rule). A critical result is never released by itself: the critical alert must be acknowledged first.') }} <a href="{{ route('admin.portal.policies') }}">{{ __('Release rules') }}</a></p>
+    <form method="GET" class="mb-3"><select name="status" class="form-select w-auto" onchange="this.form.submit()">@foreach(['open' => 'Waiting', 'held_critical' => 'Critical, held back', 'withheld' => 'Kept back', 'never' => 'In person only', 'released' => 'Released', 'all' => 'All'] as $k => $t)<option value="{{ $k }}" @selected($status === $k)>{{ __($t) }}</option>@endforeach</select></form>
+    <div class="card"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Patient') }}</th><th>{{ __('Report') }}</th><th>{{ __('Reported') }}</th><th>{{ __('Rule') }}</th><th>{{ __('Status') }}</th><th></th></tr></thead>
+        <tbody>@forelse($rows as $r)<tr class="{{ $r->critical ? 'table-danger' : '' }}"><td>{{ $r->patient->first_name }} {{ $r->patient->last_name }} <span class="text-muted">{{ $r->patient->enterprise_patient_no }}</span></td><td>{{ $r->title }} @if($r->critical)<span class="badge text-bg-danger"><i class="bi bi-exclamation-triangle-fill"></i> {{ __('Critical') }}</span>@endif @if($r->reason)<div class="small text-muted">{{ $r->reason }}</div>@endif</td><td>{{ $r->reported_at?->format('d M H:i') }}</td><td>{{ __(\Illuminate\Support\Str::headline($r->mode)) }}@if($r->due_at) <span class="text-muted small">{{ $r->due_at->format('d M H:i') }}</span>@endif</td><td><x-ui.status-badge :status="$r->status" /></td>
+            <td>@can('portal.release.manage')@if($r->status !== 'released')<form method="POST" action="{{ route('admin.portal.releases.decide', $r->public_id) }}" class="d-flex gap-1">@csrf<input name="reason" class="form-control form-control-sm" placeholder="{{ $r->status === 'never' ? __('Reason (needed)') : __('Reason') }}">
+                @if($r->critical && ! $ack($r))<span class="small text-danger align-self-center text-nowrap">{{ __('Alert not acknowledged') }}</span>@else<button name="decision" value="release" class="btn btn-sm btn-outline-success">{{ __('Release') }}</button>@endif<button name="decision" value="withhold" class="btn btn-sm btn-outline-secondary">{{ __('Keep back') }}</button></form>
+                @else<form method="POST" action="{{ route('admin.portal.releases.decide', $r->public_id) }}" class="d-flex gap-1">@csrf<input name="reason" class="form-control form-control-sm" placeholder="{{ __('Reason') }}" required><button name="decision" value="withhold" class="btn btn-sm btn-outline-secondary">{{ __('Take back') }}</button></form>@endif @endcan</td></tr>
+        @empty<tr><td colspan="6" class="text-muted">{{ __('Nothing waiting.') }}</td></tr>@endforelse</tbody></table></div><div class="card-footer">{{ $rows->links() }}</div></div>
+@stop

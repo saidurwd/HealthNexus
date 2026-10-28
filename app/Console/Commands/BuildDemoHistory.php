@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\Demo\DemoAccess;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
+use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\ModuleManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -95,6 +96,12 @@ class BuildDemoHistory extends Command
             $this->newLine();
             $this->table(['Kind', 'Login', 'Roles'], array_map(fn ($r) => [$r['kind'], $r['email'], $r['roles']], $access));
             $this->line("Password for every demo login: $password   (shown once; training data only)");
+        }
+        if ($logins = $context->shared('portal_logins')) {
+            $this->newLine();
+            $this->line('Patient portal logins (mobile number, then the password below):');
+            $this->table(['Who', 'Mobile', 'Patient', 'Patient no.'], array_map(fn ($r) => [$r['kind'], $r['phone'], $r['patient'], $r['patient_no']], $logins));
+            $this->line('Password for every demo patient login: '.PortalHistory::PASSWORD);
         }
 
         return self::SUCCESS;

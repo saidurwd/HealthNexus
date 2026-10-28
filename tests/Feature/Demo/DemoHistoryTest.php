@@ -106,6 +106,15 @@ class DemoHistoryTest extends TestCase
         $has('hr_punches', 300);
         $has('hr_attendance_days', 300);
         $has('hr_leave_ledger', 30);
+        $has('patient_portal_accounts', 8, ['status' => 'active']);
+        $has('portal_result_releases', 3);
+        $has('portal_threads', 5);
+        $has('portal_release_policies', 2);
+        $has('crm_interactions', 5);
+        $has('crm_segments', 3, ['status' => 'active']);
+        $has('crm_campaigns', 2, ['status' => 'completed']);
+        $has('crm_complaints', 1);
+        $has('crm_form_submissions', 2);
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -135,6 +144,16 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('billing_invoices')->where('organization_id', $org)->whereRaw('ABS(paid_amount + due_amount - grand_total) > 0.01')->count());
         $this->assertSame(0, DB::table('ipd_bed_allocations')->whereNull('released_at')->groupBy('bed_id')->havingRaw('count(*) > 1')->get()->count());
         $this->assertSame(0, DB::table('ed_dispositions')->groupBy('visit_id')->havingRaw('count(*) > 1')->get()->count());
+
+        // the portal: a result reaches a patient only after a decision, a critical one only after its alert was acknowledged, marketing only to those who said yes, online money is in Billing exactly once
+        $this->assertSame(0, DB::table('portal_result_releases')->where('organization_id', $org)->where('status', 'released')->whereNull('released_at')->count());
+        $this->assertSame(0, DB::table('portal_result_releases as r')->where('r.organization_id', $org)->where('r.status', 'released')->where('r.critical', true)->where('r.source_type', 'lab_report')->whereNotExists(fn ($q) => $q->selectRaw('1')->from('lab_critical_result_alerts as a')->join('lab_results as lr', 'lr.id', '=', 'a.result_id')->join('lab_order_items as i', 'i.id', '=', 'lr.lab_order_item_id')->join('lab_reports as lrep', 'lrep.lab_order_id', '=', 'i.lab_order_id')->whereColumn('lrep.id', 'r.source_id')->whereNotNull('a.acknowledged_at'))->count(), 'no critical result was released without an acknowledged alert');
+        $this->assertSame(0, DB::table('portal_outbox as o')->where('o.organization_id', $org)->where('o.purpose', 'marketing')->whereIn('o.status', ['sent', 'queued', 'deferred'])->whereNotExists(fn ($q) => $q->selectRaw('1')->from('portal_comm_preferences as p')->whereColumn('p.patient_id', 'o.patient_id')->whereColumn('p.channel', 'o.channel')->where('p.purpose', 'marketing')->where('p.opted_in', true))->count(), 'marketing went only to patients who opted in');
+        $this->assertSame(0, DB::table('portal_payments')->where('organization_id', $org)->where('status', 'succeeded')->whereNotNull('billing_payment_id')->groupBy('billing_payment_id')->havingRaw('count(*) > 1')->get()->count(), 'no online payment was posted to Billing twice');
+        $this->assertSame(0, DB::table('portal_payments as p')->where('p.organization_id', $org)->where('p.status', 'succeeded')->whereNotNull('p.billing_payment_id')->whereNotExists(fn ($q) => $q->selectRaw('1')->from('billing_payments as b')->whereColumn('b.id', 'p.billing_payment_id')->whereColumn('b.amount', 'p.amount'))->count());
+        $this->assertSame(0, DB::table('crm_campaigns')->where('organization_id', $org)->whereIn('status', ['approved', 'running', 'completed'])->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own campaign');
+        $this->assertSame(0, DB::table('portal_proxies')->where('organization_id', $org)->where('status', 'active')->whereNull('valid_to')->count());
+        $this->assertSame(0, DB::table('patient_portal_accounts')->where('organization_id', $org)->where('status', 'active')->whereNull('password')->count());
 
         // running it again is refused instead of duplicating the history
         $appointments = Appointment::count();

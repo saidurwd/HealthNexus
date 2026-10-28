@@ -802,6 +802,42 @@ class PermissionSeeder extends Seeder
             'compensation.structure.view',
             'compensation.structure.manage',
 
+            // Patient portal and CRM (Phase 17)
+            'portal.dashboard.view',
+            'portal.account.view',
+            'portal.account.manage',
+            'portal.proxy.review',
+            'portal.release.view',
+            'portal.release.manage',
+            'portal.release.policy',
+            'portal.refill.review',
+            'portal.message.view',
+            'portal.message.reply',
+            'portal.request.manage',
+            'portal.payment.view',
+            'portal.payment.reconcile',
+            'portal.document.view',
+            'portal.communication.view',
+            'portal.report.view',
+            'portal.settings.manage',
+            'crm.dashboard.view',
+            'crm.interaction.view',
+            'crm.interaction.manage',
+            'crm.segment.view',
+            'crm.segment.manage',
+            'crm.segment.approve',
+            'crm.campaign.view',
+            'crm.campaign.manage',
+            'crm.campaign.approve',
+            'crm.feedback.view',
+            'crm.feedback.manage',
+            'crm.complaint.view',
+            'crm.complaint.manage',
+            'crm.complaint.close',
+            'crm.form.view',
+            'crm.form.manage',
+            'crm.report.view',
+
             // HR
             'hr.view',
             'hr.create',
@@ -857,6 +893,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
                 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
                 'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage', 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
@@ -992,6 +1029,7 @@ class PermissionSeeder extends Seeder
                 'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
+                'portal.release.view', 'portal.release.manage', 'portal.refill.review',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.transfusion.view', 'bloodbank.reaction.record', 'bloodbank.issue.emergency', 'bloodbank.mtp.activate', 'bloodbank.lookback.view', 'bloodbank.incident.view', 'insurance.policy.view', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.claim.view',
                 'patients.view', 'patients.create', 'patients.update',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
@@ -1805,6 +1843,15 @@ class PermissionSeeder extends Seeder
             ],
             'payroll_manager' => [
                 'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.sensitive', 'hr.report.view', 'hr.report.export', 'attendance.view', 'leave.request.view', 'leave.balance.view', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'patient_relations_manager' => [
+                'patients.view', 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
+            ],
+            'patient_relations_officer' => [
+                'patients.view', 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.document.view', 'portal.communication.view', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.campaign.view', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.form.view',
+            ],
+            'call_center_agent' => [
+                'patients.view', 'appointments.view', 'appointments.create', 'appointments.cancel', 'appointments.reschedule', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.complaint.view', 'crm.complaint.manage', 'portal.account.view', 'portal.message.view', 'portal.message.reply',
             ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',

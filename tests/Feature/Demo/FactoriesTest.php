@@ -19,6 +19,7 @@ use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\InventoryStore;
 use App\Models\Inventory\ProcurementSupplier;
 use App\Models\Patient;
+use App\Models\PatientPortalAccount;
 use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -95,5 +96,16 @@ class FactoriesTest extends TestCase
         $this->assertSame($employee->organization_id, $shift->organization_id);
         $this->assertNotEmpty($employee->public_id);
         $this->assertSame('active', $employee->status);
+    }
+
+    public function test_portal_account_factory_builds_a_login_that_matches_its_patient(): void
+    {
+        $patient = Patient::factory()->create(['phone' => '01712345678']);
+        $account = PatientPortalAccount::factory()->create(['patient_id' => $patient->id]);
+
+        $this->assertSame($patient->organization_id, $account->organization_id);
+        $this->assertSame('8801712345678', $account->phone);
+        $this->assertTrue($account->canLogin());
+        $this->assertFalse(PatientPortalAccount::factory()->invited()->create()->canLogin());
     }
 }

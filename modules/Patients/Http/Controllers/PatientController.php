@@ -32,6 +32,7 @@ use App\Services\Patients\PatientBarcodeService;
 use App\Services\Patients\PatientDuplicateScoringService;
 use App\Services\Patients\PatientService;
 use App\Services\Patients\PatientTimelineService;
+use App\Services\Portal\PortalAuthService;
 use App\Services\TenantContextResolver;
 use App\Support\Fhir\PatientFhirMapper;
 use Illuminate\Http\Request;
@@ -822,15 +823,12 @@ class PatientController extends Controller
             'email' => ['required', 'email', 'max:255'],
         ]);
 
-        $account = PatientPortalAccount::updateOrCreate(
-            ['patient_id' => $patient->id],
-            ['organization_id' => $patient->organization_id, 'email' => $validated['email'], 'is_active' => false, 'invited_at' => now()],
-        );
+        // Phase 17: the invitation is a one-time code handed to the patient after the desk has checked who they are (the account is the same table as before).
+        [$account, $code] = app(PortalAuthService::class)->invite($patient, $request->user()->id);
+        $account->update(['email' => $validated['email']]);
 
-        $patient->update(['portal_enabled' => true]);
+        $this->auditLogger->log('CREATE', PatientPortalAccount::class, $account->id, null, ['patient_id' => $patient->id, 'kind' => 'invitation'], $request);
 
-        $this->auditLogger->log('CREATE', PatientPortalAccount::class, $account->id, null, $account->toArray(), $request);
-
-        return redirect()->route('admin.patients.show', $patient)->with('success', __('Patient portal invitation created.'));
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Patient portal invitation created.'))->with('portal_invitation_code', $code);
     }
 }
