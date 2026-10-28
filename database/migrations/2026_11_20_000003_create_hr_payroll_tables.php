@@ -218,7 +218,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('rating')->nullable(); // 1–5
             $table->string('strengths', 400)->nullable();
             $table->string('improvements', 400)->nullable();
-            $table->string('status', 10)->default('pending'); // pending | submitted | acknowledged
+            $table->string('status', 14)->default('pending'); // pending | submitted | acknowledged
             $table->timestamp('submitted_at')->nullable();
             $table->timestamp('acknowledged_at')->nullable();
             $table->timestamps();
