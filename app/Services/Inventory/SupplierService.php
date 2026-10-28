@@ -133,12 +133,12 @@ class SupplierService
             if ($window === null) {
                 continue;
             }
-            $this->alerts->raise(new AlertRequest(
+            $alert = $this->alerts->raise(new AlertRequest(
                 organizationId: $organizationId, category: 'supplier_document_expiry', severity: $window <= 7 ? 'critical' : 'warning', sourceModule: 'inventory',
                 message: "{$doc->supplier->name}: {$doc->doc_type} expires in {$days} day(s).", sourceType: ProcurementSupplierDocument::class, sourceId: $doc->id,
                 recipientUserIds: $recipientUserIds, dedupKey: "supplier-doc:{$doc->id}:{$window}",
             ));
-            $raised++;
+            $alert->wasRecentlyCreated && $raised++;
         }
 
         return $raised;

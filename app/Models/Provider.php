@@ -21,6 +21,7 @@ class Provider extends Model
         'organization_id',
         'branch_id',
         'user_id',
+        'employee_id',
         'provider_code',
         'name',
         'provider_type',

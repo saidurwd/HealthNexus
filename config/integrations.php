@@ -1,11 +1,13 @@
 <?php
 
 use App\Contracts\Integration\AiProviderGateway;
+use App\Contracts\Integration\BiometricGateway;
 use App\Contracts\Integration\BloodRequestGateway;
 use App\Contracts\Integration\FinanceGateway;
 use App\Contracts\Integration\NationalExchangeGateway;
 use App\Contracts\Integration\PayerGateway;
 use App\Integrations\Null\NullAiProviderGateway;
+use App\Integrations\Null\NullBiometricGateway;
 use App\Integrations\Null\NullBloodRequestGateway;
 use App\Integrations\Null\NullFinanceGateway;
 use App\Integrations\Null\NullNationalExchangeGateway;
@@ -22,5 +24,6 @@ return [
         PayerGateway::class => NullPayerGateway::class,
         NationalExchangeGateway::class => NullNationalExchangeGateway::class,
         AiProviderGateway::class => NullAiProviderGateway::class,
+        BiometricGateway::class => NullBiometricGateway::class,
     ],
 ];

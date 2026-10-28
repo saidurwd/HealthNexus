@@ -54,6 +54,13 @@ return [
         'matched' => ['success', 'bi-check2-all'], 'mismatch' => ['danger', 'bi-exclamation-diamond'], 'requested' => ['info', 'bi-send'], 'dispatched' => ['primary', 'bi-truck'], 'in_transit' => ['primary', 'bi-truck'],
         'counting' => ['info', 'bi-list-check'], 'partially_received' => ['warning', 'bi-box-seam'], 'pending_inspection' => ['warning', 'bi-search'], 'posted' => ['success', 'bi-box-arrow-in-down'],
         'recorded' => ['info', 'bi-receipt'], 'recalled' => ['danger', 'bi-arrow-return-left'], 'credited' => ['success', 'bi-cash-coin'], 'awarded' => ['success', 'bi-trophy'], 'sent' => ['info', 'bi-send'], 'selected' => ['success', 'bi-check-circle'],
+        // people and payroll
+        'onboarding' => ['info', 'bi-person-plus'], 'on_leave' => ['info', 'bi-airplane'], 'resigned' => ['secondary', 'bi-box-arrow-right'], 'terminated' => ['danger', 'bi-person-x'], 'retired' => ['secondary', 'bi-person-heart'],
+        'late' => ['warning', 'bi-alarm'], 'half_day' => ['warning', 'bi-circle-half'], 'absent' => ['danger', 'bi-person-dash'], 'present' => ['success', 'bi-person-check'], 'weekly_off' => ['secondary', 'bi-moon'], 'holiday' => ['info', 'bi-calendar-heart'],
+        'unrostered' => ['secondary', 'bi-question-circle'], 'leave' => ['info', 'bi-airplane'], 'manager_approved' => ['info', 'bi-person-check'], 'calculated' => ['primary', 'bi-calculator'],
+        'applied' => ['secondary', 'bi-inbox'], 'screened' => ['info', 'bi-funnel'], 'interview' => ['primary', 'bi-chat-dots'], 'offered' => ['warning', 'bi-envelope-paper'], 'hired' => ['success', 'bi-person-check'], 'withdrawn' => ['secondary', 'bi-person-dash'],
+        'attended' => ['success', 'bi-check'], 'passed' => ['success', 'bi-award'], 'repaid' => ['success', 'bi-check-all'], 'done' => ['success', 'bi-check-circle'], 'published' => ['primary', 'bi-megaphone'], 'prepared' => ['info', 'bi-file-earmark-text'],
+        'renewed' => ['secondary', 'bi-arrow-repeat'], 'ended' => ['secondary', 'bi-stop-circle'], 'revoked' => ['danger', 'bi-slash-circle'], 'filled' => ['success', 'bi-check-circle'],
         // insurance and corporate claims
         'queried' => ['warning', 'bi-question-circle'], 'denied' => ['danger', 'bi-x-octagon'], 'appealed' => ['primary', 'bi-megaphone'],
         'unallocated' => ['warning', 'bi-hourglass-split'], 'partly_allocated' => ['info', 'bi-cash'], 'allocated' => ['success', 'bi-check-all'],

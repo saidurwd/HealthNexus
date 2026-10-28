@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware('module:bloodbank')->group(fn () => require __DIR__.'/../modules/BloodBank/Routes/web.php');
         Route::middleware('module:insurance')->group(fn () => require __DIR__.'/../modules/Insurance/Routes/web.php');
         Route::middleware('module:inventory')->group(fn () => require __DIR__.'/../modules/Inventory/Routes/web.php');
+        Route::middleware('module:hr')->group(fn () => require __DIR__.'/../modules/Hr/Routes/web.php');
         require __DIR__.'/../modules/Audit/Routes/web.php';
         require __DIR__.'/../modules/System/Routes/web.php';
         require __DIR__.'/../modules/Workflow/Routes/web.php';

@@ -746,6 +746,62 @@ class PermissionSeeder extends Seeder
             'procurement.update',
             'procurement.approve',
 
+            // HR, attendance, leave, payroll and compensation (Phase 16)
+            'hr.dashboard.view',
+            'hr.employee.view',
+            'hr.employee.manage',
+            'hr.employee.sensitive',
+            'hr.employee.separate',
+            'hr.provider_link.review',
+            'hr.job.manage',
+            'hr.contract.manage',
+            'hr.credential.view',
+            'hr.credential.manage',
+            'hr.document.manage',
+            'hr.onboarding.manage',
+            'hr.recruitment.manage',
+            'hr.roster.view',
+            'hr.roster.manage',
+            'hr.shift.manage',
+            'hr.staffing.view',
+            'hr.training.manage',
+            'hr.appraisal.manage',
+            'hr.report.view',
+            'hr.report.export',
+            'hr.settings.manage',
+            'hr.self.view',
+            'attendance.view',
+            'attendance.punch.import',
+            'attendance.process',
+            'attendance.device.manage',
+            'attendance.regularize.request',
+            'attendance.regularize.approve',
+            'leave.type.manage',
+            'leave.request.view',
+            'leave.request.create',
+            'leave.approve.manager',
+            'leave.approve.hr',
+            'leave.balance.view',
+            'leave.balance.adjust',
+            'leave.accrue',
+            'payroll.period.manage',
+            'payroll.run.create',
+            'payroll.run.view',
+            'payroll.run.approve',
+            'payroll.adjustment.manage',
+            'payroll.payslip.view',
+            'payroll.payslip.publish',
+            'payroll.payment.file',
+            'payroll.journal.post',
+            'payroll.overtime.approve',
+            'payroll.loan.manage',
+            'payroll.exception.view',
+            'payroll.tax.manage',
+            'payroll.reconcile.view',
+            'compensation.component.manage',
+            'compensation.structure.view',
+            'compensation.structure.manage',
+
             // HR
             'hr.view',
             'hr.create',
@@ -801,6 +857,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
                 'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view',
                 'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage', 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
                 'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
@@ -1737,7 +1794,29 @@ class PermissionSeeder extends Seeder
             'procurement_manager' => [
                 'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view', 'reporting.view', 'reporting.export', 'reporting.print',
             ],
+            'hr_officer' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.report.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.approve.hr', 'leave.balance.view',
+            ],
+            'hr_manager' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'payroll_officer' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.sensitive', 'hr.report.view', 'attendance.view', 'leave.request.view', 'leave.balance.view', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payment.file', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
+            ],
+            'payroll_manager' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.sensitive', 'hr.report.view', 'hr.report.export', 'attendance.view', 'leave.request.view', 'leave.balance.view', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'department_manager' => [
+                'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
+            ],
         ];
+
+        // Employee self-service (Phase 16): every job role can see its own payslips, ask for leave and ask for a punch to be corrected.
+        foreach ($roles as $roleName => $rolePermissions) {
+            if ($roleName !== 'super_admin') {
+                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request'])));
+            }
+        }
 
         foreach ($roles as $roleName => $rolePermissions) {
             $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);

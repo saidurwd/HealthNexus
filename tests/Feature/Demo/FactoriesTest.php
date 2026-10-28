@@ -8,6 +8,9 @@ use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodUnit;
 use App\Models\Ed\EdBay;
 use App\Models\Ed\EdVisit;
+use App\Models\Hr\HrEmployee;
+use App\Models\Hr\HrJob;
+use App\Models\Hr\HrShift;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Insurance\InsurancePreauth;
@@ -81,5 +84,16 @@ class FactoriesTest extends TestCase
         $this->assertSame($store->organization_id, $supplier->organization_id);
         $this->assertNotEmpty($store->public_id);
         $this->assertNotEmpty($supplier->public_id);
+    }
+
+    public function test_hr_factories_build_consistent_records(): void
+    {
+        $employee = HrEmployee::factory()->create();
+        $job = HrJob::factory()->create(['organization_id' => $employee->organization_id]);
+        $shift = HrShift::factory()->create(['organization_id' => $employee->organization_id]);
+        $this->assertSame($employee->organization_id, $job->organization_id);
+        $this->assertSame($employee->organization_id, $shift->organization_id);
+        $this->assertNotEmpty($employee->public_id);
+        $this->assertSame('active', $employee->status);
     }
 }

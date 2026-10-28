@@ -140,6 +140,49 @@ _Generated from the Schema::create calls in database/migrations._
 - `ed_visits`
 - `ed_zones`
 
+## hr (40)
+
+- `hr_appraisal_cycles`
+- `hr_appraisals`
+- `hr_attendance_days`
+- `hr_candidates`
+- `hr_checklist_items`
+- `hr_checklists`
+- `hr_contracts`
+- `hr_credentials`
+- `hr_dependents`
+- `hr_devices`
+- `hr_documents`
+- `hr_employee_history`
+- `hr_employees`
+- `hr_jobs`
+- `hr_leave_ledger`
+- `hr_leave_requests`
+- `hr_leave_types`
+- `hr_loan_entries`
+- `hr_loans`
+- `hr_overtime_entries`
+- `hr_pay_components`
+- `hr_payment_batches`
+- `hr_payroll_adjustments`
+- `hr_payroll_line_items`
+- `hr_payroll_lines`
+- `hr_payroll_periods`
+- `hr_payroll_runs`
+- `hr_positions`
+- `hr_provider_links`
+- `hr_punches`
+- `hr_regularizations`
+- `hr_roster_entries`
+- `hr_salary_structure_lines`
+- `hr_salary_structures`
+- `hr_shifts`
+- `hr_staffing_requirements`
+- `hr_tax_slabs`
+- `hr_training_records`
+- `hr_trainings`
+- `hr_vacancies`
+
 ## icu (26)
 
 - `icu_admission_requests`

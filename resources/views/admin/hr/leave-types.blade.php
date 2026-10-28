@@ -1,0 +1,14 @@
+@extends('layouts.adminlte')
+
+@section('page_title', __('Leave types'))
+
+@section('page_content')
+    @include('admin.hr._flash')
+    <div class="alert alert-warning small">{{ __('The leave allowances shown are examples. Set the ones your policy and the law require.') }}</div>
+    <form method="POST" action="{{ route('admin.hr.leave.types.store') }}" class="card mb-3">@csrf<div class="card-header"><h3 class="card-title">{{ __('Add or change a leave type') }}</h3></div>
+        <div class="card-body row g-2"><div class="col-md-2"><input name="code" class="form-control" placeholder="{{ __('Code') }}" required></div><div class="col-md-3"><input name="name" class="form-control" placeholder="{{ __('Name') }}" required></div><div class="col-md-2"><input type="number" step="0.5" name="annual_days" class="form-control" placeholder="{{ __('Days a year') }}" required></div>
+            <div class="col-md-2"><select name="accrual" class="form-select"><option value="upfront">{{ __('All at the start') }}</option><option value="monthly">{{ __('Monthly') }}</option><option value="none">{{ __('Not accrued') }}</option></select></div><div class="col-md-2"><input type="number" step="0.5" name="carry_forward_max" class="form-control" placeholder="{{ __('Carry forward up to') }}"></div>
+            <div class="col-md-2"><input type="number" name="max_consecutive_days" class="form-control" placeholder="{{ __('Max days in a row') }}"></div><div class="col-md-2"><input type="number" name="document_after_days" class="form-control" placeholder="{{ __('Document after days') }}"></div><div class="col-md-2"><select name="gender_restriction" class="form-select"><option value="">{{ __('Anyone') }}</option><option value="female">{{ __('Women only') }}</option><option value="male">{{ __('Men only') }}</option></select></div>
+            <div class="col-md-3 d-flex gap-3"><label class="form-check"><input class="form-check-input" type="checkbox" name="is_paid" value="1" checked> {{ __('Paid') }}</label><label class="form-check"><input class="form-check-input" type="checkbox" name="requires_hr_approval" value="1"> {{ __('HR approves too') }}</label></div><div class="col-md-2"><button class="btn btn-danger w-100">{{ __('Save') }}</button></div></div></form>
+    <div class="card"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Code') }}</th><th>{{ __('Name') }}</th><th>{{ __('Paid') }}</th><th class="text-end">{{ __('Days') }}</th><th>{{ __('Accrual') }}</th><th class="text-end">{{ __('Carry') }}</th></tr></thead><tbody>@foreach($types as $t)<tr><td>{{ $t->code }}</td><td>{{ $t->name }}</td><td>{{ $t->is_paid ? __('Yes') : __('No') }}</td><td class="text-end">{{ $t->annual_days + 0 }}</td><td>{{ __(\Illuminate\Support\Str::headline($t->accrual)) }}</td><td class="text-end">{{ $t->carry_forward_max + 0 }}</td></tr>@endforeach</tbody></table></div>
+@stop

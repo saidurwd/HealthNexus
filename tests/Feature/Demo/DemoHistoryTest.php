@@ -101,6 +101,11 @@ class DemoHistoryTest extends TestCase
         $has('inventory_issues', 3);
         $has('inventory_transfers', 2, ['status' => 'received']);
         $has('inventory_consumptions', 3);
+        $has('hr_employees', 30);
+        $has('hr_roster_entries', 300);
+        $has('hr_punches', 300);
+        $has('hr_attendance_days', 300);
+        $has('hr_leave_ledger', 30);
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);

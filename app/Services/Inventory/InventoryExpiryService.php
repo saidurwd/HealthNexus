@@ -76,12 +76,12 @@ class InventoryExpiryService
             if ($window === null) {
                 continue;
             }
-            $this->alerts->raise(new AlertRequest(
+            $alert = $this->alerts->raise(new AlertRequest(
                 organizationId: $organizationId, category: 'inventory_expiry', severity: $window <= 30 ? 'warning' : 'info', sourceModule: 'inventory',
                 message: "{$row->item_name} batch {$row->batch_no} in {$row->store_name}: {$row->quantity_on_hand} {$row->base_uom} expire in {$row->days_left} day(s).",
                 sourceType: InventoryBatch::class, sourceId: $row->batch_id, recipientUserIds: $recipientUserIds, ackRequired: false, dedupKey: "inv-expiry:{$row->batch_id}:{$row->store_id}:{$window}",
             ));
-            $alerts++;
+            $alert->wasRecentlyCreated && $alerts++;
         }
 
         return ['expired' => $expired, 'writeoffs_proposed' => $proposed, 'alerts' => $alerts];

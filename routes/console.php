@@ -91,3 +91,4 @@ Schedule::command('downtime:census')->cron('0 */'.max(1, (int) config('ops.downt
 Schedule::command('ed:check-timers')->everyMinute()->name('ed-check-timers')->withoutOverlapping();
 Schedule::command('blood:check')->hourly()->name('blood-check')->withoutOverlapping();
 Schedule::command('inventory:check')->dailyAt('06:30')->name('inventory-check')->withoutOverlapping();
+Schedule::command('hr:check')->dailyAt('01:30')->name('hr-check')->withoutOverlapping();
