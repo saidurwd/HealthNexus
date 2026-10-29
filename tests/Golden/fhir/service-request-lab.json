@@ -1,0 +1,41 @@
+{
+    "resourceType": "ServiceRequest",
+    "id": "<id1>",
+    "meta": {
+        "lastUpdated": "2026-09-10T10:00:00Z"
+    },
+    "identifier": [
+        {
+            "system": "urn:healthnexus:lab-order",
+            "value": "LAB-0001"
+        }
+    ],
+    "status": "completed",
+    "intent": "order",
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://snomed.info/sct",
+                    "code": "108252007",
+                    "display": "Laboratory procedure"
+                }
+            ]
+        }
+    ],
+    "priority": "routine",
+    "code": {
+        "coding": [
+            {
+                "system": "urn:healthnexus:lab-test",
+                "code": "HGB",
+                "display": "Hemoglobin"
+            }
+        ],
+        "text": "Hemoglobin"
+    },
+    "subject": {
+        "reference": "Patient/<id2>"
+    },
+    "authoredOn": "2026-09-10T10:00:00Z"
+}

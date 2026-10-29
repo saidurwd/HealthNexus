@@ -11,6 +11,7 @@ use App\Services\Demo\History\Modules\HrHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
 use App\Services\Demo\History\Modules\InsuranceClaimsHistory;
 use App\Services\Demo\History\Modules\InsuranceSetupHistory;
+use App\Services\Demo\History\Modules\InteropHistory;
 use App\Services\Demo\History\Modules\InventoryHistory;
 use App\Services\Demo\History\Modules\IpdHistory;
 use App\Services\Demo\History\Modules\LabHistory;
@@ -47,6 +48,7 @@ return [
         BillingHistory::class,
         InsuranceClaimsHistory::class,
         PortalHistory::class,
+        InteropHistory::class,
     ],
 
     'months' => 6,

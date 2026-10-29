@@ -93,3 +93,5 @@ Schedule::command('blood:check')->hourly()->name('blood-check')->withoutOverlapp
 Schedule::command('inventory:check')->dailyAt('06:30')->name('inventory-check')->withoutOverlapping();
 Schedule::command('hr:check')->dailyAt('01:30')->name('hr-check')->withoutOverlapping();
 Schedule::command('portal:check')->everyFiveMinutes()->name('portal-check')->withoutOverlapping();
+Schedule::command('integration:work')->everyMinute()->name('integration-work')->withoutOverlapping();
+Schedule::command('interop:check')->everyFiveMinutes()->name('interop-check')->withoutOverlapping();

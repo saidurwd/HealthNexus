@@ -6,6 +6,7 @@ use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Documents\PdfRenderer;
 use App\Contracts\Integration\BloodRequestGateway;
+use App\Contracts\Integration\NationalExchangeGateway;
 use App\Contracts\Integration\PaymentGateway;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
@@ -62,7 +63,9 @@ use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
 use App\Events\Radiology\RadiologyReportFinalized;
 use App\Integrations\BloodBankRequestGateway;
+use App\Integrations\Null\NullNationalExchangeGateway;
 use App\Integrations\Null\NullPaymentGateway;
+use App\Integrations\Sandbox\SandboxNationalExchangeGateway;
 use App\Integrations\Sandbox\SandboxPaymentGateway;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
@@ -76,6 +79,7 @@ use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
 use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
 use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
 use App\Listeners\Insurance\DraftClaimWhenInvoiceFinalized;
+use App\Listeners\Interop\PublishDomainEvent;
 use App\Listeners\Ipd\NotifyOnAdmissionEvents;
 use App\Listeners\Ipd\NotifyOnDischargeEvents;
 use App\Listeners\Ipd\NotifyOnTransferEvents;
@@ -114,6 +118,7 @@ use App\Services\Billing\Events\BillingChargeEventPublisher;
 use App\Services\Billing\NullRevenuePoster;
 use App\Services\Breadcrumbs;
 use App\Services\Documents\BrowsershotPdfRenderer;
+use App\Services\Interop\DeliveryWorker;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
 use App\Services\ModuleManager;
 use App\Services\Ops\ShellRunner;
@@ -145,6 +150,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Phase 17: the payment gateway is the sandbox only where the config says so (development, tests, the demo); otherwise the null adapter answers.
         $this->app->bind(PaymentGateway::class, fn () => config('portal.payments.driver') === 'sandbox' ? new SandboxPaymentGateway : new NullPaymentGateway);
+
+        $this->app->singleton(DeliveryWorker::class); // one sender per process, so a transport set on it (tests, a hospital adapter) is the one used
+
+        // Phase 18: the national exchange answers with the sandbox test client only where the config says so; otherwise the null adapter does.
+        $this->app->bind(NationalExchangeGateway::class, fn () => config('interop.national.driver') === 'sandbox' ? new SandboxNationalExchangeGateway : new NullNationalExchangeGateway);
 
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);
@@ -257,5 +267,10 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ICUPatientTransferred::class, [NotifyOnIcuEpisodeEvents::class, 'handleTransferred']);
         Event::listen(ICUCriticalAlertTriggered::class, [NotifyOnIcuCriticalAlerts::class, 'handleAlertTriggered']);
         Event::listen(ICUCodeBlueStarted::class, [NotifyOnIcuCriticalAlerts::class, 'handleCodeBlueStarted']);
+
+        // Phase 18: the domain events offered to integration routing rules (config/interop.php).
+        foreach (array_values((array) config('interop.events', [])) as $eventClass) {
+            Event::listen($eventClass, [PublishDomainEvent::class, 'handle']);
+        }
     }
 }

@@ -235,6 +235,20 @@ _Generated from the Schema::create calls in database/migrations._
 - `insurance_submissions`
 - `insurance_writeoffs`
 
+## interop (11)
+
+- `dicom_worklist_entries`
+- `hl7_inbound_results`
+- `integration_access_log`
+- `integration_attempts`
+- `integration_credentials`
+- `integration_endpoints`
+- `integration_id_maps`
+- `integration_messages`
+- `integration_nonces`
+- `integration_partners`
+- `integration_routes`
+
 ## inventory (41)
 
 - `inventory_adjustments`

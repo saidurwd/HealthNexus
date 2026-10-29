@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     require __DIR__.'/../modules/Portal/Routes/api.php';
+    require __DIR__.'/../modules/Interop/Routes/api.php';
 
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
     Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'staff.only']);

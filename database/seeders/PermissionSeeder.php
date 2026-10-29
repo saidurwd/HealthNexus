@@ -802,6 +802,29 @@ class PermissionSeeder extends Seeder
             'compensation.structure.view',
             'compensation.structure.manage',
 
+            // Interoperability (Phase 18)
+            'interoperability.dashboard.view',
+            'interoperability.partner.view',
+            'interoperability.partner.manage',
+            'interoperability.credential.manage',
+            'interoperability.route.manage',
+            'interoperability.message.view',
+            'interoperability.message.replay',
+            'interoperability.message.send_test',
+            'interoperability.idmap.view',
+            'interoperability.idmap.manage',
+            'interoperability.exchange.log.view',
+            'interoperability.consent.override',
+            'interoperability.hl7.review',
+            'interoperability.dicom.worklist.view',
+            'interoperability.dicom.worklist.manage',
+            'interoperability.fhir.read',
+            'interoperability.fhir.write',
+            'interoperability.terminology.view',
+            'interoperability.national.publish',
+            'interoperability.report.view',
+            'interoperability.settings.manage',
+
             // Patient portal and CRM (Phase 17)
             'portal.dashboard.view',
             'portal.account.view',
@@ -893,6 +916,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
                 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
                 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
                 'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view',
@@ -1202,6 +1226,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'radiologist' => [
+                'interoperability.dicom.worklist.view',
                 'radiology.view', 'radiology.report',
                 'radiology.dashboard.view',
                 'radiology.order.view',
@@ -1852,6 +1877,12 @@ class PermissionSeeder extends Seeder
             ],
             'call_center_agent' => [
                 'patients.view', 'appointments.view', 'appointments.create', 'appointments.cancel', 'appointments.reschedule', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.complaint.view', 'crm.complaint.manage', 'portal.account.view', 'portal.message.view', 'portal.message.reply',
+            ],
+            'integration_manager' => [
+                'patients.view', 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
+            ],
+            'integration_officer' => [
+                'patients.view', 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.message.view', 'interoperability.idmap.view', 'interoperability.exchange.log.view', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.terminology.view', 'interoperability.fhir.read', 'interoperability.report.view',
             ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',

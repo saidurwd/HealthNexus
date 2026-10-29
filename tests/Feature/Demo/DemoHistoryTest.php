@@ -115,6 +115,12 @@ class DemoHistoryTest extends TestCase
         $has('crm_campaigns', 2, ['status' => 'completed']);
         $has('crm_complaints', 1);
         $has('crm_form_submissions', 2);
+        $has('integration_partners', 5);
+        $has('integration_routes', 4);
+        $has('integration_messages', 10);
+        $this->assertGreaterThanOrEqual(10, DB::table('integration_attempts as a')->join('integration_messages as m', 'm.id', '=', 'a.message_id')->where('m.organization_id', $org)->count(), 'attempts are recorded');
+        $has('integration_access_log', 1);
+
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -154,6 +160,13 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('crm_campaigns')->where('organization_id', $org)->whereIn('status', ['approved', 'running', 'completed'])->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own campaign');
         $this->assertSame(0, DB::table('portal_proxies')->where('organization_id', $org)->where('status', 'active')->whereNull('valid_to')->count());
         $this->assertSame(0, DB::table('patient_portal_accounts')->where('organization_id', $org)->where('status', 'active')->whereNull('password')->count());
+
+        // interoperability: nothing went to a partner that needs consent without it, one idempotency key once, a dead message always says why, nothing is stuck sending
+        $this->assertSame(0, DB::table('integration_messages as m')->join('integration_partners as p', 'p.id', '=', 'm.partner_id')->where('m.organization_id', $org)->where('m.direction', 'out')->where('p.requires_consent', true)->whereIn('m.status', ['processed', 'queued', 'retrying'])->whereNotNull('m.patient_id')
+            ->whereNotExists(fn ($q) => $q->selectRaw('1')->from('patient_consents as c')->whereColumn('c.patient_id', 'm.patient_id')->where('c.status', 'active'))->count(), 'nothing was sent about a patient who did not agree');
+        $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->groupBy('direction', 'idempotency_key')->havingRaw('count(*) > 1')->get()->count());
+        $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->where('status', 'dead')->whereNull('error')->count());
+        $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->where('status', 'sending')->count(), 'nothing is left stuck sending');
 
         // running it again is refused instead of duplicating the history
         $appointments = Appointment::count();

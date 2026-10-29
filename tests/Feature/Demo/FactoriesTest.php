@@ -14,6 +14,7 @@ use App\Models\Hr\HrShift;
 use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Insurance\InsurancePreauth;
+use App\Models\Integration\IntegrationPartner;
 use App\Models\Inventory\InventoryBatch;
 use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\InventoryStore;
@@ -107,5 +108,15 @@ class FactoriesTest extends TestCase
         $this->assertSame('8801712345678', $account->phone);
         $this->assertTrue($account->canLogin());
         $this->assertFalse(PatientPortalAccount::factory()->invited()->create()->canLogin());
+    }
+
+    public function test_integration_partner_factory_builds_a_partner_that_needs_consent_unless_told_otherwise(): void
+    {
+        $partner = IntegrationPartner::factory()->create();
+        $this->assertTrue($partner->requires_consent);
+        $this->assertSame('active', $partner->status);
+        $scanner = IntegrationPartner::factory()->kind('dicom_node')->noConsentNeeded()->create();
+        $this->assertFalse($scanner->requires_consent);
+        $this->assertNotSame($partner->code, $scanner->code);
     }
 }
