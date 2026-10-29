@@ -1,0 +1,1 @@
+<div class="col-auto"><label class="form-label" for="cost_center">{{ __('Cost centre') }}</label><select id="cost_center" name="cost_center" class="form-select"><option value="">{{ __('All') }}</option>@foreach($centers as $c)<option value="{{ $c->id }}" @selected($cc == $c->id)>{{ $c->code }} {{ $c->name }}</option>@endforeach</select></div>

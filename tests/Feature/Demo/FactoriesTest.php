@@ -8,6 +8,10 @@ use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodUnit;
 use App\Models\Ed\EdBay;
 use App\Models\Ed\EdVisit;
+use App\Models\Finance\Account;
+use App\Models\Finance\Asset;
+use App\Models\Finance\BankAccount;
+use App\Models\Finance\CostCenter;
 use App\Models\Hr\HrEmployee;
 use App\Models\Hr\HrJob;
 use App\Models\Hr\HrShift;
@@ -118,5 +122,18 @@ class FactoriesTest extends TestCase
         $scanner = IntegrationPartner::factory()->kind('dicom_node')->noConsentNeeded()->create();
         $this->assertFalse($scanner->requires_consent);
         $this->assertNotSame($partner->code, $scanner->code);
+    }
+
+    public function test_finance_factories_build_a_chart_a_bank_account_and_an_asset(): void
+    {
+        $expense = Account::factory()->create();
+        $this->assertSame('debit', $expense->normal_side);
+        $this->assertSame('credit', Account::factory()->type('revenue')->create()->normal_side);
+        $this->assertFalse(Account::factory()->heading()->create()->postable);
+        $bank = BankAccount::factory()->create();
+        $this->assertSame('asset', $bank->account_id ? Account::find($bank->account_id)->type : null);
+        $asset = Asset::factory()->create();
+        $this->assertSame('120000.00', (string) $asset->cost);
+        $this->assertNotSame(CostCenter::factory()->create()->code, CostCenter::factory()->create()->code);
     }
 }

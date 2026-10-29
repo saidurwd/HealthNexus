@@ -140,6 +140,36 @@ _Generated from the Schema::create calls in database/migrations._
 - `ed_visits`
 - `ed_zones`
 
+## finance (27)
+
+- `fin_account_roles`
+- `fin_accounts`
+- `fin_assets`
+- `fin_bank_accounts`
+- `fin_bank_deposits`
+- `fin_bank_statement_lines`
+- `fin_bank_statements`
+- `fin_budget_lines`
+- `fin_budgets`
+- `fin_cost_centers`
+- `fin_cursors`
+- `fin_depreciation`
+- `fin_fee_share_rules`
+- `fin_fee_share_runs`
+- `fin_fiscal_years`
+- `fin_journal_lines`
+- `fin_journals`
+- `fin_payables`
+- `fin_periods`
+- `fin_postings`
+- `fin_receivable_applications`
+- `fin_receivables`
+- `fin_supplier_payment_lines`
+- `fin_supplier_payments`
+- `fin_tax_codes`
+- `fin_tax_entries`
+- `fin_writeoffs`
+
 ## hr (40)
 
 - `hr_appraisal_cycles`

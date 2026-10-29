@@ -7,6 +7,8 @@ use App\Models\Branch;
 use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
+use App\Services\Finance\LedgerService;
+use App\Services\Finance\ReconciliationService;
 use App\Services\Inventory\InventoryLedgerReconciler;
 use Carbon\Carbon;
 use Database\Seeders\BillingSeeder;
@@ -121,6 +123,13 @@ class DemoHistoryTest extends TestCase
         $this->assertGreaterThanOrEqual(10, DB::table('integration_attempts as a')->join('integration_messages as m', 'm.id', '=', 'a.message_id')->where('m.organization_id', $org)->count(), 'attempts are recorded');
         $has('integration_access_log', 1);
 
+        $has('fin_accounts', 40);
+        $has('fin_journals', 50, ['status' => 'posted']);
+        $has('fin_receivables', 20);
+        $has('fin_bank_accounts', 3);
+        $has('fin_assets', 5);
+        $has('fin_postings', 20, ['status' => 'posted']);
+
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -167,6 +176,21 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->groupBy('direction', 'idempotency_key')->havingRaw('count(*) > 1')->get()->count());
         $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->where('status', 'dead')->whereNull('error')->count());
         $this->assertSame(0, DB::table('integration_messages')->where('organization_id', $org)->where('status', 'sending')->count(), 'nothing is left stuck sending');
+
+        // finance: the books balance, every posted journal balances on its own, Billing agrees with the books, what customers owe agrees with the control accounts, nothing was posted into a closed period
+        $this->assertSame(0, DB::table('fin_journals')->where('organization_id', $org)->where('status', 'posted')->whereRaw('ABS(total_debit - total_credit) > 0.001')->count(), 'every posted journal balances');
+        $this->assertSame(0, DB::table('fin_journals as j')->where('j.organization_id', $org)->where('j.status', 'posted')->whereRaw('ABS(j.total_debit - (select coalesce(sum(l.debit), 0) from fin_journal_lines l where l.journal_id = j.id)) > 0.001')->count(), 'journal totals equal their lines');
+        $tb = app(LedgerService::class)->trialBalance($org, null, now()->toDateString());
+        $this->assertTrue(app(LedgerService::class)->totals($tb)['balanced'], 'the trial balance balances');
+        $recon = app(ReconciliationService::class)->billingVsLedger($org, '2000-01-01', now()->toDateString());
+        $this->assertSame([], collect($recon['rows'])->filter(fn ($r) => bccomp($r['difference'], '0', 2) !== 0)->pluck('label')->all(), 'Billing agrees with the books: '.json_encode(app(ReconciliationService::class)->receivableDifferences($org, now()->toDateString(), 10)));
+        $this->assertSame(0, DB::table('fin_postings')->where('organization_id', $org)->where('status', 'failed')->count(), 'no posting is left failed');
+        $this->assertSame(0, DB::table('fin_payables')->where('organization_id', $org)->whereRaw('settled > amount + 0.001')->count());
+        $this->assertSame(0, DB::table('fin_journals as j')->join('fin_periods as p', 'p.id', '=', 'j.period_id')->where('j.organization_id', $org)->where('j.status', 'posted')->where('p.status', 'closed')->where('j.kind', '<>', 'closing')->where('j.posted_at', '>', DB::raw('p.locked_at'))->count());
+        $this->assertSame(0, DB::table('fin_journals')->where('organization_id', $org)->where('status', 'posted')->whereNull('period_id')->count(), 'every posted journal sits in a period');
+        $this->assertSame(0, DB::table('fin_supplier_payments')->where('organization_id', $org)->where('status', 'paid')->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own supplier payment');
+        $this->assertSame(0, DB::table('fin_journals')->where('organization_id', $org)->where('status', 'posted')->where('kind', 'manual')->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own journal');
+        $this->assertSame(0, DB::table('fin_journals as j')->where('j.organization_id', $org)->whereNotNull('j.reversed_by_id')->whereNotExists(fn ($q) => $q->selectRaw('1')->from('fin_journals as r')->whereColumn('r.id', 'j.reversed_by_id')->whereColumn('r.reversal_of_id', 'j.id'))->count(), 'every reversal points back');
 
         // running it again is refused instead of duplicating the history
         $appointments = Appointment::count();

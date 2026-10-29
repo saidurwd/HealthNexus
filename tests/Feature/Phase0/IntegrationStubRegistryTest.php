@@ -3,7 +3,9 @@
 namespace Tests\Feature\Phase0;
 
 use App\Contracts\Integration\BloodRequestGateway;
+use App\Contracts\Integration\FinanceGateway;
 use App\Integrations\BloodBankRequestGateway;
+use App\Integrations\Finance\LedgerFinanceGateway;
 use App\Integrations\Null\NullBloodRequestGateway;
 use Tests\TestCase;
 
@@ -11,8 +13,8 @@ class IntegrationStubRegistryTest extends TestCase
 {
     public function test_every_registered_gateway_resolves_to_a_null_adapter_that_reports_not_enabled(): void
     {
-        // A gateway whose owning phase is built is rebound to the real adapter (Phase 13: Blood Bank); every other one stays a null adapter.
-        $built = [BloodRequestGateway::class => BloodBankRequestGateway::class];
+        // A gateway whose owning phase is built is rebound to the real adapter (Phase 13: Blood Bank, Phase 21: Finance); every other one stays a null adapter.
+        $built = [BloodRequestGateway::class => BloodBankRequestGateway::class, FinanceGateway::class => LedgerFinanceGateway::class];
         foreach (config('integrations.gateways') as $contract => $adapter) {
             $this->assertInstanceOf($built[$contract] ?? $adapter, app($contract));
             $this->assertInstanceOf($contract, app($contract));

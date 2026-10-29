@@ -6,6 +6,7 @@ use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
 use App\Contracts\Documents\PdfRenderer;
 use App\Contracts\Integration\BloodRequestGateway;
+use App\Contracts\Integration\FinanceGateway;
 use App\Contracts\Integration\NationalExchangeGateway;
 use App\Contracts\Integration\PaymentGateway;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
@@ -15,8 +16,12 @@ use App\Events\Appointments\AppointmentCancelled;
 use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
 use App\Events\Appointments\AppointmentRescheduled;
+use App\Events\Billing\AdjustmentApproved;
 use App\Events\Billing\ChargeReversalRequested;
+use App\Events\Billing\InvoiceCancelled;
 use App\Events\Billing\InvoiceFinalized;
+use App\Events\Billing\PaymentCompleted;
+use App\Events\Billing\RefundProcessed;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\EncounterCompleted;
@@ -63,6 +68,7 @@ use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
 use App\Events\Radiology\RadiologyReportFinalized;
 use App\Integrations\BloodBankRequestGateway;
+use App\Integrations\Finance\LedgerFinanceGateway;
 use App\Integrations\Null\NullNationalExchangeGateway;
 use App\Integrations\Null\NullPaymentGateway;
 use App\Integrations\Sandbox\SandboxNationalExchangeGateway;
@@ -74,6 +80,7 @@ use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
 use App\Listeners\Billing\ReverseChargeOnReversalRequested;
 use App\Listeners\Blood\SyncDonationTestsOnLabReport;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
+use App\Listeners\Finance\PostToLedger;
 use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
 use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
 use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
@@ -156,6 +163,9 @@ class AppServiceProvider extends ServiceProvider
         // Phase 18: the national exchange answers with the sandbox test client only where the config says so; otherwise the null adapter does.
         $this->app->bind(NationalExchangeGateway::class, fn () => config('interop.national.driver') === 'sandbox' ? new SandboxNationalExchangeGateway : new NullNationalExchangeGateway);
 
+        // Phase 21: the books answer the hand-offs from payroll, insurance and purchasing (they say "not enabled" like the null adapter when Finance is off for the hospital).
+        $this->app->bind(FinanceGateway::class, LedgerFinanceGateway::class);
+
         foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
             $this->app->bindIf($contract, $nullAdapter);
         }
@@ -184,6 +194,13 @@ class AppServiceProvider extends ServiceProvider
             $child::saved($reindex);
             $child::deleted($reindex);
         }
+
+        // Phase 21: Billing's money events are posted to the books.
+        Event::listen(InvoiceFinalized::class, [PostToLedger::class, 'invoiceFinalized']);
+        Event::listen(InvoiceCancelled::class, [PostToLedger::class, 'invoiceCancelled']);
+        Event::listen(PaymentCompleted::class, [PostToLedger::class, 'paymentCompleted']);
+        Event::listen(RefundProcessed::class, [PostToLedger::class, 'refundProcessed']);
+        Event::listen(AdjustmentApproved::class, [PostToLedger::class, 'adjustmentApproved']);
 
         Event::listen(ChargeReversalRequested::class, ReverseChargeOnReversalRequested::class);
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);

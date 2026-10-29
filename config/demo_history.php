@@ -7,6 +7,7 @@ use App\Services\Demo\History\Modules\BloodDonationsHistory;
 use App\Services\Demo\History\Modules\BloodTransfusionHistory;
 use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\EdHistory;
+use App\Services\Demo\History\Modules\FinanceHistory;
 use App\Services\Demo\History\Modules\HrHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
 use App\Services\Demo\History\Modules\InsuranceClaimsHistory;
@@ -49,6 +50,7 @@ return [
         InsuranceClaimsHistory::class,
         PortalHistory::class,
         InteropHistory::class,
+        FinanceHistory::class,
     ],
 
     'months' => 6,

@@ -70,6 +70,8 @@ return [
         'needs_visit' => ['warning', 'bi-calendar-plus'], 'declined' => ['danger', 'bi-x-circle'], 'investigating' => ['primary', 'bi-search'], 'escalated' => ['danger', 'bi-arrow-up-circle'], 'assigned' => ['info', 'bi-person-check'],
         'initiated' => ['info', 'bi-hourglass'], 'succeeded' => ['success', 'bi-check-circle-fill'], 'queued' => ['info', 'bi-inbox'], 'suppressed' => ['secondary', 'bi-slash-circle'], 'new' => ['info', 'bi-star'], 'reviewed' => ['success', 'bi-check2'],
         'running' => ['primary', 'bi-play-circle'], 'unknown_payment' => ['danger', 'bi-question-diamond'], 'amount_differs' => ['danger', 'bi-exclamation-diamond'], 'not_succeeded' => ['warning', 'bi-x-diamond'],
+        // finance
+        'reconciled' => ['success', 'bi-check-all'], 'banked' => ['success', 'bi-bank'], 'accrued' => ['info', 'bi-hourglass'], 'fully_depreciated' => ['secondary', 'bi-hourglass-bottom'], 'disposed' => ['secondary', 'bi-trash'], 'unmatched' => ['warning', 'bi-question-circle'], 'ignored' => ['secondary', 'bi-eye-slash'],
         // interoperability
         'retrying' => ['warning', 'bi-arrow-repeat'], 'sending' => ['primary', 'bi-send'], 'dead' => ['danger', 'bi-x-octagon'], 'dismissed' => ['secondary', 'bi-archive'],
         'deceased' => ['dark', 'bi-heart-pulse'], 'success' => ['success', 'bi-check-circle'], 'failed' => ['danger', 'bi-x-circle'],

@@ -802,6 +802,41 @@ class PermissionSeeder extends Seeder
             'compensation.structure.view',
             'compensation.structure.manage',
 
+            // Finance and Accounting (Phase 21)
+            'finance.dashboard.view',
+            'finance.chart.view',
+            'finance.chart.manage',
+            'finance.journal.view',
+            'finance.journal.create',
+            'finance.journal.approve',
+            'finance.journal.reverse',
+            'finance.period.manage',
+            'finance.year.close',
+            'finance.ledger.view',
+            'finance.posting.view',
+            'finance.posting.retry',
+            'finance.receivable.view',
+            'finance.receivable.writeoff',
+            'finance.receivable.writeoff_approve',
+            'finance.payable.view',
+            'finance.payable.manage',
+            'finance.payable.approve',
+            'finance.payable.pay',
+            'finance.bank.view',
+            'finance.bank.manage',
+            'finance.bank.reconcile',
+            'finance.tax.view',
+            'finance.tax.manage',
+            'finance.budget.view',
+            'finance.budget.manage',
+            'finance.budget.approve',
+            'finance.asset.view',
+            'finance.asset.manage',
+            'finance.report.view',
+            'finance.report.export',
+            'finance.feeshare.manage',
+            'finance.settings.manage',
+
             // Interoperability (Phase 18)
             'interoperability.dashboard.view',
             'interoperability.partner.view',
@@ -916,6 +951,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
                 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
                 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
                 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
@@ -1883,6 +1919,18 @@ class PermissionSeeder extends Seeder
             ],
             'integration_officer' => [
                 'patients.view', 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.message.view', 'interoperability.idmap.view', 'interoperability.exchange.log.view', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.terminology.view', 'interoperability.fhir.read', 'interoperability.report.view',
+            ],
+            'finance_manager' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
+            ],
+            'accountant' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view', 'finance.chart.manage', 'finance.journal.create', 'finance.journal.reverse', 'finance.period.manage', 'finance.posting.retry', 'finance.receivable.writeoff', 'finance.payable.manage', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.manage', 'finance.budget.manage', 'finance.asset.manage', 'finance.report.export', 'finance.feeshare.manage', 'finance.journal.approve', 'finance.receivable.writeoff_approve', 'finance.payable.approve', 'finance.payable.pay', 'finance.budget.approve',
+            ],
+            'accounts_officer' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view', 'finance.journal.create', 'finance.payable.manage', 'finance.receivable.writeoff', 'finance.bank.reconcile', 'finance.report.export',
+            ],
+            'finance_viewer' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view',
             ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
