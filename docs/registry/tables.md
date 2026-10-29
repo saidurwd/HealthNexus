@@ -2,6 +2,23 @@
 
 _Generated from the Schema::create calls in database/migrations._
 
+## analytics (14)
+
+- `analytics_dashboards`
+- `analytics_datasets`
+- `analytics_deliveries`
+- `analytics_dq_issues`
+- `analytics_dq_rules`
+- `analytics_forecasts`
+- `analytics_kpi_targets`
+- `analytics_kpi_versions`
+- `analytics_kpis`
+- `analytics_loads`
+- `analytics_optins`
+- `analytics_reports`
+- `analytics_schedules`
+- `analytics_sources`
+
 ## appointment (14)
 
 - `appointment_documents`

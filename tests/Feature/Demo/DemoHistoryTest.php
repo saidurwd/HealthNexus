@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
+use App\Services\Analytics\Warehouse;
 use App\Services\Finance\LedgerService;
 use App\Services\Finance\ReconciliationService;
 use App\Services\Inventory\InventoryLedgerReconciler;
@@ -26,6 +27,7 @@ use Database\Seeders\WorkflowSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 /**
@@ -130,6 +132,11 @@ class DemoHistoryTest extends TestCase
         $has('fin_assets', 5);
         $has('fin_postings', 20, ['status' => 'posted']);
 
+        $has('analytics_reports', 3);
+        $has('analytics_schedules', 2);
+        $has('analytics_datasets', 1);
+        $has('analytics_forecasts', 5);
+
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
         $has('billing_cashier_sessions', 10);
@@ -191,6 +198,22 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('fin_supplier_payments')->where('organization_id', $org)->where('status', 'paid')->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own supplier payment');
         $this->assertSame(0, DB::table('fin_journals')->where('organization_id', $org)->where('status', 'posted')->where('kind', 'manual')->whereColumn('approved_by', 'created_by')->count(), 'nobody approved their own journal');
         $this->assertSame(0, DB::table('fin_journals as j')->where('j.organization_id', $org)->whereNotNull('j.reversed_by_id')->whereNotExists(fn ($q) => $q->selectRaw('1')->from('fin_journals as r')->whereColumn('r.id', 'j.reversed_by_id')->whereColumn('r.reversal_of_id', 'j.id'))->count(), 'every reversal points back');
+
+        // analytics: the warehouse is loaded and agrees with the records, holds nothing that identifies a patient, no serious data-quality issue is open, the standard content is in place
+        $wh = app(Warehouse::class);
+        $this->assertGreaterThan(15, $wh->table('fact_encounters')->where('organization_id', $org)->count(), 'visits reached the warehouse');
+        $this->assertSame(Encounter::where('organization_id', $org)->count(), $wh->table('fact_encounters')->where('organization_id', $org)->count(), 'one fact per visit');
+        $this->assertSame(bcadd((string) DB::table('billing_invoices')->where('organization_id', $org)->whereNotNull('finalized_at')->whereNotIn('status', ['draft', 'cancelled'])->sum('grand_total'), '0', 2), bcadd((string) $wh->table('fact_invoices')->where('organization_id', $org)->where('is_billed', true)->sum('grand_total'), '0', 2), 'billed money agrees with Billing');
+        foreach (['dim_patient', 'fact_encounters', 'fact_appointments', 'fact_lab_orders', 'fact_admissions', 'fact_invoices'] as $table) {
+            $columns = array_map('strtolower', Schema::connection(config('analytics.connection') ?: null)->getColumnListing($table));
+            $this->assertSame([], array_values(array_intersect($columns, ['patient_id', 'first_name', 'last_name', 'phone', 'email', 'national_identifier', 'address', 'date_of_birth', 'name'])), "$table holds nothing that names a patient");
+        }
+        $this->assertSame(0, DB::table('analytics_dq_issues')->where('status', 'open')->where('severity', 'error')->where(fn ($q) => $q->where('organization_id', $org)->orWhereNull('organization_id'))->count(), 'no serious data-quality issue is open: '.json_encode(DB::table('analytics_dq_issues')->where('status', 'open')->where('severity', 'error')->get(['rule_code', 'detail'])).' '.json_encode(DB::table('analytics_loads')->where('status', 'failed')->get(['source_key', 'error'])).' '.json_encode(DB::table('analytics_sources')->get(['key', 'last_status', 'last_run_at'])));
+        $this->assertSame(25, DB::table('analytics_kpis')->whereNull('organization_id')->count());
+        $this->assertSame(5, DB::table('analytics_dashboards')->whereNull('organization_id')->count());
+        $this->assertSame(0, DB::table('analytics_loads')->where('status', 'failed')->count(), 'every load succeeded');
+        $this->assertGreaterThanOrEqual(1, DB::table('analytics_deliveries')->where('status', 'sent')->count(), 'a scheduled report was sent');
+        $this->assertSame(0, DB::table('analytics_datasets')->where('organization_id', $org)->whereColumn('decided_by', 'requested_by')->count(), 'nobody approved their own dataset');
 
         // running it again is refused instead of duplicating the history
         $appointments = Appointment::count();

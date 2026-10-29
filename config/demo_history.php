@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Demo\History\Modules\AnalyticsHistory;
 use App\Services\Demo\History\Modules\AppointmentsAndOpdHistory;
 use App\Services\Demo\History\Modules\BillingCatalogHistory;
 use App\Services\Demo\History\Modules\BillingHistory;
@@ -51,6 +52,7 @@ return [
         PortalHistory::class,
         InteropHistory::class,
         FinanceHistory::class,
+        AnalyticsHistory::class,
     ],
 
     'months' => 6,

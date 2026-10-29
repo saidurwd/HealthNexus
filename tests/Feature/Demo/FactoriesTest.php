@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Demo;
 
+use App\Models\Analytics\AnalyticsDashboard;
+use App\Models\Analytics\AnalyticsDataset;
+use App\Models\Analytics\AnalyticsKpi;
+use App\Models\Analytics\AnalyticsReport;
 use App\Models\Billing\BillingItem;
 use App\Models\Blood\BloodDonor;
 use App\Models\Blood\BloodRequest;
@@ -25,6 +29,7 @@ use App\Models\Inventory\InventoryStore;
 use App\Models\Inventory\ProcurementSupplier;
 use App\Models\Patient;
 use App\Models\PatientPortalAccount;
+use App\Services\Analytics\Semantic\SemanticQuery;
 use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -135,5 +140,18 @@ class FactoriesTest extends TestCase
         $asset = Asset::factory()->create();
         $this->assertSame('120000.00', (string) $asset->cost);
         $this->assertNotSame(CostCenter::factory()->create()->code, CostCenter::factory()->create()->code);
+    }
+
+    public function test_analytics_factories_build_content_that_the_semantic_model_accepts(): void
+    {
+        $kpi = AnalyticsKpi::factory()->create();
+        $report = AnalyticsReport::factory()->create();
+        $dash = AnalyticsDashboard::factory()->create();
+        $ds = AnalyticsDataset::factory()->create();
+        $queries = app(SemanticQuery::class);
+        $this->assertSame('encounters', $queries->normalise(['fact' => $kpi->definition['fact'], 'measures' => [$kpi->definition['measure']]])['fact']);
+        $this->assertSame('revenue', $queries->normalise($report->query)['fact']);
+        $this->assertNotEmpty($dash->widgets);
+        $this->assertSame('requested', $ds->status);
     }
 }

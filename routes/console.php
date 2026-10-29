@@ -97,3 +97,7 @@ Schedule::command('integration:work')->everyMinute()->name('integration-work')->
 Schedule::command('interop:check')->everyFiveMinutes()->name('interop-check')->withoutOverlapping();
 Schedule::command('finance:post')->everyTenMinutes()->name('finance-post')->withoutOverlapping();
 Schedule::command('finance:check')->dailyAt('07:00')->name('finance-check')->withoutOverlapping();
+Schedule::command('analytics:load')->everyFifteenMinutes()->name('analytics-load')->withoutOverlapping();
+Schedule::command('analytics:check')->hourly()->name('analytics-check')->withoutOverlapping();
+Schedule::command('analytics:run-schedules')->everyFiveMinutes()->name('analytics-schedules')->withoutOverlapping();
+Schedule::command('analytics:forecast')->dailyAt('05:30')->name('analytics-forecast')->withoutOverlapping();

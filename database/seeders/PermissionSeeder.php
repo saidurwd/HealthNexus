@@ -802,6 +802,34 @@ class PermissionSeeder extends Seeder
             'compensation.structure.view',
             'compensation.structure.manage',
 
+            // BI and Analytics (Phase 19)
+            'analytics.dashboard.view',
+            'analytics.dashboard.manage',
+            'analytics.kpi.view',
+            'analytics.kpi.manage',
+            'analytics.query.run',
+            'analytics.report.view',
+            'analytics.report.manage',
+            'analytics.report.export',
+            'analytics.schedule.manage',
+            'analytics.quality.view',
+            'analytics.quality.manage',
+            'analytics.load.view',
+            'analytics.load.run',
+            'analytics.load.rebuild',
+            'analytics.research.request',
+            'analytics.research.approve',
+            'analytics.research.download',
+            'analytics.benchmark.view',
+            'analytics.benchmark.manage',
+            'analytics.national.view',
+            'analytics.national.export',
+            'analytics.national.manage',
+            'analytics.forecast.view',
+            'analytics.question.ask',
+            'analytics.scope.organization',
+            'analytics.sensitive.view',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -951,6 +979,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
                 'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
                 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
                 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
@@ -1931,6 +1960,18 @@ class PermissionSeeder extends Seeder
             ],
             'finance_viewer' => [
                 'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view',
+            ],
+            'analytics_manager' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
+            ],
+            'data_analyst' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view', 'analytics.dashboard.manage', 'analytics.kpi.manage', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.load.view', 'analytics.national.view', 'analytics.research.request', 'analytics.scope.organization',
+            ],
+            'executive_viewer' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view', 'analytics.scope.organization', 'analytics.sensitive.view', 'analytics.national.view', 'analytics.quality.view', 'analytics.load.view', 'analytics.report.export',
+            ],
+            'branch_manager_analytics' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view',
             ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
