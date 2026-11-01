@@ -830,6 +830,43 @@ class PermissionSeeder extends Seeder
             'analytics.scope.organization',
             'analytics.sensitive.view',
 
+            // Quality, Safety and Compliance (Phase 23)
+            'quality.dashboard.view',
+            'quality.incident.report',
+            'quality.incident.view',
+            'quality.incident.triage',
+            'quality.incident.amend',
+            'quality.incident.reveal',
+            'quality.incident.export',
+            'quality.investigation.manage',
+            'quality.investigation.review',
+            'quality.action.view',
+            'quality.action.manage',
+            'quality.action.verify',
+            'quality.infection.view',
+            'quality.infection.manage',
+            'quality.indicator.view',
+            'quality.indicator.manage',
+            'quality.audit.view',
+            'quality.audit.manage',
+            'quality.mortality.view',
+            'quality.mortality.review',
+            'quality.document.view',
+            'quality.document.manage',
+            'quality.document.approve',
+            'quality.document.acknowledge',
+            'quality.privilege.view',
+            'quality.privilege.request',
+            'quality.privilege.decide',
+            'quality.privilege.manage',
+            'quality.compliance.view',
+            'quality.compliance.manage',
+            'quality.accreditation.view',
+            'quality.accreditation.manage',
+            'quality.committee.view',
+            'quality.committee.manage',
+            'quality.complaint.link',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -979,6 +1016,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
                 'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
                 'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
                 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
@@ -1973,6 +2011,24 @@ class PermissionSeeder extends Seeder
             'branch_manager_analytics' => [
                 'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view',
             ],
+            'quality_manager' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.reveal', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
+            ],
+            'quality_officer' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.investigation.manage', 'quality.action.view', 'quality.action.manage', 'quality.indicator.view', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.document.view', 'quality.document.manage', 'quality.committee.view', 'quality.accreditation.view', 'quality.compliance.view', 'quality.complaint.link',
+            ],
+            'infection_control_officer' => [
+                'patients.view', 'quality.dashboard.view', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.action.view', 'quality.document.view', 'quality.committee.view',
+            ],
+            'clinical_auditor' => [
+                'patients.view', 'quality.dashboard.view', 'quality.audit.view', 'quality.audit.manage', 'quality.indicator.view', 'quality.mortality.view', 'quality.action.view', 'quality.document.view',
+            ],
+            'medical_director' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.view', 'quality.investigation.review', 'quality.action.view', 'quality.action.verify', 'quality.indicator.view', 'quality.mortality.view', 'quality.mortality.review', 'quality.privilege.view', 'quality.privilege.decide', 'quality.committee.view', 'quality.accreditation.view', 'quality.compliance.view', 'quality.document.view', 'quality.document.approve',
+            ],
+            'credentialing_officer' => [
+                'patients.view', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.document.view',
+            ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
             ],
@@ -1981,7 +2037,7 @@ class PermissionSeeder extends Seeder
         // Employee self-service (Phase 16): every job role can see its own payslips, ask for leave and ask for a punch to be corrected.
         foreach ($roles as $roleName => $rolePermissions) {
             if ($roleName !== 'super_admin') {
-                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request'])));
+                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request', 'quality.incident.report', 'quality.document.view', 'quality.document.acknowledge'])));
             }
         }
 

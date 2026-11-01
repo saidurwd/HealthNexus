@@ -561,6 +561,40 @@ _Generated from the Schema::create calls in database/migrations._
 - `portal_settlements`
 - `portal_threads`
 
+## quality (31)
+
+- `qa_acknowledgements`
+- `qa_actions`
+- `qa_assessment_results`
+- `qa_assessments`
+- `qa_audit_findings`
+- `qa_audits`
+- `qa_committee_members`
+- `qa_committees`
+- `qa_complaint_links`
+- `qa_compliance_items`
+- `qa_document_assignments`
+- `qa_document_versions`
+- `qa_documents`
+- `qa_hand_hygiene_audits`
+- `qa_incident_amendments`
+- `qa_incident_events`
+- `qa_incident_reporters`
+- `qa_incidents`
+- `qa_indicator_values`
+- `qa_indicators`
+- `qa_infection_cases`
+- `qa_investigations`
+- `qa_isolations`
+- `qa_meeting_items`
+- `qa_meetings`
+- `qa_mortality_reviews`
+- `qa_outbreaks`
+- `qa_privilege_catalog`
+- `qa_privileges`
+- `qa_standard_items`
+- `qa_standards`
+
 ## radiology (19)
 
 - `radiology_body_parts`

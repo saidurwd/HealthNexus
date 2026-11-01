@@ -24,6 +24,7 @@ use Database\Seeders\PharmacySeeder;
 use Database\Seeders\RadiologySeeder;
 use Database\Seeders\SettingsTableSeeder;
 use Database\Seeders\WorkflowSeeder;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -56,9 +57,11 @@ class DemoHistoryTest extends TestCase
 
     private function run_(): string
     {
-        $this->assertSame(0, Artisan::call('demo:history', ['organization' => 'DEMOH', '--months' => 1, '--visits-per-day' => 2, '--password' => 'demo-pass-123']));
+        $code = Artisan::call('demo:history', ['organization' => 'DEMOH', '--months' => 1, '--visits-per-day' => 2, '--password' => 'demo-pass-123']);
+        $output = Artisan::output();
+        $this->assertSame(0, $code, 'demo:history failed: '.mb_substr($output, -1500));
 
-        return Artisan::output();
+        return $output;
     }
 
     public function test_history_is_created_across_the_period_with_test_users(): void
@@ -136,6 +139,15 @@ class DemoHistoryTest extends TestCase
         $has('analytics_schedules', 2);
         $has('analytics_datasets', 1);
         $has('analytics_forecasts', 5);
+        $has('qa_incidents', 12);
+        $has('qa_actions', 3);
+        $has('qa_documents', 8);
+        $has('qa_acknowledgements', 20);
+        $has('qa_compliance_items', 7);
+        $has('qa_hand_hygiene_audits', 4);
+        $has('qa_audits', 4);
+        $has('qa_meetings', 10);
+        $has('qa_indicator_values', 13);
 
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
@@ -214,6 +226,27 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('analytics_loads')->where('status', 'failed')->count(), 'every load succeeded');
         $this->assertGreaterThanOrEqual(1, DB::table('analytics_deliveries')->where('status', 'sent')->count(), 'a scheduled report was sent');
         $this->assertSame(0, DB::table('analytics_datasets')->where('organization_id', $org)->whereColumn('decided_by', 'requested_by')->count(), 'nobody approved their own dataset');
+
+        // quality: reports are frozen with their reporter protected, second people did the checking, deaths were each looked at once, the books of documents and privileges are tidy
+        $this->assertSame(0, DB::table('qa_incidents')->where('is_anonymous', true)->whereIn('id', DB::table('qa_incident_reporters')->select('incident_id'))->count(), 'an anonymous report has no reporter row');
+        $this->assertSame(0, DB::table('qa_incident_events')->where('event', 'reported')->whereNotNull('user_id')->count(), 'the first event never names the reporter');
+        $this->assertSame(0, DB::table('qa_incidents')->where('status', 'closed')->where(fn ($q) => $q->whereNull('closed_by')->orWhereNull('closure_note'))->count(), 'a closed incident says who and why');
+        $this->assertSame(0, DB::table('qa_actions')->whereColumn('verified_by', 'owner_id')->count(), 'nobody checked their own action');
+        $this->assertSame(0, DB::table('qa_investigations')->where('status', 'accepted')->whereColumn('reviewed_by', 'lead_id')->count(), 'nobody accepted their own investigation');
+        $this->assertSame(0, DB::table('qa_document_versions')->whereIn('status', ['approved', 'superseded'])->whereColumn('approved_by', 'author_id')->count(), 'nobody approved their own document');
+        $this->assertSame(0, DB::table('qa_privileges')->where('status', '!=', 'requested')->whereColumn('decided_by', 'requested_by')->count(), 'nobody decided their own request');
+        $this->assertSame(0, DB::table('qa_incidents as i')->join('qa_investigations as v', 'v.incident_id', '=', 'i.id')->where('i.status', 'closed')->where('v.status', '!=', 'accepted')->count(), 'a closed incident has an accepted investigation');
+        $this->assertSame(0, DB::table('qa_incidents as i')->where('i.status', 'closed')->whereExists(fn ($q) => $q->select(DB::raw(1))->from('qa_actions as a')->whereColumn('a.source_id', 'i.id')->where('a.source_type', 'incident')->whereIn('a.status', ['open', 'in_progress']))->count(), 'a closed incident has no open action');
+        $this->assertSame(0, DB::table('qa_documents as d')->whereRaw("(select count(*) from qa_document_versions v where v.document_id = d.id and v.status = 'approved') > 1")->count(), 'one approved version in force per document');
+        $this->assertSame((int) DB::table('ed_visits')->where('organization_id', $org)->where('disposition_type', 'death')->count(), (int) DB::table('qa_mortality_reviews')->where('organization_id', $org)->where('source_type', 'ed_visit')->count(), 'every emergency death has one review');
+        $this->assertSame(0, DB::table('qa_incidents')->selectRaw('source_type, source_id, count(*) as n')->whereNotNull('source_type')->groupBy('source_type', 'source_id')->havingRaw('count(*) > 1')->count(), 'a source event is swept once');
+        $this->assertGreaterThanOrEqual(13, DB::table('qa_indicators')->whereNull('organization_id')->count());
+        try {
+            DB::table('qa_incidents')->limit(1)->update(['description' => 'edited']);
+            $this->fail('a reported incident was changed by SQL');
+        } catch (QueryException) {
+            $this->addToAssertionCount(1);
+        }
 
         // running it again is refused instead of duplicating the history
         $appointments = Appointment::count();

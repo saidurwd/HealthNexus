@@ -29,6 +29,16 @@ use App\Models\Inventory\InventoryStore;
 use App\Models\Inventory\ProcurementSupplier;
 use App\Models\Patient;
 use App\Models\PatientPortalAccount;
+use App\Models\Quality\QaAction;
+use App\Models\Quality\QaAudit;
+use App\Models\Quality\QaCommittee;
+use App\Models\Quality\QaComplianceItem;
+use App\Models\Quality\QaDocument;
+use App\Models\Quality\QaIncident;
+use App\Models\Quality\QaIndicator;
+use App\Models\Quality\QaInfectionCase;
+use App\Models\Quality\QaPrivilegeCatalog;
+use App\Models\Quality\QaStandard;
 use App\Services\Analytics\Semantic\SemanticQuery;
 use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -153,5 +163,21 @@ class FactoriesTest extends TestCase
         $this->assertSame('revenue', $queries->normalise($report->query)['fact']);
         $this->assertNotEmpty($dash->widgets);
         $this->assertSame('requested', $ds->status);
+    }
+
+    public function test_quality_factories_build_records_the_services_accept(): void
+    {
+        $incident = QaIncident::factory()->create();
+        $this->assertSame('reported', $incident->status);
+        $this->assertSame(1, QaIncident::query()->count());
+        $this->assertNotEmpty(QaAction::factory()->create()->public_id);
+        $this->assertSame('active', QaDocument::factory()->create()->status);
+        $this->assertSame('suspected', QaInfectionCase::factory()->create()->status);
+        $this->assertSame('in_progress', QaAudit::factory()->create()->status);
+        $this->assertNotNull(QaComplianceItem::factory()->create()->due_on);
+        $this->assertTrue(QaPrivilegeCatalog::factory()->create()->active);
+        $this->assertTrue(QaStandard::factory()->create()->active);
+        $this->assertSame('safety', QaCommittee::factory()->create()->kind);
+        $this->assertNull(QaIndicator::factory()->create()->organization_id);
     }
 }

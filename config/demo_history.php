@@ -22,6 +22,7 @@ use App\Services\Demo\History\Modules\OtHistory;
 use App\Services\Demo\History\Modules\PatientsHistory;
 use App\Services\Demo\History\Modules\PharmacyHistory;
 use App\Services\Demo\History\Modules\PortalHistory;
+use App\Services\Demo\History\Modules\QualityHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
 
 /*
@@ -53,6 +54,7 @@ return [
         InteropHistory::class,
         FinanceHistory::class,
         AnalyticsHistory::class,
+        QualityHistory::class,
     ],
 
     'months' => 6,

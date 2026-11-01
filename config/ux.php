@@ -70,6 +70,11 @@ return [
         'needs_visit' => ['warning', 'bi-calendar-plus'], 'declined' => ['danger', 'bi-x-circle'], 'investigating' => ['primary', 'bi-search'], 'escalated' => ['danger', 'bi-arrow-up-circle'], 'assigned' => ['info', 'bi-person-check'],
         'initiated' => ['info', 'bi-hourglass'], 'succeeded' => ['success', 'bi-check-circle-fill'], 'queued' => ['info', 'bi-inbox'], 'suppressed' => ['secondary', 'bi-slash-circle'], 'new' => ['info', 'bi-star'], 'reviewed' => ['success', 'bi-check2'],
         'running' => ['primary', 'bi-play-circle'], 'unknown_payment' => ['danger', 'bi-question-diamond'], 'amount_differs' => ['danger', 'bi-exclamation-diamond'], 'not_succeeded' => ['warning', 'bi-x-diamond'],
+        // quality
+        'reported' => ['info', 'bi-flag'], 'triaged' => ['primary', 'bi-funnel'], 'actioned' => ['primary', 'bi-list-check'], 'granted' => ['success', 'bi-patch-check'], 'ruled_out' => ['secondary', 'bi-x-circle'], 'suspected' => ['warning', 'bi-question-circle'],
+        'planned' => ['info', 'bi-calendar-event'], 'held' => ['primary', 'bi-people'], 'minuted' => ['success', 'bi-journal-check'], 'superseded' => ['secondary', 'bi-layers'], 'in_review' => ['info', 'bi-eye'], 'contained' => ['warning', 'bi-shield'],
+        'discussed' => ['success', 'bi-chat-square-text'], 'overdue' => ['danger', 'bi-alarm'], 'due_soon' => ['warning', 'bi-alarm'], 'current' => ['success', 'bi-check-circle'], 'compliant' => ['success', 'bi-check-circle-fill'], 'partial' => ['warning', 'bi-pie-chart'],
+        'non_compliant' => ['danger', 'bi-x-octagon'], 'not_assessed' => ['secondary', 'bi-dash-circle'],
         // analytics
         'generated' => ['success', 'bi-file-earmark-check'],
         // finance

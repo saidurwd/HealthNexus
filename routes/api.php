@@ -46,6 +46,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('module:icu')->group(fn () => require __DIR__.'/../modules/Icu/Routes/api.php');
         Route::middleware('module:finance')->group(fn () => require __DIR__.'/../modules/Finance/Routes/api.php');
         Route::middleware('module:analytics')->group(fn () => require __DIR__.'/../modules/Analytics/Routes/api.php');
+        Route::middleware('module:quality')->group(fn () => require __DIR__.'/../modules/Quality/Routes/api.php');
 
         Route::get('/organizations', [OrganizationController::class, 'index']);
         Route::post('/organizations', [OrganizationController::class, 'store']);
