@@ -3,30 +3,29 @@
 @section('page_title', __('Blood bank'))
 
 @section('page_content')
+    @php $L = fn ($route, $perm, $q = []) => \App\Support\Dashboard\Link::to($route, $perm, $q); $N = fn ($v) => \App\Support\Dashboard\Numbers::number($v); $c = $metrics['current']; $p = $metrics['previous']; @endphp
     @include('admin.blood._flash')
-
-    <div class="row g-3 mb-3">
-        <div class="col-6 col-md-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ __('Issued today') }}</div><div class="fs-3 fw-semibold">{{ $issuedToday }}</div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ __('On the ward, not yet started') }}</div><div class="fs-3 fw-semibold {{ $waiting ? 'text-warning' : '' }}">{{ $waiting }}</div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ __('Below minimum stock') }}</div><div class="fs-3 fw-semibold {{ $low ? 'text-danger' : '' }}">{{ count($low) }}</div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ __('Open incidents') }}</div><div class="fs-3 fw-semibold {{ $incidents->count() ? 'text-danger' : '' }}">{{ $incidents->count() }}</div></div></div></div>
-    </div>
-
-    <div class="card mb-3">
-        <div class="card-header"><h3 class="card-title">{{ __('Units on the shelf') }}</h3></div>
-        <div class="table-responsive"><table class="table table-sm mb-0">
-            <thead><tr><th>{{ __('Group') }}</th>@foreach($components as $c)<th class="text-end">{{ __($labels[$c]) }}</th>@endforeach</tr></thead>
-            <tbody>
-            @forelse($summary as $group => $row)
-                <tr><th>{{ __(\Illuminate\Support\Str::headline($group)) }}</th>@foreach($components as $c)<td class="text-end">{{ $row[$c] ?? 0 }}</td>@endforeach</tr>
-            @empty
-                <tr><td colspan="{{ count($components) + 1 }}" class="text-muted">{{ __('No units are available.') }}</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-        @if($low)<div class="card-footer text-danger small">{{ __('Below the minimum:') }} @foreach($low as $c => $n){{ __($labels[$c]) }} ({{ $n }}) @endforeach</div>@endif
-    </div>
-
+    <x-ui.dashboard :question="__('Is there blood for the next patient who needs it, and is any of it about to be wasted?')" :audience="__('For the blood bank medical officer')" :period="$period" :periods="['today', '7d', '30d', '90d', 'month', 'last_month', 'custom']" :as-of="$asOf">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-xl-5 g-2 mb-3">
+            <x-ui.kpi-tile :label="__('Below minimum stock')" :value="$metrics['below_minimum']" unit="count" icon="bi-droplet-half" variant="danger" :href="$L('admin.blood.inventory.index', 'bloodbank.inventory.view')" good-direction="down" :note="__('kinds of blood product')" />
+            <x-ui.kpi-tile :label="__('Expiring soon')" :value="$metrics['expiring']" unit="count" icon="bi-calendar-x" variant="warning" :href="$L('admin.blood.inventory.index', 'bloodbank.inventory.view')" good-direction="down" :note="__('within :n days', ['n' => $N($metrics['expiry_days'])])" />
+            <x-ui.kpi-tile :label="__('Requests waiting')" :value="$metrics['requests_waiting']" unit="count" icon="bi-inbox" variant="primary" :href="$L('admin.blood.requests.index', 'bloodbank.request.view')" good-direction="down" :note="__(':n emergency', ['n' => $N($metrics['emergency_waiting'])])" />
+            <x-ui.kpi-tile :label="__('Issued today')" :value="$metrics['issued_today']" unit="count" icon="bi-box-arrow-right" variant="success" good-direction="none" />
+            <x-ui.kpi-tile :label="__('On the ward, not started')" :value="$metrics['on_ward_not_started']" unit="count" icon="bi-hospital" variant="warning" good-direction="down" />
+            <x-ui.kpi-tile :label="__('Open incidents')" :value="$metrics['open_incidents']" unit="count" icon="bi-exclamation-octagon" variant="danger" :href="$L('admin.blood.incidents.index', 'bloodbank.incident.view')" good-direction="down" />
+            <x-ui.kpi-tile :label="__('Bags issued in the period')" :value="$c['issued']" :previous="$p['issued']" unit="count" icon="bi-droplet-fill" variant="primary" good-direction="none" />
+            <x-ui.kpi-tile :label="__('Typical wait for blood')" :value="$c['wait']['median'] ?? null" :previous="$p['wait']['median'] ?? null" unit="minutes" icon="bi-stopwatch" variant="info" good-direction="down" :target="app(\App\Services\Dashboard\Targets::class)->get('blood_wait')" :note="$c['wait'] ? __('9 in 10 within :m min · :n requests', ['m' => $N($c['wait']['p90']), 'n' => $N($c['wait']['n'])]) : __('No blood was issued in this period.')" />
+            <x-ui.kpi-tile :label="__('Blood wasted')" :value="$c['wastage_percent']" :previous="$p['wastage_percent']" unit="percent" icon="bi-trash" variant="secondary" good-direction="down" :note="__('thrown away or expired, of bags received')" />
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-lg-6"><div class="card h-100"><div class="card-header"><h3 class="card-title">{{ __('Units on the shelf') }}</h3></div>
+                <div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Blood product') }}</th><th class="text-end">{{ __('Usable') }}</th><th class="text-end">{{ __('Minimum') }}</th></tr></thead><tbody>
+                    @foreach($metrics['stock'] as $s)<tr class="{{ $s['minimum'] !== null && $s['available'] < $s['minimum'] ? 'table-danger' : '' }}"><td>{{ __($s['component']) }}</td><td class="text-end">{{ $N($s['available']) }}</td><td class="text-end">{{ $s['minimum'] !== null ? $N($s['minimum']) : '—' }}</td></tr>@endforeach
+                </tbody></table></div></div></div>
+            <div class="col-lg-6"><div class="card h-100"><div class="card-header"><h3 class="card-title">{{ __('Bags issued per day') }} <span class="small text-muted">· {{ $period->label() }}</span></h3></div><div class="card-body">
+                <x-ui.chart kind="bar" :rows="$metrics['per_day']" x="day" :series="[['key' => 'issued', 'label' => 'Issued']]" />
+            </div></div></div>
+        </div>
     <div class="row g-3">
         <div class="col-lg-6">
             <div class="card"><div class="card-header"><h3 class="card-title">{{ __('Open requests') }}</h3></div>
@@ -59,4 +58,5 @@
                 </ul></div>
         </div>
     </div>
+    </x-ui.dashboard>
 @stop

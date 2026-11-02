@@ -28,6 +28,15 @@ Owner instruction (2026-11-02): "go for the dashboard" after the plan in `docs/u
 - A figure that cannot be worked out now shows a dash on every tile (this was blank before).
 Tiles open the module's own list pages where one exists; an exact figure-equals-list proof for those lists belongs to the slices that rebuild the lists (a list that states its count, as Welfare's does).
 
+## D3 — Laboratory, Radiology, Pharmacy and Blood bank
+- **Laboratory:** work waiting at each stage (the stages add up to "tests to work on"), samples not yet in, critical results nobody has acknowledged and how long the oldest has waited, reports finished today against the same weekday of the last four weeks. **Turnaround = from the order to the pathologist's last approval on that order**, shown as a median and a 90th percentile (nearest rank, whole minutes) against the period before. Cancelled orders are not counted. Sample rejection is a share of samples taken in the period.
+- **Radiology:** patients waiting for a scan, scans in progress, **scanned but not reported** with the age of the oldest and how many are urgent or stat, critical findings unseen, reports waiting for approval. **Report time = from the scan being finished to the approved final report**; studies by type of scan and per day.
+- **Pharmacy:** prescriptions waiting and under review, safety alerts nobody has acted on, batches near expiry that still have stock, batches set aside, and **medicines with nothing usable on the shelf** (a quarantined or expired batch is not usable). **Wait = order to first dispensing.**
+- **Blood bank:** usable bags by product against the policy minimum, bags expiring inside the warning window, requests waiting (and how many are emergency), bags issued today, bags on the ward not yet started, open incidents. **Wait = request to first bag issued**; wastage = bags thrown away or expired as a share of bags received (the existing utilization report, not a second definition).
+- A time that cannot be worked out (nothing finished in the period) is a dash, never zero. No page names a patient in its cached figures; the blood bank's request and incident lists, which name patients and bags, are the team's own worklists and are read live.
+- Targets (none ship): `dashboard.target.lab_tat`, `radiology_tat`, `pharmacy_wait`, `blood_wait`.
+- The dashboards default to the last 7 days; the lab, radiology and pharmacy dashboards showed only "today" before.
+
 ## Not done in D0 (next slices)
 Role-aware Home and the Director's "Today" (D1); moving each module's dashboard onto the standard (D2–D5); the BI role dashboards (D6). Per-user Bangla-digit preference (today an organization setting).
 

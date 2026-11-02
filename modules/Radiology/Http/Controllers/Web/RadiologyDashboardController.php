@@ -3,37 +3,26 @@
 namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Radiology\RadiologyCriticalFinding;
-use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyOrder;
-use App\Models\Radiology\RadiologyReport;
+use App\Services\Dashboard\DashboardCache;
+use App\Services\Radiology\RadiologyOverview;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RadiologyDashboardController extends Controller
 {
+    public function __construct(private readonly RadiologyOverview $overview, private readonly DashboardCache $cache, private readonly TenantContextResolver $tenant) {}
+
     public function index(Request $request)
     {
-        $this->authorize('viewAny', RadiologyOrder::class);
+        Gate::authorize('viewAny', RadiologyOrder::class);
+        $org = (int) $this->tenant->getOrganizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        $period = DashboardPeriod::fromRequest($request, '7d', ['today', '7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $r = $this->cache->remember($request->user(), 'radiology', $org, $branch, $period, fn () => $this->overview->summary($org, $branch, $period), fresh: $request->boolean('fresh'));
 
-        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
-        $branchId = app(TenantContextResolver::class)->getBranchId();
-
-        $today = now()->toDateString();
-
-        $summary = [
-            'orders_today' => RadiologyOrder::query()->forTenant($organizationId, $branchId)->whereDate('ordered_at', $today)->count(),
-            'scheduled_today' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->whereDate('scheduled_at', $today)->count(),
-            'waiting_patients' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->whereIn('status', ['checked_in', 'preparing', 'ready'])->count(),
-            'in_progress' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->where('status', 'in_progress')->count(),
-            'completed_today' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->where('status', 'completed')->whereDate('completed_at', $today)->count(),
-            'awaiting_reporting' => RadiologyOrder::query()->forTenant($organizationId, $branchId)->whereIn('status', ['completed', 'images_available'])->count(),
-            'urgent_studies' => RadiologyExamination::query()->forTenant($organizationId, $branchId)->whereHas('orderItem', fn ($q) => $q->whereIn('priority', ['urgent', 'stat']))->whereIn('status', ['completed', 'images_available'])->count(),
-            'critical_unacknowledged' => RadiologyCriticalFinding::query()->forTenant($organizationId, $branchId)->whereNull('acknowledged_at')->count(),
-            'reports_pending_approval' => RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'submitted')->count(),
-            'reports_completed_today' => RadiologyReport::query()->forTenant($organizationId, $branchId)->where('status', 'final')->whereDate('approved_at', $today)->count(),
-        ];
-
-        return view('admin.radiology.dashboard.index', compact('summary'));
+        return view('admin.radiology.dashboard.index', ['metrics' => $r['data'], 'asOf' => $r['as_of'], 'period' => $period]);
     }
 }
