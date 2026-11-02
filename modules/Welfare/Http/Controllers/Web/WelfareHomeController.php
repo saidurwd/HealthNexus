@@ -5,14 +5,16 @@ namespace Modules\Welfare\Http\Controllers\Web;
 use App\Models\Welfare\WfApplication;
 use App\Models\Welfare\WfAssessment;
 use App\Models\Welfare\WfFundEntry;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\TenantContextResolver;
 use App\Services\Welfare\WelfareOverview;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class WelfareHomeController extends WelfareController
 {
-    public function __construct(TenantContextResolver $tenant, private readonly WelfareOverview $overview)
+    public function __construct(TenantContextResolver $tenant, private readonly WelfareOverview $overview, private readonly DashboardCache $cache)
     {
         parent::__construct($tenant);
     }
@@ -21,9 +23,10 @@ class WelfareHomeController extends WelfareController
     {
         $this->allow($request, 'welfare.dashboard.view');
         $org = $this->organizationId();
-        $days = max(7, min(365, (int) $request->query('days', 30)));
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $r = $this->cache->remember($request->user(), 'welfare', $org, $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, $period, fn () => $this->overview->summaryFor($org, $period), fresh: $request->boolean('fresh'));
 
-        return view('admin.welfare.index', ['s' => $this->overview->summary($org, $days), 'can' => ['assess' => $request->user()->can('welfare.assessment.view'), 'grant' => $request->user()->can('welfare.grant.view'), 'fund' => $request->user()->can('welfare.fund.view')],
+        return view('admin.welfare.index', ['s' => $r['data'], 'asOf' => $r['as_of'], 'period' => $period, 'can' => ['assess' => $request->user()->can('welfare.assessment.view'), 'grant' => $request->user()->can('welfare.grant.view'), 'fund' => $request->user()->can('welfare.fund.view')],
             'waiting' => $request->user()->can('welfare.assessment.view') ? WfAssessment::query()->where('organization_id', $org)->where('status', 'submitted')->with('patient')->orderBy('updated_at')->limit(8)->get() : collect(),
             'billing' => $request->user()->can('welfare.grant.view') ? WfApplication::query()->where('organization_id', $org)->where('status', 'requested')->with('grant', 'invoice')->orderBy('requested_at')->limit(8)->get() : collect()]);
     }

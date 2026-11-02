@@ -11,6 +11,8 @@ Route::prefix('welfare')->name('welfare.')->group(function () {
     Route::get('/', [WelfareHomeController::class, 'index'])->name('index');
     Route::get('reports', [WelfareHomeController::class, 'reports'])->name('reports');
 
+    Route::get('gifts', [FundController::class, 'gifts'])->name('gifts');
+    Route::get('discounts', [GrantController::class, 'discounts'])->name('discounts');
     Route::get('funds', [FundController::class, 'index'])->name('funds');
     Route::post('funds', [FundController::class, 'store'])->name('funds.store');
     Route::get('funds/{fund}', [FundController::class, 'show'])->name('funds.show');

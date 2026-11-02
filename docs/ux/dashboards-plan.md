@@ -146,7 +146,7 @@ Each slice: spec → build → tests (the §3 list) → demo-data check → Bang
 
 | Slice | Content | Output |
 |---|---|---|
-| **D0 — Foundation** | `x-ui.kpi`, `x-ui.chart` (SVG, sparkline), `x-ui.dashboard` layout and filter bar, "as of" + refresh, `DashboardDefinition` + registry, `DashboardCache`, acceptance test kit, style rules (colour + icon + word; contrast; Bangla digits setting); migrate Quality and Facility to the shared tile as the proof | the standard, ready to use |
+| **D0 — Foundation** *(built 2026-11-02, see `docs/ux/dashboard-standard.md`; reference: Welfare)* | `x-ui.kpi`, `x-ui.chart` (SVG, sparkline), `x-ui.dashboard` layout and filter bar, "as of" + refresh, `DashboardDefinition` + registry, `DashboardCache`, acceptance test kit, style rules (colour + icon + word; contrast; Bangla digits setting); migrate Quality and Facility to the shared tile as the proof | the standard, ready to use |
 | **D1 — Front door** | Role-aware Home, Director's Today, OPD/reception queue board | people stop landing on a placeholder |
 | **D2 — Clinical** | IPD, Nursing, Emergency (board + performance), ICU, OT | wards and theatres on one standard |
 | **D3 — Diagnostics and pharmacy** | Lab, Radiology, Pharmacy, Blood bank | TAT and stock safety |
@@ -171,6 +171,8 @@ Order rationale: the foundation first (so nothing is built twice), then the scre
 - [ ] Query count within budget; first paint under one second with the six-month demo data.
 
 ## 8. Open decisions for the owner
+_D1, D3, D4, D5 and D6 were not answered before D0 was built; the recommended choice was taken and recorded in `docs/decisions/D-DASH-01-dashboard-foundation.md`._
+
 * **D1 — Chart tooling.** The plan keeps the existing **inline-SVG** components (no package, works offline on a LAN, prints well, accessible). A chart package (for example ECharts or Chart.js) would give interactivity faster but adds a package, which needs your approval (rule in `docs/AI-RULES.md`). Recommendation: stay with SVG for D0–D5; revisit only if hover/zoom is truly needed.
 * **D2 — Targets.** Which KPIs have targets and what are they (door-to-doctor minutes, lab TAT, occupancy band, collection rate)? The system ships none as fact; the hospital sets them.
 * **D3 — Refresh rhythm.** 60 s for boards, 5 min for management pages, or by hand?

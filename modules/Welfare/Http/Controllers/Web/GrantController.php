@@ -3,12 +3,14 @@
 namespace Modules\Welfare\Http\Controllers\Web;
 
 use App\Models\Billing\BillingInvoice;
+use App\Models\Welfare\WfApplication;
 use App\Models\Welfare\WfAssessment;
 use App\Models\Welfare\WfFund;
 use App\Models\Welfare\WfGrant;
 use App\Services\TenantContextResolver;
 use App\Services\Welfare\ApplicationService;
 use App\Services\Welfare\GrantService;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -26,6 +28,19 @@ class GrantController extends WelfareController
         $q = WfGrant::query()->where('organization_id', $this->organizationId())->with('patient', 'fund')->when($status !== 'all', fn ($w) => $w->where('status', $status))->orderByDesc('id');
 
         return view('admin.welfare.grants', ['rows' => $q->paginate(25)->withQueryString(), 'status' => $status]);
+    }
+
+    /** The discounts behind the dashboard's "given" figures: the same period, the same rows. */
+    public function discounts(Request $request)
+    {
+        $this->allow($request, 'welfare.grant.view');
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $status = $request->query('status', 'applied');
+        $q = WfApplication::query()->where('organization_id', $this->organizationId())->with('grant.fund', 'patient', 'invoice');
+        $status === 'requested' ? $q->where('status', 'requested') : $q->where('status', 'applied')->whereBetween('settled_at', [$period->fromUtc(), $period->toUtc()]);
+        $rows = $q->orderByDesc('id')->paginate(30)->withQueryString();
+
+        return view('admin.welfare.discounts', ['rows' => $rows, 'period' => $period, 'status' => $status, 'total' => (clone $q)->sum('amount'), 'patients' => (clone $q)->distinct()->count('patient_id')]);
     }
 
     public function store(Request $request, string $assessment)

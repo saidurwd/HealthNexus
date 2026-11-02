@@ -7,6 +7,7 @@ use App\Models\Welfare\WfFund;
 use App\Models\Welfare\WfFundEntry;
 use App\Services\TenantContextResolver;
 use App\Services\Welfare\FundService;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
 
 class FundController extends WelfareController
@@ -22,6 +23,17 @@ class FundController extends WelfareController
         $rows = WfFund::query()->where('organization_id', $this->organizationId())->orderBy('status')->orderBy('name')->get()->map(fn ($f) => ['fund' => $f, 'balance' => $this->funds->balance($f), 'committed' => $this->funds->committed($f), 'available' => $this->funds->available($f)]);
 
         return view('admin.welfare.funds', ['rows' => $rows, 'kinds' => config('welfare.fund_kinds'), 'canManage' => $request->user()->can('welfare.fund.manage')]);
+    }
+
+    /** The gifts behind the dashboard's "received" figure: the same period, the same rows. */
+    public function gifts(Request $request)
+    {
+        $this->allow($request, 'welfare.fund.view');
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $q = WfFundEntry::query()->where('organization_id', $this->organizationId())->where('entry_type', 'donation')->whereBetween('occurred_at', [$period->fromUtc(), $period->toUtc()]);
+        $rows = (clone $q)->with('fund', 'donor')->orderByDesc('occurred_at')->paginate(30)->withQueryString();
+
+        return view('admin.welfare.gifts', ['rows' => $rows, 'period' => $period, 'total' => (clone $q)->sum('amount')]);
     }
 
     public function store(Request $request)

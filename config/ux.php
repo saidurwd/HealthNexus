@@ -10,6 +10,20 @@
 | module must be on, and the user must hold the permission — otherwise the next role, then the dashboard.
 */
 return [
+    // Dashboards (docs/ux/dashboard-standard.md). Time is shown in Dhaka; numbers can be grouped the South Asian way (12,34,567) and written with Bangla digits: both are settings (`ux.number_grouping`, `ux.bangla_digits`).
+    'timezone' => 'Asia/Dhaka',
+    'numbers' => ['grouping' => 'international', 'bangla_digits' => false],
+    'dashboard' => [
+        'default_period' => '30d',
+        'periods' => ['today', '7d', '30d', '90d', 'month', 'last_month', 'custom'],
+        'max_custom_days' => 366,
+        'cache_seconds' => 60,
+        // How often a live board reloads itself, in seconds (a hospital can change it; 0 turns it off).
+        'refresh_seconds' => ['board' => 60, 'management' => 300],
+        // A figure within this share of its target is "close", not "off".
+        'near_target_percent' => 10,
+    ],
+
     'statuses' => [
         // shared vocabulary (guideline 9.4)
         'enabled' => ['success', 'bi-toggle-on'], 'used' => ['secondary', 'bi-check2-all'], 'disabled' => ['secondary', 'bi-toggle-off'], 'candidate' => ['info', 'bi-hourglass'],
