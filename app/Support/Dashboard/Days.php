@@ -37,6 +37,14 @@ class Days
         return DB::getDriverName() === 'sqlite' ? "date($column, '+$hours hours')" : "date(date_add($column, interval $hours hour))";
     }
 
+    /** SQL for the hour of the day (0-23) in Dhaka of a UTC timestamp column. */
+    public static function hourOf(string $column): string
+    {
+        $hours = (int) round(CarbonImmutable::now(self::timezone())->utcOffset() / 60);
+
+        return DB::getDriverName() === 'sqlite' ? "cast(strftime('%H', $column, '+$hours hours') as integer)" : "hour(date_add($column, interval $hours hour))";
+    }
+
     /**
      * One value per day from $from to $to (zero where nothing happened).
      *

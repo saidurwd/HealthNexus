@@ -5,7 +5,7 @@
 --}}
 @php
     $numeric = $unit !== null && is_numeric($value) && ! $suppressed;
-    $shown = $suppressed ? __('Hidden (small number)') : ($numeric ? \App\Support\Dashboard\Numbers::value($value, $unit) : $value);
+    $shown = $suppressed ? __('Hidden (small number)') : ($value === null ? '—' : ($numeric ? \App\Support\Dashboard\Numbers::value($value, $unit) : $value));
     $change = $numeric ? \App\Support\Dashboard\Kpi::change($value, $previous) : null;
     $good = \App\Support\Dashboard\Kpi::changeIsGood($change, $goodDirection);
     $status = $numeric ? \App\Support\Dashboard\Kpi::status($value, $target, $goodDirection) : \App\Support\Dashboard\Kpi::status(null, null);
