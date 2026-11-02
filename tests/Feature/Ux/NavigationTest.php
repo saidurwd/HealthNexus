@@ -33,7 +33,7 @@ class NavigationTest extends TestCase
         $headers = collect($this->menu())->pluck('header')->filter()->values()->all();
         $this->assertSame(self::SECTIONS, $headers);
         $this->assertSame('Dashboard', $this->menu()[0]['text'], 'the dashboard is first');
-        $this->assertSame('Front desk', $this->menu()[2]['header'], 'reception comes straight after the dashboard and the personal page');
+        $this->assertSame('Front desk', collect($this->menu())->first(fn ($i) => isset($i['header']))['header'], 'reception is the first section, straight after the dashboards and the personal page');
         $this->assertSame('Help and support', $this->menu()[array_key_last($this->menu())]['text'], 'help is last');
         $registry = array_keys(array_filter(config('modules.modules') ?? config('modules'), fn ($m) => is_array($m) && ($m['built'] ?? false)));
         $inMenu = collect($this->menu())->pluck('module')->filter()->unique();

@@ -1,6 +1,6 @@
 # Dashboard standard — how to build a dashboard here
 
-Plan and reasons: `docs/ux/dashboards-plan.md`. This page is the working recipe. The Welfare dashboard (`/admin/welfare`) is the reference build.
+Plan and reasons: `docs/ux/dashboards-plan.md`. This page is the working recipe. The Welfare dashboard (`/admin/welfare`) is the reference build for a management page; the Queue board (`/admin/queue-board`) for a live board; the Home (`/dashboard`) for a personal one.
 
 ## The parts (all built in D0)
 | Part | Where | Use |

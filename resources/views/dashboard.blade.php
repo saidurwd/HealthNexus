@@ -1,6 +1,22 @@
 @extends('layouts.adminlte')
 
 @section('page_content')
+    @php($name = auth()->user()->name)
+    <x-ui.dashboard :question="__('What needs me now?')" :audience="__('Hello, :name. These are the things waiting for you, from the work your role does.', ['name' => $name])" :as-of="$asOf">
+        @if($worklistUrl)<p><a class="btn btn-primary" href="{{ $worklistUrl }}"><i class="bi bi-list-check" aria-hidden="true"></i> {{ __('Open my worklist') }}</a></p>@endif
+        @if(count($tiles) > 0)
+            @php($waitingTiles = collect($tiles)->where('count', '>', 0))
+            @php($clear = collect($tiles)->where('count', 0))
+            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-2 mb-2">
+                @foreach($waitingTiles as $t)<x-ui.kpi-tile :label="$t['label']" :value="$t['count']" unit="count" :icon="$t['icon']" :variant="$t['variant']" :href="route($t['route'])" :note="$t['hint']" good-direction="down" />@endforeach
+            </div>
+            @if($waitingTiles->isEmpty())<x-ui.empty-state :title="__('Nothing is waiting for you.')" :hint="__('New work will appear here.')" icon="bi-check2-circle" />@endif
+            @if($clear->isNotEmpty())<p class="small text-muted"><i class="bi bi-check2-circle text-success" aria-hidden="true"></i> {{ __('All clear') }}: {{ $clear->pluck('label')->implode(' · ') }}</p>@endif
+        @else
+            <x-ui.empty-state :title="__('No work queues are set up for your role yet.')" :hint="__('Use the menu on the left.')" icon="bi-compass" />
+        @endif
+    </x-ui.dashboard>
+
     {{-- Reusable dashboard widgets — see App\Services\Dashboard\DashboardWidgetRegistry. Any
          module can register a widget here without touching this view or HomeController. --}}
     <div class="row">

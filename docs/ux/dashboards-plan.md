@@ -147,7 +147,7 @@ Each slice: spec → build → tests (the §3 list) → demo-data check → Bang
 | Slice | Content | Output |
 |---|---|---|
 | **D0 — Foundation** *(built 2026-11-02, see `docs/ux/dashboard-standard.md`; reference: Welfare)* | `x-ui.kpi`, `x-ui.chart` (SVG, sparkline), `x-ui.dashboard` layout and filter bar, "as of" + refresh, `DashboardDefinition` + registry, `DashboardCache`, acceptance test kit, style rules (colour + icon + word; contrast; Bangla digits setting); migrate Quality and Facility to the shared tile as the proof | the standard, ready to use |
-| **D1 — Front door** | Role-aware Home, Director's Today, OPD/reception queue board | people stop landing on a placeholder |
+| **D1 — Front door** *(built 2026-11-02: Home, Today in the hospital, Queue board)* | Role-aware Home, Director's Today, OPD/reception queue board | people stop landing on a placeholder |
 | **D2 — Clinical** | IPD, Nursing, Emergency (board + performance), ICU, OT | wards and theatres on one standard |
 | **D3 — Diagnostics and pharmacy** | Lab, Radiology, Pharmacy, Blood bank | TAT and stock safety |
 | **D4 — Money** | Billing and cashier, Insurance, Finance, Welfare trends | collections and claims clarity |

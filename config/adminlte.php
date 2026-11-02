@@ -803,6 +803,12 @@ return [
             'icon' => 'bi bi-speedometer2',
         ],
         [
+            'text' => 'Today in the hospital',
+            'url' => '/admin/today',
+            'icon' => 'bi bi-sun',
+            'can' => 'dashboard.today.view',
+        ],
+        [
             'text' => 'My work',
             'module' => 'hr',
             'icon' => 'bi bi-person-badge',
@@ -878,6 +884,12 @@ return [
                     'text' => 'Waiting Queue',
                     'url' => '/admin/queue',
                     'icon' => 'bi bi-ticket',
+                    'can' => 'appointments.queue',
+                ],
+                [
+                    'text' => 'Queue board',
+                    'url' => '/admin/queue-board',
+                    'icon' => 'bi bi-tv',
                     'can' => 'appointments.queue',
                 ],
                 [

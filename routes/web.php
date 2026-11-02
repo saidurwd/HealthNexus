@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\Mfa\MfaController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Dashboard\QueueBoardController;
+use App\Http\Controllers\Dashboard\TodayController;
 use App\Http\Controllers\DocumentPrintController;
 use App\Http\Controllers\DowntimeController;
 use App\Http\Controllers\GlobalSearchPageController;
@@ -45,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([RequireMfa::class])->group(function () {
         Route::middleware([EnsureTenantContext::class])->group(function () {
             Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+            Route::get('/admin/today', [TodayController::class, 'index'])->name('admin.today');
+            Route::get('/admin/queue-board', [QueueBoardController::class, 'index'])->name('admin.queue.board')->middleware('module:appointment');
         });
     });
 

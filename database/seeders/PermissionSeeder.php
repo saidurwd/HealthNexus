@@ -925,6 +925,9 @@ class PermissionSeeder extends Seeder
             'ai.monitor.view',
             'ai.audit.view',
 
+            // Dashboards (D1)
+            'dashboard.today.view',
+
             // Patient Welfare Fund (Phase 26, Bangladesh pack)
             'welfare.dashboard.view',
             'welfare.fund.view',
@@ -2145,6 +2148,9 @@ class PermissionSeeder extends Seeder
             ],
             'ai_safety_officer' => [
                 'patients.view', 'ai.dashboard.view', 'ai.usecase.view', 'ai.usecase.approve', 'ai.killswitch', 'ai.model.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view', 'ai.provider.legal',
+            ],
+            'hospital_director' => [
+                'patients.view', 'dashboard.today.view', 'encounters.view', 'ed.board.view', 'ipd.dashboard.view', 'ot.dashboard.view', 'billing.dashboard.view', 'analytics.dashboard.view', 'quality.dashboard.view', 'welfare.dashboard.view', 'welfare.grant.view', 'welfare.report.view', 'appointments.queue',
             ],
             'welfare_officer' => [
                 'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.assessment.view', 'welfare.assessment.create', 'welfare.grant.view', 'welfare.grant.request', 'welfare.grant.apply',
