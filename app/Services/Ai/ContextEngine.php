@@ -122,13 +122,73 @@ class ContextEngine
     /** @return list<array<string,mixed>> */
     private function vitals(Patient $p, CarbonImmutable $since, ?int $encounterId): array
     {
-        return DB::table('encounter_vitals')->where('patient_id', $p->id)->when($encounterId, fn ($q) => $q->where('encounter_id', $encounterId))->whereBetween('recorded_at', [$since, now()])->orderByDesc('recorded_at')->limit($encounterId ? 5 : 10)
-            ->get()->map(function ($v) use ($p) {
-                $bits = array_filter([$v->systolic ? 'BP '.$v->systolic.'/'.$v->diastolic : null, $v->pulse_rate ? 'pulse '.$v->pulse_rate : null, $v->temperature ? 'temperature '.(float) $v->temperature : null, $v->oxygen_saturation ? 'SpO2 '.$v->oxygen_saturation.'%' : null,
+        $out = [];
+        // OPD/visit vitals are written to vital_signs; encounter_vitals is the older store. Both are read.
+        foreach (['vital_signs' => 'vs', 'encounter_vitals' => 'vit'] as $table => $prefix) {
+            $rows = DB::table($table)->where('patient_id', $p->id)->when($table === 'vital_signs', fn ($q) => $q->whereNull('deleted_at'))->when($encounterId, fn ($q) => $q->where('encounter_id', $encounterId))
+                ->whereBetween('recorded_at', [$since, now()])->orderByDesc('recorded_at')->limit($encounterId ? 5 : 10)->get();
+            foreach ($rows as $v) {
+                $bits = array_filter([$v->systolic ? 'BP '.$v->systolic.'/'.$v->diastolic : null, $v->pulse_rate ? 'pulse '.$v->pulse_rate : null, $v->temperature ? 'temperature '.(float) $v->temperature : null, $v->oxygen_saturation ? 'SpO2 '.(float) $v->oxygen_saturation.'%' : null,
                     $v->respiratory_rate ? 'respiratory rate '.$v->respiratory_rate : null, $v->weight ? 'weight '.(float) $v->weight.' kg' : null]);
+                if ($bits) {
+                    $out[] = ['ref' => $prefix.':'.$v->id, 'text' => __('Vitals on :d: :b.', ['d' => $this->d($v->recorded_at), 'b' => implode(', ', $bits)]), 'section' => __('Vital signs'), 'kind' => 'vitals', 'date' => $v->recorded_at, 'patient_id' => (int) $p->id];
+                }
+            }
+        }
+        usort($out, fn ($a, $b) => strcmp((string) $b['date'], (string) $a['date']));
 
-                return $bits ? ['ref' => 'vit:'.$v->id, 'text' => __('Vitals on :d: :b.', ['d' => $this->d($v->recorded_at), 'b' => implode(', ', $bits)]), 'section' => __('Vital signs'), 'kind' => 'vitals', 'date' => $v->recorded_at, 'patient_id' => (int) $p->id] : null;
-            })->filter()->values()->all();
+        return array_slice($out, 0, $encounterId ? 5 : 10);
+    }
+
+    /**
+     * What a pharmacist needs side by side to review a medicine list: allergies, the medicines now active, the pharmacy's own safety alerts, and plain counts. It states facts; it never says what to do.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function medications(User $user, Patient $patient): array
+    {
+        $this->authorise($user, $patient);
+        $pid = (int) $patient->id;
+        $since = CarbonImmutable::now()->subDays($this->policy->int('medication.lookback_days', 90));
+        $items = $this->allergies($patient);
+        if ($items === []) {
+            $items[] = ['ref' => 'allergy:none', 'text' => __('No active allergy is recorded in the chart.'), 'section' => __('Allergies'), 'kind' => 'allergy', 'date' => '9999-12-31', 'patient_id' => $pid];
+        }
+        $lines = DB::table('prescription_items as i')->join('prescriptions as r', 'r.id', '=', 'i.prescription_id')->where('r.patient_id', $pid)->where('r.status', 'issued')->whereNull('r.deleted_at')->whereNull('i.deleted_at')->where('i.is_active', true)
+            ->where('r.prescribed_at', '>=', $since)->orderByDesc('r.prescribed_at')->limit(40)->get(['i.id', 'i.medicine_name', 'i.strength', 'i.frequency', 'i.duration', 'r.prescription_no', 'r.prescribed_at']);
+        $firstWords = [];
+        foreach ($lines as $l) {
+            $items[] = ['ref' => 'med:'.$l->id, 'text' => __('Medicine on prescription :n (:d): :m, :f, :t.', ['n' => $l->prescription_no, 'd' => $this->d($l->prescribed_at), 'm' => trim($l->medicine_name.' '.$l->strength), 'f' => $l->frequency ?: __('frequency not stated'), 't' => $l->duration ?: __('duration not stated')]),
+                'section' => __('Medicines now active'), 'kind' => 'medicine', 'untrusted' => true, 'date' => $l->prescribed_at, 'patient_id' => $pid];
+            $word = mb_strtolower((string) (preg_split('/[^\p{L}]+/u', trim((string) $l->medicine_name), -1, PREG_SPLIT_NO_EMPTY)[0] ?? ''));
+            if (mb_strlen($word) > 2) {
+                $firstWords[$word][] = $l->id;
+            }
+        }
+        foreach (DB::table('encounter_medication_histories')->where('patient_id', $pid)->whereNull('ended_at')->orderByDesc('started_at')->limit(20)->get(['id', 'medication_name', 'dosage', 'frequency', 'started_at']) as $h) {
+            $items[] = ['ref' => 'medhx:'.$h->id, 'text' => __('Medicine the patient already takes (from :d): :m, :f.', ['d' => $this->d($h->started_at), 'm' => trim($h->medication_name.' '.$h->dosage), 'f' => $h->frequency ?: __('frequency not stated')]),
+                'section' => __('Medicines now active'), 'kind' => 'medicine', 'untrusted' => true, 'date' => $h->started_at, 'patient_id' => $pid];
+        }
+        $n = $lines->count() + count(array_filter($items, fn ($i) => str_starts_with((string) $i['ref'], 'medhx:')));
+        $many = $this->policy->int('medication.many_medicines', 5);
+        $items[] = ['ref' => 'medcount', 'text' => $n >= $many ? __(':n medicines are active, which is :m or more.', ['n' => $n, 'm' => $many]) : __(':n medicines are active.', ['n' => $n]), 'section' => __('Counts'), 'kind' => 'count', 'date' => '9999-12-30', 'patient_id' => $pid];
+        foreach ($firstWords as $word => $ids) {
+            if (count($ids) > 1) {
+                $items[] = ['ref' => 'dup:'.$ids[0], 'text' => __('More than one active line starts with the same medicine name “:w” (:n lines).', ['w' => $word, 'n' => count($ids)]), 'section' => __('Counts'), 'kind' => 'count', 'untrusted' => true, 'date' => '9999-12-30', 'patient_id' => $pid];
+            }
+        }
+        $alerts = DB::table('pharmacy_safety_alerts as a')->join('pharmacy_order_items as oi', 'oi.id', '=', 'a.order_item_id')->join('pharmacy_orders as o', 'o.id', '=', 'oi.order_id')->where('o.patient_id', $pid)->where('a.created_at', '>=', $since)
+            ->orderByDesc('a.created_at')->limit(20)->get(['a.id', 'a.alert_type', 'a.severity', 'a.explanation', 'a.is_overridden', 'a.override_reason', 'a.created_at']);
+        foreach ($alerts as $a) {
+            $items[] = ['ref' => 'alert:'.$a->id, 'text' => __('Pharmacy safety alert (:s, :t) on :d: :e Overridden: :o.', ['s' => $a->severity, 't' => str_replace('_', ' ', (string) $a->alert_type), 'd' => $this->d($a->created_at), 'e' => rtrim((string) $a->explanation, '.').'.', 'o' => $a->is_overridden ? __('yes') : __('no')]),
+                'section' => __('Pharmacy safety alerts'), 'kind' => 'alert', 'untrusted' => true, 'date' => $a->created_at, 'patient_id' => $pid];
+            if ($a->is_overridden && trim((string) $a->override_reason) !== '') {
+                $items[] = ['ref' => 'alertwhy:'.$a->id, 'text' => __('Reason given for overriding that alert: :r', ['r' => $a->override_reason]), 'section' => __('Pharmacy safety alerts'), 'kind' => 'note', 'untrusted' => true, 'date' => $a->created_at, 'patient_id' => $pid];
+            }
+        }
+        $items[] = ['ref' => 'ph:1', 'text' => __(':l — for the clinician to write.', ['l' => __('The pharmacist\'s review and decision')]), 'section' => __('To be completed by the clinician'), 'kind' => 'placeholder', 'placeholder' => true, 'date' => null, 'patient_id' => $pid];
+
+        return $this->finish($items, $patient, (int) $patient->organization_id);
     }
 
     /** Abnormal and critical reported results. @return list<array<string,mixed>> */

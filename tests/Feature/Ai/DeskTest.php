@@ -34,6 +34,29 @@ class DeskTest extends AiTestCase
         }
     }
 
+    public function test_the_screens_for_the_four_higher_risk_functions_open_and_run_only_once_switched_on(): void
+    {
+        $patient = $this->chart();
+        DB::table('vital_signs')->insert(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id, 'recorded_at' => now()->subHour(), 'temperature' => 37.0, 'temperature_unit' => 'celsius', 'systolic' => 118, 'diastolic' => 76,
+            'pulse_rate' => 84, 'respiratory_rate' => 18, 'oxygen_saturation' => 97, 'created_at' => now(), 'updated_at' => now()]);
+        $this->as($this->superAdmin());
+        foreach (['/claim-check', '/reading-order', '/medicines', '/early-warning'] as $p) {
+            $this->get('/admin/ai'.$p)->assertOk();
+        }
+        $this->as($this->clinician)->from('/admin/ai/early-warning')->post('/admin/ai/early-warning', ['patient_no' => $patient->enterprise_patient_no])->assertSessionHas('warning'); // off: refused, nothing drafted
+        $this->assertSame(0, AiOutput::query()->where('use_case_code', 'risk_scoring')->count());
+
+        $this->enableFunction('risk_scoring');
+        $this->enableFunction('medication_review');
+        $this->as($this->clinician)->post('/admin/ai/early-warning', ['patient_no' => $patient->enterprise_patient_no])->assertRedirect();
+        $this->as($this->clinician)->post('/admin/ai/medicines', ['patient_no' => $patient->enterprise_patient_no])->assertRedirect();
+        $this->assertSame(1, AiOutput::query()->where('use_case_code', 'risk_scoring')->count());
+        $this->assertSame(1, AiOutput::query()->where('use_case_code', 'medication_review')->count());
+        $this->as($this->clinician)->post('/admin/ai/medicines', ['patient_no' => 'NOPE-1'])->assertSessionHasErrors('patient_no');
+        $this->as($this->actor([]))->get('/admin/ai/early-warning')->assertForbidden();
+        $this->as($this->clinician)->get('/admin/ai')->assertOk()->assertSee('Early-warning screen')->assertDontSee('Suggest a reading order');
+    }
+
     public function test_a_clinician_asks_reviews_and_accepts_through_the_screens_and_nothing_is_written_to_the_record(): void
     {
         $patient = $this->chart();

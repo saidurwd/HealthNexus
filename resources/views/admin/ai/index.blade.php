@@ -9,7 +9,8 @@
     @unless($on)<div class="alert alert-danger"><strong>{{ __('AI is switched off for the whole hospital.') }}</strong></div>@endunless
     @if($can['use'] && $on)
     <div class="row g-2 mb-3">
-        @foreach([['admin.ai.summary', 'Read a record back', 'bi-person-lines-fill', 'summary'], ['admin.ai.notes', 'Draft a visit note', 'bi-journal-text', 'notes'], ['admin.ai.ask', 'Ask about hospital policy', 'bi-book', 'ask'], ['admin.ai.figures', 'Ask about the figures', 'bi-bar-chart-line', 'figures'], ['admin.ai.forecast', 'Forecast an item\'s use', 'bi-graph-up-arrow', 'forecast'], ['admin.ai.outputs', 'My drafts', 'bi-inbox', 'outputs']] as [$route, $label, $icon])
+        @foreach([['admin.ai.summary', 'Read a record back', 'bi-person-lines-fill', 'summary'], ['admin.ai.notes', 'Draft a visit note', 'bi-journal-text', 'notes'], ['admin.ai.ask', 'Ask about hospital policy', 'bi-book', 'ask'], ['admin.ai.figures', 'Ask about the figures', 'bi-bar-chart-line', 'figures'], ['admin.ai.forecast', 'Forecast an item\'s use', 'bi-graph-up-arrow', 'forecast'], ['admin.ai.claim', 'Check a claim', 'bi-shield-check', 'insurance_claim_check'], ['admin.ai.worklist', 'Suggest a reading order', 'bi-list-ol', 'radiology_worklist'], ['admin.ai.medicines', 'Medicines for review', 'bi-capsule', 'medication_review'], ['admin.ai.score', 'Early-warning screen', 'bi-activity', 'risk_scoring'], ['admin.ai.outputs', 'My drafts', 'bi-inbox', 'outputs']] as [$route, $label, $icon, $code])
+            @continue(in_array($code, ['insurance_claim_check', 'radiology_worklist', 'medication_review', 'risk_scoring'], true) && ! $useCases->where('code', $code)->where('status', 'enabled')->count())
             <div class="col-6 col-md-4 col-xl-2"><a class="btn btn-outline-primary w-100 text-start" href="{{ route($route) }}"><i class="bi {{ $icon }}"></i> {{ __($label) }}</a></div>
         @endforeach
     </div>

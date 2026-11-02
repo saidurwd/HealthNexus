@@ -293,6 +293,13 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('ai_use_cases')->where('status', 'enabled')->whereNotIn('model_id', DB::table('ai_models')->where('status', 'approved')->select('id'))->count(), 'every function that is on uses an approved model');
         $this->assertSame(0, DB::table('ai_models')->where('status', 'approved')->whereNotIn('eval_run_id', DB::table('ai_eval_runs')->where('passed', true)->select('id'))->count(), 'every approved model passed an evaluation');
         $this->assertSame(0, DB::table('ai_outputs')->where('status', 'draft')->where('expires_at', '<', now()->subDays(4))->count(), 'old drafts lapsed');
+        foreach (['medication_review', 'radiology_worklist', 'insurance_claim_check', 'risk_scoring'] as $code) {
+            $this->assertSame(1, DB::table('ai_use_cases')->where('code', $code)->where('status', 'enabled')->whereColumn('approved_by', '!=', 'registered_by')->count(), "$code was switched on by a second person");
+            $waiting = $code === 'radiology_worklist' ? DB::table('radiology_examinations as e')->join('radiology_order_items as i', 'i.id', '=', 'e.order_item_id')->whereIn('e.status', ['completed', 'images_available'])->whereNotIn('i.status', ['reported', 'cancelled'])->count() : 1;
+            $waiting > 0 && $this->assertGreaterThan(0, DB::table('ai_outputs')->where('use_case_code', $code)->count(), "$code was used");
+            $this->assertGreaterThan(0, DB::table('ai_eval_runs as r')->join('ai_eval_sets as s', 's.id', '=', 'r.set_id')->where('s.use_case_code', $code)->where('r.passed', true)->count(), "$code has its own passing evaluation");
+        }
+        $this->assertSame(0, DB::table('ai_outputs as o')->join('ai_use_cases as u', 'u.code', '=', 'o.use_case_code')->where('u.risk_class', '!=', 'low')->where('o.status', 'accepted')->whereNull('o.reviewed_by')->count(), 'higher-risk drafts are reviewed by a person');
         try {
             DB::table('ai_requests')->limit(1)->update(['outcome' => 'blocked']);
             $this->fail('the request log was changed by SQL');

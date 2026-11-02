@@ -2142,7 +2142,7 @@ class PermissionSeeder extends Seeder
                 $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['ai.use', 'ai.output.review'])));
             }
         }
-        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'data_analyst', 'accountant', 'inventory_manager', 'storekeeper', 'procurement_officer', 'procurement_manager'] as $user) {
+        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'data_analyst', 'accountant', 'inventory_manager', 'storekeeper', 'procurement_officer', 'procurement_manager', 'radiologist', 'senior_radiologist', 'radiology_manager', 'insurance_officer', 'claims_manager'] as $user) {
             if (isset($roles[$user])) {
                 $roles[$user] = array_values(array_unique(array_merge($roles[$user], ['ai.use'])));
             }

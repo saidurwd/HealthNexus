@@ -7,10 +7,14 @@ use App\Models\Encounter;
 use App\Models\Patient;
 use App\Services\Ai\AiBlocked;
 use App\Services\Ai\OutputService;
+use App\Services\Ai\UseCases\ClaimCheck;
+use App\Services\Ai\UseCases\EarlyWarningScore;
 use App\Services\Ai\UseCases\InventoryForecast;
 use App\Services\Ai\UseCases\KnowledgeService;
+use App\Services\Ai\UseCases\MedicationReview;
 use App\Services\Ai\UseCases\NlAnalytics;
 use App\Services\Ai\UseCases\NoteDraft;
+use App\Services\Ai\UseCases\RadiologyWorklistSuggest;
 use App\Services\Ai\UseCases\TimelineSummary;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -21,7 +25,8 @@ use Illuminate\Validation\ValidationException;
 class AiAssistController extends AiController
 {
     public function __construct(TenantContextResolver $tenant, private readonly TimelineSummary $summaries, private readonly NoteDraft $notes, private readonly KnowledgeService $knowledge, private readonly NlAnalytics $figures,
-        private readonly InventoryForecast $forecasts, private readonly OutputService $outputs)
+        private readonly InventoryForecast $forecasts, private readonly OutputService $outputs, private readonly ClaimCheck $claims, private readonly RadiologyWorklistSuggest $worklist,
+        private readonly MedicationReview $medicines, private readonly EarlyWarningScore $scores)
     {
         parent::__construct($tenant);
     }
@@ -113,6 +118,72 @@ class AiAssistController extends AiController
         $d = $request->validate(['item_id' => ['required', 'integer']]);
 
         return $this->go(fn () => $this->forecasts->forecast($request->user(), (int) $d['item_id'], $this->organizationId()));
+    }
+
+    private function patientFrom(Request $request): Patient
+    {
+        $d = $request->validate(['patient_no' => ['required', 'string', 'max:40']]);
+
+        return Patient::query()->where('organization_id', $this->organizationId())->where('enterprise_patient_no', trim($d['patient_no']))->first() ?? throw ValidationException::withMessages(['patient_no' => __('No patient has that number.')]);
+    }
+
+    public function claim(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+
+        return view('admin.ai.ask', ['mode' => 'claim', 'title' => __('Check a claim before it goes'), 'help' => __('Type the claim number. You see the Insurance module\'s own checks, the documents, the payer queries and the deadline. It never submits, changes or decides a claim.')]);
+    }
+
+    public function runClaim(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+        $d = $request->validate(['claim_number' => ['required', 'string', 'max:60']]);
+
+        return $this->go(fn () => $this->claims->check($request->user(), $d['claim_number'], $this->organizationId()));
+    }
+
+    public function worklist(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+
+        return view('admin.ai.ask', ['mode' => 'worklist', 'title' => __('Suggest a reading order'), 'help' => __('Lists the finished studies that are waiting, in the order they could be read: priority first, then the longest wait. The real worklist is not changed and nobody is assigned.')]);
+    }
+
+    public function runWorklist(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+
+        return $this->go(fn () => $this->worklist->suggest($request->user(), $this->organizationId()));
+    }
+
+    public function medicines(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+
+        return view('admin.ai.ask', ['mode' => 'medicines', 'title' => __('Lay out a patient\'s medicines for review'), 'help' => __('Type the patient number. Allergies, the medicines now active, the pharmacy\'s own safety alerts and counts are laid side by side. It states facts: it never says to start, stop or change a medicine.')]);
+    }
+
+    public function runMedicines(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+        $patient = $this->patientFrom($request);
+
+        return $this->go(fn () => $this->medicines->review($request->user(), $patient));
+    }
+
+    public function score(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+
+        return view('admin.ai.ask', ['mode' => 'score', 'title' => __('Early-warning screen (NEWS2)'), 'help' => __('Type the patient number. The latest stored vital signs are scored on the NEWS2 chart, with every input and its points. It is a screen, not a diagnosis, and it starts nothing.')]);
+    }
+
+    public function runScore(Request $request)
+    {
+        $this->allow($request, 'ai.use');
+        $patient = $this->patientFrom($request);
+
+        return $this->go(fn () => $this->scores->score($request->user(), $patient));
     }
 
     public function outputs(Request $request)

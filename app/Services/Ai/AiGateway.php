@@ -131,6 +131,10 @@ class AiGateway
     {
         AiRequest::create(['organization_id' => $call->organizationId, 'use_case_code' => $call->useCase, 'user_id' => $call->user->id, 'patient_id' => $call->patientId, 'provider_id' => $provider?->id, 'model_name' => $model?->name,
             'model_version' => $model?->version, 'task' => $call->task, 'outcome' => 'blocked', 'blocked_reason' => mb_substr($reason, 0, 300), 'injection_score' => $score, 'input' => null]);
+        if ($score > 0) {
+            $this->incidents->open($call->organizationId, 'injection', 'high', $call->useCase, null, __('Text with instruction-like content (:n signs) was found in what the AI was given, so the request was refused.', ['n' => $score]));
+        }
+
         throw new AiBlocked($reason);
     }
 

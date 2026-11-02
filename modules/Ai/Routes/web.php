@@ -21,6 +21,14 @@ Route::prefix('ai')->name('ai.')->group(function () {
     Route::post('figures', [AiAssistController::class, 'runFigures'])->name('figures.run');
     Route::get('forecast', [AiAssistController::class, 'forecast'])->name('forecast');
     Route::post('forecast', [AiAssistController::class, 'runForecast'])->name('forecast.run');
+    Route::get('claim-check', [AiAssistController::class, 'claim'])->name('claim');
+    Route::post('claim-check', [AiAssistController::class, 'runClaim'])->name('claim.run');
+    Route::get('reading-order', [AiAssistController::class, 'worklist'])->name('worklist');
+    Route::post('reading-order', [AiAssistController::class, 'runWorklist'])->name('worklist.run');
+    Route::get('medicines', [AiAssistController::class, 'medicines'])->name('medicines');
+    Route::post('medicines', [AiAssistController::class, 'runMedicines'])->name('medicines.run');
+    Route::get('early-warning', [AiAssistController::class, 'score'])->name('score');
+    Route::post('early-warning', [AiAssistController::class, 'runScore'])->name('score.run');
     Route::get('outputs', [AiAssistController::class, 'outputs'])->name('outputs');
     Route::get('outputs/{output}', [AiAssistController::class, 'show'])->name('outputs.show');
     Route::post('outputs/{output}/accept', [AiAssistController::class, 'accept'])->name('outputs.accept');

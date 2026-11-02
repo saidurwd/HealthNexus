@@ -33,3 +33,43 @@ Integrity queries, all **0**: output without the AI label · accepted draft with
 
 ## Open for the hospital
 AI governance owner and committee, any outside provider and its legal approval, native review of Bangla. See `docs/decisions/D-P20-ai-state.md`.
+
+---
+
+# Phase 20b — four functions above low risk: Gate F-2 addendum
+
+| Check | Result |
+|---|---|
+| Functions | medication review facts, radiology reading order, claim pre-check, early-warning screen (NEWS2) — built, **off until the owner sets them up and a second person switches them on, and only after the model passes that function's own evaluation**; four still planned (lab interpretation, ICU early warning, ED triage support, portal assistant) |
+| Whole suite | 1,506 tests: 1,504 passed on the full run. Two failures: `HrHistoryTest` (the old date-dependent payroll test, not this work) and one assertion of mine in `DemoHistoryTest` (the SQLite demo had no finished, unreported radiology study to rank); the assertion now only requires use when a study is waiting, and the demo test was re-run (see below) |
+| AI tests | 69 passed (29 new: review functions, claim check, screens; governance and red-team extended) |
+| Pint · phpstan (level 5, no baseline entries) · `registry:export --check` | clean · 0 errors · clean |
+| Localization, Ux, Rbac, Phase0, Security suites | 142 passed |
+| Bangla | 80 new strings in this slice (no missing; **wording needs native review**) |
+
+## Defects found by running on real-shaped data (not by the small fixtures)
+- **MySQL only:** the draft `kind` column is 14 characters; `medication_review` is 17. Every medicine sheet was refused on save while SQLite accepted it. The kind is now `medicines`.
+- **A forbidden word matched medicine names:** `inject` matched "Ceftriaxone Injection", so injectable medicines were silently dropped from the sheet (54 lines in 26 sheets). The rule is now the imperative `inject `; a test keeps injectable medicines listed.
+- **Setting up the local engine would have tried to switch on every built function**, including the new ones, and failed for a single user. It now switches on low-risk functions only.
+- **A refused request with hidden instructions opened no incident** (only completed ones did). It now does.
+- **Phase 20's note draft and record read-back showed no vital signs** on real data: they read only `encounter_vitals`, which current flows no longer write. They now read `vital_signs` too.
+
+## Scratch MySQL build (six months, on top of the full history)
+40 medicine sheets, 45 early-warning screens, 40 claim checks, 7 reading orders — all completed, none refused; 0 lines removed from any draft; incidents back to the original 6 (5 hidden-instruction questions, 1 reported problem).
+
+Integrity queries, all **0**: unlabelled output · accepted draft without a reviewer · function above low risk switched on by the person who set it up · function above low risk on without its own passing evaluation · outside provider enabled · blocked requests · output with facts but no sources.
+
+## Behaviour that is tested
+| Rule | Status |
+|---|---|
+| Setting up the local engine switches on only the five low-risk functions; the four others are built but planned/off | tested |
+| Each higher-risk function has its own passing evaluation; without one it cannot be switched on; the person who set it up cannot approve it; a hospital set up before they were built gets them registered, still off | tested |
+| NEWS2 points are right at every boundary; each input, its points and the total are shown; missing or old vitals are said to be unscored; fewer than three recent ones is refused; one parameter scoring 3 is marked | tested |
+| The medicine sheet lists allergies, medicines and counts, restates Pharmacy's alerts as raised, leaves the decision blank, refuses a medicine name carrying three instruction signs, and drops (never repeats) a milder instruction | tested |
+| The reading order is stat → urgent → routine, then longest wait; reported studies are left out; nothing in Radiology changes; no right or no studies is refused | tested |
+| The claim check restates failed scrub rules, documents, deadline and queries; changes nothing; does not repeat an instruction in a payer's query; needs `insurance.claim.view`; cannot see another hospital's claim | tested |
+| Accepting needs the typed patient number; a wrong one opens an incident; nothing is written to any record | tested |
+| The four screens open for the super user, are refused without rights, run only once on; tiles appear only for functions that are on | tested |
+
+## Open for the hospital
+Whether each function is wanted and who owns it (pharmacy lead, radiology lead, claims manager, the clinical lead for the screen); clinician-written evaluation cases (the starter sets prove the guards, not clinical value); native review of Bangla. See `docs/decisions/D-P20-ai-state.md`.

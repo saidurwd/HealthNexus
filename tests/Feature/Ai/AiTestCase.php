@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Ai;
 
+use App\Models\Ai\AiModel;
+use App\Models\Ai\AiUseCase;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\Ai\AiInstaller;
 use App\Services\Ai\Providers\FakeProvider;
+use App\Services\Ai\UseCaseService;
 use Illuminate\Support\Facades\DB;
 use Tests\Feature\Portal\PortalTestCase;
 
@@ -29,6 +32,19 @@ abstract class AiTestCase extends PortalTestCase
     {
         FakeProvider::script(null);
         parent::tearDown();
+    }
+
+    /** Switch on a function above low risk the way a hospital would: an owner sets it up, a second person approves. */
+    protected function enableFunction(string $code): AiUseCase
+    {
+        $owner = $this->actor(['ai.usecase.manage']);
+        $approver = $this->actor(['ai.usecase.approve']);
+        $uc = AiUseCase::query()->where('organization_id', $this->organization->id)->where('code', $code)->firstOrFail();
+        $local = AiModel::query()->where('organization_id', $this->organization->id)->where('status', 'approved')->firstOrFail();
+        $uc->update(['registered_by' => $owner->id]);
+        app(UseCaseService::class)->setup($uc, $owner, $local->provider, $local);
+
+        return app(UseCaseService::class)->enable($uc->refresh(), $approver);
     }
 
     /** A patient with an allergy, a diagnosis, a visit with vitals and a note that someone wrote. */

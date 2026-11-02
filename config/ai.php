@@ -39,8 +39,8 @@ return [
     // The words that make a line an instruction to act. A line containing one is dropped from any output (English and Bangla).
     'forbidden_actions' => [
         'prescribe', 'start ', 'stop ', 'increase the dose', 'decrease the dose', 'change the dose', 'order a', 'order an', 'discharge the', 'discharge him', 'discharge her', 'transfer the', 'transfer to', 'admit the', 'admit to', 'diagnose', 'diagnosis is',
-        'give the patient', 'administer', 'cancel the', 'override', 'approve the claim', 'bill the', 'inject', 'should be given', 'must be given', 'withhold',
-        'প্রেসক্রাইব', 'ওষুধ দিন', 'ডোজ বাড়ান', 'ডোজ কমান', 'ভর্তি করুন', 'ছাড়পত্র দিন', 'স্থানান্তর করুন', 'অর্ডার করুন', 'ইনজেকশন দিন', 'বন্ধ করুন', 'শুরু করুন',
+        'give the patient', 'administer', 'cancel the', 'override', 'approve the claim', 'reject the claim', 'deny the claim', 'submit the claim', 'escalate', 'rapid response', 'assign the', 'reprioritise', 'reprioritize', 'upgrade the priority', 'downgrade the priority', 'discontinue', 'bill the', 'inject ', 'should be given', 'must be given', 'withhold',
+        'প্রেসক্রাইব', 'ওষুধ দিন', 'ডোজ বাড়ান', 'ডোজ কমান', 'ভর্তি করুন', 'ছাড়পত্র দিন', 'স্থানান্তর করুন', 'অর্ডার করুন', 'ইনজেকশন দিন', 'বন্ধ করুন', 'শুরু করুন', 'দাবি অনুমোদন করুন', 'অগ্রাধিকার বদলান',
     ],
 
     // Text that looks like an instruction to the model. Free text containing these is flagged and quoted as data.
@@ -77,6 +77,22 @@ return [
     'forecast' => [
         'history_days' => 90,
         'horizon_days' => 14,
+    ],
+
+    'medication' => [
+        // Active medicines at or above this number are noted as many medicines; the note states the count, nothing more.
+        'many_medicines' => 5,
+        'lookback_days' => 90,
+    ],
+
+    'risk' => [
+        // A vital sign older than this is not scored.
+        'max_age_hours' => 24,
+        'min_parameters' => 3,
+    ],
+
+    'radiology' => [
+        'max_studies' => 30,
     ],
 
     'secrets' => [

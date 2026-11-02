@@ -2,6 +2,7 @@
 
 namespace App\Services\Ai;
 
+use App\Models\Ai\AiEvalRun;
 use App\Models\Ai\AiModel;
 use App\Models\Ai\AiProvider;
 use App\Models\Ai\AiUseCase;
@@ -21,14 +22,14 @@ class UseCaseService
         ['knowledge_answer', 'Hospital knowledge answers', 'Answer staff questions from the hospital\'s approved policies and procedures, quoting and citing them.', 'low', true],
         ['inventory_forecast', 'Inventory demand forecast', 'Forecast how much of an item will be used, with its range and how wrong past forecasts were. Advisory; nothing is ordered from it.', 'low', true],
         ['nl_analytics', 'Natural-language analytics', 'Turn a plain question about the hospital\'s figures into a query that can be read and checked, and show the result.', 'low', true],
-        ['medication_review', 'Medication review support', 'Planned. Would help a pharmacist review a medicine list. Not built: it comes after the evaluation framework has proved itself.', 'high', false],
+        ['medication_review', 'Medication review support', 'Lay a patient\'s medicines, allergies, the pharmacy\'s own safety alerts and plain counts side by side so a pharmacist can review them. It states facts only: it never says to start, stop or change anything.', 'high', true],
         ['lab_interpretation', 'Laboratory interpretation support', 'Planned. Would explain patterns in results. Not built.', 'high', false],
         ['icu_early_warning', 'ICU early-warning support', 'Planned. Would highlight deterioration trends. Not built; a risk score.', 'high', false],
         ['ed_triage_support', 'Emergency triage support', 'Planned. Would suggest triage notes. Never assigns triage. Not built.', 'high', false],
-        ['radiology_worklist', 'Radiology worklist support', 'Planned. Would help order a reading list. Not built.', 'medium', false],
-        ['insurance_claim_check', 'Insurance claim pre-check', 'Planned. Would flag incomplete claims. Never decides a claim. Not built.', 'medium', false],
+        ['radiology_worklist', 'Radiology worklist support', 'Suggest the order in which finished studies could be read, by priority and then by how long they have waited, and say why. The real worklist and priorities are not changed.', 'medium', true],
+        ['insurance_claim_check', 'Insurance claim pre-check', 'Restate the checks the Insurance module runs on a claim, with the documents, queries and deadline, so staff can see what may hold it up. It never decides, submits or changes a claim.', 'medium', true],
         ['portal_assistant', 'Patient portal assistant', 'Planned. Would answer patients\' questions about the hospital. Not built; free text from patients needs the injection tests first.', 'medium', false],
-        ['risk_scoring', 'Clinical risk scores', 'Planned. Risk scores come last, with inputs and uncertainty shown. Not built.', 'high', false],
+        ['risk_scoring', 'Clinical risk scores', 'Work out an early-warning screen (NEWS2) from the latest stored vital signs, showing every input, its points and what could not be scored. It is a screen, not a diagnosis, and it triggers nothing.', 'high', true],
     ];
 
     public function __construct(private readonly AuditLogger $audit) {}
@@ -38,8 +39,13 @@ class UseCaseService
     {
         $n = 0;
         foreach (self::CATALOGUE as [$code, $name, $use, $risk, $built]) {
-            $uc = AiUseCase::query()->firstOrCreate(['organization_id' => $organizationId, 'code' => $code], ['name' => $name, 'intended_use' => $use, 'risk_class' => $risk, 'data_level' => in_array($code, ['knowledge_answer', 'inventory_forecast', 'nl_analytics'], true) ? 'C2' : 'C4', 'status' => 'planned', 'implemented' => $built]);
+            $level = in_array($code, ['knowledge_answer', 'inventory_forecast', 'nl_analytics'], true) ? 'C2' : ($code === 'radiology_worklist' ? 'C3' : 'C4');
+            $uc = AiUseCase::query()->firstOrCreate(['organization_id' => $organizationId, 'code' => $code], ['name' => $name, 'intended_use' => $use, 'risk_class' => $risk, 'data_level' => $level, 'status' => 'planned', 'implemented' => $built]);
             $uc->wasRecentlyCreated && $n++;
+            // A function that was only planned when this hospital was set up and has been built since: bring its description up to date. It stays off.
+            if (! $uc->wasRecentlyCreated && $built && ! $uc->implemented && $uc->status === 'planned') {
+                $uc->update(['implemented' => true, 'name' => $name, 'intended_use' => $use, 'risk_class' => $risk, 'data_level' => $level]);
+            }
         }
 
         return $n;
@@ -73,6 +79,9 @@ class UseCaseService
         }
         if ($uc->risk_class !== 'low' && $uc->registered_by === $by->id) {
             throw ValidationException::withMessages(['status' => __('A second person must approve a function that is not low-risk.')]);
+        }
+        if ($uc->risk_class !== 'low' && ! AiEvalRun::query()->where('model_id', $model->id)->where('passed', true)->whereHas('set', fn ($q) => $q->where('use_case_code', $uc->code))->exists()) {
+            throw ValidationException::withMessages(['status' => __('Above low risk, this function needs an evaluation of its own that this model has passed.')]);
         }
         $uc->update(['status' => 'enabled', 'approved_by' => $by->id, 'approved_at' => now(), 'paused_reason' => null]);
         $this->audit->log('UPDATE', AiUseCase::class, $uc->id, null, ['status' => 'enabled']);

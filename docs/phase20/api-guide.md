@@ -11,6 +11,13 @@
 - **Review a draft** (`/admin/ai/outputs`): type the patient number again, optionally edit, then accept or reject (a reason is needed). Accepting writes **nothing** into the record: copy what you want yourself. A draft lapses after 72 hours.
 - **Tell us how it did**: useful, not useful, or something was wrong. A report of a harmful or wrong answer opens an incident.
 
+## The four functions above low risk (off until two people switch them on)
+- **Early-warning screen** (`/admin/ai/early-warning`): the latest stored vital signs scored on the NEWS2 chart with every input and its points. Consciousness and extra oxygen are not stored, so the total is "at least". A screen, not a diagnosis.
+- **Medicines for review** (`/admin/ai/medicines`): allergies, active medicines, Pharmacy's own safety alerts and counts side by side. It never says to start, stop or change anything.
+- **Check a claim** (`/admin/ai/claim-check`): the Insurance module's own checks, documents, payer queries and deadline. It never submits or decides a claim.
+- **Suggest a reading order** (`/admin/ai/reading-order`): finished studies by priority then waiting time. The real worklist is not changed.
+To switch one on: **AI → AI functions**: the owner sets it up (provider and model), then a **second person** switches it on. It needs the model to have passed that function's own evaluation (**AI → Evaluations**; the starter sets are created by `ai:install` and run when the local engine is set up). The tiles appear on the AI home only for functions that are on.
+
 ## Governance
 - **AI functions**: owner, intended use, risk class, model. Planned functions cannot be switched on; above low risk a second person approves; anyone with the kill-switch right can pause one.
 - **Providers and models**: no key is stored, only the name of the environment variable. A model is a candidate until an evaluation passes. A provider abroad is sent de-identified facts only unless a legal approval reference is recorded.

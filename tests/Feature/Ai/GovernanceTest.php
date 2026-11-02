@@ -153,7 +153,7 @@ class GovernanceTest extends AiTestCase
     public function test_planned_functions_cannot_be_switched_on_and_riskier_ones_need_a_second_person(): void
     {
         $svc = app(UseCaseService::class);
-        $planned = AiUseCase::query()->where('code', 'risk_scoring')->first();
+        $planned = AiUseCase::query()->where('code', 'lab_interpretation')->first();
         $this->assertFalse($planned->implemented);
         try {
             $svc->enable($planned, $this->clinician);

@@ -5,6 +5,7 @@ namespace App\Services\Demo\History\Modules;
 use App\Models\Ai\AiIncident;
 use App\Models\Ai\AiKnowledge;
 use App\Models\Ai\AiOutput;
+use App\Models\Ai\AiUseCase;
 use App\Models\Encounter;
 use App\Models\Patient;
 use App\Models\User;
@@ -16,11 +17,16 @@ use App\Services\Ai\Monitoring;
 use App\Services\Ai\OutputService;
 use App\Services\Ai\PromptRegistry;
 use App\Services\Ai\ProviderService;
+use App\Services\Ai\UseCases\ClaimCheck;
+use App\Services\Ai\UseCases\EarlyWarningScore;
 use App\Services\Ai\UseCases\InventoryForecast;
 use App\Services\Ai\UseCases\KnowledgeService;
+use App\Services\Ai\UseCases\MedicationReview;
 use App\Services\Ai\UseCases\NlAnalytics;
 use App\Services\Ai\UseCases\NoteDraft;
+use App\Services\Ai\UseCases\RadiologyWorklistSuggest;
 use App\Services\Ai\UseCases\TimelineSummary;
+use App\Services\Ai\UseCaseService;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
 use Carbon\CarbonImmutable;
@@ -48,7 +54,8 @@ class AiHistory implements DemoHistoryModule
     public function __construct(
         private readonly AiInstaller $installer, private readonly TimelineSummary $summaries, private readonly NoteDraft $notes, private readonly KnowledgeService $knowledge, private readonly NlAnalytics $figures,
         private readonly InventoryForecast $forecasts, private readonly OutputService $outputs, private readonly ProviderService $providers, private readonly PromptRegistry $prompts, private readonly AiIncidents $incidents,
-        private readonly Monitoring $monitoring, private readonly AiCheck $check,
+        private readonly Monitoring $monitoring, private readonly AiCheck $check, private readonly UseCaseService $useCases, private readonly ClaimCheck $claims, private readonly RadiologyWorklistSuggest $worklist,
+        private readonly MedicationReview $medicines, private readonly EarlyWarningScore $scores,
     ) {}
 
     public function name(): string
@@ -86,10 +93,22 @@ class AiHistory implements DemoHistoryModule
             $this->providers->addModel($x, 'cloud-model', '1', 'Candidate only.');
         });
 
+        // the four functions above low risk: the owner sets each up and a second person switches it on (each has its own passing evaluation on record)
+        $context->at($context->from->addDays(2)->setTime(11, 0), function () use ($org, $lead, $safety, $started) {
+            foreach (['medication_review', 'radiology_worklist', 'insurance_claim_check', 'risk_scoring'] as $code) {
+                $uc = AiUseCase::query()->where('organization_id', $org)->where('code', $code)->first();
+                if ($uc && $started['passed']) {
+                    $uc->update(['registered_by' => $lead->id]);
+                    $this->useCases->setup($uc, $lead, $started['model']->provider, $started['model']);
+                    $this->useCases->enable($uc->refresh(), $safety);
+                }
+            }
+        });
+
         $encounters = Encounter::query()->where('organization_id', $org)->whereNotNull('started_at')->orderBy('started_at')->get(['id', 'patient_id', 'encounter_no', 'started_at']);
         $patients = Patient::query()->where('organization_id', $org)->whereIn('id', $encounters->pluck('patient_id')->unique())->get()->keyBy('id');
         $items = DB::table('stock_ledger')->where('organization_id', $org)->whereIn('txn_type', ['dispense', 'issue'])->where('quantity', '<', 0)->groupBy('item_id')->havingRaw('count(*) >= 30')->orderByRaw('count(*) desc')->limit(8)->pluck('item_id')->all();
-        $made = ['summaries' => 0, 'notes' => 0, 'answers' => 0, 'figures' => 0, 'forecasts' => 0, 'none' => 0, 'refused' => 0];
+        $made = ['summaries' => 0, 'notes' => 0, 'answers' => 0, 'figures' => 0, 'forecasts' => 0, 'none' => 0, 'refused' => 0, 'claims' => 0, 'worklists' => 0, 'sheets' => 0, 'screens' => 0];
         $n = 0;
 
         foreach ($context->days() as $day) {
@@ -153,6 +172,9 @@ class AiHistory implements DemoHistoryModule
             }
             $n++;
         }
+        if ($started['passed']) {
+            $this->higherRisk($context, $made, $lead);
+        }
         // a couple of problems reported by people, one worked to the end
         $nurse = $nurses->first() ?? $lead;
         $reported = $context->at($context->from->addDays((int) ($context->from->diffInDays($context->to) * 0.4))->setTime(15, 0), fn () => $this->incidents->open($org, 'other', 'low', 'timeline_summary', null, 'The summary listed an old admission before the newest visit, which made it confusing to read.', $nurse));
@@ -167,13 +189,75 @@ class AiHistory implements DemoHistoryModule
 
         $m = $this->monitoring->metrics($org, 'timeline_summary', (int) $context->from->diffInDays($context->to) + 2);
 
-        return sprintf('local engine %s, %d record read-backs (%s%% accepted), %d note drafts, %d policy answers (%d with no supported answer), %d figure questions, %d forecasts, %d refused; %d incidents (%d from instructions hidden in questions); an outside provider registered but off',
+        $higher = sprintf('; above low risk (second person approved): %d medicine sheets, %d early-warning screens, %d claim checks, %d reading orders', $made['sheets'], $made['screens'], $made['claims'], $made['worklists']);
+
+        return sprintf('local engine %s, %d record read-backs (%s%% accepted), %d note drafts, %d policy answers (%d with no supported answer), %d figure questions, %d forecasts, %d refused; %d incidents (%d from instructions hidden in questions); an outside provider registered but off'.$higher,
             $started['passed'] ? 'evaluated and approved' : 'FAILED its evaluation', $made['summaries'], $m['acceptance'] ?? '—', $made['notes'], $made['answers'], $made['none'], $made['figures'], $made['forecasts'], $made['refused'], AiIncident::query()->where('organization_id', $org)->count(),
             AiIncident::query()->where('organization_id', $org)->where('kind', 'injection')->count());
     }
 
+    /**
+     * The four functions above low risk, used a few times each across the six months by the people who would use them: pharmacists lay out medicines, doctors and nurses run the early-warning screen on a fresh set of vital
+     * signs, claims staff check claims a day after they were made, and a radiologist asks for a reading order in the last week. A clinical reviewer decides about each draft.
+     *
+     * @param  array<string,int>  $made
+     */
+    private function higherRisk(HistoryContext $context, array &$made, User $lead): void
+    {
+        $org = $context->organization->id;
+        $reviewer = $context->staff('ai_clinical_reviewer')->first() ?? $lead;
+        $pharmacists = collect(['pharmacist', 'senior_pharmacist'])->flatMap(fn ($r) => $context->staff($r))->filter(fn ($u) => $u->can('patients.view'))->values();
+        $clinicians = collect(['doctor', 'staff_nurse', 'senior_staff_nurse'])->flatMap(fn ($r) => $context->staff($r))->filter(fn ($u) => $u->can('patients.view'))->values();
+        $patientNo = fn (int $id) => (string) Patient::query()->whereKey($id)->value('enterprise_patient_no');
+        $spread = fn ($rows, int $n) => $rows->count() <= $n ? $rows : $rows->values()->filter(fn ($r, $i) => $i % max(1, intdiv($rows->count(), $n)) === 0)->take($n);
+
+        // medicines: patients with a prescription, a day or so after it was written
+        $rx = DB::table('prescriptions')->where('organization_id', $org)->where('status', 'issued')->whereNull('deleted_at')->whereNotNull('prescribed_at')->orderBy('prescribed_at')->get(['patient_id', 'prescribed_at']);
+        foreach ($spread($rx, 40) as $r) {
+            $at = CarbonImmutable::parse($r->prescribed_at)->addHours(3);
+            $by = $pharmacists->isEmpty() ? $lead : $context->pick($pharmacists);
+            $this->guarded($made, 'refused', function () use ($context, $at, $by, $r, $reviewer, $patientNo, &$made) {
+                $o = $context->at($at, fn () => $this->medicines->review($by, Patient::query()->findOrFail($r->patient_id)));
+                $made['sheets']++;
+                $this->review($context, $o, $reviewer, $at, $patientNo((int) $r->patient_id), 78);
+            });
+        }
+        // the early-warning screen: right after a patient's newest vital signs were recorded
+        $last = DB::table('vital_signs')->where('organization_id', $org)->whereNull('deleted_at')->groupBy('patient_id')->selectRaw('patient_id, max(recorded_at) as last_at')->orderBy('last_at')->get();
+        foreach ($spread($last, 45) as $r) {
+            $at = CarbonImmutable::parse($r->last_at)->addHours(1);
+            $by = $clinicians->isEmpty() ? $lead : $context->pick($clinicians);
+            $this->guarded($made, 'refused', function () use ($context, $at, $by, $r, $reviewer, $patientNo, &$made) {
+                $o = $context->at($at, fn () => $this->scores->score($by, Patient::query()->findOrFail($r->patient_id)));
+                $made['screens']++;
+                $this->review($context, $o, $reviewer, $at, $patientNo((int) $r->patient_id), 85);
+            });
+        }
+        // claims: checked the day after they were made
+        $officer = $context->staff('insurance_officer')->first() ?? $lead;
+        $claims = DB::table('insurance_claims')->where('organization_id', $org)->orderBy('created_at')->get(['claim_number', 'patient_id', 'created_at']);
+        foreach ($spread($claims, 40) as $c) {
+            $at = CarbonImmutable::parse($c->created_at)->addDay()->setTime(10, 0);
+            $this->guarded($made, 'refused', function () use ($context, $at, $officer, $c, $reviewer, $patientNo, &$made) {
+                $o = $context->at($at, fn () => $this->claims->check($officer, $c->claim_number, $context->organization->id));
+                $made['claims']++;
+                $this->review($context, $o, $reviewer, $at, $patientNo((int) $c->patient_id), 80);
+            });
+        }
+        // the reading order: the last week, mornings
+        $radiologist = $context->staff('radiologist')->first() ?? $lead;
+        foreach (range(6, 0) as $back) {
+            $at = $context->to->subDays($back)->setTime(8, 0);
+            $this->guarded($made, 'refused', function () use ($context, $at, $radiologist, $reviewer, &$made) {
+                $o = $context->at($at, fn () => $this->worklist->suggest($radiologist, $context->organization->id));
+                $made['worklists']++;
+                $this->review($context, $o, $reviewer, $at, null, 70);
+            });
+        }
+    }
+
     /** Most drafts are accepted (the patient number is typed), some rejected, some left to lapse. */
-    private function review(HistoryContext $context, AiOutput $o, User $by, CarbonImmutable $at, string $patientNo, int $acceptPercent = 82): void
+    private function review(HistoryContext $context, AiOutput $o, User $by, CarbonImmutable $at, ?string $patientNo, int $acceptPercent = 82): void
     {
         if ($o->kind === 'none') {
             return;
