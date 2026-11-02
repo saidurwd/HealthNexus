@@ -4,7 +4,8 @@
 
 @section('page_content')
     @include('admin.hr._flash')
-    @php($tiles = [
+    <x-ui.dashboard :question="__('Who is working, who is absent, and what needs a decision?')" :audience="__('For the HR manager and the director')" :as-of="$asOf">
+    @php $tiles = [
         [__('People working here'), $d['headcount'], false, route('admin.hr.employees')],
         [__('Being onboarded'), $d['onboarding'], false, route('admin.hr.employees', ['status' => 'onboarding'])],
         [__('Joined in the last 30 days'), $d['joined_30'], false, null],
@@ -20,13 +21,8 @@
         [__('Device numbers nobody is matched to'), $d['unmapped_punches'], $d['unmapped_punches'] > 0, route('admin.hr.attendance')],
         [__('Provider links to confirm'), $d['provider_links_pending'], $d['provider_links_pending'] > 0, route('admin.hr.provider-links')],
         [__('Open vacancies'), $d['open_vacancies'], false, route('admin.hr.vacancies')],
-    ])
-    <div class="row g-3 mb-3">
-        @foreach($tiles as [$label, $value, $warn, $url])
-            <div class="col-6 col-md-4 col-xl-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ $label }}</div>
-                <div class="fs-4 fw-semibold {{ $warn ? 'text-danger' : '' }}">@if($url)<a href="{{ $url }}" class="{{ $warn ? 'text-danger' : '' }}">{{ $value }}</a>@else{{ $value }}@endif</div></div></div></div>
-        @endforeach
-    </div>
+    ]; @endphp
+    <x-ui.tile-grid :tiles="$tiles" />
     <div class="row g-3">
         <div class="col-lg-6"><div class="card"><div class="card-header"><h3 class="card-title">{{ __('People by department') }}</h3></div>
             <ul class="list-group list-group-flush small">@forelse($byDepartment as $r)<li class="list-group-item d-flex justify-content-between"><span>{{ $r->department }}</span><strong>{{ $r->headcount }}</strong></li>@empty<li class="list-group-item text-muted">{{ __('Nobody yet.') }}</li>@endforelse</ul></div></div>
@@ -34,4 +30,5 @@
             <ul class="list-group list-group-flush small">@forelse($expiringContracts as $c)<li class="list-group-item d-flex justify-content-between"><a href="{{ route('admin.hr.employees.show', $c->employee) }}">{{ $c->employee->fullName() }}</a><span>{{ $c->end_on->toDateString() }}</span></li>@empty<li class="list-group-item text-muted">{{ __('None in the next 30 days.') }}</li>@endforelse</ul></div>
             @can('payroll.run.view')<div class="card"><div class="card-body small">{{ __('Last payroll') }}: @if($d['last_payroll']){{ $d['last_payroll']['number'] }} · <x-ui.status-badge :status="$d['last_payroll']['status']" /> · {{ $d['last_payroll']['employees'] }} {{ __('people') }}@else{{ __('none yet') }}@endif</div></div>@endcan</div>
     </div>
+    </x-ui.dashboard>
 @stop

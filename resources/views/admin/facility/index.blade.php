@@ -13,7 +13,8 @@
         @endforeach
     </div>
     @if($s)
-    <div class="row row-cols-2 row-cols-md-4 g-3 mb-3">
+    <x-ui.dashboard :question="__('Are the buildings, equipment and support services keeping the wards running?')" :audience="__('For the facility manager and the biomedical engineer')" :as-of="\Carbon\CarbonImmutable::now()">
+    <div class="row row-cols-2 row-cols-md-4 row-cols-xl-5 g-2 mb-3">
         <x-ui.kpi-tile :label="__('Equipment in the register')" :value="$s['assets']" icon="bi-cpu" variant="primary" :href="route('admin.facility.assets')" />
         <x-ui.kpi-tile :label="__('Equipment not in use')" :value="$s['assets_down']" icon="bi-exclamation-octagon" variant="danger" :href="route('admin.facility.assets', ['status' => 'out_of_service'])" />
         <x-ui.kpi-tile :label="__('High-risk equipment that must not be used')" :value="$s['high_risk_blocked']" icon="bi-slash-circle" variant="danger" />
@@ -36,5 +37,6 @@
         <x-ui.kpi-tile :label="__('People inside now')" :value="$s['visitors_inside']" icon="bi-people" variant="info" />
         <x-ui.kpi-tile :label="__('Refused at the gate (30 days)')" :value="$s['gate_refusals']" icon="bi-slash-circle" variant="secondary" />
     </div>
+    </x-ui.dashboard>
     @endif
 @stop

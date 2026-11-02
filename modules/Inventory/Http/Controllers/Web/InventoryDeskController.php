@@ -6,6 +6,7 @@ use App\Models\Inventory\InventoryCategory;
 use App\Models\Inventory\InventoryItem;
 use App\Models\Inventory\InventoryStock;
 use App\Models\Inventory\InventoryStore;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Inventory\InventoryMasterService;
 use App\Services\Inventory\InventoryReportService;
 use App\Services\TenantContextResolver;
@@ -26,7 +27,9 @@ class InventoryDeskController extends InventoryController
     {
         $this->allow($request, 'inventory.dashboard.view');
 
-        return view('admin.inventory.dashboard', ['d' => $this->reports->dashboard($this->organizationId())]);
+        $r = app(DashboardCache::class)->remember($request->user(), 'inventory', $this->organizationId(), $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, null, fn () => $this->reports->dashboard($this->organizationId()), fresh: $request->boolean('fresh'));
+
+        return view('admin.inventory.dashboard', ['d' => $r['data'], 'asOf' => $r['as_of']]);
     }
 
     public function items(Request $request)

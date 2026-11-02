@@ -10,6 +10,7 @@ use App\Models\Hr\HrPosition;
 use App\Models\Hr\HrProviderLink;
 use App\Models\Hr\HrTraining;
 use App\Models\Hr\HrVacancy;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Hr\ContractService;
 use App\Services\Hr\EmployeeService;
 use App\Services\Hr\HrBackfillService;
@@ -47,7 +48,10 @@ class HrDeskController extends HrController
         $this->allow($request, 'hr.dashboard.view');
         $org = $this->organizationId();
 
-        return view('admin.hr.dashboard', ['d' => $this->reports->dashboard($org), 'byDepartment' => $this->reports->headcountByDepartment($org), 'expiringContracts' => $this->contracts->expiring($org, 30)]);
+        $r = app(DashboardCache::class)->remember($request->user(), 'hr', $this->organizationId(), $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, null, fn () => ['d' => $this->reports->dashboard($org), 'byDepartment' => $this->reports->headcountByDepartment($org)->all()], fresh: $request->boolean('fresh'));
+
+        // The contracts list names people: a working list for HR, read live and not part of the cached figures.
+        return view('admin.hr.dashboard', ['d' => $r['data']['d'], 'byDepartment' => $r['data']['byDepartment'], 'expiringContracts' => $this->contracts->expiring($org, 30), 'asOf' => $r['as_of']]);
     }
 
     public function jobs(Request $request)

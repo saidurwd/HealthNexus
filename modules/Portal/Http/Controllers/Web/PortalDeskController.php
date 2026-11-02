@@ -11,6 +11,7 @@ use App\Models\Portal\PortalProxy;
 use App\Models\Portal\PortalSecurityEvent;
 use App\Models\Setting;
 use App\Services\AuditLogger;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Portal\PortalAuthService;
 use App\Services\Portal\PortalPolicy;
 use App\Services\Portal\PortalReportService;
@@ -32,7 +33,9 @@ class PortalDeskController extends PortalStaffController
     {
         $this->allow($request, 'portal.dashboard.view');
 
-        return view('admin.portal.dashboard', ['d' => $this->reports->portal($this->organizationId())]);
+        $r = app(DashboardCache::class)->remember($request->user(), 'portal', $this->organizationId(), $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, null, fn () => $this->reports->portal($this->organizationId()), fresh: $request->boolean('fresh'));
+
+        return view('admin.portal.dashboard', ['d' => $r['data'], 'asOf' => $r['as_of']]);
     }
 
     public function accounts(Request $request)

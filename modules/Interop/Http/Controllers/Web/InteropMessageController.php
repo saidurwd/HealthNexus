@@ -7,6 +7,7 @@ use App\Models\Integration\IntegrationAccessLog;
 use App\Models\Integration\IntegrationAttempt;
 use App\Models\Integration\IntegrationMessage;
 use App\Models\Integration\IntegrationPartner;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Interop\InteropException;
 use App\Services\Interop\MessageService;
 use App\Services\Interop\ReportService;
@@ -25,7 +26,9 @@ class InteropMessageController extends InteropStaffController
     {
         $this->allow($request, 'interoperability.dashboard.view');
 
-        return view('admin.interop.dashboard', ['d' => $this->reports->dashboard($this->organizationId())]);
+        $r = app(DashboardCache::class)->remember($request->user(), 'interop', $this->organizationId(), $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, null, fn () => $this->reports->dashboard($this->organizationId()), fresh: $request->boolean('fresh'));
+
+        return view('admin.interop.dashboard', ['d' => $r['data'], 'asOf' => $r['as_of']]);
     }
 
     public function messages(Request $request)

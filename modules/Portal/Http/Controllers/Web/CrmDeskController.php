@@ -8,6 +8,7 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Services\Crm\FeedbackService;
 use App\Services\Crm\InteractionService;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Portal\PortalReportService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -24,7 +25,9 @@ class CrmDeskController extends PortalStaffController
     {
         $this->allow($request, 'crm.dashboard.view');
 
-        return view('admin.crm.dashboard', ['d' => $this->reports->crm($this->organizationId())]);
+        $r = app(DashboardCache::class)->remember($request->user(), 'crm', $this->organizationId(), $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null, null, fn () => $this->reports->crm($this->organizationId()), fresh: $request->boolean('fresh'));
+
+        return view('admin.crm.dashboard', ['d' => $r['data'], 'asOf' => $r['as_of']]);
     }
 
     public function interactions(Request $request)

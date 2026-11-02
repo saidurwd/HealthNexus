@@ -44,6 +44,12 @@ Tiles open the module's own list pages where one exists; an exact figure-equals-
 - A rate or time that cannot be worked out (nothing billed, nothing decided, nothing paid) is a dash. Targets (none ship): `dashboard.target.collection_rate`, `claim_denial_rate`.
 - Welfare trends stay on the Welfare dashboard (built on the standard in Phase 26); they are not repeated here.
 
+## D5 — Supply, people and services
+- **Stores and supplies, People and payroll, Patient relations, Patient portal, Connections:** these pages show **standing counts** (what is waiting, late or at risk now), not period figures, so they have no period picker. Their definitions did not change; they now carry the frame (the question, the audience, "as of" and Refresh), draw each figure as a tile (a figure needing attention is marked, a figure that cannot be worked out is a dash, money is written in taka) and are cached per user and hospital (`DashboardCache`, 5 minutes). The HR "contracts ending soon" list names people and is read live.
+- **Facility and Quality:** already built from tiles; they gain the frame ("as of") and the same grid. They show more than eight figures; that is kept because each is a separate duty (cleaning, sterile services, ambulances; incidents, actions, outbreaks), and the plan's cap is for a management page - a later pass may split them by role.
+- **AI** is a governance page (use-cases, models, monitoring), not a metrics dashboard, and is left as it is. **Purchasing** figures are on the Stores page.
+- Links on these pages are as before (shown to everyone who can open the page); the permission-checked `Link` helper is used by the pages rebuilt in D1-D4.
+
 ## Not done in D0 (next slices)
 Role-aware Home and the Director's "Today" (D1); moving each module's dashboard onto the standard (D2–D5); the BI role dashboards (D6). Per-user Bangla-digit preference (today an organization setting).
 

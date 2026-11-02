@@ -12,7 +12,8 @@
     <p class="text-muted small">{{ __('Reporting is for learning, not for blame. You can report without your name; the quality team sees what happened, not who told them.') }}</p>
 
     @if($summary)
-        <div class="row row-cols-2 row-cols-md-4 g-3 mb-3">
+        <x-ui.dashboard :question="__('Are we learning from incidents, and are the corrective actions getting done?')" :audience="__('For the quality manager and the director')" :as-of="\Carbon\CarbonImmutable::now()">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-xl-5 g-2 mb-3">
             <x-ui.kpi-tile :label="__('Open incidents')" :value="$summary['incidents_open']" icon="bi-exclamation-triangle" variant="warning" :href="route('admin.quality.incidents')" />
             <x-ui.kpi-tile :label="__('Past their due date')" :value="$summary['incidents_overdue']" icon="bi-alarm" variant="danger" :href="route('admin.quality.incidents', ['overdue' => 1])" />
             <x-ui.kpi-tile :label="__('Serious in the last 90 days')" :value="$summary['serious_90d']" icon="bi-activity" variant="danger" />
@@ -40,5 +41,6 @@
                 <td>@if($r['on_target'] === null)<span class="text-muted small">{{ __('no target') }}</span>@else<x-ui.status-badge :status="$r['on_target'] ? 'compliant' : 'non_compliant'" />@endif</td></tr>@endforeach
             </tbody></table></div></div>
         @endcan
+        </x-ui.dashboard>
     @endif
 @stop

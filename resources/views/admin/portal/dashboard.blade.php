@@ -4,7 +4,8 @@
 
 @section('page_content')
     @include('admin.portal._flash')
-    @php($tiles = [
+    <x-ui.dashboard :question="__('Is the patient portal being used, and is anything waiting for staff?')" :audience="__('For the portal desk and the clinical leads')" :as-of="$asOf">
+    @php $tiles = [
         [__('Patients with a login'), $d['accounts']['active'], false, route('admin.portal.accounts', ['status' => 'active'])],
         [__('Joined in the last 30 days'), $d['accounts']['new_30d'], false, null],
         [__('Signed in during the last 7 days'), $d['accounts']['logged_in_7d'], false, null],
@@ -21,17 +22,13 @@
         [__('Online payments in progress'), $d['payments']['pending'], false, route('admin.portal.payments')],
         [__('Online payments to refund'), $d['payments']['to_refund'], $d['payments']['to_refund'] > 0, route('admin.portal.payments', ['status' => 'to_refund'])],
         [__('Online payments not yet matched to the provider file'), $d['payments']['unreconciled'], false, route('admin.portal.payments', ['status' => 'unreconciled'])],
-    ])
-    <div class="row g-3 mb-3">
-        @foreach($tiles as [$label, $value, $warn, $url])
-            <div class="col-6 col-md-4 col-xl-3"><div class="card h-100"><div class="card-body"><div class="text-muted small">{{ $label }}</div>
-                <div class="fs-4 fw-semibold {{ $warn ? 'text-danger' : '' }}">@if($url)<a href="{{ $url }}" class="{{ $warn ? 'text-danger' : '' }}">{{ $value }}</a>@else{{ $value }}@endif</div></div></div></div>
-        @endforeach
-    </div>
+    ]; @endphp
+    <x-ui.tile-grid :tiles="$tiles" />
     <div class="row g-3">
         <div class="col-lg-6"><div class="card"><div class="card-header"><h3 class="card-title">{{ __('Sign-in events, last 7 days') }}</h3></div>
             <ul class="list-group list-group-flush small">@forelse($d['security_7d'] as $kind => $n)<li class="list-group-item d-flex justify-content-between"><span>{{ __(\Illuminate\Support\Str::headline($kind)) }}</span><strong>{{ $n }}</strong></li>@empty<li class="list-group-item text-muted">{{ __('Nothing yet.') }}</li>@endforelse</ul></div></div>
         <div class="col-lg-6"><div class="card"><div class="card-header"><h3 class="card-title">{{ __('Messages sent to patients, last 7 days') }}</h3></div>
             <ul class="list-group list-group-flush small">@forelse($d['outbox'] as $status => $n)<li class="list-group-item d-flex justify-content-between"><x-ui.status-badge :status="$status" /><strong>{{ $n }}</strong></li>@empty<li class="list-group-item text-muted">{{ __('Nothing yet.') }}</li>@endforelse</ul></div></div>
     </div>
+    </x-ui.dashboard>
 @stop
