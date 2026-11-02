@@ -8,9 +8,9 @@
         <form action="{{ route('admin.ot.surgery-requests.store') }}" method="post">
             @csrf
             <div class="card-body row">
-                <div class="col-md-4 mb-3"><label>{{ __('Patient ID') }}</label><input type="number" name="patient_id" class="form-control" required></div>
-                <div class="col-md-4 mb-3"><label>{{ __('Encounter ID') }}</label><input type="number" name="encounter_id" class="form-control" required></div>
-                <div class="col-md-4 mb-3"><label>{{ __('Admission ID (optional)') }}</label><input type="number" name="admission_id" class="form-control"></div>
+                <div class="col-md-4 mb-3"><label>{{ __('Patient') }}</label><x-ui.patient-select name="patient_id" required class="form-control" /></div>
+                <div class="col-md-4 mb-3"><label>{{ __('Visit') }}</label><x-ui.encounter-select name="encounter_id" required depends-on="[name=patient_id]" class="form-control" /></div>
+                <div class="col-md-4 mb-3"><label>{{ __('Admission (optional)') }}</label><x-ui.admission-select name="admission_id" depends-on="[name=patient_id]" class="form-control" /></div>
                 <div class="col-md-4 mb-3"><label>{{ __('Procedure ID') }}</label><input type="number" name="procedure_id" class="form-control"></div>
                 <div class="col-md-4 mb-3"><label>{{ __('Specialty ID') }}</label><input type="number" name="specialty_id" class="form-control"></div>
                 <div class="col-md-4 mb-3">

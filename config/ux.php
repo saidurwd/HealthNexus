@@ -12,6 +12,8 @@
 return [
     // Dashboards (docs/ux/dashboard-standard.md). Time is shown in Dhaka; numbers can be grouped the South Asian way (12,34,567) and written with Bangla digits: both are settings (`ux.number_grouping`, `ux.bangla_digits`).
     'timezone' => 'Asia/Dhaka',
+    // Who may use the lookups behind the searchable dropdowns (patients, encounters, admissions): anyone who already holds a right on a screen that picks one. Each lookup returns a label and an id, only for the person's own hospital.
+    'lookup_permissions' => ['patients.view', 'encounters.view', 'appointments.create', 'appointments.view', 'ipd.admission.view', 'icu.admission_request.view', 'ot.surgery.view', 'billing.dashboard.view', 'insurance.policy.view', 'inventory.dashboard.view'],
     'numbers' => ['grouping' => 'international', 'bangla_digits' => false],
     'dashboard' => [
         'default_period' => '30d',

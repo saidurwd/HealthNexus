@@ -49,9 +49,10 @@ class EncounterController extends Controller
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $branches = Branch::where('organization_id', $organizationId)->get();
-        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
+        // The patient dropdown asks the server as the user types (admin.lookup.patients); only a patient already chosen (a validation error sends the form back) is loaded here.
+        $selectedPatient = old('patient_id') ? Patient::where('organization_id', $organizationId)->find(old('patient_id')) : null;
 
-        return view('admin.encounters.create', compact('branches', 'patients'));
+        return view('admin.encounters.create', compact('branches', 'selectedPatient'));
     }
 
     public function store(StoreEncounterRequest $request)

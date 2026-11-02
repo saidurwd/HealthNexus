@@ -70,7 +70,6 @@ class AppointmentController extends Controller
 
         $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
             ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
@@ -80,11 +79,13 @@ class AppointmentController extends Controller
 
         // Supports "Book Appointment" from the Patient 360 profile (spec §25) — the patient
         // comes pre-selected but the user can still change it via an explicit action.
-        $selectedPatient = $request->filled('patient_id')
-            ? Patient::where('organization_id', $organizationId)->find($request->input('patient_id'))
+        // The patient dropdown asks the server as the user types (admin.lookup.patients), so only the chosen patient is loaded here: the one from the profile link, or the one the form had before a validation error.
+        $chosen = $request->input('patient_id', old('patient_id'));
+        $selectedPatient = $chosen
+            ? Patient::where('organization_id', $organizationId)->find($chosen)
             : null;
 
-        return view('admin.appointments.create', compact('patients', 'doctors', 'providers', 'branches', 'appointmentTypes', 'selectedPatient'));
+        return view('admin.appointments.create', compact('doctors', 'providers', 'branches', 'appointmentTypes', 'selectedPatient'));
     }
 
     public function store(StoreAppointmentRequest $request)

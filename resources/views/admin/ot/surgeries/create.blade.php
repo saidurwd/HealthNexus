@@ -12,9 +12,9 @@
                     <input type="hidden" name="surgery_request_id" value="{{ $surgeryRequest->id }}">
                     <div class="col-md-12 mb-3">{{ __('From approved request for') }} <strong>{{ $surgeryRequest->patient?->full_name }}</strong> — {{ $surgeryRequest->procedure?->name }}</div>
                 @else
-                    <div class="col-md-4 mb-3"><label>{{ __('Patient ID') }}</label><input type="number" name="patient_id" class="form-control" required></div>
-                    <div class="col-md-4 mb-3"><label>{{ __('Encounter ID') }}</label><input type="number" name="encounter_id" class="form-control" required></div>
-                    <div class="col-md-4 mb-3"><label>{{ __('Admission ID (optional)') }}</label><input type="number" name="admission_id" class="form-control"></div>
+                    <div class="col-md-4 mb-3"><label>{{ __('Patient') }}</label><x-ui.patient-select name="patient_id" required class="form-control" /></div>
+                    <div class="col-md-4 mb-3"><label>{{ __('Visit') }}</label><x-ui.encounter-select name="encounter_id" required depends-on="[name=patient_id]" class="form-control" /></div>
+                    <div class="col-md-4 mb-3"><label>{{ __('Admission (optional)') }}</label><x-ui.admission-select name="admission_id" depends-on="[name=patient_id]" class="form-control" /></div>
                     <div class="col-md-4 mb-3"><label>{{ __('Primary Procedure ID') }}</label><input type="number" name="primary_procedure_id" class="form-control"></div>
                     <div class="col-md-4 mb-3"><label>{{ __('Specialty ID') }}</label><input type="number" name="specialty_id" class="form-control"></div>
                     <div class="col-md-4 mb-3">

@@ -12,7 +12,7 @@
             <div class="col-md-1"><input type="number" step="0.0001" min="0.0001" name="quantity" class="form-control" placeholder="{{ __('Qty') }}" required></div>
             <div class="col-md-2"><select name="department_id" class="form-select"><option value="">{{ __('No department') }}</option>@foreach($departments as $d)<option value="{{ $d->id }}">{{ $d->name }}</option>@endforeach</select></div>
             <div class="col-md-2"><input name="patient" class="form-control" placeholder="{{ __('Patient number (if for a patient)') }}"></div>
-            <div class="col-md-1"><input type="number" name="admission_id" class="form-control" placeholder="{{ __('Admission') }}"></div>
+            <div class="col-md-1"><x-ui.admission-select name="admission_id" class="form-control" :placeholder="__('Admission')" /></div>
             <div class="col-md-1"><button class="btn btn-danger w-100">{{ __('Save') }}</button></div>
         </div><div class="card-footer small text-muted">{{ __('An item with a billing code is charged to the patient automatically; the price comes from Billing, never from the store.') }}</div></form>
     <div class="card"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('When') }}</th><th>{{ __('Item') }}</th><th class="text-end">{{ __('Quantity') }}</th><th>{{ __('Charge') }}</th></tr></thead>

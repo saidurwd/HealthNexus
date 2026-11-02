@@ -22,7 +22,12 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.45rem .
 .pill{display:inline-block;padding:.1rem .55rem;border-radius:1rem;font-size:.82rem;background:#e8eeea}.pill.good{background:#dff3e6;color:#12502f}.pill.bad{background:#fbe6e6;color:var(--bad)}.pill.wait{background:#fff3d6;color:var(--warn)}
 .emerg{background:#fff3d6;border:1px solid #e6c36a;border-radius:.6rem;padding:.6rem .9rem;margin-bottom:1rem;font-size:.95rem}.bubble{padding:.6rem .8rem;border-radius:.7rem;background:#eef2ef;white-space:pre-wrap;display:inline-block;max-width:92%}.bubble.me{background:#dff3e6}
 @media print{header,nav,.noprint{display:none}body{background:#fff}.card{border:0}}
+/* the searchable dropdown theme reads Bootstrap variables; this page has no Bootstrap, so it gets the few it needs */
+:root{--bs-body-bg:#fff;--bs-body-color:var(--ink);--bs-border-color:#b9c5be;--bs-border-radius:.5rem;--bs-secondary-color:var(--mute);--bs-secondary-bg:#eef2ef;--bs-tertiary-bg:#f2f5f3;--bs-primary:var(--c);--bs-primary-bg-subtle:#dff3e6;--bs-danger:var(--bad);--bs-form-invalid-border-color:var(--bad)}
+.ts-wrapper{margin:0}.ts-control{font:inherit}
 </style>
+<link rel="stylesheet" href="{{ asset('vendor/tom-select/tom-select.bootstrap5.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/searchable-select.css') }}">
 </head>
 <body>
 <header><div class="bar"><a href="{{ route('portal.home') }}"><strong>{{ config('app.name') }}</strong></a>
@@ -35,5 +40,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.45rem .
 @if($errors->any())<div class="flash err" role="alert">@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div>@endif
 @yield('content')
 </main>
+<script src="{{ asset('vendor/tom-select/tom-select.complete.min.js') }}"></script>
+<script src="{{ asset('js/searchable-select.js') }}"></script>
 </body>
 </html>

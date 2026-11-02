@@ -22,15 +22,11 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">{{ __('Patient *') }}</label>
-                                <select name="patient_id" class="form-select @error('patient_id') is-invalid @enderror" required>
+                                <select name="patient_id" class="form-select @error('patient_id') is-invalid @enderror" required data-remote="{{ route('admin.lookup.patients') }}" data-placeholder="{{ __('Type a name, patient number or phone') }}">
                                     <option value="">{{ __('Select Patient') }}</option>
                                     @if($selectedPatient ?? null)
                                         <option value="{{ $selectedPatient->id }}" selected>{{ $selectedPatient->full_name }} ({{ $selectedPatient->enterprise_patient_no ?? 'N/A' }})</option>
                                     @endif
-                                    @foreach($patients as $patient)
-                                        @continue(($selectedPatient ?? null) && $patient->id === $selectedPatient->id)
-                                        <option value="{{ $patient->id }}" {{ old('patient_id') == $patient->id ? 'selected' : '' }}>{{ $patient->full_name }} ({{ $patient->enterprise_patient_no ?? 'N/A' }})</option>
-                                    @endforeach
                                 </select>
                                 @if($selectedPatient ?? null)
                                     <div class="form-text">{{ __('Pre-selected from the patient\'s profile — change it explicitly if this is the wrong patient.') }}</div>

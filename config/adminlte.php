@@ -2406,19 +2406,15 @@ return [
                 ],
             ],
         ],
+        // Every dropdown in the product is searchable (owner instruction 2026-11-02). Tom Select is copied into public/vendor/tom-select so it works without internet; public/js/searchable-select.js
+        // enhances every <select> (opt out with data-plain; load options from the server with data-remote). Loaded on every AdminLTE page, including sign-in. The patient portal has its own layout and loads the same files.
         'TomSelect' => [
-            'active' => false,
+            'active' => true,
             'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css',
-                ],
+                ['type' => 'css', 'asset' => true, 'location' => 'vendor/tom-select/tom-select.bootstrap5.min.css'],
+                ['type' => 'css', 'asset' => true, 'location' => 'css/searchable-select.css'],
+                ['type' => 'js', 'asset' => true, 'location' => 'vendor/tom-select/tom-select.complete.min.js'],
+                ['type' => 'js', 'asset' => true, 'location' => 'js/searchable-select.js'],
             ],
         ],
         'Tabulator' => [

@@ -9,16 +9,16 @@
             @csrf
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">{{ __('Patient ID') }}</label>
-                    <input type="number" name="patient_id" value="{{ old('patient_id', $patient?->id) }}" class="form-control @error('patient_id') is-invalid @enderror" required>
+                    <label class="form-label">{{ __('Patient') }}</label>
+                    <x-ui.patient-select name="patient_id" :value="$patient?->id" required class="form-control @error('patient_id') is-invalid @enderror" />
                     @if($patient)
                         <small class="text-muted">{{ $patient->full_name }} ({{ $patient->enterprise_patient_no }})</small>
                     @endif
                     @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">{{ __('Encounter ID (optional)') }}</label>
-                    <input type="number" name="encounter_id" value="{{ old('encounter_id') }}" class="form-control">
+                    <label class="form-label">{{ __('Visit (optional)') }}</label>
+                    <x-ui.encounter-select name="encounter_id" depends-on="[name=patient_id]" class="form-control" />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ __('Invoice Type') }}</label>

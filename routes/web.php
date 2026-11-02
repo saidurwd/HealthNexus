@@ -14,6 +14,9 @@ use App\Http\Controllers\GlobalSearchPageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\Lookup\AdmissionLookupController;
+use App\Http\Controllers\Lookup\EncounterLookupController;
+use App\Http\Controllers\Lookup\PatientLookupController;
 use App\Http\Controllers\QuickStartController;
 use App\Http\Middleware\ApplyTenantContextToInput;
 use App\Http\Middleware\EnsureTenantContext;
@@ -47,6 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([RequireMfa::class])->group(function () {
         Route::middleware([EnsureTenantContext::class])->group(function () {
             Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+            Route::get('/admin/lookup/patients', PatientLookupController::class)->name('admin.lookup.patients');
+            Route::get('/admin/lookup/encounters', EncounterLookupController::class)->name('admin.lookup.encounters');
+            Route::get('/admin/lookup/admissions', AdmissionLookupController::class)->name('admin.lookup.admissions');
             Route::get('/admin/today', [TodayController::class, 'index'])->name('admin.today');
             Route::get('/admin/queue-board', [QueueBoardController::class, 'index'])->name('admin.queue.board')->middleware('module:appointment');
         });

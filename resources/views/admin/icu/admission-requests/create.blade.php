@@ -8,12 +8,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group">
-                    <label>{{ __('Patient ID') }}</label>
-                    <input type="number" name="patient_id" class="form-control" required>
+                    <label>{{ __('Patient') }}</label>
+                    <x-ui.patient-select name="patient_id" required class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label>{{ __('Encounter ID') }}</label>
-                    <input type="number" name="encounter_id" class="form-control" required>
+                    <label>{{ __('Visit') }}</label>
+                    <x-ui.encounter-select name="encounter_id" required depends-on="[name=patient_id]" class="form-control" />
                 </div>
                 <div class="form-group">
                     <label>{{ __('Admission Reason') }}</label>

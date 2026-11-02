@@ -12,7 +12,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">{{ __('Patient') }}</label>
-                        <input type="number" name="patient_id" value="{{ old('patient_id', $admissionRequest?->patient_id) }}" class="form-control @error('patient_id') is-invalid @enderror" placeholder="{{ __('Patient ID') }}" required>
+                        <x-ui.patient-select name="patient_id" :value="$admissionRequest?->patient_id" required class="form-control @error('patient_id') is-invalid @enderror" />
                         @if($admissionRequest?->patient)<div class="form-text">{{ $admissionRequest->patient->full_name }}</div>@endif
                         @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>

@@ -11,7 +11,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">{{ __('Patient') }}</label>
-                        <input type="number" name="patient_id" value="{{ old('patient_id', $patient?->id) }}" class="form-control @error('patient_id') is-invalid @enderror" placeholder="{{ __('Patient ID') }}" required>
+                        <x-ui.patient-select name="patient_id" :value="$patient?->id" required class="form-control @error('patient_id') is-invalid @enderror" />
                         @if($patient)<div class="form-text">{{ $patient->full_name }} ({{ $patient->enterprise_patient_no }})</div>@endif
                         @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>

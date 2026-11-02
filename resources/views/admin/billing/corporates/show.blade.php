@@ -103,7 +103,7 @@
                     <form action="{{ route('admin.billing.corporates.members.store', $corporate) }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-md-3 mb-2"><input type="number" name="patient_id" class="form-control" placeholder="{{ __('Patient ID') }}" required></div>
+                            <div class="col-md-3 mb-2"><x-ui.patient-select name="patient_id" required class="form-control" /></div>
                             <div class="col-md-3 mb-2"><input type="text" name="member_number" class="form-control" placeholder="{{ __('Member number') }}"></div>
                             <div class="col-md-3 mb-2">
                                 <select name="relationship" class="form-control">

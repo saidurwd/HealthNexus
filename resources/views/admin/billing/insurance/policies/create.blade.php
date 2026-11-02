@@ -20,8 +20,8 @@
                         @error('insurance_provider_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{{ __('Patient ID') }}</label>
-                        <input type="number" name="patient_id" value="{{ old('patient_id') }}" class="form-control @error('patient_id') is-invalid @enderror" required>
+                        <label class="form-label">{{ __('Patient') }}</label>
+                        <x-ui.patient-select name="patient_id" :value="null" required class="form-control @error('patient_id') is-invalid @enderror" />
                         @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="mb-3">
