@@ -72,8 +72,7 @@ class BillingDashboardAndReportsTest extends BillingTestCase
         $response = $this->get('/admin/billing');
 
         $response->assertOk();
-        $response->assertViewHas('todaySummary');
-        $response->assertViewHas('cashierSummary');
+        $response->assertViewHas('metrics', fn ($m) => (float) $m['current']['billed'] === 500.0 && (float) $m['current']['collected'] === 500.0 && (float) $m['owed'] === 0.0);
     }
 
     public function test_collection_report_loads(): void

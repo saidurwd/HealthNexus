@@ -150,7 +150,7 @@ Each slice: spec → build → tests (the §3 list) → demo-data check → Bang
 | **D1 — Front door** *(built 2026-11-02: Home, Today in the hospital, Queue board)* | Role-aware Home, Director's Today, OPD/reception queue board | people stop landing on a placeholder |
 | **D2 — Clinical** *(built 2026-11-02: IPD, Nursing, ICU, OT, Emergency performance; the Emergency board was already a live board)* | IPD, Nursing, Emergency (board + performance), ICU, OT | wards and theatres on one standard |
 | **D3 — Diagnostics and pharmacy** *(built 2026-11-02: Lab, Radiology, Pharmacy, Blood bank)* | Lab, Radiology, Pharmacy, Blood bank | TAT and stock safety |
-| **D4 — Money** | Billing and cashier, Insurance, Finance, Welfare trends | collections and claims clarity |
+| **D4 — Money** *(built 2026-11-02: Billing, Insurance, Finance; Welfare was built on the standard in Phase 26)* | Billing and cashier, Insurance, Finance, Welfare trends | collections and claims clarity |
 | **D5 — Supply, people, services** | Stores/Purchasing, HR, Facility, Quality, CRM/Portal, Connections, AI | the rest on the standard |
 | **D6 — BI and reporting** | five system dashboards on the standard, snapshots, scheduled A4 pack, national-return dashboard | management reporting |
 | **D7 — Bangladesh dashboards** | catchment, outbreak, mother-and-child, bed-class mix — each ships with its gap slice | local needs |

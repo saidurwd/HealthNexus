@@ -27,12 +27,14 @@ class FinanceDashboard
         $banks = BankAccount::query()->where('organization_id', $organizationId)->where('active', true)->orderBy('kind')->orderBy('name')->get()->map(fn (BankAccount $b) => ['bank' => $b, 'balance' => $this->banks->ledgerBalance($b)]);
         $arLeft = (string) Receivable::query()->where('organization_id', $organizationId)->where('status', 'open')->sum(DB::raw('amount - settled - written_off'));
         $apLeft = (string) Payable::query()->where('organization_id', $organizationId)->where('status', 'open')->sum(DB::raw('amount - settled'));
+        $before = $today->copy()->subMonthNoOverflow();
+        $was = $this->statements->incomeStatement($organizationId, $before->copy()->startOfMonth()->toDateString(), $before->copy()->setDay(min($today->day, $before->daysInMonth))->toDateString());
         $recon = $this->reconciliation->billingVsLedger($organizationId, $from, $to);
 
         return [
             'ready' => FiscalYear::query()->where('organization_id', $organizationId)->exists(),
             'month' => $today->format('F Y'), 'from' => $from, 'to' => $to, 'period' => $period,
-            'revenue' => $is['total_revenue'], 'expense' => $is['total_expense'], 'net' => $is['net'],
+            'revenue_before' => $was['total_revenue'], 'expense_before' => $was['total_expense'], 'net_before' => $was['net'], 'revenue' => $is['total_revenue'], 'expense' => $is['total_expense'], 'net' => $is['net'],
             'banks' => $banks, 'cash_total' => $banks->reduce(fn ($c, $r) => bcadd($c, $r['balance'], 2), '0.00'),
             'receivable' => bcadd($arLeft, '0', 2), 'payable' => bcadd($apLeft, '0', 2),
             'failed' => Posting::query()->where(['organization_id' => $organizationId, 'status' => 'failed'])->count(),

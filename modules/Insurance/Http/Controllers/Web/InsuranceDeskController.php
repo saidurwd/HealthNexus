@@ -8,13 +8,16 @@ use App\Models\Insurance\InsurancePayer;
 use App\Models\Insurance\InsurancePlan;
 use App\Models\Insurance\InsurancePreauth;
 use App\Models\Patient;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\Insurance\InsuranceEligibilityService;
 use App\Services\Insurance\InsuranceMasterService;
+use App\Services\Insurance\InsuranceOverview;
 use App\Services\Insurance\InsurancePolicyService;
 use App\Services\Insurance\InsurancePreauthService;
 use App\Services\Insurance\InsuranceQueryService;
 use App\Services\Insurance\InsuranceReportService;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -27,11 +30,15 @@ class InsuranceDeskController extends InsuranceController
         parent::__construct($tenant);
     }
 
-    public function dashboard(Request $request, InsuranceReportService $reports, InsuranceQueryService $queries)
+    public function dashboard(Request $request, InsuranceReportService $reports, InsuranceQueryService $queries, InsuranceOverview $overview, DashboardCache $cache)
     {
         $this->allow($request, 'dashboard.view');
+        $org = $this->organizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $r = $cache->remember($request->user(), 'insurance', $org, $branch, $period, fn () => ['d' => $reports->dashboard($org), 'aging' => $reports->aging($org)->all(), 'worklist' => $queries->worklist($org)->take(5)->values()->all(), 'p' => $overview->summary($org, $branch, $period)], fresh: $request->boolean('fresh'));
 
-        return view('admin.insurance.dashboard', ['d' => $reports->dashboard($this->organizationId()), 'aging' => $reports->aging($this->organizationId()), 'worklist' => $queries->worklist($this->organizationId())]);
+        return view('admin.insurance.dashboard', ['d' => $r['data']['d'], 'aging' => collect($r['data']['aging']), 'worklist' => collect($r['data']['worklist']), 'p' => $r['data']['p'], 'asOf' => $r['as_of'], 'period' => $period]);
     }
 
     public function payers(Request $request)

@@ -9,28 +9,10 @@ use App\Services\Radiology\RadiologyOverview;
 use App\Support\Dashboard\DashboardPeriod;
 use App\Support\Dashboard\Spread;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
 
 /** The laboratory, radiology, pharmacy and blood bank boards on the dashboard standard. Now is Thursday 12 Nov 2026, 10:00 in Dhaka (04:00 UTC). */
 class DiagnosticsBoardsTest extends FrontDoorTestCase
 {
-    /** A row with every required column filled with a plain value, so a test states only what it is about. Foreign keys are deferred in these tests. */
-    protected function filled(string $table, array $attrs = []): int
-    {
-        foreach (DB::select("pragma table_info($table)") as $c) {
-            if ($c->notnull && $c->dflt_value === null && ! $c->pk && ! array_key_exists($c->name, $attrs) && ! in_array($c->name, ['organization_id', 'branch_id', 'public_id', 'created_at', 'updated_at'], true)) {
-                $attrs[$c->name] = match (true) {
-                    str_contains(strtolower($c->type), 'int') => 1,
-                    str_contains(strtolower($c->type), 'datetime'), str_contains(strtolower($c->type), 'date') => '2026-11-12 03:00:00',
-                    str_contains(strtolower($c->type), 'numeric'), str_contains(strtolower($c->type), 'float') => 0,
-                    default => 'x'.uniqid(),
-                };
-            }
-        }
-
-        return $this->row($table, $attrs);
-    }
-
     private function period(string $key = '7d'): DashboardPeriod
     {
         return DashboardPeriod::make($key, now: CarbonImmutable::now());

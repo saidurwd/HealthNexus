@@ -37,6 +37,13 @@ Tiles open the module's own list pages where one exists; an exact figure-equals-
 - Targets (none ship): `dashboard.target.lab_tat`, `radiology_tat`, `pharmacy_wait`, `blood_wait`.
 - The dashboards default to the last 7 days; the lab, radiology and pharmacy dashboards showed only "today" before.
 
+## D4 — Billing, Insurance and Finance
+- **Billing:** billed (finalized, part-paid and paid bills by bill date; drafts and cancelled bills are not billed), collected (completed payments by payment date; cancelled ones are not), **collected as a share of billed** (it can pass 100 when old bills are paid, and the tile says so), discounts given, refunds paid, what is still owed by how old the bill is (the bands add up to the total owed), what corporates owe, how the money came (cash, card, mobile banking, bank) and cashier sessions still open. Totals only: no patient is named. Default period: last 7 days.
+- **Insurance:** claims sent in the period and their value, money the payers paid, **the share denied or rejected of the claims decided**, and the days from sending to payment (median and 90th percentile). The standing counts (pre-authorizations waiting, deadlines within 14 days, open queries, write-offs waiting) and the aging table are unchanged and are not period figures. Default period: last 30 days.
+- **Finance:** the books are monthly, so this page has no period picker; revenue, expenses and result this month are set against **the same days of last month**. Cash, receivables and payables are positions as of now. Not cached: the figures come straight from the ledger.
+- A rate or time that cannot be worked out (nothing billed, nothing decided, nothing paid) is a dash. Targets (none ship): `dashboard.target.collection_rate`, `claim_denial_rate`.
+- Welfare trends stay on the Welfare dashboard (built on the standard in Phase 26); they are not repeated here.
+
 ## Not done in D0 (next slices)
 Role-aware Home and the Director's "Today" (D1); moving each module's dashboard onto the standard (D2–D5); the BI role dashboards (D6). Per-user Bangla-digit preference (today an organization setting).
 
