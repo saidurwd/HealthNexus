@@ -2,6 +2,21 @@
 
 _Generated from the Schema::create calls in database/migrations._
 
+## ai (12)
+
+- `ai_eval_cases`
+- `ai_eval_runs`
+- `ai_eval_sets`
+- `ai_feedback`
+- `ai_incidents`
+- `ai_knowledge`
+- `ai_models`
+- `ai_outputs`
+- `ai_prompts`
+- `ai_providers`
+- `ai_requests`
+- `ai_use_cases`
+
 ## analytics (14)
 
 - `analytics_dashboards`
@@ -645,3 +660,12 @@ _Generated from the Schema::create calls in database/migrations._
 - `radiology_sections`
 - `radiology_series`
 - `radiology_studies`
+
+## welfare (6)
+
+- `wf_applications`
+- `wf_assessments`
+- `wf_donors`
+- `wf_fund_entries`
+- `wf_funds`
+- `wf_grants`

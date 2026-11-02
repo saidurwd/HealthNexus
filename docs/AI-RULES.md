@@ -15,7 +15,7 @@ PHP 8.4+, Laravel 13, MySQL 8 (SQLite only for the fast test run), Blade + Admin
 6. Never delete or overwrite clinical or financial records: amend, reverse, version. Ledgers are append-only (a database trigger enforces it on `stock_ledger`).
 7. Store UTC, display Asia/Dhaka.
 8. Permissions `module.resource.action`; the prefix must be registered in `config/modules.php` (CI fails otherwise: `php artisan registry:export --check`). Export and print are separate permissions.
-9. New modules: ULID `public_id` in URLs (`HasPublicId`), table prefix from the registry, a charter in `docs/charters/`, a module key in `config/modules.php`, routes behind `module:<key>`, a forward-integration gateway with a null adapter for anything not built yet.
+9. New modules: ULID `public_id` in URLs (`HasPublicId`), table prefix from the registry, a charter in `docs/charters/`, a module key in `config/modules.php`, routes behind `module:<key>`, a forward-integration gateway with a null adapter for anything not built yet. Its menu entry goes in the section where its users work, two levels deep, with `module` and `can` (docs/ux/navigation.md; `NavigationTest` fails otherwise).
 10. UI: the seven templates (`docs/ux/screen-templates-and-acceptance.md`), `<x-patient-banner>` on clinical pages, `<x-ui.status-badge>` for statuses, text through `__('English text')` with a Bangla value in `lang/bn.json` (`php artisan lang:extract` helps; the parity test fails otherwise), plain-language labels, 1366×768 first.
 11. API: `/api/v1/<module>`, envelope `{success,message,data,meta}`, 409 on state conflicts.
 12. Tests with the code: scope, authorization, state machine, concurrency, idempotency, audit — as relevant.

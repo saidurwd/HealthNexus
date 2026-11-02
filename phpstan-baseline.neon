@@ -3283,18 +3283,6 @@ parameters:
 			path: app/Support/Fhir/PatientFhirMapper.php
 
 		-
-			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/Support/ModuleMenuFilter.php
-
-		-
-			message: '#^Method App\\Support\\ModuleMenuFilter\:\:transform\(\) should return array but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Support/ModuleMenuFilter.php
-
-		-
 			message: '#^Method App\\Support\\RegistryInspector\:\:permissions\(\) should return array\<string, list\<string\>\> but returns array\<non\-falsy\-string, string\>\.$#'
 			identifier: return.type
 			count: 1

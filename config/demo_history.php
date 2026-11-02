@@ -26,6 +26,7 @@ use App\Services\Demo\History\Modules\PharmacyHistory;
 use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\Demo\History\Modules\QualityHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
+use App\Services\Demo\History\Modules\WelfareHistory;
 
 /*
 | Demo history (AI-RULES 16). Order matters: later classes build on what earlier ones left in the HistoryContext.
@@ -55,6 +56,7 @@ return [
         PortalHistory::class,
         InteropHistory::class,
         FinanceHistory::class,
+        WelfareHistory::class,
         AnalyticsHistory::class,
         QualityHistory::class,
         FacilityHistory::class,

@@ -925,6 +925,21 @@ class PermissionSeeder extends Seeder
             'ai.monitor.view',
             'ai.audit.view',
 
+            // Patient Welfare Fund (Phase 26, Bangladesh pack)
+            'welfare.dashboard.view',
+            'welfare.fund.view',
+            'welfare.fund.manage',
+            'welfare.donation.record',
+            'welfare.assessment.view',
+            'welfare.assessment.create',
+            'welfare.assessment.decide',
+            'welfare.grant.view',
+            'welfare.grant.request',
+            'welfare.grant.approve',
+            'welfare.grant.apply',
+            'welfare.report.view',
+            'welfare.settings.manage',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -2130,6 +2145,15 @@ class PermissionSeeder extends Seeder
             ],
             'ai_safety_officer' => [
                 'patients.view', 'ai.dashboard.view', 'ai.usecase.view', 'ai.usecase.approve', 'ai.killswitch', 'ai.model.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view', 'ai.provider.legal',
+            ],
+            'welfare_officer' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.assessment.view', 'welfare.assessment.create', 'welfare.grant.view', 'welfare.grant.request', 'welfare.grant.apply',
+            ],
+            'welfare_committee_member' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.assessment.view', 'welfare.assessment.decide', 'welfare.grant.view', 'welfare.grant.approve', 'welfare.report.view',
+            ],
+            'welfare_manager' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.fund.manage', 'welfare.donation.record', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.report.view', 'welfare.settings.manage',
             ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',

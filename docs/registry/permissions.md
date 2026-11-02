@@ -2,6 +2,30 @@
 
 _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resource.action` (D-06)._
 
+## ai (21)
+
+- `0`
+- `1`
+- `2`
+- `3`
+- `4`
+- `5`
+- `6`
+- `7`
+- `8`
+- `9`
+- `10`
+- `11`
+- `12`
+- `13`
+- `14`
+- `15`
+- `16`
+- `17`
+- `18`
+- `19`
+- `20`
+
 ## analytics (26)
 
 - `0`
@@ -978,3 +1002,19 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `37`
 - `38`
 - `39`
+
+## welfare (13)
+
+- `0`
+- `1`
+- `2`
+- `3`
+- `4`
+- `5`
+- `6`
+- `7`
+- `8`
+- `9`
+- `10`
+- `11`
+- `12`

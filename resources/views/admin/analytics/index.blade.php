@@ -10,7 +10,7 @@
     </div>
     <div class="row g-3">
         @foreach([['analytics.kpi.view', 'admin.analytics.kpis', 'KPIs and targets', 'bi-speedometer'], ['analytics.query.run', 'admin.analytics.explore', 'Explore the figures', 'bi-search'], ['analytics.report.view', 'admin.analytics.reports', 'Reports', 'bi-file-earmark-text'], ['analytics.question.ask', 'admin.analytics.ask', 'Ask a question', 'bi-chat-dots'],
-            ['analytics.forecast.view', 'admin.analytics.forecast', 'Planning forecasts', 'bi-graph-up-arrow'], ['analytics.benchmark.view', 'admin.analytics.benchmark', 'Compare with other hospitals', 'bi-people'], ['analytics.national.view', 'admin.analytics.national', 'National reporting pack', 'bi-globe2'], ['analytics.quality.view', 'admin.analytics.quality', 'Data quality', 'bi-shield-check'], ['analytics.load.view', 'admin.analytics.loads', 'Warehouse loads', 'bi-database']] as [$perm, $route, $label, $icon])
+            ['analytics.forecast.view', 'admin.analytics.forecast', 'Planning forecasts', 'bi-graph-up-arrow'], ['analytics.benchmark.view', 'admin.analytics.benchmark', 'Compare with other hospitals', 'bi-people'], ['analytics.national.view', 'admin.analytics.national', 'National reporting (DGHS / DHIS2)', 'bi-globe2'], ['analytics.quality.view', 'admin.analytics.quality', 'Data quality', 'bi-shield-check'], ['analytics.load.view', 'admin.analytics.loads', 'Warehouse loads', 'bi-database']] as [$perm, $route, $label, $icon])
             @can($perm)<div class="col-6 col-md-4 col-xl-3"><a class="btn btn-outline-secondary w-100 text-start" href="{{ route($route) }}"><i class="bi {{ $icon }}"></i> {{ __($label) }}</a></div>@endcan
         @endforeach
     </div>

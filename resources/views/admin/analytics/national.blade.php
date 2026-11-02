@@ -1,6 +1,6 @@
 @extends('layouts.adminlte')
 
-@section('page_title', __('National reporting pack'))
+@section('page_title', __('National reporting (DGHS / DHIS2)'))
 
 @section('page_content')
     @include('admin.analytics._flash')

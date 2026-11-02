@@ -161,6 +161,11 @@ class DemoHistoryTest extends TestCase
         $has('ai_requests', 10);
         $has('ai_outputs', 8);
         $has('ai_use_cases', 13);
+        $has('wf_funds', 3);
+        $has('wf_fund_entries', 10);
+        $has('wf_assessments', 10);
+        $has('wf_grants', 5);
+        $has('wf_applications', 5);
 
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
@@ -216,7 +221,7 @@ class DemoHistoryTest extends TestCase
         $this->assertTrue(app(LedgerService::class)->totals($tb)['balanced'], 'the trial balance balances');
         $recon = app(ReconciliationService::class)->billingVsLedger($org, '2000-01-01', now()->toDateString());
         $this->assertSame([], collect($recon['rows'])->filter(fn ($r) => bccomp($r['difference'], '0', 2) !== 0)->pluck('label')->all(), 'Billing agrees with the books: '.json_encode(app(ReconciliationService::class)->receivableDifferences($org, now()->toDateString(), 10)));
-        $this->assertSame(0, DB::table('fin_postings')->where('organization_id', $org)->where('status', 'failed')->count(), 'no posting is left failed');
+        $this->assertSame(0, DB::table('fin_postings')->where('organization_id', $org)->where('status', 'failed')->count(), 'no posting is left failed: '.json_encode(DB::table('fin_postings')->where('organization_id', $org)->where('status', 'failed')->selectRaw('source_type, error, count(*) as n')->groupBy('source_type', 'error')->get(), JSON_UNESCAPED_UNICODE));
         $this->assertSame(0, DB::table('fin_payables')->where('organization_id', $org)->whereRaw('settled > amount + 0.001')->count());
         $this->assertSame(0, DB::table('fin_journals as j')->join('fin_periods as p', 'p.id', '=', 'j.period_id')->where('j.organization_id', $org)->where('j.status', 'posted')->where('p.status', 'closed')->where('j.kind', '<>', 'closing')->where('j.posted_at', '>', DB::raw('p.locked_at'))->count());
         $this->assertSame(0, DB::table('fin_journals')->where('organization_id', $org)->where('status', 'posted')->whereNull('period_id')->count(), 'every posted journal sits in a period');
@@ -293,6 +298,14 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('ai_use_cases')->where('status', 'enabled')->whereNotIn('model_id', DB::table('ai_models')->where('status', 'approved')->select('id'))->count(), 'every function that is on uses an approved model');
         $this->assertSame(0, DB::table('ai_models')->where('status', 'approved')->whereNotIn('eval_run_id', DB::table('ai_eval_runs')->where('passed', true)->select('id'))->count(), 'every approved model passed an evaluation');
         $this->assertSame(0, DB::table('ai_outputs')->where('status', 'draft')->where('expires_at', '<', now()->subDays(4))->count(), 'old drafts lapsed');
+        // patient welfare: money in and out reconciles, and every decision had a second person
+        $this->assertSame(0, DB::table('wf_funds as f')->whereRaw('(select coalesce(sum(amount), 0) from wf_fund_entries where fund_id = f.id) < 0')->count(), 'no fund is overdrawn');
+        $this->assertSame(0, DB::table('wf_grants as g')->whereRaw("g.spent_amount <> (select coalesce(sum(amount), 0) from wf_applications where grant_id = g.id and status = 'applied')")->count(), 'what a grant gave is what its applied discounts add up to');
+        $this->assertSame(0, DB::table('wf_grants')->whereColumn('spent_amount', '>', 'cap_amount')->count(), 'no grant gave more than its limit');
+        $this->assertSame(0, DB::table('wf_applications as a')->where('a.status', 'applied')->whereRaw("(select count(*) from wf_fund_entries where application_id = a.id and entry_type = 'disbursement') <> 1")->count(), 'every discount charged the fund once');
+        $this->assertSame(0, DB::table('wf_applications as a')->join('billing_adjustments as j', 'j.id', '=', 'a.adjustment_id')->where('a.status', 'applied')->where('j.status', '<>', 'approved')->count(), 'the fund is charged only after Billing approves');
+        $this->assertSame(0, DB::table('wf_assessments')->whereColumn('decided_by', 'assessed_by')->count() + DB::table('wf_grants')->whereIn('status', ['approved', 'used', 'expired'])->whereColumn('approved_by', 'requested_by')->count(), 'nobody decided their own work');
+        $this->assertSame(0, DB::table('wf_fund_entries')->where('entry_type', 'donation')->whereNull('receipt_no')->count(), 'every gift has a receipt');
         foreach (['medication_review', 'radiology_worklist', 'insurance_claim_check', 'risk_scoring'] as $code) {
             $this->assertSame(1, DB::table('ai_use_cases')->where('code', $code)->where('status', 'enabled')->whereColumn('approved_by', '!=', 'registered_by')->count(), "$code was switched on by a second person");
             $waiting = $code === 'radiology_worklist' ? DB::table('radiology_examinations as e')->join('radiology_order_items as i', 'i.id', '=', 'e.order_item_id')->whereIn('e.status', ['completed', 'images_available'])->whereNotIn('i.status', ['reported', 'cancelled'])->count() : 1;

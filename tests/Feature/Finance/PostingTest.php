@@ -119,6 +119,7 @@ class PostingTest extends FinanceTestCase
         $adj->approve($a, $this->superAdmin(), 'ok');
         $this->assertSame('900.00', $this->bal('1210'));
         $this->assertSame('-100.00', $this->bal('4900'), 'discounts allowed sit on the debit side of a revenue account');
+        $this->assertSame([], collect($this->recon()['rows'])->filter(fn ($r) => bccomp($r['difference'], '0', 2) !== 0)->pluck('label')->all(), 'a discount approved after the bill was finalised is not a difference between Billing and the books: '.json_encode($this->recon()['rows']));
     }
 
     public function test_a_failure_waits_in_the_list_and_never_breaks_billing(): void

@@ -49,6 +49,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('module:quality')->group(fn () => require __DIR__.'/../modules/Quality/Routes/api.php');
         Route::middleware('module:facility')->group(fn () => require __DIR__.'/../modules/Facility/Routes/api.php');
         Route::middleware('module:ai')->group(fn () => require __DIR__.'/../modules/Ai/Routes/api.php');
+        Route::middleware('module:welfare')->group(fn () => require __DIR__.'/../modules/Welfare/Routes/api.php');
 
         Route::get('/organizations', [OrganizationController::class, 'index']);
         Route::post('/organizations', [OrganizationController::class, 'store']);

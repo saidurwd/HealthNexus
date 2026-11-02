@@ -118,6 +118,7 @@ use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
 use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
 use App\Listeners\Radiology\NotifyOnRadiologyReportEvents;
 use App\Listeners\Radiology\RecordRadiologyReportOnPatientTimeline;
+use App\Listeners\Welfare\SettleWelfareApplication;
 use App\Models\Patient;
 use App\Models\PatientBranchRegistration;
 use App\Models\PatientContact;
@@ -199,6 +200,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Phase 21: Billing's money events are posted to the books.
         Event::listen(BedReleased::class, CreateCleaningTask::class);
+        Event::listen(AdjustmentApproved::class, SettleWelfareApplication::class);
         Event::listen(InvoiceFinalized::class, [PostToLedger::class, 'invoiceFinalized']);
         Event::listen(InvoiceCancelled::class, [PostToLedger::class, 'invoiceCancelled']);
         Event::listen(PaymentCompleted::class, [PostToLedger::class, 'paymentCompleted']);

@@ -1,6 +1,6 @@
 @extends('layouts.adminlte')
 
-@section('page_title', __('National exchange'))
+@section('page_title', __('National exchange (DGHS)'))
 
 @section('page_content')
     @include('admin.interop._flash')
