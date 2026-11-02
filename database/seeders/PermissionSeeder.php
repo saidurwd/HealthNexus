@@ -902,6 +902,29 @@ class PermissionSeeder extends Seeder
             'facility.visitor.gate',
             'facility.visitor.manage',
 
+            // AI and Clinical Intelligence (Phase 20)
+            'ai.dashboard.view',
+            'ai.use',
+            'ai.output.review',
+            'ai.output.view_all',
+            'ai.usecase.view',
+            'ai.usecase.manage',
+            'ai.usecase.approve',
+            'ai.killswitch',
+            'ai.provider.manage',
+            'ai.provider.legal',
+            'ai.model.manage',
+            'ai.model.approve',
+            'ai.prompt.manage',
+            'ai.knowledge.manage',
+            'ai.knowledge.approve',
+            'ai.eval.run',
+            'ai.eval.view',
+            'ai.incident.view',
+            'ai.incident.manage',
+            'ai.monitor.view',
+            'ai.audit.view',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -1051,6 +1074,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.usecase.manage', 'ai.usecase.approve', 'ai.killswitch', 'ai.provider.manage', 'ai.provider.legal', 'ai.model.manage', 'ai.model.approve', 'ai.prompt.manage', 'ai.knowledge.manage', 'ai.knowledge.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view',
                 'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.workorder.verify', 'facility.calibration.record', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.cssd.view', 'facility.cssd.manage', 'facility.cssd.release', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request', 'facility.mortuary.view', 'facility.mortuary.manage', 'facility.mortuary.release', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate', 'facility.visitor.manage',
                 'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
                 'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
@@ -2098,10 +2122,31 @@ class PermissionSeeder extends Seeder
             'reception_gate_officer' => [
                 'patients.view', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate',
             ],
+            'ai_governance_lead' => [
+                'patients.view', 'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.usecase.manage', 'ai.usecase.approve', 'ai.killswitch', 'ai.provider.manage', 'ai.provider.legal', 'ai.model.manage', 'ai.model.approve', 'ai.prompt.manage', 'ai.knowledge.manage', 'ai.knowledge.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view',
+            ],
+            'ai_clinical_reviewer' => [
+                'patients.view', 'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.eval.view', 'ai.incident.view', 'ai.monitor.view',
+            ],
+            'ai_safety_officer' => [
+                'patients.view', 'ai.dashboard.view', 'ai.usecase.view', 'ai.usecase.approve', 'ai.killswitch', 'ai.model.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view', 'ai.provider.legal',
+            ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
             ],
         ];
+
+        // Clinicians can ask the AI to read a record back to them and are the people who accept or reject what it drafts; other clinical staff can use it and report problems.
+        foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician', 'senior_radiologist', 'pathologist'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['ai.use', 'ai.output.review'])));
+            }
+        }
+        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'data_analyst', 'accountant', 'inventory_manager', 'storekeeper', 'procurement_officer', 'procurement_manager'] as $user) {
+            if (isset($roles[$user])) {
+                $roles[$user] = array_values(array_unique(array_merge($roles[$user], ['ai.use'])));
+            }
+        }
 
         // Clinical staff can order diets, ask for an ambulance and ask for a clean.
         foreach (['doctor', 'staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'nursing_supervisor', 'icu_nurse', 'senior_icu_nurse'] as $clinical) {

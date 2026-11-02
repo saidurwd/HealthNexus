@@ -158,6 +158,9 @@ class DemoHistoryTest extends TestCase
         $has('fac_waste_records', 80);
         $has('fac_diet_orders', 1);
         $has('fac_ambulance_trips', 10);
+        $has('ai_requests', 10);
+        $has('ai_outputs', 8);
+        $has('ai_use_cases', 13);
 
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
@@ -277,6 +280,22 @@ class DemoHistoryTest extends TestCase
         try {
             DB::table('fac_gate_logs')->limit(1)->update(['note' => 'edited']);
             $this->fail('the gate log was changed by SQL');
+        } catch (QueryException) {
+            $this->addToAssertionCount(1);
+        }
+
+        // ai: nothing left the hospital, nothing was written to a record, every output is a labelled draft with sources, and the governance trail is whole
+        $this->assertSame(0, DB::table('ai_requests')->where('mode', 'deidentified')->count() + DB::table('ai_providers')->where('location', 'international')->where('status', 'enabled')->count(), 'nothing is sent abroad');
+        $this->assertSame(0, DB::table('ai_outputs')->where('label', '!=', 'AI-generated — needs review')->count(), 'every output is labelled');
+        $this->assertSame(0, DB::table('ai_outputs')->where('kind', '!=', 'none')->pluck('sources')->filter(fn ($s) => count((array) json_decode((string) $s, true)) === 0)->count(), 'every output cites its sources');
+        $this->assertSame(0, DB::table('ai_outputs')->where('status', 'accepted')->where(fn ($q) => $q->whereNull('reviewed_by')->orWhereNull('reviewed_at'))->count(), 'every accepted draft has a reviewer');
+        $this->assertSame(0, DB::table('ai_use_cases')->where('implemented', false)->where('status', 'enabled')->count(), 'a function that is only planned is never on');
+        $this->assertSame(0, DB::table('ai_use_cases')->where('status', 'enabled')->whereNotIn('model_id', DB::table('ai_models')->where('status', 'approved')->select('id'))->count(), 'every function that is on uses an approved model');
+        $this->assertSame(0, DB::table('ai_models')->where('status', 'approved')->whereNotIn('eval_run_id', DB::table('ai_eval_runs')->where('passed', true)->select('id'))->count(), 'every approved model passed an evaluation');
+        $this->assertSame(0, DB::table('ai_outputs')->where('status', 'draft')->where('expires_at', '<', now()->subDays(4))->count(), 'old drafts lapsed');
+        try {
+            DB::table('ai_requests')->limit(1)->update(['outcome' => 'blocked']);
+            $this->fail('the request log was changed by SQL');
         } catch (QueryException) {
             $this->addToAssertionCount(1);
         }

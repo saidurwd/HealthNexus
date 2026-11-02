@@ -1,0 +1,9 @@
+@extends('layouts.adminlte')
+
+@section('page_title', __('AI monitoring'))
+
+@section('page_content')
+    <p class="small text-muted">{{ __('The last :d days. A fall in how often clinicians accept drafts, compared with the period before, opens a drift incident.', ['d' => $days]) }}</p>
+    <div class="card"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Function') }}</th><th>{{ __('Status') }}</th><th class="text-end">{{ __('Requests') }}</th><th class="text-end">{{ __('Refused') }}</th><th class="text-end">{{ __('Failed') }}</th><th class="text-end">{{ __('Drafts') }}</th><th class="text-end">{{ __('Accepted') }}</th><th class="text-end">{{ __('Rejected') }}</th><th class="text-end">{{ __('Acceptance') }}</th><th class="text-end">{{ __('Errors reported') }}</th><th class="text-end">{{ __('Lines removed') }}</th><th class="text-end">{{ __('Speed (ms)') }}</th><th class="text-end">{{ __('Open incidents') }}</th></tr></thead><tbody>
+        @foreach($rows as $r)@php($m = $r['m'])<tr><td>{{ __($r['uc']->name) }}</td><td><x-ui.status-badge :status="$r['uc']->status === 'enabled' ? 'active' : ($r['uc']->status === 'paused' ? 'suspended' : 'pending')" :label="__(\Illuminate\Support\Str::headline($r['uc']->status))" /></td><td class="text-end">{{ $m['requests'] }}</td><td class="text-end">{{ $m['blocked'] }}</td><td class="text-end">{{ $m['failed'] }}</td><td class="text-end">{{ $m['outputs'] }}</td><td class="text-end">{{ $m['accepted'] }}</td><td class="text-end">{{ $m['rejected'] }}</td><td class="text-end">{{ $m['acceptance'] !== null ? $m['acceptance'].'%' : '—' }}</td><td class="text-end">{{ $m['errors_reported'] }}</td><td class="text-end">{{ $m['suppressed_lines'] }}</td><td class="text-end">{{ $m['avg_latency_ms'] ?? '—' }}</td><td class="text-end">{{ $m['incidents_open'] }}</td></tr>@endforeach</tbody></table></div></div>
+@stop

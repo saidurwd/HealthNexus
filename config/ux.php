@@ -12,6 +12,7 @@
 return [
     'statuses' => [
         // shared vocabulary (guideline 9.4)
+        'enabled' => ['success', 'bi-toggle-on'], 'disabled' => ['secondary', 'bi-toggle-off'], 'candidate' => ['info', 'bi-hourglass'],
         'active' => ['success', 'bi-check-circle'], 'inactive' => ['secondary', 'bi-dash-circle'], 'archived' => ['secondary', 'bi-archive'],
         'draft' => ['secondary', 'bi-pencil'], 'submitted' => ['info', 'bi-send'], 'pending_approval' => ['warning', 'bi-hourglass-split'],
         'approved' => ['success', 'bi-check2-circle'], 'rejected' => ['danger', 'bi-x-circle'], 'returned' => ['warning', 'bi-arrow-return-left'],

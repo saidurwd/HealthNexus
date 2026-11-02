@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Demo\History\Modules\AiHistory;
 use App\Services\Demo\History\Modules\AnalyticsHistory;
 use App\Services\Demo\History\Modules\AppointmentsAndOpdHistory;
 use App\Services\Demo\History\Modules\BillingCatalogHistory;
@@ -57,6 +58,7 @@ return [
         AnalyticsHistory::class,
         QualityHistory::class,
         FacilityHistory::class,
+        AiHistory::class,
     ],
 
     'months' => 6,

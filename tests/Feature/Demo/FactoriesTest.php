@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Demo;
 
+use App\Models\Ai\AiIncident;
+use App\Models\Ai\AiKnowledge;
+use App\Models\Ai\AiProvider;
+use App\Models\Ai\AiUseCase;
 use App\Models\Analytics\AnalyticsDashboard;
 use App\Models\Analytics\AnalyticsDataset;
 use App\Models\Analytics\AnalyticsKpi;
@@ -204,5 +208,14 @@ class FactoriesTest extends TestCase
         $this->assertSame('available', FacAmbulance::factory()->create()->status);
         $this->assertSame(4, FacMortuaryUnit::factory()->create()->capacity);
         $this->assertTrue(FacVisitorBlock::factory()->create()->active);
+    }
+
+    public function test_ai_factories_build_records_the_services_accept(): void
+    {
+        $this->assertSame('disabled', AiProvider::factory()->create()->status);
+        $uc = AiUseCase::factory()->create();
+        $this->assertFalse($uc->implemented);
+        $this->assertSame('draft', AiKnowledge::factory()->create()->status);
+        $this->assertSame('open', AiIncident::factory()->create()->status);
     }
 }
