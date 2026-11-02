@@ -70,6 +70,10 @@ return [
         'needs_visit' => ['warning', 'bi-calendar-plus'], 'declined' => ['danger', 'bi-x-circle'], 'investigating' => ['primary', 'bi-search'], 'escalated' => ['danger', 'bi-arrow-up-circle'], 'assigned' => ['info', 'bi-person-check'],
         'initiated' => ['info', 'bi-hourglass'], 'succeeded' => ['success', 'bi-check-circle-fill'], 'queued' => ['info', 'bi-inbox'], 'suppressed' => ['secondary', 'bi-slash-circle'], 'new' => ['info', 'bi-star'], 'reviewed' => ['success', 'bi-check2'],
         'running' => ['primary', 'bi-play-circle'], 'unknown_payment' => ['danger', 'bi-question-diamond'], 'amount_differs' => ['danger', 'bi-exclamation-diamond'], 'not_succeeded' => ['warning', 'bi-x-diamond'],
+        // facility
+        'in_service' => ['success', 'bi-check-circle'], 'under_maintenance' => ['warning', 'bi-wrench'], 'out_of_service' => ['danger', 'bi-slash-circle'], 'waiting_parts' => ['warning', 'bi-box-seam'], 'packed' => ['info', 'bi-box'], 'loading' => ['secondary', 'bi-box-arrow-in-down'],
+        'released' => ['success', 'bi-unlock'], 'stored' => ['info', 'bi-archive'], 'release_pending' => ['warning', 'bi-hourglass-split'], 'handed_over' => ['info', 'bi-truck'], 'arrived' => ['info', 'bi-geo-alt'], 'inspected' => ['success', 'bi-clipboard-check'],
+        'stopped' => ['secondary', 'bi-stop-circle'], 'served' => ['success', 'bi-check2-circle'], 'refused' => ['secondary', 'bi-x-circle'], 'on_trip' => ['primary', 'bi-truck-front'],
         // quality
         'reported' => ['info', 'bi-flag'], 'triaged' => ['primary', 'bi-funnel'], 'actioned' => ['primary', 'bi-list-check'], 'granted' => ['success', 'bi-patch-check'], 'ruled_out' => ['secondary', 'bi-x-circle'], 'suspected' => ['warning', 'bi-question-circle'],
         'planned' => ['info', 'bi-calendar-event'], 'held' => ['primary', 'bi-people'], 'minuted' => ['success', 'bi-journal-check'], 'superseded' => ['secondary', 'bi-layers'], 'in_review' => ['info', 'bi-eye'], 'contained' => ['warning', 'bi-shield'],

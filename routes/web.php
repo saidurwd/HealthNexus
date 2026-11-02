@@ -86,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware('module:finance')->group(fn () => require __DIR__.'/../modules/Finance/Routes/web.php');
         Route::middleware('module:analytics')->group(fn () => require __DIR__.'/../modules/Analytics/Routes/web.php');
         Route::middleware('module:quality')->group(fn () => require __DIR__.'/../modules/Quality/Routes/web.php');
+        Route::middleware('module:facility')->group(fn () => require __DIR__.'/../modules/Facility/Routes/web.php');
         require __DIR__.'/../modules/Audit/Routes/web.php';
         require __DIR__.'/../modules/System/Routes/web.php';
         require __DIR__.'/../modules/Workflow/Routes/web.php';

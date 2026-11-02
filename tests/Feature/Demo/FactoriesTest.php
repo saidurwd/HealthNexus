@@ -12,6 +12,15 @@ use App\Models\Blood\BloodRequest;
 use App\Models\Blood\BloodUnit;
 use App\Models\Ed\EdBay;
 use App\Models\Ed\EdVisit;
+use App\Models\Facility\FacAmbulance;
+use App\Models\Facility\FacAsset;
+use App\Models\Facility\FacCleaningTask;
+use App\Models\Facility\FacDietType;
+use App\Models\Facility\FacInstrumentSet;
+use App\Models\Facility\FacLinenType;
+use App\Models\Facility\FacMortuaryUnit;
+use App\Models\Facility\FacVisitorBlock;
+use App\Models\Facility\FacWorkOrder;
 use App\Models\Finance\Account;
 use App\Models\Finance\Asset;
 use App\Models\Finance\BankAccount;
@@ -40,6 +49,7 @@ use App\Models\Quality\QaInfectionCase;
 use App\Models\Quality\QaPrivilegeCatalog;
 use App\Models\Quality\QaStandard;
 use App\Services\Analytics\Semantic\SemanticQuery;
+use App\Services\Facility\AssetService;
 use App\Services\Insurance\InsurancePolicyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -179,5 +189,20 @@ class FactoriesTest extends TestCase
         $this->assertTrue(QaStandard::factory()->create()->active);
         $this->assertSame('safety', QaCommittee::factory()->create()->kind);
         $this->assertNull(QaIndicator::factory()->create()->organization_id);
+    }
+
+    public function test_facility_factories_build_records_the_services_accept(): void
+    {
+        $asset = FacAsset::factory()->create();
+        $this->assertSame(32, strlen($asset->qr_token));
+        $this->assertTrue(app(AssetService::class)->usable($asset));
+        $this->assertSame('open', FacWorkOrder::factory()->create()->status);
+        $this->assertSame('pending', FacCleaningTask::factory()->create()->status);
+        $this->assertTrue(FacInstrumentSet::factory()->create()->active);
+        $this->assertSame(50, FacLinenType::factory()->create()->par_level);
+        $this->assertTrue(FacDietType::factory()->create()->active);
+        $this->assertSame('available', FacAmbulance::factory()->create()->status);
+        $this->assertSame(4, FacMortuaryUnit::factory()->create()->capacity);
+        $this->assertTrue(FacVisitorBlock::factory()->create()->active);
     }
 }

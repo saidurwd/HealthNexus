@@ -5,9 +5,11 @@ namespace Tests\Feature\Demo;
 use App\Models\Appointment;
 use App\Models\Branch;
 use App\Models\Encounter;
+use App\Models\Facility\FacLinenType;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Services\Analytics\Warehouse;
+use App\Services\Facility\LinenService;
 use App\Services\Finance\LedgerService;
 use App\Services\Finance\ReconciliationService;
 use App\Services\Inventory\InventoryLedgerReconciler;
@@ -148,6 +150,14 @@ class DemoHistoryTest extends TestCase
         $has('qa_audits', 4);
         $has('qa_meetings', 10);
         $has('qa_indicator_values', 13);
+        $has('fac_assets', 40);
+        $has('fac_work_orders', 5);
+        $has('fac_cleaning_tasks', 1);
+        $has('fac_sterilisation_batches', 5);
+        $has('fac_linen_movements', 100);
+        $has('fac_waste_records', 80);
+        $has('fac_diet_orders', 1);
+        $has('fac_ambulance_trips', 10);
 
         $has('billing_invoices', 30);
         $has('billing_payments', 20);
@@ -244,6 +254,29 @@ class DemoHistoryTest extends TestCase
         try {
             DB::table('qa_incidents')->limit(1)->update(['description' => 'edited']);
             $this->fail('a reported incident was changed by SQL');
+        } catch (QueryException) {
+            $this->addToAssertionCount(1);
+        }
+
+        // facility: nothing unsafe is in use, second people did the checking, the ledgers add up
+        $this->assertSame(0, DB::table('fac_assets as a')->whereIn('a.status', ['out_of_service', 'under_maintenance'])->whereNotExists(fn ($q) => $q->select(DB::raw(1))->from('fac_work_orders as w')->whereColumn('w.asset_id', 'a.id')->whereIn('w.status', ['open', 'in_progress', 'waiting_parts', 'done']))->count(), 'equipment that is down has an order');
+        $this->assertSame(0, DB::table('fac_work_orders')->where('status', 'verified')->whereColumn('verified_by', 'assigned_to')->count(), 'nobody checked their own repair');
+        $this->assertSame(0, DB::table('fac_sterilisation_batches')->whereNotNull('released_by')->whereColumn('released_by', 'operator_id')->count(), 'nobody released their own batch');
+        $this->assertSame(0, DB::table('fac_sterilisation_batches')->whereNotNull('released_at')->where('indicator_result', '!=', 'pass')->count(), 'only a passed batch is released');
+        $this->assertSame(0, DB::table('fac_batch_items as i')->join('fac_sterilisation_batches as b', 'b.id', '=', 'i.batch_id')->where('i.status', 'issued')->whereNull('b.released_at')->count(), 'no pack is used from an unreleased batch');
+        $this->assertSame(0, DB::table('fac_waste_manifests as m')->whereRaw('abs(m.total_kg - (select coalesce(sum(r.weight_kg), 0) from fac_waste_records r where r.manifest_id = m.id)) > 0.001')->count(), 'every manifest adds up');
+        $this->assertSame(0, DB::table('fac_diet_orders')->where('status', 'active')->groupBy('admission_id')->havingRaw('count(*) > 1')->count(), 'one active diet per patient');
+        $this->assertSame(0, DB::table('fac_ambulance_trips')->where('status', 'completed')->whereColumn('odometer_end', '<', 'odometer_start')->count(), 'odometers go forward');
+        $this->assertSame(0, DB::table('fac_mortuary_cases')->where('status', 'released')->whereColumn('released_by', 'authorised_by')->count(), 'releases are authorised by a second person');
+        $this->assertSame(0, DB::table('fac_visitor_passes')->where('status', 'active')->where('kind', 'attendant')->groupBy('admission_id')->havingRaw('count(*) > 1')->count(), 'one attendant at a time');
+        $this->assertSame(0, DB::table('fac_visitor_passes as p')->join('ipd_admissions as a', 'a.id', '=', 'p.admission_id')->where('p.status', 'active')->whereNotNull('a.actual_discharge_date')->count(), 'passes end with the stay');
+        foreach (DB::table('fac_linen_types')->get() as $type) {
+            $b = app(LinenService::class)->balance(FacLinenType::find($type->id));
+            $this->assertGreaterThanOrEqual(0, min($b['clean_store'], $b['on_wards'], $b['soiled'], $b['at_laundry']), "linen {$type->code} never goes below zero");
+        }
+        try {
+            DB::table('fac_gate_logs')->limit(1)->update(['note' => 'edited']);
+            $this->fail('the gate log was changed by SQL');
         } catch (QueryException) {
             $this->addToAssertionCount(1);
         }

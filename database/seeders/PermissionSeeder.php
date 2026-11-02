@@ -867,6 +867,41 @@ class PermissionSeeder extends Seeder
             'quality.committee.manage',
             'quality.complaint.link',
 
+            // Facility and Support Services (Phase 22)
+            'facility.dashboard.view',
+            'facility.asset.view',
+            'facility.asset.manage',
+            'facility.asset.label',
+            'facility.workorder.view',
+            'facility.workorder.report',
+            'facility.workorder.manage',
+            'facility.workorder.verify',
+            'facility.calibration.record',
+            'facility.housekeeping.view',
+            'facility.housekeeping.work',
+            'facility.housekeeping.manage',
+            'facility.housekeeping.inspect',
+            'facility.cssd.view',
+            'facility.cssd.manage',
+            'facility.cssd.release',
+            'facility.linen.view',
+            'facility.linen.manage',
+            'facility.waste.view',
+            'facility.waste.manage',
+            'facility.diet.view',
+            'facility.diet.order',
+            'facility.diet.kitchen',
+            'facility.ambulance.view',
+            'facility.ambulance.manage',
+            'facility.ambulance.request',
+            'facility.mortuary.view',
+            'facility.mortuary.manage',
+            'facility.mortuary.release',
+            'facility.visitor.view',
+            'facility.visitor.issue',
+            'facility.visitor.gate',
+            'facility.visitor.manage',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -1016,6 +1051,7 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
+                'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.workorder.verify', 'facility.calibration.record', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.cssd.view', 'facility.cssd.manage', 'facility.cssd.release', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request', 'facility.mortuary.view', 'facility.mortuary.manage', 'facility.mortuary.release', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate', 'facility.visitor.manage',
                 'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
                 'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
                 'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
@@ -2029,15 +2065,55 @@ class PermissionSeeder extends Seeder
             'credentialing_officer' => [
                 'patients.view', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.document.view',
             ],
+            'facility_manager' => [
+                'patients.view', 'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.workorder.verify', 'facility.calibration.record', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.cssd.view', 'facility.cssd.manage', 'facility.cssd.release', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request', 'facility.mortuary.view', 'facility.mortuary.manage', 'facility.mortuary.release', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate', 'facility.visitor.manage',
+            ],
+            'biomedical_engineer' => [
+                'patients.view', 'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.calibration.record', 'facility.cssd.view',
+            ],
+            'housekeeping_supervisor' => [
+                'patients.view', 'facility.dashboard.view', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage',
+            ],
+            'housekeeper' => [
+                'patients.view', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.waste.view',
+            ],
+            'cssd_technician' => [
+                'patients.view', 'facility.cssd.view', 'facility.cssd.manage', 'facility.asset.view',
+            ],
+            'dietitian' => [
+                'patients.view', 'facility.dashboard.view', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen',
+            ],
+            'kitchen_staff' => [
+                'patients.view', 'facility.diet.view', 'facility.diet.kitchen',
+            ],
+            'ambulance_dispatcher' => [
+                'patients.view', 'facility.dashboard.view', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request',
+            ],
+            'mortuary_attendant' => [
+                'patients.view', 'facility.mortuary.view', 'facility.mortuary.manage',
+            ],
+            'security_guard' => [
+                'patients.view', 'facility.visitor.view', 'facility.visitor.gate',
+            ],
+            'reception_gate_officer' => [
+                'patients.view', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate',
+            ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
             ],
         ];
 
+        // Clinical staff can order diets, ask for an ambulance and ask for a clean.
+        foreach (['doctor', 'staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'nursing_supervisor', 'icu_nurse', 'senior_icu_nurse'] as $clinical) {
+            if (isset($roles[$clinical])) {
+                $roles[$clinical] = array_values(array_unique(array_merge($roles[$clinical], ['facility.diet.order', 'facility.diet.view', 'facility.ambulance.request', 'facility.housekeeping.view'])));
+            }
+        }
+
         // Employee self-service (Phase 16): every job role can see its own payslips, ask for leave and ask for a punch to be corrected.
         foreach ($roles as $roleName => $rolePermissions) {
             if ($roleName !== 'super_admin') {
-                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request', 'quality.incident.report', 'quality.document.view', 'quality.document.acknowledge'])));
+                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request', 'quality.incident.report', 'quality.document.view', 'quality.document.acknowledge', 'facility.workorder.report'])));
             }
         }
 

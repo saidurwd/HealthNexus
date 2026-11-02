@@ -8,6 +8,7 @@ use App\Services\Demo\History\Modules\BloodDonationsHistory;
 use App\Services\Demo\History\Modules\BloodTransfusionHistory;
 use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\EdHistory;
+use App\Services\Demo\History\Modules\FacilityHistory;
 use App\Services\Demo\History\Modules\FinanceHistory;
 use App\Services\Demo\History\Modules\HrHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
@@ -55,6 +56,7 @@ return [
         FinanceHistory::class,
         AnalyticsHistory::class,
         QualityHistory::class,
+        FacilityHistory::class,
     ],
 
     'months' => 6,

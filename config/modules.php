@@ -30,7 +30,7 @@ return [
     'analytics' => ['name' => 'BI / Analytics', 'phase' => 19, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['analytics'], 'tables' => ['fact', 'dim', 'analytics'], 'api' => ['analytics']],
     'ai' => ['name' => 'AI / Clinical Intelligence', 'phase' => 20, 'built' => false, 'always_on' => false, 'depends_on' => ['analytics'], 'permissions' => ['ai'], 'tables' => ['ai'], 'api' => ['ai']],
     'finance' => ['name' => 'Finance & Accounting', 'phase' => 21, 'built' => true, 'always_on' => false, 'depends_on' => ['billing'], 'permissions' => ['finance'], 'tables' => ['fin'], 'api' => ['finance']],
-    'facility' => ['name' => 'Facility & Support Services', 'phase' => 22, 'built' => false, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['facility'], 'tables' => ['fac'], 'api' => ['facility']],
+    'facility' => ['name' => 'Facility & Support Services', 'phase' => 22, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['facility'], 'tables' => ['fac'], 'api' => ['facility']],
     'quality' => ['name' => 'Quality, Safety & Compliance', 'phase' => 23, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['quality'], 'tables' => ['qa'], 'api' => ['quality']],
     'specialty' => ['name' => 'Specialty Care & Telemedicine', 'phase' => 24, 'built' => false, 'always_on' => false, 'depends_on' => ['opd'], 'permissions' => ['specialty'], 'tables' => ['mat', 'dial', 'dent', 'physio', 'tele'], 'api' => ['specialty']],
     'platform' => ['name' => 'Platform & SaaS Admin', 'phase' => 25, 'built' => false, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['platform'], 'tables' => ['plat'], 'api' => ['platform']],

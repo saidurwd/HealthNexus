@@ -35,6 +35,7 @@ use App\Events\Icu\ICUPatientAdmitted;
 use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ipd\AdmissionApproved;
 use App\Events\Ipd\BedAllocated;
+use App\Events\Ipd\BedReleased;
 use App\Events\Ipd\DischargeRequested;
 use App\Events\Ipd\PatientAdmitted;
 use App\Events\Ipd\PatientDischarged;
@@ -80,6 +81,7 @@ use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
 use App\Listeners\Billing\ReverseChargeOnReversalRequested;
 use App\Listeners\Blood\SyncDonationTestsOnLabReport;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
+use App\Listeners\Facility\CreateCleaningTask;
 use App\Listeners\Finance\PostToLedger;
 use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
 use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
@@ -196,6 +198,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Phase 21: Billing's money events are posted to the books.
+        Event::listen(BedReleased::class, CreateCleaningTask::class);
         Event::listen(InvoiceFinalized::class, [PostToLedger::class, 'invoiceFinalized']);
         Event::listen(InvoiceCancelled::class, [PostToLedger::class, 'invoiceCancelled']);
         Event::listen(PaymentCompleted::class, [PostToLedger::class, 'paymentCompleted']);

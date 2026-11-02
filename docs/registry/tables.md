@@ -157,6 +157,35 @@ _Generated from the Schema::create calls in database/migrations._
 - `ed_visits`
 - `ed_zones`
 
+## facility (26)
+
+- `fac_ambulance_trips`
+- `fac_ambulances`
+- `fac_assets`
+- `fac_batch_items`
+- `fac_calibrations`
+- `fac_cleaning_audits`
+- `fac_cleaning_tasks`
+- `fac_diet_orders`
+- `fac_diet_types`
+- `fac_fuel_logs`
+- `fac_gate_logs`
+- `fac_instrument_sets`
+- `fac_linen_movements`
+- `fac_linen_types`
+- `fac_maintenance_plans`
+- `fac_meal_lists`
+- `fac_meal_trays`
+- `fac_mortuary_cases`
+- `fac_mortuary_units`
+- `fac_sterilisation_batches`
+- `fac_visitor_blocks`
+- `fac_visitor_passes`
+- `fac_waste_manifests`
+- `fac_waste_records`
+- `fac_work_order_parts`
+- `fac_work_orders`
+
 ## finance (27)
 
 - `fin_account_roles`

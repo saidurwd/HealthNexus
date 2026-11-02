@@ -1,0 +1,23 @@
+@extends('layouts.adminlte')
+
+@section('page_title', __('Equipment'))
+
+@section('page_content')
+    @include('admin.facility._flash')
+    @php($H = fn ($v) => __(\Illuminate\Support\Str::headline((string) $v)))
+    <form class="row g-2 mb-3" method="GET"><div class="col-md-3"><input name="q" class="form-control form-control-sm" placeholder="{{ __('Tag, name or serial number') }}" value="{{ $filters['q'] ?? '' }}"></div>
+        <div class="col-md-2"><select name="category" class="form-select form-select-sm"><option value="">{{ __('Any kind') }}</option>@foreach($policy->list('asset.categories') as $c)<option value="{{ $c }}" @selected(($filters['category'] ?? '') === $c)>{{ $H($c) }}</option>@endforeach</select></div>
+        <div class="col-md-2"><select name="status" class="form-select form-select-sm"><option value="">{{ __('Any state') }}</option>@foreach(['in_service', 'under_maintenance', 'out_of_service', 'retired'] as $st)<option value="{{ $st }}" @selected(($filters['status'] ?? '') === $st)>{{ $H($st) }}</option>@endforeach</select></div>
+        <div class="col-md-2"><button class="btn btn-sm btn-primary">{{ __('Filter') }}</button></div></form>
+    <div class="card mb-3"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Tag') }}</th><th>{{ __('Name') }}</th><th>{{ __('Kind') }}</th><th>{{ __('Where') }}</th><th>{{ __('Risk') }}</th><th>{{ __('State') }}</th><th>{{ __('May be used?') }}</th></tr></thead><tbody>
+        @forelse($assets as $a)@php($why = $service->reason($a))<tr><td><a href="{{ route('admin.facility.assets.show', $a->public_id) }}">{{ $a->tag }}</a></td><td>{{ $a->name }}</td><td>{{ $H($a->category) }}</td><td>{{ $a->location }}</td><td>{{ $H($a->risk_class) }}</td><td><x-ui.status-badge :status="$a->status" /></td><td>@if($why)<span class="text-danger small">{{ $why }}</span>@else<span class="text-success small">{{ __('Yes') }}</span>@endif</td></tr>
+        @empty<tr><td colspan="7" class="text-muted">{{ __('No equipment.') }}</td></tr>@endforelse</tbody></table></div><div class="card-footer">{{ $assets->links() }}</div></div>
+    @if($canManage)<form method="POST" action="{{ route('admin.facility.assets.store') }}" class="card"><div class="card-header"><h3 class="card-title">{{ __('Add equipment') }}</h3></div><div class="card-body row g-2">@csrf
+        <div class="col-md-4"><input name="name" class="form-control form-control-sm" placeholder="{{ __('Name') }}" required></div><div class="col-md-2"><select name="category" class="form-select form-select-sm">@foreach($policy->list('asset.categories') as $c)<option value="{{ $c }}">{{ $H($c) }}</option>@endforeach</select></div>
+        <div class="col-md-2"><select name="risk_class" class="form-select form-select-sm">@foreach($policy->list('asset.risk_classes') as $c)<option value="{{ $c }}" @selected($c === 'medium')>{{ $H($c) }}</option>@endforeach</select></div><div class="col-md-2"><input name="tag" class="form-control form-control-sm" placeholder="{{ __('Tag (made for you if empty)') }}"></div>
+        <div class="col-md-2"><input name="location" class="form-control form-control-sm" placeholder="{{ __('Where') }}"></div><div class="col-md-3"><input name="manufacturer" class="form-control form-control-sm" placeholder="{{ __('Maker') }}"></div><div class="col-md-3"><input name="model" class="form-control form-control-sm" placeholder="{{ __('Model') }}"></div>
+        <div class="col-md-3"><input name="serial_no" class="form-control form-control-sm" placeholder="{{ __('Serial number') }}"></div><div class="col-md-3"><input name="supplier_name" class="form-control form-control-sm" placeholder="{{ __('Supplier') }}"></div>
+        <div class="col-md-2"><label class="small">{{ __('Bought on') }}</label><input type="date" name="purchased_on" class="form-control form-control-sm"></div><div class="col-md-2"><label class="small">{{ __('Cost') }}</label><input type="number" step="0.01" min="0" name="cost" class="form-control form-control-sm"></div>
+        <div class="col-md-2"><label class="small">{{ __('Warranty until') }}</label><input type="date" name="warranty_until" class="form-control form-control-sm"></div><div class="col-md-3"><label class="small">{{ __('Department') }}</label><select name="department_id" class="form-select form-select-sm"><option value="">—</option>@foreach($departments as $d)<option value="{{ $d->id }}">{{ $d->name }}</option>@endforeach</select></div>
+        <div class="col-md-3 d-flex align-items-end"><button class="btn btn-sm btn-primary">{{ __('Add') }}</button></div></div></form>@endif
+@stop

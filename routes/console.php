@@ -102,3 +102,4 @@ Schedule::command('analytics:check')->hourly()->name('analytics-check')->without
 Schedule::command('analytics:run-schedules')->everyFiveMinutes()->name('analytics-schedules')->withoutOverlapping();
 Schedule::command('analytics:forecast')->dailyAt('05:30')->name('analytics-forecast')->withoutOverlapping();
 Schedule::command('quality:check')->dailyAt('06:00')->name('quality-check')->withoutOverlapping();
+Schedule::command('facility:check')->dailyAt('06:30')->name('facility-check')->withoutOverlapping();
