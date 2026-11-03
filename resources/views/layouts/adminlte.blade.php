@@ -168,11 +168,13 @@
         // A row at the top of the page that holds only buttons moves up to the right of the title.
         var bar = document.getElementById('page-actions');
         var wrap = document.querySelector('.app-content > .container-fluid') || document.querySelector('.app-content');
+        // Many pages wrap everything in their own .container-fluid; look inside it.
+        while (wrap && wrap.children.length && wrap.firstElementChild.matches('.container-fluid,.container')) { wrap = wrap.firstElementChild; }
         if (bar && wrap) {
             Array.prototype.slice.call(wrap.children, 0, 3).some(function (el) {
                 if (el.matches('script,style,.alert,.card,.row,table,form[method="GET" i]') || el.querySelector('.btn') === null) { return false; }
                 var probe = el.cloneNode(true);
-                probe.querySelectorAll('.btn,.badge,script,style').forEach(function (n) { n.remove(); });
+                probe.querySelectorAll('.btn,.badge,.d-none,script,style').forEach(function (n) { n.remove(); });
                 if (probe.textContent.trim() !== '' || probe.querySelector('input:not([type=hidden]),select,textarea,table,.card')) { return false; }
                 el.className = (el.className || '').split(/\s+/).filter(function (c) { return !/^(m[tbsex]?-|justify-|float-|w-|col|d-print)/.test(c); }).join(' ');
                 el.classList.add('d-flex', 'flex-wrap', 'align-items-center', 'gap-2');
