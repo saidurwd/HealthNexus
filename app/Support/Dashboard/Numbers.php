@@ -6,7 +6,7 @@ use App\Services\SettingsService;
 
 /**
  * How a figure is written on a dashboard. Two choices belong to the hospital, not the screen: whether thousands are grouped the South Asian way (12,34,567, as taka are usually written) or the international way (1,234,567),
- * and whether the Bangla interface writes digits as ০১২৩. Both default to the plain choice and are changed in Settings (`ux.number_grouping`, `ux.bangla_digits`).
+ * and whether the Bangla interface writes digits as ০১২৩. Both default to the plain choice and are changed in Settings (`ux.number_grouping`, `ux.bangla_digits`); a person can override the digits for themselves (users.bangla_digits).
  */
 class Numbers
 {
@@ -23,6 +23,11 @@ class Numbers
     {
         if (app()->getLocale() !== 'bn') {
             return false;
+        }
+        // A person's own choice comes first; without one the hospital's setting decides.
+        $own = auth()->user()?->bangla_digits;
+        if ($own !== null) {
+            return (bool) $own;
         }
         $v = app(SettingsService::class)->get('ux.bangla_digits');
 

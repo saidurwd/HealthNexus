@@ -9,6 +9,7 @@ use App\Models\Ipd\IpdBed;
 use App\Models\Ipd\IpdBedType;
 use App\Models\Ipd\IpdRoom;
 use App\Services\Billing\BillingPricingService;
+use App\Services\SettingsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 
@@ -112,5 +113,43 @@ class BedRateService
     {
         return DB::table('ipd_rooms as r')->join('ipd_wards as w', 'w.id', '=', 'r.ward_id')->where('r.organization_id', $organizationId)->where('r.is_active', true)->whereNotNull('r.rate_category')->where('r.rate_category', '!=', '')
             ->orderBy('w.name')->orderBy('r.room_number')->limit(100)->get(['w.name as ward', 'r.room_number as room', 'r.rate_category as label', 'r.is_vip as vip'])->map(fn ($x) => ['ward' => (string) $x->ward, 'room' => (string) $x->room, 'label' => (string) $x->label, 'vip' => (bool) $x->vip])->all();
+    }
+
+    /** The item codes shown on the OPD ticket card: Settings (`rates.opd_item_codes`, a list) or the registration, consultation and follow-up fees. @return list<string> */
+    public function opdCodes(): array
+    {
+        $v = app(SettingsService::class)->get('rates.opd_item_codes');
+        $list = is_array($v) ? $v : array_filter(array_map('trim', explode(',', (string) $v)));
+
+        return $list !== [] ? array_values(array_map('strval', $list)) : ['REGISTRATION', 'OPD-CONSULT', 'FOLLOWUP-CONSULT'];
+    }
+
+    /**
+     * The outpatient ticket and fees: what a visit costs for each patient category, and which categories pay nothing. A price of zero is shown as free; a fee with no price list entry shows the item's own price.
+     *
+     * @return array{rows:list<array<string,mixed>>,categories:list<string>,missing:list<string>,on:string}
+     */
+    public function opdCard(int $organizationId, ?int $branchId = null, ?CarbonImmutable $on = null): array
+    {
+        $on ??= CarbonImmutable::now();
+        $categories = $this->categories($organizationId, $branchId, $on);
+        $columns = array_merge([null], $categories);
+        $rows = [];
+        $missing = [];
+        foreach ($this->opdCodes() as $code) {
+            $item = BillingItem::query()->forTenant($organizationId, $branchId)->where('item_code', $code)->where('is_active', true)->first();
+            if ($item === null) {
+                $missing[] = $code;
+
+                continue;
+            }
+            $prices = [];
+            foreach ($columns as $cat) {
+                $prices[$cat ?? ''] = $this->priceOf($item, $cat, $on);
+            }
+            $rows[] = ['item' => $item, 'prices' => $prices];
+        }
+
+        return ['rows' => $rows, 'categories' => $categories, 'missing' => $missing, 'on' => $on->toDateString()];
     }
 }

@@ -27,4 +27,13 @@ class BedRateController extends Controller
         return view('admin.rates.beds', ['card' => $card, 'estimate' => $estimate, 'asked' => $request->only(['bed_type', 'days', 'category']), 'labelled' => $this->rates->labelledRooms($org),
             'canBilling' => $request->user()->can('billing.pricing.view')]);
     }
+
+    public function opd(Request $request)
+    {
+        abort_unless($request->user()->can('rates.opd.view'), 403);
+        $org = (int) $this->tenant->getOrganizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+
+        return view('admin.rates.opd', ['card' => $this->rates->opdCard($org, $branch), 'canBilling' => $request->user()->can('billing.pricing.view')]);
+    }
 }

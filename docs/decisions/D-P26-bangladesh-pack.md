@@ -10,7 +10,7 @@ Owner instruction (2026-11-02): "Go for Bangladesh gaps" — the gaps listed in 
 | B4 | Maternity and newborn, immunisation (EPI) (Phase 24 packs) | built 2026-11-03 - see `D-MCH-01-mothers-and-babies.md` (the vaccine schedule is an example the programme must confirm) |
 | B5 | Outbreak watch (dengue and others); Quality already tracks outbreaks inside infection control | built 2026-11-03 - see `D-WATCH-01-disease-watch.md` (the disease list is an example the health authority must confirm) |
 | B6 | Cabin and bed-class price lists as a view over Billing's price lists (P-23) | built 2026-11-03 - see `D-RATES-01-bed-and-cabin-rates.md` |
-| B7 | Government-hospital flows (OPD ticket fees, DGHS returns beyond the national pack); Bangla digits as a user setting (P-02) | planned |
+| B7 | Government-hospital flows (OPD ticket fees, DGHS returns beyond the national pack); Bangla digits as a user setting (P-02) | **partly built 2026-11-03** - see `D-B7-government-and-digits.md`: Bangla digits per user and the OPD ticket-and-fees card are built; the DGHS returns wait for the owner's decision on which returns are filed |
 
 ## B1 decisions
 1. **A separate module, not a payer.** Guideline P-17 puts charity and government/NGO schemes in Insurance *as payers* that reimburse a claim. Welfare is the hospital spending money it already holds, so it is its own module (`wf_`). Insurance payer types `charity`, `ngo`, `government` stay for schemes that pay the hospital later.

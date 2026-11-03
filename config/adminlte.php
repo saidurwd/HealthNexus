@@ -1573,7 +1573,7 @@ return [
         ],
         [
             'header' => 'Billing and insurance',
-            'can' => ['billing.dashboard.view', 'insurance.dashboard.view', 'welfare.dashboard.view', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.fund.view', 'rates.bed.view'],
+            'can' => ['billing.dashboard.view', 'insurance.dashboard.view', 'welfare.dashboard.view', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.fund.view', 'rates.bed.view', 'rates.opd.view'],
         ],
         [
             'text' => 'Billing and cashier',
@@ -1815,6 +1815,13 @@ return [
             'url' => '/admin/rates/beds',
             'icon' => 'bi bi-hospital',
             'can' => 'rates.bed.view',
+        ],
+        [
+            'text' => 'OPD ticket and fees',
+            'module' => 'rates',
+            'url' => '/admin/rates/opd',
+            'icon' => 'bi bi-ticket-perforated',
+            'can' => 'rates.opd.view',
         ],
         [
             'text' => 'Patient welfare',
@@ -2303,6 +2310,11 @@ return [
         ],
         [
             'header' => 'Help',
+        ],
+        [
+            'text' => 'My display settings',
+            'url' => '/preferences',
+            'icon' => 'bi bi-sliders',
         ],
         [
             'text' => 'Help and support',

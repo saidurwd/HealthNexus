@@ -1014,9 +1014,10 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `38`
 - `39`
 
-## rates (1)
+## rates (2)
 
 - `0`
+- `1`
 
 ## vital (14)
 

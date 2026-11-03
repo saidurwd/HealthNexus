@@ -977,6 +977,7 @@ class PermissionSeeder extends Seeder
 
             // Bed and cabin rates (Phase 26, Bangladesh pack)
             'rates.bed.view',
+            'rates.opd.view',
 
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
@@ -2238,9 +2239,9 @@ class PermissionSeeder extends Seeder
         }
 
         // Those who admit patients, bill them and answer their families see the rate card.
-        foreach (['cashier', 'receptionist', 'ipd_coordinator', 'charge_nurse', 'ward_manager', 'hospital_director'] as $desk) {
+        foreach (['cashier', 'receptionist', 'ipd_coordinator', 'charge_nurse', 'ward_manager', 'hospital_director', 'doctor'] as $desk) {
             if (isset($roles[$desk])) {
-                $roles[$desk] = array_values(array_unique(array_merge($roles[$desk], ['rates.bed.view'])));
+                $roles[$desk] = array_values(array_unique(array_merge($roles[$desk], ['rates.bed.view', 'rates.opd.view'])));
             }
         }
 

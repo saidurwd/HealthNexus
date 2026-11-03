@@ -18,6 +18,7 @@ use App\Http\Controllers\Lookup\AdmissionLookupController;
 use App\Http\Controllers\Lookup\EncounterLookupController;
 use App\Http\Controllers\Lookup\GeoLookupController;
 use App\Http\Controllers\Lookup\PatientLookupController;
+use App\Http\Controllers\PreferencesController;
 use App\Http\Controllers\QuickStartController;
 use App\Http\Middleware\ApplyTenantContextToInput;
 use App\Http\Middleware\EnsureTenantContext;
@@ -45,6 +46,8 @@ Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create']
 Route::post('/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/preferences', [PreferencesController::class, 'edit'])->name('preferences');
+    Route::post('/preferences', [PreferencesController::class, 'update'])->name('preferences.update');
     Route::get('/change-password', [PasswordController::class, 'create'])->name('password.change');
     Route::post('/change-password', [PasswordController::class, 'store']);
 
