@@ -4,6 +4,7 @@ namespace App\Services\Patients;
 
 use App\Events\PatientRegistered;
 use App\Models\Branch;
+use App\Models\Geo\GeoDistrict;
 use App\Models\Patient;
 use App\Models\PatientAddress;
 use App\Models\PatientAlert;
@@ -15,6 +16,7 @@ use App\Models\PatientGuardian;
 use App\Models\PatientHistory;
 use App\Models\PatientPreference;
 use App\Models\User;
+use App\Services\Geo\GeoService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -142,6 +144,13 @@ class PatientService
     public function addAddress(Patient $patient, array $addressData): PatientAddress
     {
         $addressData['organization_id'] = $patient->organization_id;
+
+        // The places chosen must belong together; the older free-text district is kept filled so reports and the FHIR export that read it keep working.
+        $places = app(GeoService::class)->resolve($addressData);
+        $addressData = array_merge($addressData, $places);
+        if ($places['district_id'] !== null && empty($addressData['district'])) {
+            $addressData['district'] = GeoDistrict::query()->whereKey($places['district_id'])->value('name_en');
+        }
 
         if (! empty($addressData['is_primary'])) {
             $patient->addresses()->where('address_type', $addressData['address_type'])->update(['is_primary' => false]);

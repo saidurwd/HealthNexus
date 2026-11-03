@@ -24,8 +24,7 @@
                             <tr>
                                 <th>{{ __('Type') }}</th>
                                 <th>{{ __('Address') }}</th>
-                                <th>{{ __('City') }}</th>
-                                <th>{{ __('District') }}</th>
+                                <th>{{ __('Place') }}</th>
                                 <th>{{ __('Postal Code') }}</th>
                                 <th class="text-center">{{ __('Primary') }}</th>
                             </tr>
@@ -34,9 +33,8 @@
                             @forelse($addresses as $address)
                                 <tr>
                                     <td>{{ ucfirst($address->address_type) }}</td>
-                                    <td>{{ trim(($address->line1 ?? '').' '.($address->line2 ?? '')) ?: '-' }}</td>
-                                    <td>{{ $address->city ?? '-' }}</td>
-                                    <td>{{ $address->district ?? '-' }}</td>
+                                    <td>{{ trim(($address->line1 ?? '').' '.($address->line2 ?? '').' '.($address->village_area ?? '')) ?: '-' }}</td>
+                                    <td>{{ collect([$address->geoUnion, $address->geoUpazila, $address->geoDistrict, $address->geoDivision])->filter()->map(fn ($g) => $g->displayName())->implode(', ') ?: collect([$address->city, $address->district])->filter()->implode(', ') ?: '-' }}</td>
                                     <td>{{ $address->postal_code ?? '-' }}</td>
                                     <td class="text-center">
                                         @if($address->is_primary)
@@ -83,15 +81,31 @@
                             <label class="form-label">{{ __('Address Line 2') }}</label>
                             <input type="text" name="line2" class="form-control">
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="addr-village">{{ __('Village or neighbourhood') }}</label>
+                            <input type="text" id="addr-village" name="village_area" class="form-control" maxlength="120">
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('City') }}</label>
-                                <input type="text" name="city" class="form-control">
+                                <label class="form-label" for="addr-division">{{ __('Division') }}</label>
+                                <x-ui.geo-select level="division" name="division_id" id="addr-division" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">{{ __('District') }}</label>
-                                <input type="text" name="district" class="form-control">
+                                <label class="form-label" for="addr-district">{{ __('District') }}</label>
+                                <x-ui.geo-select level="district" name="district_id" id="addr-district" depends-on="#addr-division" />
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="addr-upazila">{{ __('Upazila') }}</label>
+                                <x-ui.geo-select level="upazila" name="upazila_id" id="addr-upazila" depends-on="#addr-district" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="addr-union">{{ __('Union') }}</label>
+                                <x-ui.geo-select level="union" name="union_id" id="addr-union" depends-on="#addr-upazila" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="addr-city">{{ __('City or town') }}</label>
+                            <input type="text" id="addr-city" name="city" class="form-control" maxlength="100">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">{{ __('Postal Code') }}</label>

@@ -100,7 +100,7 @@ _Generated from the Schema::create calls in database/migrations._
 - `blood_unit_tests`
 - `blood_units`
 
-## core (52)
+## core (56)
 
 - `activity_logs`
 - `audit_logs`
@@ -122,6 +122,10 @@ _Generated from the Schema::create calls in database/migrations._
 - `file_versions`
 - `files`
 - `genders`
+- `geo_districts`
+- `geo_divisions`
+- `geo_unions`
+- `geo_upazilas`
 - `hospital_holidays`
 - `hospitals`
 - `identification_types`

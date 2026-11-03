@@ -577,7 +577,7 @@ class PatientController extends Controller
     {
         $this->authorize('view', $patient);
 
-        $addresses = $patient->addresses()->with(['country', 'state'])->get();
+        $addresses = $patient->addresses()->with(['country', 'state', 'geoDivision', 'geoDistrict', 'geoUpazila', 'geoUnion'])->get();
 
         return view('admin.patients.addresses', compact('patient', 'addresses'));
     }
@@ -594,6 +594,11 @@ class PatientController extends Controller
             'country_id' => ['nullable', 'integer', 'exists:countries,id'],
             'state_id' => ['nullable', 'integer', 'exists:states,id'],
             'district' => ['nullable', 'string', 'max:100'],
+            'division_id' => ['nullable', 'integer', 'exists:geo_divisions,id'],
+            'district_id' => ['nullable', 'integer', 'exists:geo_districts,id'],
+            'upazila_id' => ['nullable', 'integer', 'exists:geo_upazilas,id'],
+            'union_id' => ['nullable', 'integer', 'exists:geo_unions,id'],
+            'village_area' => ['nullable', 'string', 'max:120'],
             'postal_code' => ['nullable', 'string', 'max:20'],
             'is_primary' => ['boolean'],
         ]);

@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\MasterData\Http\Controllers\GeographyController;
 use Modules\MasterData\Http\Controllers\MasterDataController;
 
 Route::middleware(['can:settings.view'])->group(function () {
     Route::get('master-data', [MasterDataController::class, 'index'])->name('master-data.index');
+
+    Route::get('master-data/geography', [GeographyController::class, 'index'])->name('master-data.geography');
+    Route::post('master-data/geography/unions', [GeographyController::class, 'storeUnion'])->name('master-data.geography.unions.store');
+    Route::post('master-data/geography/unions/import', [GeographyController::class, 'importUnions'])->name('master-data.geography.unions.import');
 
     Route::get('master-data/countries', [MasterDataController::class, 'countries'])->name('master-data.countries');
     Route::get('master-data/countries/create', [MasterDataController::class, 'createCountry'])->name('master-data.countries.create');

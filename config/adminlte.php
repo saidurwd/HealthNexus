@@ -2131,6 +2131,12 @@ return [
                     'can' => 'settings.view',
                 ],
                 [
+                    'text' => 'Geography (divisions to unions)',
+                    'url' => '/admin/master-data/geography',
+                    'icon' => 'bi bi-pin-map',
+                    'can' => 'settings.view',
+                ],
+                [
                     'text' => 'States',
                     'url' => '/admin/master-data/states',
                     'icon' => 'bi bi-map',

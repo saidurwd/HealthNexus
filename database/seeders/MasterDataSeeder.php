@@ -9,6 +9,7 @@ use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\MaritalStatus;
 use App\Models\PatientType;
+use App\Services\Geo\GeoInstaller;
 use Illuminate\Database\Seeder;
 
 class MasterDataSeeder extends Seeder
@@ -22,6 +23,7 @@ class MasterDataSeeder extends Seeder
         $this->seedMaritalStatuses();
         $this->seedPatientTypes();
         $this->seedAppointmentTypes();
+        app(GeoInstaller::class)->install();
     }
 
     private function seedCountries(): void

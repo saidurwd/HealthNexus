@@ -11,6 +11,7 @@ use App\Services\Demo\History\Modules\CatalogHistory;
 use App\Services\Demo\History\Modules\EdHistory;
 use App\Services\Demo\History\Modules\FacilityHistory;
 use App\Services\Demo\History\Modules\FinanceHistory;
+use App\Services\Demo\History\Modules\GeographyHistory;
 use App\Services\Demo\History\Modules\HrHistory;
 use App\Services\Demo\History\Modules\IcuHistory;
 use App\Services\Demo\History\Modules\InsuranceClaimsHistory;
@@ -35,6 +36,7 @@ use App\Services\Demo\History\Modules\WelfareHistory;
 return [
     'modules' => [
         PatientsHistory::class,
+        GeographyHistory::class,
         CatalogHistory::class,
         BillingCatalogHistory::class,
         InsuranceSetupHistory::class,
