@@ -152,7 +152,7 @@ Each slice: spec → build → tests (the §3 list) → demo-data check → Bang
 | **D3 — Diagnostics and pharmacy** *(built 2026-11-02: Lab, Radiology, Pharmacy, Blood bank)* | Lab, Radiology, Pharmacy, Blood bank | TAT and stock safety |
 | **D4 — Money** *(built 2026-11-02: Billing, Insurance, Finance; Welfare was built on the standard in Phase 26)* | Billing and cashier, Insurance, Finance, Welfare trends | collections and claims clarity |
 | **D5 — Supply, people, services** *(built 2026-11-03: Stores, HR, CRM, Portal, Connections framed and cached; Facility and Quality framed; AI left as governance)* | Stores/Purchasing, HR, Facility, Quality, CRM/Portal, Connections, AI | the rest on the standard |
-| **D6 — BI and reporting** | five system dashboards on the standard, snapshots, scheduled A4 pack, national-return dashboard | management reporting |
+| **D6 — BI and reporting** *(built 2026-11-03: standard dashboards on the frame, snapshots, month-end A4 pack, national-return readiness; e-mailing the pack not built)* | five system dashboards on the standard, snapshots, scheduled A4 pack, national-return dashboard | management reporting |
 | **D7 — Bangladesh dashboards** | catchment, outbreak, mother-and-child, bed-class mix — each ships with its gap slice | local needs |
 
 Order rationale: the foundation first (so nothing is built twice), then the screens people open all day, then the money, then the long tail.

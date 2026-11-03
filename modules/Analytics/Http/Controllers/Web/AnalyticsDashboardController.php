@@ -3,22 +3,27 @@
 namespace Modules\Analytics\Http\Controllers\Web;
 
 use App\Models\Analytics\AnalyticsDashboard;
+use App\Models\Analytics\AnalyticsDashboardSnapshot;
 use App\Models\Analytics\AnalyticsKpi;
 use App\Models\Analytics\AnalyticsKpiVersion;
 use App\Services\Analytics\Kpi\DashboardService;
+use App\Services\Analytics\Kpi\DashboardSnapshotService;
 use App\Services\Analytics\Kpi\KpiService;
 use App\Services\Analytics\Reports\ReportService;
 use App\Services\Analytics\Semantic\SemanticCatalog;
 use App\Services\Analytics\Semantic\SemanticQuery;
 use App\Services\AuditLogger;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\DashboardPeriod;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /** Dashboards, KPIs and the explorer (any question over the semantic model, with drill-down). */
 class AnalyticsDashboardController extends AnalyticsController
 {
-    public function __construct(TenantContextResolver $tenant, private readonly DashboardService $dashboards, private readonly KpiService $kpis, private readonly SemanticQuery $queries, private readonly ReportService $reports)
+    public function __construct(TenantContextResolver $tenant, private readonly DashboardService $dashboards, private readonly KpiService $kpis, private readonly SemanticQuery $queries, private readonly ReportService $reports, private readonly DashboardCache $cache, private readonly DashboardSnapshotService $snapshots)
     {
         parent::__construct($tenant);
     }
@@ -36,9 +41,51 @@ class AnalyticsDashboardController extends AnalyticsController
         $this->allow($request, 'analytics.dashboard.view');
         $d = AnalyticsDashboard::query()->where('public_id', $dashboard)->where(fn ($q) => $q->whereNull('organization_id')->orWhere('organization_id', $this->organizationId()))->firstOrFail();
         abort_unless($d->organization_id === null || $d->shared || $d->created_by === $request->user()->id, 404);
-        [$from, $to] = $this->range($request);
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        // What a person may see depends on their own branches and rights, so the kept figures are theirs alone.
+        $r = $this->cache->remember($request->user(), 'analytics:'.$d->public_id.':u'.$request->user()->id, $this->organizationId(), $branch, $period, fn () => $this->dashboards->render($d, $this->scope($request), $period->fromDate(), $period->toDate()), fresh: $request->boolean('fresh'));
 
-        return view('admin.analytics.dashboard', ['d' => $d, 'widgets' => $this->dashboards->render($d, $this->scope($request), $from, $to), 'from' => $from, 'to' => $to]);
+        return view('admin.analytics.dashboard', ['d' => $d, 'widgets' => $r['data'], 'asOf' => $r['as_of'], 'period' => $period, 'canSnapshot' => $request->user()->can('analytics.dashboard.manage')]);
+    }
+
+    public function snapshot(Request $request, string $dashboard)
+    {
+        $this->allow($request, 'analytics.dashboard.manage');
+        $d = AnalyticsDashboard::query()->where('public_id', $dashboard)->where(fn ($q) => $q->whereNull('organization_id')->orWhere('organization_id', $this->organizationId()))->firstOrFail();
+        abort_unless($d->organization_id === null || $d->shared || $d->created_by === $request->user()->id, 404);
+        $period = DashboardPeriod::fromRequest($request, '30d', ['7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $s = $this->snapshots->take($d, $this->scope($request), $period->fromDate(), $period->toDate(), 'manual', $request->user());
+
+        return redirect()->route('admin.analytics.snapshots.show', $s->public_id)->with('success', __('Snapshot kept.'));
+    }
+
+    public function snapshots(Request $request)
+    {
+        $this->allow($request, 'analytics.dashboard.view');
+        $rows = AnalyticsDashboardSnapshot::query()->where('organization_id', $this->organizationId())->when($request->query('kind'), fn ($q, $v) => $q->where('kind', $v))->orderByDesc('period_from')->orderBy('dashboard_name')->orderByDesc('id')->paginate(30)->withQueryString();
+
+        return view('admin.analytics.snapshots', ['rows' => $rows, 'months' => AnalyticsDashboardSnapshot::query()->where(['organization_id' => $this->organizationId(), 'kind' => 'monthly'])->orderByDesc('period_from')->pluck('period_from')->map(fn ($d) => $d->format('Y-m'))->unique()->values()]);
+    }
+
+    public function snapshotShow(Request $request, string $snapshot)
+    {
+        $this->allow($request, 'analytics.dashboard.view');
+        $s = $this->find(AnalyticsDashboardSnapshot::class, $snapshot);
+
+        return view('admin.analytics.snapshot', ['s' => $s, 'widgets' => $this->snapshots->widgets($s)]);
+    }
+
+    /** The month-end pack: every kept system dashboard of the month on one printable page, a dashboard to an A4 sheet. */
+    public function pack(Request $request, string $month)
+    {
+        $this->allow($request, 'analytics.dashboard.view');
+        abort_unless(preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month) === 1, 404);
+        $from = CarbonImmutable::createFromFormat('!Y-m', $month)->startOfMonth()->toDateString();
+        $items = AnalyticsDashboardSnapshot::query()->where(['organization_id' => $this->organizationId(), 'kind' => 'monthly', 'period_from' => $from])->orderBy('id')->get();
+        abort_if($items->isEmpty(), 404);
+
+        return view('admin.analytics.pack', ['month' => CarbonImmutable::parse($from), 'items' => $items->map(fn ($s) => ['s' => $s, 'widgets' => $this->snapshots->widgets($s)])]);
     }
 
     public function create(Request $request)

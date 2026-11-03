@@ -100,6 +100,7 @@ Schedule::command('finance:check')->dailyAt('07:00')->name('finance-check')->wit
 Schedule::command('analytics:load')->everyFifteenMinutes()->name('analytics-load')->withoutOverlapping();
 Schedule::command('analytics:check')->hourly()->name('analytics-check')->withoutOverlapping();
 Schedule::command('analytics:run-schedules')->everyFiveMinutes()->name('analytics-schedules')->withoutOverlapping();
+Schedule::command('analytics:dashboard-pack')->monthlyOn(1, '06:10')->name('analytics-dashboard-pack')->withoutOverlapping();
 Schedule::command('analytics:forecast')->dailyAt('05:30')->name('analytics-forecast')->withoutOverlapping();
 Schedule::command('quality:check')->dailyAt('06:00')->name('quality-check')->withoutOverlapping();
 Schedule::command('facility:check')->dailyAt('06:30')->name('facility-check')->withoutOverlapping();

@@ -2,6 +2,7 @@
 
 namespace App\Services\Demo\History\Modules;
 
+use App\Models\Analytics\AnalyticsDashboard;
 use App\Models\Analytics\AnalyticsDataset;
 use App\Models\Analytics\AnalyticsKpi;
 use App\Services\Analytics\AnalyticsInstaller;
@@ -9,11 +10,13 @@ use App\Services\Analytics\BenchmarkService;
 use App\Services\Analytics\DataQualityService;
 use App\Services\Analytics\Insight\ForecastService;
 use App\Services\Analytics\Kpi\DashboardService;
+use App\Services\Analytics\Kpi\DashboardSnapshotService;
 use App\Services\Analytics\Kpi\KpiService;
 use App\Services\Analytics\LoadRunner;
 use App\Services\Analytics\Reports\ReportService;
 use App\Services\Analytics\Reports\ScheduleService;
 use App\Services\Analytics\Research\ResearchDatasetService;
+use App\Services\Analytics\Semantic\ScopeContext;
 use App\Services\Demo\History\DemoHistoryModule;
 use App\Services\Demo\History\HistoryContext;
 use Throwable;
@@ -36,6 +39,7 @@ class AnalyticsHistory implements DemoHistoryModule
         private readonly ResearchDatasetService $research,
         private readonly BenchmarkService $benchmark,
         private readonly ForecastService $forecasts,
+        private readonly DashboardSnapshotService $snapshots,
     ) {}
 
     public function name(): string
@@ -74,6 +78,14 @@ class AnalyticsHistory implements DemoHistoryModule
                 ['type' => 'chart', 'title' => 'Emergency arrivals by hour', 'kind' => 'bar', 'query' => ['fact' => 'emergency', 'measures' => ['ed_visits'], 'group_by' => ['hour'], 'order_by' => 'hour', 'direction' => 'asc']],
             ], $analyst, true);
 
+            // the month-end pack for every complete month of the history, and one snapshot kept by hand
+            $packed = 0;
+            for ($m = $context->from->startOfMonth(); $m->lt($context->to->startOfMonth()); $m = $m->addMonth()) {
+                $packed += $this->snapshots->monthlyPack($org, $m);
+            }
+            $ceo = AnalyticsDashboard::query()->where(['is_system' => true, 'code' => 'ceo'])->first();
+            $ceo && $this->snapshots->take($ceo, new ScopeContext($org, null, false), $context->to->startOfMonth()->toDateString(), $context->to->toDateString(), 'manual', $manager);
+
             $revenue = $this->reports->save($org, $analyst, 'Revenue by service', 'Net and gross revenue for each kind of service.', ['fact' => 'revenue', 'measures' => ['net_revenue', 'gross_revenue'], 'group_by' => ['category']], true);
             $visits = $this->reports->save($org, $analyst, 'Visits by doctor', 'Outpatient visits and average visit length for each doctor.', ['fact' => 'encounters', 'measures' => ['opd_visits', 'avg_visit_minutes'], 'group_by' => ['doctor'], 'limit' => 50], true);
             $this->reports->save($org, $analyst, 'Claims by insurer', 'What insurers owe and have paid.', ['fact' => 'claims', 'measures' => ['claims', 'claimed', 'claims_paid', 'claims_outstanding', 'denial_rate'], 'group_by' => ['payer']], true);
@@ -98,7 +110,7 @@ class AnalyticsHistory implements DemoHistoryModule
             }
             $made = AnalyticsDataset::query()->where('organization_id', $org)->where('status', 'generated')->first();
 
-            return sprintf('%d KPIs and %d dashboards installed, warehouse loaded (%s rows%s), 4 targets set, 1 KPI of our own in 2 versions, 1 dashboard, 3 reports (2 scheduled, 1 sent), data quality: %d failing rule(s) and %d open issue(s), research dataset %s, 5 forecasts',
+            return sprintf('%d KPIs and %d dashboards installed, warehouse loaded (%s rows%s), 4 targets set, 1 KPI of our own in 2 versions, 1 dashboard, '.$packed.' month-end snapshots and 1 kept by hand, 3 reports (2 scheduled, 1 sent), data quality: %d failing rule(s) and %d open issue(s), research dataset %s, 5 forecasts',
                 $installed['kpis'], $installed['dashboards'], number_format($rows), $failed ? '; FAILED: '.implode(', ', $failed) : '', $dq['failing'], $this->quality->openCount($org), $made ? 'made ('.$made->row_count.' rows, '.$made->suppressed_rows.' left out)' : 'approved');
         });
     }

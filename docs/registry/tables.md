@@ -17,8 +17,9 @@ _Generated from the Schema::create calls in database/migrations._
 - `ai_requests`
 - `ai_use_cases`
 
-## analytics (14)
+## analytics (15)
 
+- `analytics_dashboard_snapshots`
 - `analytics_dashboards`
 - `analytics_datasets`
 - `analytics_deliveries`

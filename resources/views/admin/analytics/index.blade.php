@@ -4,6 +4,7 @@
 
 @section('page_content')
     @include('admin.analytics._flash')
+    <div class="mb-3"><a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.analytics.snapshots') }}"><i class="bi bi-collection"></i> {{ __('Kept snapshots and month-end packs') }}</a></div>
     <div class="row g-3 mb-3">
         @forelse($dashboards as $d)<div class="col-md-4 col-xl-3"><a href="{{ route('admin.analytics.dashboards.show', $d->public_id) }}" class="card h-100 text-decoration-none"><div class="card-body"><div class="fw-bold">{{ __($d->name) }}</div><div class="small text-muted">{{ $d->is_system ? __('Standard dashboard') : __('Our own dashboard') }} · {{ count($d->widgets) }} {{ __('widgets') }}</div></div></a></div>@empty<div class="col-12 text-muted">{{ __('No dashboards yet. Run the analytics install command.') }}</div>@endforelse
         @can('analytics.dashboard.manage')<div class="col-md-4 col-xl-3"><a href="{{ route('admin.analytics.dashboards.create') }}" class="card h-100 text-decoration-none border-dashed"><div class="card-body text-center text-muted"><i class="bi bi-plus-circle fs-3"></i><div>{{ __('Make a dashboard') }}</div></div></a></div>@endcan

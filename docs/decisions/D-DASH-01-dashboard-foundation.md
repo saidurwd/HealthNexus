@@ -50,6 +50,13 @@ Tiles open the module's own list pages where one exists; an exact figure-equals-
 - **AI** is a governance page (use-cases, models, monitoring), not a metrics dashboard, and is left as it is. **Purchasing** figures are on the Stores page.
 - Links on these pages are as before (shown to everyone who can open the page); the permission-checked `Link` helper is used by the pages rebuilt in D1-D4.
 
+## D6 — BI and reporting
+- **The standard dashboards** (Chief executive, Medical director, Finance, Nursing and wards, Pharmacy and stores, and the hospital's own) are drawn on the standard frame: the dashboard's name as its question, a period picker (7 / 30 / 90 days, this month, last month, dates), "as of" with Refresh, and a print button for A4. They are cached **per person** (what a person may see depends on their own branches and rights).
+- **Snapshots** (`analytics_dashboard_snapshots`): a dashboard as it looked for a period, kept by hand (needs `analytics.dashboard.manage`; taken with the person's own scope) or by the system. A snapshot is written once and has no edit screen; the kept figures do not move when the data does. A KPI in a snapshot is rebuilt from what was kept, not looked up again.
+- **The month-end pack:** `analytics:dashboard-pack` (scheduled the 1st of each month, 06:10) keeps every standard dashboard for the calendar month, once (running it again does nothing). It is made with the whole hospital in scope and **small numbers hidden**, so it is safe to hand round. `/admin/analytics/pack/{YYYY-MM}` shows the month's dashboards on one page, one to an A4 sheet; the browser's print makes the PDF. Sending the pack by e-mail is not built; the existing report schedules still e-mail reports.
+- **National return:** the page now says at a glance how many indicators have a figure this month, how many have a national code, and whether the return is ready to send. The codes are the hospital's to set after onboarding with the national system.
+- Demo history keeps the month-end pack for every complete month of the six and one snapshot by hand.
+
 ## Not done in D0 (next slices)
 Role-aware Home and the Director's "Today" (D1); moving each module's dashboard onto the standard (D2–D5); the BI role dashboards (D6). Per-user Bangla-digit preference (today an organization setting).
 

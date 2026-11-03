@@ -11,6 +11,10 @@ Route::prefix('analytics')->name('analytics.')->group(function () {
     Route::get('dashboards/new', [AnalyticsDashboardController::class, 'create'])->name('dashboards.create');
     Route::post('dashboards', [AnalyticsDashboardController::class, 'store'])->name('dashboards.store');
     Route::get('dashboards/{dashboard}', [AnalyticsDashboardController::class, 'show'])->name('dashboards.show');
+    Route::post('dashboards/{dashboard}/snapshot', [AnalyticsDashboardController::class, 'snapshot'])->name('dashboards.snapshot');
+    Route::get('snapshots', [AnalyticsDashboardController::class, 'snapshots'])->name('snapshots');
+    Route::get('snapshots/{snapshot}', [AnalyticsDashboardController::class, 'snapshotShow'])->name('snapshots.show');
+    Route::get('pack/{month}', [AnalyticsDashboardController::class, 'pack'])->where('month', '\d{4}-\d{2}')->name('pack');
     Route::post('dashboards/{dashboard}/delete', [AnalyticsDashboardController::class, 'destroy'])->name('dashboards.delete');
 
     Route::get('kpis', [AnalyticsDashboardController::class, 'kpis'])->name('kpis');
