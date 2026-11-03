@@ -101,6 +101,7 @@ Route::middleware('can:patients.amend.request')->group(function () {
 
 Route::middleware('can:patients.print')->group(function () {
     Route::get('patients/{patient}/print', [PatientController::class, 'print'])->name('patients.print');
+    Route::get('patients/{patient}/wristband', [PatientController::class, 'wristband'])->name('patients.wristband');
     Route::get('patients/{patient}/barcode', [PatientController::class, 'barcode'])->name('patients.barcode');
 });
 

@@ -804,6 +804,16 @@ class PatientController extends Controller
         return view('admin.patients.print', compact('patient'));
     }
 
+    /** The identification band for the patient's wrist: name, number, birth date, blood group, allergies and a barcode. */
+    public function wristband(Patient $patient)
+    {
+        $this->authorize('print', $patient);
+
+        $patient->load(['allergies' => fn ($q) => $q->where('is_active', true)]);
+
+        return view('admin.patients.wristband', ['patient' => $patient, 'barcode' => $this->barcodeService->svg($patient)]);
+    }
+
     public function barcode(Patient $patient)
     {
         $this->authorize('print', $patient);

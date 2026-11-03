@@ -60,6 +60,9 @@
                 <a href="{{ route('admin.patients.print', $patient) }}" class="btn btn-outline-secondary">
                     <i class="bi bi-printer me-1"></i>{{ __('Print') }}
                 </a>
+                <a href="{{ route('admin.patients.wristband', $patient) }}" target="_blank" class="btn btn-outline-secondary">
+                    <i class="bi bi-upc-scan me-1"></i>{{ __('Wristband') }}
+                </a>
                 <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-outline-warning">
                     <i class="bi bi-pencil me-1"></i>{{ __('Edit Patient') }}
                 </a>

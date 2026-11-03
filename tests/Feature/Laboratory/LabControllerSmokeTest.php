@@ -94,6 +94,7 @@ class LabControllerSmokeTest extends LabTestCase
         $this->get('/admin/lab/orders/'.$this->order->public_id)->assertOk();
         $this->get('/admin/lab/specimens')->assertOk();
         $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->public_id)->assertOk();
+        $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->public_id.'/label')->assertOk()->assertSee('Paper size: label 50', false)->assertSee('<svg', false);
     }
 
     public function test_worklist_and_critical_results_pages_load(): void

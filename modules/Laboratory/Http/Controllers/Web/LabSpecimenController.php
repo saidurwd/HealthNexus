@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabSpecimen;
 use App\Services\AuditLogger;
+use App\Services\Laboratory\LabBarcodeService;
 use App\Services\Laboratory\SpecimenService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -45,6 +46,16 @@ class LabSpecimenController extends Controller
         $specimen->load(['labOrder.patient', 'specimenType', 'containerType', 'orderItems.test', 'collectedBy', 'receivedBy']);
 
         return view('admin.lab.specimens.show', compact('specimen'));
+    }
+
+    /** The tube label: accession barcode, patient, specimen type and the tests asked for. */
+    public function label(LabSpecimen $specimen)
+    {
+        $this->authorize('view', $specimen);
+
+        $specimen->load(['labOrder.patient', 'specimenType', 'orderItems.test', 'collectedBy']);
+
+        return view('admin.lab.specimens.label', ['specimen' => $specimen, 'barcode' => app(LabBarcodeService::class)->svg($specimen)]);
     }
 
     public function collect(CollectSpecimenRequest $request, LabOrder $order)

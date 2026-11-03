@@ -7518,5 +7518,10 @@
     "Please come back": "অনুগ্রহ করে আবার আসবেন",
     "to": "যাঁর কাছে",
     "No follow-up needed.": "ফলো-আপের প্রয়োজন নেই।",
-    "Come to the emergency department at once if the condition worsens.": "অবস্থার অবনতি হলে সঙ্গে সঙ্গে জরুরি বিভাগে আসুন।"
+    "Come to the emergency department at once if the condition worsens.": "অবস্থার অবনতি হলে সঙ্গে সঙ্গে জরুরি বিভাগে আসুন।",
+    "Wristband": "রিস্টব্যান্ড",
+    "Print tube label": "টিউব লেবেল ছাপুন",
+    "ALLERGY": "অ্যালার্জি",
+    "Paper size: wristband 200 × 28 mm. Choose \"no margins\" in the print window.": "কাগজের মাপ: রিস্টব্যান্ড ২০০ × ২৮ মিমি। প্রিন্ট উইন্ডোতে \"মার্জিন নেই\" বেছে নিন।",
+    "Paper size: label 50 × 30 mm.": "কাগজের মাপ: লেবেল ৫০ × ৩০ মিমি।"
 }

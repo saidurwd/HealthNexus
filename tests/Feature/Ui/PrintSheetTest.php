@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Ui;
 
+use App\Models\Patient;
+use App\Models\PatientAllergy;
 use Tests\Feature\Dashboard\FrontDoorTestCase;
 
 /** Every ordinary screen can be printed with a letterhead and footer; forms and screens with their own print button are left alone. */
@@ -24,5 +26,17 @@ class PrintSheetTest extends FrontDoorTestCase
         foreach (['.app-sidebar', '.btn', 'table-header-group', '.print-footer', '@page'] as $needle) {
             $this->assertStringContainsString($needle, $css);
         }
+    }
+
+    public function test_the_wristband_shows_name_number_allergy_and_a_barcode(): void
+    {
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        PatientAllergy::factory()->create(['organization_id' => $this->organization->id, 'patient_id' => $patient->id, 'substance' => 'Penicillin', 'severity' => 'severe', 'is_active' => true]);
+
+        $this->as($this->actor(['patients.print']))->get('/admin/patients/'.$patient->public_id.'/wristband')
+            ->assertOk()
+            ->assertSee($patient->enterprise_patient_no)
+            ->assertSee('Penicillin')
+            ->assertSee('<svg', false);
     }
 }

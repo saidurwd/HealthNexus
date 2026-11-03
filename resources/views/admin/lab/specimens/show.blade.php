@@ -57,6 +57,7 @@
                 <div class="card-body text-center">
                     {!! app(\App\Services\Laboratory\LabBarcodeService::class)->svg($specimen) !!}
                     <p class="mt-2">{{ $specimen->accession_number }}</p>
+                    <a href="{{ route('admin.lab.specimens.label', $specimen) }}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-printer"></i> {{ __('Print tube label') }}</a>
                 </div>
             </div>
         </div>
