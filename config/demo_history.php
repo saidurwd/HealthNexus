@@ -20,6 +20,7 @@ use App\Services\Demo\History\Modules\InteropHistory;
 use App\Services\Demo\History\Modules\InventoryHistory;
 use App\Services\Demo\History\Modules\IpdHistory;
 use App\Services\Demo\History\Modules\LabHistory;
+use App\Services\Demo\History\Modules\MchHistory;
 use App\Services\Demo\History\Modules\NursingHistory;
 use App\Services\Demo\History\Modules\OtHistory;
 use App\Services\Demo\History\Modules\PatientsHistory;
@@ -61,6 +62,7 @@ return [
         FinanceHistory::class,
         WelfareHistory::class,
         VitalHistory::class,
+        MchHistory::class,
         AnalyticsHistory::class,
         QualityHistory::class,
         FacilityHistory::class,

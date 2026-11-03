@@ -7,7 +7,7 @@ Owner instruction (2026-11-02): "Go for Bangladesh gaps" — the gaps listed in 
 | **B1** | Patient welfare fund and waivers | **built** (this document) |
 | B2 | Birth and death notification and certification (P-25), medico-legal flag | built 2026-11-03 - see `D-VITAL-01-births-deaths-police-cases.md` |
 | B3 | Address master: division → district → upazila → union (P-04) | built 2026-11-03 - see `D-GEO-01-address-master.md` (unions have no source data yet) |
-| B4 | Maternity and newborn, immunisation (EPI) (Phase 24 packs) | planned |
+| B4 | Maternity and newborn, immunisation (EPI) (Phase 24 packs) | built 2026-11-03 - see `D-MCH-01-mothers-and-babies.md` (the vaccine schedule is an example the programme must confirm) |
 | B5 | Outbreak watch (dengue and others); Quality already tracks outbreaks inside infection control | planned |
 | B6 | Cabin and bed-class price lists as a view over Billing's price lists (P-23) | planned |
 | B7 | Government-hospital flows (OPD ticket fees, DGHS returns beyond the national pack); Bangla digits as a user setting (P-02) | planned |

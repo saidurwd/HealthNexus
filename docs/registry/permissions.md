@@ -652,6 +652,16 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `37`
 - `38`
 
+## mch (7)
+
+- `0`
+- `1`
+- `2`
+- `3`
+- `4`
+- `5`
+- `6`
+
 ## nursing (64)
 
 - `0`

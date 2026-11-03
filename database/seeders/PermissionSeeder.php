@@ -959,6 +959,15 @@ class PermissionSeeder extends Seeder
             'vital.medicolegal.register',
             'vital.medicolegal.manage',
 
+            // Mothers and babies (Phase 26, Bangladesh pack)
+            'mch.dashboard.view',
+            'mch.pregnancy.view',
+            'mch.pregnancy.book',
+            'mch.anc.record',
+            'mch.delivery.record',
+            'mch.immunisation.view',
+            'mch.immunisation.give',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -2177,6 +2186,12 @@ class PermissionSeeder extends Seeder
             'welfare_manager' => [
                 'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.fund.manage', 'welfare.donation.record', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.report.view', 'welfare.settings.manage',
             ],
+            'mch_midwife' => [
+                'patients.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'mch.immunisation.view', 'vital.birth.view', 'vital.birth.create',
+            ],
+            'immunisation_nurse' => [
+                'patients.view', 'mch.dashboard.view', 'mch.immunisation.view', 'mch.immunisation.give',
+            ],
             'records_officer' => [
                 'patients.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.birth.create', 'vital.birth.issue', 'vital.birth.register', 'vital.death.view', 'vital.death.create', 'vital.death.issue',
             ],
@@ -2190,6 +2205,21 @@ class PermissionSeeder extends Seeder
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
             ],
         ];
+
+        // Doctors and nurses of the wards see and run antenatal care and immunisation as their duties need.
+        foreach (['doctor', 'surgeon'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'mch.immunisation.view', 'mch.immunisation.give'])));
+            }
+        }
+        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse'] as $nurse) {
+            if (isset($roles[$nurse])) {
+                $roles[$nurse] = array_values(array_unique(array_merge($roles[$nurse], ['mch.pregnancy.view', 'mch.anc.record', 'mch.immunisation.view', 'mch.immunisation.give'])));
+            }
+        }
+        if (isset($roles['hospital_director'])) {
+            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['mch.dashboard.view'])));
+        }
 
         // A doctor writes and certifies the cause of death of a patient they treated, notifies the births they attend, and registers a police case.
         foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician'] as $clinician) {

@@ -435,6 +435,14 @@ _Generated from the Schema::create calls in database/migrations._
 - `lab_test_categories`
 - `lab_tests`
 
+## mch (5)
+
+- `mch_anc_visits`
+- `mch_deliveries`
+- `mch_immunisations`
+- `mch_newborns`
+- `mch_pregnancies`
+
 ## nursing (27)
 
 - `nursing_alerts`

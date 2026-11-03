@@ -1948,8 +1948,8 @@ return [
         ],
         [
             'header' => 'Hospital services',
-            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view'],
-            'modules' => ['facility', 'quality', 'portal', 'vital'],
+            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.immunisation.view'],
+            'modules' => ['facility', 'quality', 'portal', 'vital', 'mch'],
         ],
         [
             'text' => 'Facility and support',
@@ -1969,6 +1969,17 @@ return [
                 ['text' => 'Mortuary', 'url' => '/admin/facility/mortuary', 'icon' => 'bi bi-door-closed', 'can' => 'facility.mortuary.view'],
                 ['text' => 'Visitors and attendants', 'url' => '/admin/facility/visitors', 'icon' => 'bi bi-people', 'can' => 'facility.visitor.view'],
                 ['text' => 'The gate', 'url' => '/admin/facility/gate', 'icon' => 'bi bi-box-arrow-in-right', 'can' => 'facility.visitor.gate'],
+            ],
+        ],
+        [
+            'text' => 'Mothers and babies',
+            'module' => 'mch',
+            'icon' => 'bi bi-heart',
+            'can' => ['mch.dashboard.view', 'mch.pregnancy.view', 'mch.immunisation.view'],
+            'submenu' => [
+                ['text' => 'Overview', 'url' => '/admin/mch', 'icon' => 'bi bi-speedometer2', 'can' => 'mch.dashboard.view'],
+                ['text' => 'Pregnancies', 'url' => '/admin/mch/pregnancies', 'icon' => 'bi bi-person-heart', 'can' => 'mch.pregnancy.view'],
+                ['text' => 'Immunisation', 'url' => '/admin/mch/immunisation', 'icon' => 'bi bi-shield-plus', 'can' => 'mch.immunisation.view'],
             ],
         ],
         [
