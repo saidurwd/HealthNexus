@@ -62,7 +62,7 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_reschedule_records_history(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/reschedule", [
+        $this->post("/appointments/{$this->appointment->public_id}/reschedule", [
             'appointment_date' => now()->addDays(3)->toDateString(),
             'appointment_time' => '11:00',
             'reason' => 'Patient requested morning slot',
@@ -80,7 +80,7 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_cancel_records_history_and_timestamps(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/cancel", [
+        $this->post("/appointments/{$this->appointment->public_id}/cancel", [
             'cancellation_reason' => 'Doctor unavailable',
         ])->assertRedirect();
 
@@ -96,7 +96,7 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_confirm_sets_timestamp_and_user(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/confirm")->assertRedirect();
+        $this->post("/appointments/{$this->appointment->public_id}/confirm")->assertRedirect();
 
         $this->appointment->refresh();
         $this->assertSame('confirmed', $this->appointment->status);
@@ -110,9 +110,9 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_check_in_sets_timestamp_and_user(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/confirm");
+        $this->post("/appointments/{$this->appointment->public_id}/confirm");
 
-        $this->post("/admin/appointments/{$this->appointment->public_id}/check-in")->assertRedirect();
+        $this->post("/appointments/{$this->appointment->public_id}/check-in")->assertRedirect();
 
         $this->appointment->refresh();
         $this->assertSame('checked_in', $this->appointment->status);
@@ -127,11 +127,11 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_complete_sets_timestamps(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/confirm");
-        $this->post("/admin/appointments/{$this->appointment->public_id}/check-in");
-        $this->post("/admin/appointments/{$this->appointment->public_id}/start");
+        $this->post("/appointments/{$this->appointment->public_id}/confirm");
+        $this->post("/appointments/{$this->appointment->public_id}/check-in");
+        $this->post("/appointments/{$this->appointment->public_id}/start");
 
-        $this->post("/admin/appointments/{$this->appointment->public_id}/complete")->assertRedirect();
+        $this->post("/appointments/{$this->appointment->public_id}/complete")->assertRedirect();
 
         $this->appointment->refresh();
         $this->assertSame('completed', $this->appointment->status);
@@ -145,7 +145,7 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_no_show_updates_status(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/no-show", [
+        $this->post("/appointments/{$this->appointment->public_id}/no-show", [
             'reason' => 'Patient did not arrive',
         ])->assertRedirect();
 
@@ -160,7 +160,7 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_admin_can_add_appointment_note(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/notes", [
+        $this->post("/appointments/{$this->appointment->public_id}/notes", [
             'note' => 'Patient requested afternoon slot.',
         ])->assertRedirect();
 
@@ -173,16 +173,16 @@ class AppointmentLifecycleTest extends TestCase
 
     public function test_history_page_shows_transitions(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/confirm");
+        $this->post("/appointments/{$this->appointment->public_id}/confirm");
 
-        $this->get("/admin/appointments/{$this->appointment->public_id}/history")
+        $this->get("/appointments/{$this->appointment->public_id}/history")
             ->assertOk()
             ->assertSee('confirmed');
     }
 
     public function test_check_in_cannot_be_skipped_directly_from_scheduled(): void
     {
-        $this->post("/admin/appointments/{$this->appointment->public_id}/check-in")
+        $this->post("/appointments/{$this->appointment->public_id}/check-in")
             ->assertSessionHasErrors('status');
 
         $this->assertSame('scheduled', $this->appointment->fresh()->status);

@@ -20,17 +20,17 @@ class DiagnosticsBoardsTest extends FrontDoorTestCase
 
     public function test_each_board_states_itself_and_refuses_a_person_without_the_right(): void
     {
-        $this->assertStringContainsString('critical', $this->assertDashboardStatesItself('/admin/lab', $this->actor(['lab.dashboard.view', 'lab.order.view'])));
-        $this->assertStringContainsString('scan', $this->assertDashboardStatesItself('/admin/radiology', $this->actor(['radiology.dashboard.view', 'radiology.order.view'])));
-        $this->assertStringContainsString('prescriptions', $this->assertDashboardStatesItself('/admin/pharmacy', $this->actor(['pharmacy.dashboard.view'])));
-        $this->assertStringContainsString('blood', $this->assertDashboardStatesItself('/admin/blood-bank', $this->actor(['bloodbank.dashboard.view'])));
-        $this->assertDashboardRefuses('/admin/pharmacy', $this->actor(['pharmacy.stock.view']));
-        $this->assertDashboardRefuses('/admin/blood-bank', $this->actor(['bloodbank.request.view']));
+        $this->assertStringContainsString('critical', $this->assertDashboardStatesItself('/lab', $this->actor(['lab.dashboard.view', 'lab.order.view'])));
+        $this->assertStringContainsString('scan', $this->assertDashboardStatesItself('/radiology', $this->actor(['radiology.dashboard.view', 'radiology.order.view'])));
+        $this->assertStringContainsString('prescriptions', $this->assertDashboardStatesItself('/pharmacy', $this->actor(['pharmacy.dashboard.view'])));
+        $this->assertStringContainsString('blood', $this->assertDashboardStatesItself('/blood-bank', $this->actor(['bloodbank.dashboard.view'])));
+        $this->assertDashboardRefuses('/pharmacy', $this->actor(['pharmacy.stock.view']));
+        $this->assertDashboardRefuses('/blood-bank', $this->actor(['bloodbank.request.view']));
     }
 
     public function test_a_tile_links_only_where_the_person_may_go(): void
     {
-        $with = $this->as($this->actor(['pharmacy.dashboard.view', 'pharmacy.safety_alert.view']))->get('/admin/pharmacy')->assertOk()->getContent();
+        $with = $this->as($this->actor(['pharmacy.dashboard.view', 'pharmacy.safety_alert.view']))->get('/pharmacy')->assertOk()->getContent();
         $this->assertNotNull($this->tileLink($with, 'Safety alerts open'));
         $this->assertNull($this->tileLink($with, 'Medicines out of stock'), 'no stock right, no link');
     }

@@ -9,8 +9,8 @@ use Modules\Portal\Http\Controllers\Web\PortalInboxController;
 use Modules\Portal\Http\Controllers\Web\PortalPaymentDeskController;
 use Modules\Portal\Http\Controllers\Web\PortalReleaseDeskController;
 
-// Staff side of the patient portal and CRM: /admin/portal/* and /admin/crm/*.
-Route::prefix('portal')->name('portal.')->group(function () {
+// Staff side of the patient portal and CRM: /patient-portal/* and /crm/*.
+Route::prefix('patient-portal')->name('portal.')->group(function () {
     Route::get('/', [PortalDeskController::class, 'dashboard'])->name('dashboard');
     Route::get('accounts', [PortalDeskController::class, 'accounts'])->name('accounts');
     Route::post('accounts/invite', [PortalDeskController::class, 'invite'])->name('accounts.invite');

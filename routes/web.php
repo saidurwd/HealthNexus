@@ -23,6 +23,7 @@ use App\Http\Controllers\QuickStartController;
 use App\Http\Middleware\ApplyTenantContextToInput;
 use App\Http\Middleware\EnsureTenantContext;
 use App\Http\Middleware\RequireMfa;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,12 +55,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware([RequireMfa::class])->group(function () {
         Route::middleware([EnsureTenantContext::class])->group(function () {
             Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
-            Route::get('/admin/lookup/patients', PatientLookupController::class)->name('admin.lookup.patients');
-            Route::get('/admin/lookup/encounters', EncounterLookupController::class)->name('admin.lookup.encounters');
-            Route::get('/admin/lookup/admissions', AdmissionLookupController::class)->name('admin.lookup.admissions');
-            Route::get('/admin/lookup/geo/{level}', GeoLookupController::class)->name('admin.lookup.geo');
-            Route::get('/admin/today', [TodayController::class, 'index'])->name('admin.today');
-            Route::get('/admin/queue-board', [QueueBoardController::class, 'index'])->name('admin.queue.board')->middleware('module:appointment');
+            Route::get('/lookup/patients', PatientLookupController::class)->name('admin.lookup.patients');
+            Route::get('/lookup/encounters', EncounterLookupController::class)->name('admin.lookup.encounters');
+            Route::get('/lookup/admissions', AdmissionLookupController::class)->name('admin.lookup.admissions');
+            Route::get('/lookup/geo/{level}', GeoLookupController::class)->name('admin.lookup.geo');
+            Route::get('/today', [TodayController::class, 'index'])->name('admin.today');
+            Route::get('/queue-board', [QueueBoardController::class, 'index'])->name('admin.queue.board')->middleware('module:appointment');
         });
     });
 
@@ -77,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/mfa/setup', [MfaController::class, 'setup'])->name('mfa.setup.store');
     Route::post('/mfa/disable', [MfaController::class, 'disable'])->name('mfa.disable');
 
-    Route::prefix('admin')->name('admin.')->middleware([ApplyTenantContextToInput::class])->group(function () {
+    Route::name('admin.')->middleware([ApplyTenantContextToInput::class])->group(function () {
         require __DIR__.'/../modules/Core/Organization/Routes/web.php';
         require __DIR__.'/../modules/Rbac/Routes/web.php';
         require __DIR__.'/../modules/Patients/Routes/web.php';
@@ -147,3 +148,13 @@ Route::middleware(['auth'])->group(function () {
         require __DIR__.'/../modules/MasterData/Routes/web.php';
     });
 });
+
+// Staff addresses used to start with /admin; old bookmarks and printed links keep working.
+Route::get('admin/{path?}', function (Request $request, ?string $path = null) {
+    $path = (string) $path;
+    if ($path === 'portal' || str_starts_with($path, 'portal/')) {
+        $path = 'patient-portal'.substr($path, 6);
+    }
+
+    return redirect('/'.$path.($request->getQueryString() ? '?'.$request->getQueryString() : ''), 301);
+})->where('path', '.*');

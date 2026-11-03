@@ -40,9 +40,9 @@ class OpdAndDigitsTest extends FrontDoorTestCase
     {
         $ticket = $this->fee('OPD-CONSULT', 5);
         $this->listed('poor', $ticket, 0);
-        $this->as($this->actor(['patients.view']))->get('/admin/rates/opd')->assertForbidden();
+        $this->as($this->actor(['patients.view']))->get('/rates/opd')->assertForbidden();
 
-        $html = $this->as($this->actor(['rates.opd.view']))->get('/admin/rates/opd')->assertOk()->getContent();
+        $html = $this->as($this->actor(['rates.opd.view']))->get('/rates/opd')->assertOk()->getContent();
 
         $this->assertStringContainsString('data-dashboard-question', $html);
         $this->assertStringContainsString('Free', $html);

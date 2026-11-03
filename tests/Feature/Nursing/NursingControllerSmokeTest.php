@@ -22,14 +22,14 @@ class NursingControllerSmokeTest extends NursingTestCase
         app(NursingTaskService::class)->create($episode, ['task_type' => 'Turn', 'due_at' => now()->addHour()]);
 
         foreach ([
-            '/admin/nursing', '/admin/nursing/episodes', '/admin/nursing/episodes/'.$episode->public_id,
-            '/admin/nursing/shifts', '/admin/nursing/tasks', '/admin/nursing/mar', '/admin/nursing/mar/'.$mar->public_id,
-            '/admin/nursing/episodes/'.$episode->public_id.'/observations', '/admin/nursing/episodes/'.$episode->public_id.'/intake-output',
-            '/admin/nursing/episodes/'.$episode->public_id.'/clinical', '/admin/nursing/episodes/'.$episode->public_id.'/notes',
-            '/admin/nursing/care-plans/'.$carePlan->public_id, '/admin/nursing/handover', '/admin/nursing/handover/'.$handover->public_id,
-            '/admin/nursing/escalations', '/admin/nursing/episodes/'.$episode->public_id.'/discharge-checklist',
-            '/admin/nursing/reports/workload', '/admin/nursing/reports/medication', '/admin/nursing/reports/quality',
-            '/admin/nursing/settings',
+            '/nursing', '/nursing/episodes', '/nursing/episodes/'.$episode->public_id,
+            '/nursing/shifts', '/nursing/tasks', '/nursing/mar', '/nursing/mar/'.$mar->public_id,
+            '/nursing/episodes/'.$episode->public_id.'/observations', '/nursing/episodes/'.$episode->public_id.'/intake-output',
+            '/nursing/episodes/'.$episode->public_id.'/clinical', '/nursing/episodes/'.$episode->public_id.'/notes',
+            '/nursing/care-plans/'.$carePlan->public_id, '/nursing/handover', '/nursing/handover/'.$handover->public_id,
+            '/nursing/escalations', '/nursing/episodes/'.$episode->public_id.'/discharge-checklist',
+            '/nursing/reports/workload', '/nursing/reports/medication', '/nursing/reports/quality',
+            '/nursing/settings',
         ] as $url) {
             $this->get($url)->assertOk();
         }
@@ -40,10 +40,10 @@ class NursingControllerSmokeTest extends NursingTestCase
         $mar = $this->makeMar($this->makeEpisode());
         $payload = ['safety_checks' => ['patient' => 1, 'medication' => 1]];
 
-        $this->post('/admin/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertRedirect();
+        $this->post('/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertRedirect();
         $this->assertSame('administered', $mar->fresh()->status);
 
-        $this->post('/admin/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertSessionHasErrors();
+        $this->post('/nursing/mar/'.$mar->public_id.'/administer', $payload)->assertSessionHasErrors();
         $this->assertDatabaseCount('nursing_medication_administrations', 1);
     }
 

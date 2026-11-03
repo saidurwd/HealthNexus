@@ -51,7 +51,7 @@
 <script>
 (function () {
     var url = @json(route('admin.ed.board.data'));
-    var visitBase = @json(url('/admin/emergency/visits'));
+    var visitBase = @json(url('/emergency/visits'));
     var poll = {{ $pollSeconds }} * 1000;
     var L = @json($labels);
     var statusText = @json($statusText);

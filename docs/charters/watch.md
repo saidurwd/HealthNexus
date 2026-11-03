@@ -5,7 +5,7 @@ _Updated in every slice (guideline 7.4). Phase 26 (Bangladesh pack) slice B5 is 
 - Phase / owner: 26 / **owner to be named by the hospital** (the infection-control or public-health officer)
 - Status: built · switchable per organization / hospital (`watch`, depends on core and patient)
 - Purpose: notice, from the diagnoses doctors already write, when cases of a notifiable disease are rising or clustering in one district, so a person can look into it and report to the health authority. It is **community disease surveillance**; hospital-acquired infection clusters on a ward stay in Quality (infection control).
-- Permission prefix: `watch` (5 permissions). Table prefix: `sv_`. Staff screens `/admin/watch/*`. Command `watch:scan` daily 06:50, `watch:install`.
+- Permission prefix: `watch` (5 permissions). Table prefix: `sv_`. Staff screens `/watch/*`. Command `watch:scan` daily 06:50, `watch:install`.
 - Owns: the conditions watched (`sv_conditions`) and the signals raised (`sv_signals`).
 - Does NOT own: diagnoses (Clinical / OPD), the place of residence (the address master, B3), hospital-acquired outbreaks (Quality).
 - Rules:

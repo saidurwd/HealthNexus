@@ -99,7 +99,7 @@ class UxStandardTest extends TestCase
         session()->put('tenant_organization_id', $this->organization->id);
         $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id]);
 
-        $this->get('/admin/encounters/'.$encounter->public_id)->assertOk()->assertSee('Sulfa')->assertSee('patient-banner', false);
+        $this->get('/encounters/'.$encounter->public_id)->assertOk()->assertSee('Sulfa')->assertSee('patient-banner', false);
     }
 
     public function test_status_badge_is_colour_icon_and_text_from_one_palette(): void
@@ -159,7 +159,7 @@ class UxStandardTest extends TestCase
         app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         session()->put('tenant_organization_id', $this->organization->id);
 
-        $this->get('/admin/patients/create')->assertOk()->assertSee('shortcut-help', false)->assertSee('data-enter-next', false)->assertSee('Keyboard shortcuts');
+        $this->get('/patients/create')->assertOk()->assertSee('shortcut-help', false)->assertSee('data-enter-next', false)->assertSee('Keyboard shortcuts');
     }
 
     public function test_error_pages_show_a_reference_to_quote_to_support(): void

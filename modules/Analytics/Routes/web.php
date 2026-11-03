@@ -5,7 +5,7 @@ use Modules\Analytics\Http\Controllers\Web\AnalyticsDashboardController;
 use Modules\Analytics\Http\Controllers\Web\AnalyticsInsightController;
 use Modules\Analytics\Http\Controllers\Web\AnalyticsReportController;
 
-// BI and analytics: /admin/analytics/*.
+// BI and analytics: /analytics/*.
 Route::prefix('analytics')->name('analytics.')->group(function () {
     Route::get('/', [AnalyticsDashboardController::class, 'index'])->name('index');
     Route::get('dashboards/new', [AnalyticsDashboardController::class, 'create'])->name('dashboards.create');

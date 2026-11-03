@@ -30,15 +30,15 @@ class OtControllerSmokeTest extends OtTestCase
         ], $this->user);
 
         foreach ([
-            '/admin/ot', '/admin/ot/surgery-requests', '/admin/ot/surgery-requests/create',
-            '/admin/ot/surgery-requests/'.$surgeryRequest->public_id,
-            '/admin/ot/surgeries', '/admin/ot/surgeries/create', '/admin/ot/surgeries/'.$surgery->public_id,
-            '/admin/ot/theatres', '/admin/ot/theatres/create',
-            '/admin/ot/procedures', '/admin/ot/procedures/create',
-            '/admin/ot/surgeries/'.$surgery->public_id.'/preoperative',
-            '/admin/ot/surgeries/'.$completedSurgery->public_id.'/recovery',
-            '/admin/ot/reports/surgeries', '/admin/ot/reports/utilization', '/admin/ot/reports/complications',
-            '/admin/ot/settings',
+            '/ot', '/ot/surgery-requests', '/ot/surgery-requests/create',
+            '/ot/surgery-requests/'.$surgeryRequest->public_id,
+            '/ot/surgeries', '/ot/surgeries/create', '/ot/surgeries/'.$surgery->public_id,
+            '/ot/theatres', '/ot/theatres/create',
+            '/ot/procedures', '/ot/procedures/create',
+            '/ot/surgeries/'.$surgery->public_id.'/preoperative',
+            '/ot/surgeries/'.$completedSurgery->public_id.'/recovery',
+            '/ot/reports/surgeries', '/ot/reports/utilization', '/ot/reports/complications',
+            '/ot/settings',
         ] as $url) {
             $this->get($url)->assertOk();
         }

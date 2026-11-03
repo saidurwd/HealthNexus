@@ -5,7 +5,7 @@ use Modules\Mch\Http\Controllers\Web\ImmunisationController;
 use Modules\Mch\Http\Controllers\Web\MchHomeController;
 use Modules\Mch\Http\Controllers\Web\PregnancyController;
 
-// Mothers and babies: /admin/mch/*. Every screen checks its own right.
+// Mothers and babies: /mch/*. Every screen checks its own right.
 Route::prefix('mch')->name('mch.')->group(function () {
     Route::get('/', [MchHomeController::class, 'index'])->name('index');
 

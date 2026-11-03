@@ -56,7 +56,7 @@ class PatientAppointmentIntegrationTest extends TestCase
 
     public function test_book_appointment_button_preselects_the_patient(): void
     {
-        $response = $this->get('/admin/appointments/create?patient_id='.$this->patient->id);
+        $response = $this->get('/appointments/create?patient_id='.$this->patient->id);
 
         $response->assertOk();
         $response->assertViewHas('selectedPatient', fn ($selected) => $selected->id === $this->patient->id);
@@ -67,7 +67,7 @@ class PatientAppointmentIntegrationTest extends TestCase
         $doctor = User::factory()->create();
         $countBefore = Patient::count();
 
-        $this->post('/admin/appointments', [
+        $this->post('/appointments', [
             'patient_id' => $this->patient->id,
             'doctor_id' => $doctor->id,
             'appointment_date' => now()->addDays(2)->toDateString(),
@@ -84,7 +84,7 @@ class PatientAppointmentIntegrationTest extends TestCase
     {
         $doctor = User::factory()->create();
 
-        $this->post('/admin/appointments', [
+        $this->post('/appointments', [
             'patient_id' => 999999,
             'doctor_id' => $doctor->id,
             'appointment_date' => now()->addDays(2)->toDateString(),
@@ -102,7 +102,7 @@ class PatientAppointmentIntegrationTest extends TestCase
             'appointment_no' => 'APT-HIST-1',
         ]);
 
-        $response = $this->get("/admin/patients/{$this->patient->public_id}/appointments");
+        $response = $this->get("/patients/{$this->patient->public_id}/appointments");
 
         $response->assertOk();
         $response->assertSee($appointment->appointment_no);

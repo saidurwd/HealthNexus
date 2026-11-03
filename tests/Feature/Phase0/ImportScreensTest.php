@@ -48,11 +48,11 @@ class ImportScreensTest extends TestCase
 
     public function test_upload_preview_import_error_file_and_rollback_through_the_screens(): void
     {
-        $this->get('/admin/imports')->assertOk()->assertSee('Patients')->assertDontSee('Staff accounts');
-        $this->get('/admin/imports/template/patients')->assertOk();
+        $this->get('/imports')->assertOk()->assertSee('Patients')->assertDontSee('Staff accounts');
+        $this->get('/imports/template/patients')->assertOk();
 
         $file = UploadedFile::fake()->createWithContent('patients.csv', "first_name,last_name,phone\nRahim,Uddin,01712345678\n,Broken,01712345679\n");
-        $this->post('/admin/imports', ['import' => 'patients', 'file' => $file])->assertRedirect();
+        $this->post('/imports', ['import' => 'patients', 'file' => $file])->assertRedirect();
 
         $batch = ImportBatch::firstOrFail();
         $this->assertSame('validated', $batch->status, 'the queue runs synchronously in tests');
@@ -76,7 +76,7 @@ class ImportScreensTest extends TestCase
         $this->get(route('admin.imports.show', $batch))->assertNotFound();
 
         $this->actingAs($this->member($this->organization, []));
-        $this->get('/admin/imports')->assertForbidden();
-        $this->post('/admin/imports', ['import' => 'patients', 'file' => UploadedFile::fake()->createWithContent('p.csv', "first_name,last_name\nA,B\n")])->assertForbidden();
+        $this->get('/imports')->assertForbidden();
+        $this->post('/imports', ['import' => 'patients', 'file' => UploadedFile::fake()->createWithContent('p.csv', "first_name,last_name\nA,B\n")])->assertForbidden();
     }
 }

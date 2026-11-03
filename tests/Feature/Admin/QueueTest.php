@@ -77,7 +77,7 @@ class QueueTest extends TestCase
             'generated_at' => now(),
         ]);
 
-        $response = $this->get('/admin/queue');
+        $response = $this->get('/queue');
 
         $response->assertStatus(200);
         $response->assertViewHas('queue');
@@ -110,7 +110,7 @@ class QueueTest extends TestCase
             'generated_at' => now(),
         ]);
 
-        $response = $this->postJson('/admin/queue/call-next');
+        $response = $this->postJson('/queue/call-next');
 
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);
@@ -148,7 +148,7 @@ class QueueTest extends TestCase
             'called_at' => now(),
         ]);
 
-        $response = $this->postJson('/admin/queue/'.$token->id.'/start');
+        $response = $this->postJson('/queue/'.$token->id.'/start');
 
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);
@@ -189,7 +189,7 @@ class QueueTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $response = $this->postJson('/admin/queue/'.$token->id.'/complete');
+        $response = $this->postJson('/queue/'.$token->id.'/complete');
 
         $response->assertStatus(200);
         $response->assertJson(['success' => true]);

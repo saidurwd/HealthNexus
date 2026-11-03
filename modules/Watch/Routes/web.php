@@ -5,7 +5,7 @@ use Modules\Watch\Http\Controllers\Web\ConditionController;
 use Modules\Watch\Http\Controllers\Web\SignalController;
 use Modules\Watch\Http\Controllers\Web\WatchHomeController;
 
-// Disease watch: /admin/watch/*. Every screen checks its own right.
+// Disease watch: /watch/*. Every screen checks its own right.
 Route::prefix('watch')->name('watch.')->group(function () {
     Route::get('/', [WatchHomeController::class, 'index'])->name('index');
     Route::post('scan', [WatchHomeController::class, 'scan'])->name('scan');

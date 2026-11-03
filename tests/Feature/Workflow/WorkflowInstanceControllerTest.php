@@ -66,7 +66,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $this->approver->givePermissionTo('workflow.view');
         $this->actingAs($this->approver);
 
-        $response = $this->get('/admin/workflow');
+        $response = $this->get('/workflow');
 
         $response->assertOk();
         $pending = $response->viewData('pending');
@@ -80,7 +80,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $this->approver->givePermissionTo(['workflow.view', 'workflow.act']);
         $this->actingAs($this->approver);
 
-        $this->post("/admin/workflow/{$instance->id}/approve")->assertRedirect();
+        $this->post("/workflow/{$instance->id}/approve")->assertRedirect();
 
         $instance->refresh();
         $this->assertSame('approved', $instance->status);
@@ -94,7 +94,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $stranger->givePermissionTo('workflow.act');
         $this->actingAs($stranger);
 
-        $this->post("/admin/workflow/{$instance->id}/approve")
+        $this->post("/workflow/{$instance->id}/approve")
             ->assertSessionHasErrors('approver');
 
         $instance->refresh();
@@ -108,7 +108,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $this->approver->givePermissionTo(['workflow.view', 'workflow.act']);
         $this->actingAs($this->approver);
 
-        $this->post("/admin/workflow/{$instance->id}/reject", [])
+        $this->post("/workflow/{$instance->id}/reject", [])
             ->assertSessionHasErrors('reason');
     }
 
@@ -119,7 +119,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $this->approver->givePermissionTo('workflow.view');
         $this->actingAs($this->approver);
 
-        $this->post("/admin/workflow/{$instance->id}/approve")->assertForbidden();
+        $this->post("/workflow/{$instance->id}/approve")->assertForbidden();
     }
 
     public function test_show_page_displays_the_timeline(): void
@@ -129,7 +129,7 @@ class WorkflowInstanceControllerTest extends TestCase
         $this->initiator->givePermissionTo('workflow.view');
         $this->actingAs($this->initiator);
 
-        $response = $this->get("/admin/workflow/{$instance->id}");
+        $response = $this->get("/workflow/{$instance->id}");
 
         $response->assertOk();
         $response->assertSee('Review');

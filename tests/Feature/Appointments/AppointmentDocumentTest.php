@@ -53,7 +53,7 @@ class AppointmentDocumentTest extends TestCase
     {
         $file = UploadedFile::fake()->create('referral.pdf', 100, 'application/pdf');
 
-        $response = $this->post("/admin/appointments/{$this->appointment->public_id}/documents", [
+        $response = $this->post("/appointments/{$this->appointment->public_id}/documents", [
             'document' => $file,
             'document_type' => 'referral_letter',
         ]);
@@ -71,26 +71,26 @@ class AppointmentDocumentTest extends TestCase
     public function test_can_download_an_uploaded_document(): void
     {
         $file = UploadedFile::fake()->create('confirmation.pdf', 50, 'application/pdf');
-        $this->post("/admin/appointments/{$this->appointment->public_id}/documents", [
+        $this->post("/appointments/{$this->appointment->public_id}/documents", [
             'document' => $file, 'document_type' => 'booking_confirmation',
         ]);
 
         $document = $this->appointment->documents()->first();
 
-        $this->get("/admin/appointments/{$this->appointment->public_id}/documents/{$document->public_id}/download")->assertOk();
+        $this->get("/appointments/{$this->appointment->public_id}/documents/{$document->public_id}/download")->assertOk();
     }
 
     public function test_can_delete_a_document(): void
     {
         $file = UploadedFile::fake()->create('doc.pdf', 50, 'application/pdf');
-        $this->post("/admin/appointments/{$this->appointment->public_id}/documents", [
+        $this->post("/appointments/{$this->appointment->public_id}/documents", [
             'document' => $file, 'document_type' => 'supporting_document',
         ]);
 
         $document = $this->appointment->documents()->first();
         $path = $document->file->path;
 
-        $this->delete("/admin/appointments/{$this->appointment->public_id}/documents/{$document->public_id}")->assertRedirect();
+        $this->delete("/appointments/{$this->appointment->public_id}/documents/{$document->public_id}")->assertRedirect();
 
         $this->assertDatabaseMissing('appointment_documents', ['id' => $document->id]);
         Storage::disk('local')->assertMissing($path);

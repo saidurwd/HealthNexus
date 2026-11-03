@@ -9,7 +9,7 @@ Done:
   Latin sound-alike (metaphone: Mohammad ~ Muhammad). Scoped to the active organization; needs `patients.view`.
 - `ScanResolver`: wristband (MRN or public id), lab specimen accession/barcode, radiology accession, drug-pack label
   `PHB|<medication code>|<batch number>`, invoice, admission, encounter numbers; each only for users holding that module's view permission.
-- `GET /api/v1/search?q=`, `GET /api/v1/scan?code=`, page `GET /admin/search?q=` (a scanned code naming one record redirects straight to it),
+- `GET /api/v1/search?q=`, `GET /api/v1/scan?code=`, page `GET /search?q=` (a scanned code naming one record redirects straight to it),
   top-bar box with Ctrl+K / F3.
 - Benchmark: `php artisan search:benchmark 100000` (scratch DB only). On MySQL with 100,000 patients / 744,172 index rows the
   worst p95 over nine query types is 48 ms (target 500 ms). That is service time, not a full HTTP round trip.

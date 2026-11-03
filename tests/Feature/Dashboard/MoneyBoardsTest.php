@@ -22,12 +22,12 @@ class MoneyBoardsTest extends FrontDoorTestCase
 
     public function test_each_money_board_states_itself_and_refuses_a_person_without_the_right(): void
     {
-        $this->assertStringContainsString('billed and collected', $this->assertDashboardStatesItself('/admin/billing', $this->actor(['billing.dashboard.view'])));
-        $this->assertStringContainsString('claims being paid', $this->assertDashboardStatesItself('/admin/insurance', $this->actor(['insurance.dashboard.view'])));
-        $this->assertStringContainsString('books in order', $this->assertDashboardStatesItself('/admin/finance', $this->actor(['finance.dashboard.view'])));
-        $this->assertDashboardRefuses('/admin/billing', $this->actor(['billing.invoice.view']));
-        $this->assertDashboardRefuses('/admin/insurance', $this->actor(['insurance.claim.view']));
-        $this->assertDashboardRefuses('/admin/finance', $this->actor(['finance.journal.view']));
+        $this->assertStringContainsString('billed and collected', $this->assertDashboardStatesItself('/billing', $this->actor(['billing.dashboard.view'])));
+        $this->assertStringContainsString('claims being paid', $this->assertDashboardStatesItself('/insurance', $this->actor(['insurance.dashboard.view'])));
+        $this->assertStringContainsString('books in order', $this->assertDashboardStatesItself('/finance', $this->actor(['finance.dashboard.view'])));
+        $this->assertDashboardRefuses('/billing', $this->actor(['billing.invoice.view']));
+        $this->assertDashboardRefuses('/insurance', $this->actor(['insurance.claim.view']));
+        $this->assertDashboardRefuses('/finance', $this->actor(['finance.journal.view']));
     }
 
     public function test_billing_counts_what_was_billed_collected_and_is_still_owed_by_the_day(): void

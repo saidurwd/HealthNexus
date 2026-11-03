@@ -5,7 +5,7 @@ _Updated in every slice (guideline 7.4). Phase 26 (Bangladesh pack) slice B2 is 
 - Phase / owner: 26 / **owner to be named by the hospital** (the records manager, with the medical superintendent for deaths and police cases)
 - Status: built · switchable per organization / hospital (`vital`, depends on core and patient)
 - Purpose: the hospital's own paperwork for a birth, a death and a case the police must be told about. It **notifies** a birth, **certifies** the cause of a death and **keeps** the police-case record. The government registrar (not this system) registers the birth and issues the national birth certificate.
-- Permission prefix: `vital` (14 permissions). Table prefix: `vr_`. Staff screens `/admin/vital/*`. No API in this slice.
+- Permission prefix: `vital` (14 permissions). Table prefix: `vr_`. Staff screens `/vital/*`. No API in this slice.
 - Owns: birth notifications (`vr_birth_notifications`), death certifications (`vr_death_certifications`), medico-legal cases (`vr_medicolegal_cases`).
 - Does NOT own: patients (Patients), the mortuary and release of bodies (Facility — this module only sets the police hold on, and lifts it from, a mortuary case), the review of deaths for quality (Quality), places (the address master, B3).
 - Rules:

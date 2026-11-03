@@ -27,11 +27,11 @@ class QueueBoardTest extends FrontDoorTestCase
 
     public function test_it_states_itself_reloads_and_is_refused_without_the_right(): void
     {
-        $html = $this->assertDashboardStatesItself('/admin/queue-board', $this->receptionist());
+        $html = $this->assertDashboardStatesItself('/queue-board', $this->receptionist());
         $this->assertStringContainsString('How long are people waiting', $html);
         $this->assertStringContainsString('Reloads every 60 seconds', $html);
         $this->assertStringContainsString('No one is booked or waiting today.', $html, 'an empty day says so');
-        $this->assertDashboardRefuses('/admin/queue-board', $this->actor(['encounters.view']));
+        $this->assertDashboardRefuses('/queue-board', $this->actor(['encounters.view']));
     }
 
     public function test_waits_are_worked_out_from_when_the_token_was_made(): void
@@ -57,7 +57,7 @@ class QueueBoardTest extends FrontDoorTestCase
         $dr = $this->row('providers', ['name' => 'Dr Karim', 'provider_type' => 'doctor']);
         $this->booking($dr, 'checked_in', 'T-777', '2026-11-12 03:30:00', null, 'waiting', null, $patient);
 
-        $html = $this->as($this->receptionist())->get('/admin/queue-board')->assertOk()->getContent();
+        $html = $this->as($this->receptionist())->get('/queue-board')->assertOk()->getContent();
 
         $this->assertStringContainsString('T-777', $html);
         $this->assertStringContainsString('Dr Karim', $html);
@@ -70,7 +70,7 @@ class QueueBoardTest extends FrontDoorTestCase
         $this->booking($dr, 'checked_in', 'T-001', '2026-11-12 03:30:00');
         $this->booking($dr, 'checked_in', 'T-002', '2026-11-12 03:40:00');
         $user = $this->actor(['appointments.queue', 'appointments.view']);
-        $html = $this->as($user)->get('/admin/queue-board')->assertOk()->getContent();
+        $html = $this->as($user)->get('/queue-board')->assertOk()->getContent();
 
         $this->assertSame(route('admin.queue.index'), $this->tileLink($html, 'Waiting now'));
         $queue = app(QueueService::class)->todaysQueue($this->organization->id, $this->branch->id);
@@ -93,10 +93,10 @@ class QueueBoardTest extends FrontDoorTestCase
         $dr = $this->row('providers', ['name' => 'Dr Rahim', 'provider_type' => 'doctor']);
         $this->booking($dr, 'checked_in', 'T-001', '2026-11-12 03:00:00'); // 60 minutes
         $user = $this->receptionist();
-        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/admin/queue-board')->getContent(), 'no target ships');
+        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/queue-board')->getContent(), 'no target ships');
 
         app(SettingsService::class)->set('dashboard.target.opd_longest_wait', '30');
         Cache::flush();
-        $this->assertStringContainsString('Off target', $this->as($user)->get('/admin/queue-board')->getContent());
+        $this->assertStringContainsString('Off target', $this->as($user)->get('/queue-board')->getContent());
     }
 }

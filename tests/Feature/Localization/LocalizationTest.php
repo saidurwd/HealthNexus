@@ -100,7 +100,7 @@ class LocalizationTest extends TestCase
         session()->put('tenant_organization_id', $organization->id);
         app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
-        $response = $this->get('/admin/patients');
+        $response = $this->get('/patients');
 
         $response->assertOk();
         $response->assertSee('রোগীরা'); // "Patients" in Bangla

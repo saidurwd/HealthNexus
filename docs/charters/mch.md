@@ -5,7 +5,7 @@ _Updated in every slice (guideline 7.4). Phase 26 (Bangladesh pack) slice B4 is 
 - Phase / owner: 26 / **owner to be named by the hospital** (the head of obstetrics with the head of paediatrics)
 - Status: built · switchable per organization / hospital (`mch`, depends on core and patient)
 - Purpose: follow a pregnancy from booking to delivery, record the delivery and the newborns, and keep a child's routine immunisation card.
-- Permission prefix: `mch` (7 permissions). Table prefix: `mch_`. Staff screens `/admin/mch/*`. No API in this slice.
+- Permission prefix: `mch` (7 permissions). Table prefix: `mch_`. Staff screens `/mch/*`. No API in this slice.
 - Owns: pregnancies, antenatal visits, deliveries, newborns, immunisation doses.
 - Does NOT own: patients (Patients), birth notification (Births, deaths and police cases - a delivery opens a draft there), inpatient care of mother or baby (IPD / NICU), vaccine stock (Inventory / Pharmacy).
 - Rules:

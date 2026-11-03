@@ -96,7 +96,7 @@ class DischargeWorkflowTest extends IpdTestCase
         $admission = $this->makeAdmittedPatient($this->makeBed());
         $request = app(IpdDischargeService::class)->request($admission, ['discharge_type' => 'routine', 'discharge_diagnosis' => 'Community acquired pneumonia', 'instructions' => 'Rest and plenty of fluids'], $this->user);
 
-        $this->get('/admin/ipd/discharge/'.$request->public_id.'/print')
+        $this->get('/ipd/discharge/'.$request->public_id.'/print')
             ->assertOk()
             ->assertSee('Community acquired pneumonia')
             ->assertSee('Rest and plenty of fluids')

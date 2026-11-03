@@ -73,14 +73,14 @@ class EncounterSecurityTest extends TestCase
 
     public function test_user_cannot_view_another_organizations_encounter(): void
     {
-        $response = $this->get('/admin/encounters/'.$this->otherOrganizationEncounter->public_id);
+        $response = $this->get('/encounters/'.$this->otherOrganizationEncounter->public_id);
 
         $response->assertStatus(403);
     }
 
     public function test_user_cannot_update_another_organizations_encounter(): void
     {
-        $response = $this->put('/admin/encounters/'.$this->otherOrganizationEncounter->public_id, [
+        $response = $this->put('/encounters/'.$this->otherOrganizationEncounter->public_id, [
             'status' => 'waiting',
         ]);
 
@@ -89,7 +89,7 @@ class EncounterSecurityTest extends TestCase
 
     public function test_user_cannot_delete_another_organizations_encounter(): void
     {
-        $response = $this->delete('/admin/encounters/'.$this->otherOrganizationEncounter->public_id);
+        $response = $this->delete('/encounters/'.$this->otherOrganizationEncounter->public_id);
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('encounters', [
@@ -109,7 +109,7 @@ class EncounterSecurityTest extends TestCase
             'locked_at' => now(),
         ]);
 
-        $response = $this->post("/admin/encounters/{$encounter->public_id}/vitals", [
+        $response = $this->post("/encounters/{$encounter->public_id}/vitals", [
             'systolic' => 120,
             'diastolic' => 80,
         ]);
@@ -129,7 +129,7 @@ class EncounterSecurityTest extends TestCase
             'locked_at' => now(),
         ]);
 
-        $response = $this->post("/admin/encounters/{$encounter->public_id}/diagnoses", [
+        $response = $this->post("/encounters/{$encounter->public_id}/diagnoses", [
             'description' => 'Should be blocked',
         ]);
 
@@ -200,7 +200,7 @@ class EncounterSecurityTest extends TestCase
             'patient_id' => $patient->id,
         ]);
 
-        $response = $this->post("/admin/encounters/{$encounter->public_id}/break-glass", [
+        $response = $this->post("/encounters/{$encounter->public_id}/break-glass", [
             'reason' => 'Emergency access required for restricted record.',
         ]);
 

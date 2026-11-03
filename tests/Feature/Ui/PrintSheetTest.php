@@ -11,7 +11,7 @@ class PrintSheetTest extends FrontDoorTestCase
 {
     public function test_a_page_carries_the_letterhead_footer_and_one_print_button(): void
     {
-        $html = $this->as($this->actor(['rates.bed.view']))->get('/admin/rates/beds')->assertOk()->getContent();
+        $html = $this->as($this->actor(['rates.bed.view']))->get('/rates/beds')->assertOk()->getContent();
 
         $this->assertStringContainsString('css/print.css', $html);
         $this->assertStringContainsString('print-letterhead', $html);
@@ -33,7 +33,7 @@ class PrintSheetTest extends FrontDoorTestCase
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         PatientAllergy::factory()->create(['organization_id' => $this->organization->id, 'patient_id' => $patient->id, 'substance' => 'Penicillin', 'severity' => 'severe', 'is_active' => true]);
 
-        $this->as($this->actor(['patients.print']))->get('/admin/patients/'.$patient->public_id.'/wristband')
+        $this->as($this->actor(['patients.print']))->get('/patients/'.$patient->public_id.'/wristband')
             ->assertOk()
             ->assertSee($patient->enterprise_patient_no)
             ->assertSee('Penicillin')

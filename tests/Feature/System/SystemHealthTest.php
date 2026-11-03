@@ -34,7 +34,7 @@ class SystemHealthTest extends TestCase
 
     public function test_health_page_loads_and_lists_every_component(): void
     {
-        $response = $this->get('/admin/system/health');
+        $response = $this->get('/system/health');
 
         $response->assertOk();
         $response->assertViewHas('checks');
@@ -55,7 +55,7 @@ class SystemHealthTest extends TestCase
         // Force the Redis dependency to fail, whatever this machine runs.
         Redis::shouldReceive('connection')->andThrow(new \RuntimeException('Connection refused'));
 
-        $response = $this->get('/admin/system/health');
+        $response = $this->get('/system/health');
 
         $response->assertOk();
         $checks = $response->viewData('checks');
@@ -78,12 +78,12 @@ class SystemHealthTest extends TestCase
 
     public function test_queue_monitor_page_loads(): void
     {
-        $this->get('/admin/system/queue')->assertOk();
+        $this->get('/system/queue')->assertOk();
     }
 
     public function test_scheduled_jobs_page_loads_and_lists_registered_tasks(): void
     {
-        $response = $this->get('/admin/system/scheduled-jobs');
+        $response = $this->get('/system/scheduled-jobs');
 
         $response->assertOk();
         $response->assertSee('sessions:prune-expired');
@@ -92,13 +92,13 @@ class SystemHealthTest extends TestCase
 
     public function test_about_page_loads(): void
     {
-        $this->get('/admin/system/about')->assertOk();
+        $this->get('/system/about')->assertOk();
     }
 
     public function test_unauthorized_user_cannot_view_system_health(): void
     {
         $this->user->revokePermissionTo('system.health.view');
 
-        $this->get('/admin/system/health')->assertForbidden();
+        $this->get('/system/health')->assertForbidden();
     }
 }

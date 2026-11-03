@@ -69,7 +69,7 @@ class BillingDashboardAndReportsTest extends BillingTestCase
 
     public function test_dashboard_loads_with_seeded_data(): void
     {
-        $response = $this->get('/admin/billing');
+        $response = $this->get('/billing');
 
         $response->assertOk();
         $response->assertViewHas('metrics', fn ($m) => (float) $m['current']['billed'] === 500.0 && (float) $m['current']['collected'] === 500.0 && (float) $m['owed'] === 0.0);
@@ -77,31 +77,31 @@ class BillingDashboardAndReportsTest extends BillingTestCase
 
     public function test_collection_report_loads(): void
     {
-        $this->get('/admin/billing/reports/collection')->assertOk();
+        $this->get('/billing/reports/collection')->assertOk();
     }
 
     public function test_billing_report_loads(): void
     {
-        $this->get('/admin/billing/reports/billing')->assertOk();
+        $this->get('/billing/reports/billing')->assertOk();
     }
 
     public function test_revenue_report_loads(): void
     {
-        $this->get('/admin/billing/reports/revenue')->assertOk();
+        $this->get('/billing/reports/revenue')->assertOk();
     }
 
     public function test_receivables_report_loads(): void
     {
-        $this->get('/admin/billing/reports/receivables')->assertOk();
+        $this->get('/billing/reports/receivables')->assertOk();
     }
 
     public function test_refunds_report_loads(): void
     {
-        $this->get('/admin/billing/reports/refunds')->assertOk();
+        $this->get('/billing/reports/refunds')->assertOk();
     }
 
     public function test_discounts_report_loads(): void
     {
-        $this->get('/admin/billing/reports/discounts')->assertOk();
+        $this->get('/billing/reports/discounts')->assertOk();
     }
 }

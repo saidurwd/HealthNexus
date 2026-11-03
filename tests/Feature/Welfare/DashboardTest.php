@@ -52,19 +52,19 @@ class DashboardTest extends WelfareTestCase
 
     public function test_it_states_its_question_and_when_the_figures_were_worked_out(): void
     {
-        $html = $this->assertDashboardStatesItself('/admin/welfare', $this->viewer());
+        $html = $this->assertDashboardStatesItself('/welfare', $this->viewer());
         $this->assertStringContainsString('Is there enough free money', $html);
         $this->assertStringContainsString('Last 30 days', $html);
     }
 
     public function test_it_is_refused_without_the_right(): void
     {
-        $this->assertDashboardRefuses('/admin/welfare', $this->actor(['welfare.fund.view']));
+        $this->assertDashboardRefuses('/welfare', $this->actor(['welfare.fund.view']));
     }
 
     public function test_an_empty_hospital_gets_honest_empty_states_and_zero_is_a_real_zero(): void
     {
-        $html = $this->assertDashboardStatesItself('/admin/welfare', $this->viewer());
+        $html = $this->assertDashboardStatesItself('/welfare', $this->viewer());
         $this->assertStringContainsString('No funds yet.', $html);
         $this->assertStringContainsString('Nothing was given in this period.', $html);
         $this->assertStringContainsString('৳ 0', $html);
@@ -75,7 +75,7 @@ class DashboardTest extends WelfareTestCase
         $this->giveAndApprove('4000.00');
         $this->giveAndApprove('1500.00');
         $viewer = $this->viewer();
-        $html = $this->as($viewer)->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($viewer)->get('/welfare')->assertOk()->getContent();
 
         $given = $this->assertTileEqualsList($html, 'Given to patients', $viewer, '5500.00', 2);
         $this->assertStringContainsString(Numbers::value($given['total'], 'taka'), $html, 'the tile shows the list\'s total');
@@ -88,7 +88,7 @@ class DashboardTest extends WelfareTestCase
     {
         $this->fundWith('7000');
         $this->fundWith('3000');
-        $html = $this->as($this->viewer())->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($this->viewer())->get('/welfare')->assertOk()->getContent();
         $list = $this->as($this->viewer())->get($this->tileLink($html, 'Free to give now'))->assertOk()->getContent();
 
         $this->assertStringContainsString('৳ 10,000', $html);
@@ -105,7 +105,7 @@ class DashboardTest extends WelfareTestCase
             $svc->submit($a, $assessor);
         }
         $viewer = $this->viewer();
-        $html = $this->as($viewer)->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($viewer)->get('/welfare')->assertOk()->getContent();
         $list = $this->as($viewer)->get($this->tileLink($html, 'Assessments waiting'))->assertOk()->getContent();
 
         $this->assertSame(2, substr_count($list, 'WA-'), 'two rows in the list the tile opens');
@@ -118,7 +118,7 @@ class DashboardTest extends WelfareTestCase
         $svc = app(FundService::class);
         $svc->recordDonation($fund, '1000', null, $this->actor([]), null, null, now()->subDays(45)); // the 30 days before the last 30
         $svc->recordDonation($fund, '1500', null, $this->actor([]), null, null, now()->subDays(5));
-        $html = $this->as($this->viewer())->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($this->viewer())->get('/welfare')->assertOk()->getContent();
 
         $this->assertStringContainsString('+50%', $html);
         $this->assertStringContainsString('▲', $html);
@@ -132,17 +132,17 @@ class DashboardTest extends WelfareTestCase
         WfFundEntry::factory()->create(['organization_id' => $other->id, 'fund_id' => $theirs->id, 'amount' => 999999, 'occurred_at' => now()]);
         $this->fundWith('1000');
         $viewer = $this->viewer();
-        $html = $this->as($viewer)->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($viewer)->get('/welfare')->assertOk()->getContent();
 
         $this->assertStringNotContainsString('999,999', $html);
         $this->assertTileEqualsList($html, 'Received', $viewer, '1000.00', 1);
-        $this->assertStringNotContainsString('999,999', $this->as($viewer)->get('/admin/welfare/gifts')->getContent());
+        $this->assertStringNotContainsString('999,999', $this->as($viewer)->get('/welfare/gifts')->getContent());
     }
 
     public function test_a_person_without_the_list_rights_sees_the_figures_but_no_links(): void
     {
         $this->fundWith('1000');
-        $html = $this->as($this->actor(['welfare.dashboard.view']))->get('/admin/welfare')->assertOk()->getContent();
+        $html = $this->as($this->actor(['welfare.dashboard.view']))->get('/welfare')->assertOk()->getContent();
 
         $this->assertStringContainsString('৳ 1,000', $html);
         $this->assertNull($this->tileLink($html, 'Received'), 'a figure never links to a page the person may not open');
@@ -152,7 +152,7 @@ class DashboardTest extends WelfareTestCase
     public function test_the_management_page_carries_no_patient_names(): void
     {
         $this->giveAndApprove('2000.00');
-        $this->assertNoPatientIdentity($this->as($this->viewer())->get('/admin/welfare')->getContent(), ['Zubaida', 'Khatun']);
+        $this->assertNoPatientIdentity($this->as($this->viewer())->get('/welfare')->getContent(), ['Zubaida', 'Khatun']);
     }
 
     public function test_the_figures_are_kept_a_short_while_and_refresh_works_them_out_again(): void
@@ -161,11 +161,11 @@ class DashboardTest extends WelfareTestCase
         $fund = $this->fund();
         $svc = app(FundService::class);
         $svc->recordDonation($fund, '1000', null, $this->actor([]));
-        $this->as($viewer)->get('/admin/welfare')->assertOk()->assertSee('৳ 1,000');
+        $this->as($viewer)->get('/welfare')->assertOk()->assertSee('৳ 1,000');
         $svc->recordDonation($fund, '500', null, $this->actor([]));
 
-        $this->as($viewer)->get('/admin/welfare')->assertOk()->assertSee('৳ 1,000')->assertDontSee('৳ 1,500');
-        $this->as($viewer)->get('/admin/welfare?fresh=1')->assertOk()->assertSee('৳ 1,500');
+        $this->as($viewer)->get('/welfare')->assertOk()->assertSee('৳ 1,000')->assertDontSee('৳ 1,500');
+        $this->as($viewer)->get('/welfare?fresh=1')->assertOk()->assertSee('৳ 1,500');
     }
 
     public function test_a_bad_period_falls_back_and_a_custom_one_is_honoured(): void
@@ -174,10 +174,10 @@ class DashboardTest extends WelfareTestCase
         app(FundService::class)->recordDonation($fund, '800', null, $this->actor([]), null, null, now()->subDays(60));
         $viewer = $this->viewer();
 
-        $this->as($viewer)->get('/admin/welfare?period=banana')->assertOk()->assertSee('Last 30 days');
+        $this->as($viewer)->get('/welfare?period=banana')->assertOk()->assertSee('Last 30 days');
         $from = now()->subDays(70)->toDateString();
         $to = now()->subDays(50)->toDateString();
-        $html = $this->as($viewer)->get("/admin/welfare?period=custom&from=$from&to=$to")->assertOk()->getContent();
+        $html = $this->as($viewer)->get("/welfare?period=custom&from=$from&to=$to")->assertOk()->getContent();
         $this->assertStringContainsString('৳ 800', $html);
         $this->assertTileEqualsList($html, 'Received', $viewer, '800.00', 1);
     }

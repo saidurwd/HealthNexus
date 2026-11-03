@@ -167,7 +167,7 @@ class DocumentPrintTest extends BillingTestCase
 
     public function test_web_route_returns_printable_html_with_no_store_header(): void
     {
-        $response = $this->get('/admin/documents/receipt/'.$this->receiptNumber.'?lang=bn');
+        $response = $this->get('/documents/receipt/'.$this->receiptNumber.'?lang=bn');
 
         $response->assertOk();
         $response->assertHeader('Content-Type', 'text/html; charset=UTF-8');
@@ -189,7 +189,7 @@ class DocumentPrintTest extends BillingTestCase
             }
         });
 
-        $response = $this->get('/admin/documents/receipt/'.$this->receiptNumber.'?lang=bn&format=pdf');
+        $response = $this->get('/documents/receipt/'.$this->receiptNumber.'?lang=bn&format=pdf');
 
         $response->assertOk()->assertHeader('Content-Type', 'application/pdf');
         $this->assertSame('%PDF-1.7 fake', $response->getContent());

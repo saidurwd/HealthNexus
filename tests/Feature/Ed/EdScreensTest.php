@@ -20,21 +20,21 @@ class EdScreensTest extends EdTestCase
 
     public function test_zones_and_bays_are_configured_by_authorised_staff_only(): void
     {
-        $this->post('/admin/emergency/zones', ['code' => 'RESUS', 'name' => 'Resuscitation', 'zone_type' => 'resuscitation'])->assertRedirect();
+        $this->post('/emergency/zones', ['code' => 'RESUS', 'name' => 'Resuscitation', 'zone_type' => 'resuscitation'])->assertRedirect();
         $zone = EdZone::firstOrFail();
-        $this->post("/admin/emergency/zones/{$zone->public_id}/bays", ['code' => 'R1'])->assertRedirect();
-        $this->get('/admin/emergency/zones')->assertOk()->assertSee('Resuscitation')->assertSee('R1');
+        $this->post("/emergency/zones/{$zone->public_id}/bays", ['code' => 'R1'])->assertRedirect();
+        $this->get('/emergency/zones')->assertOk()->assertSee('Resuscitation')->assertSee('R1');
 
         $this->actingAs($this->staff());
-        $this->get('/admin/emergency/zones')->assertForbidden();
-        $this->post('/admin/emergency/zones', ['code' => 'X', 'name' => 'X', 'zone_type' => 'acute'])->assertForbidden();
+        $this->get('/emergency/zones')->assertForbidden();
+        $this->post('/emergency/zones', ['code' => 'X', 'name' => 'X', 'zone_type' => 'acute'])->assertForbidden();
     }
 
     public function test_arrival_form_registers_an_unknown_patient_in_one_step(): void
     {
-        $this->get('/admin/emergency/arrivals/create')->assertOk()->assertSee('data-enter-next', false);
+        $this->get('/emergency/arrivals/create')->assertOk()->assertSee('data-enter-next', false);
 
-        $response = $this->post('/admin/emergency/arrivals', ['arrival_mode' => 'police', 'chief_complaint' => 'Unconscious', 'sex' => 'M', 'estimated_age' => 30]);
+        $response = $this->post('/emergency/arrivals', ['arrival_mode' => 'police', 'chief_complaint' => 'Unconscious', 'sex' => 'M', 'estimated_age' => 30]);
 
         $visit = EdVisit::firstOrFail();
         $response->assertRedirect(route('admin.ed.visits.show', $visit));
@@ -67,12 +67,12 @@ class EdScreensTest extends EdTestCase
         app(EdTriageService::class)->triage($slow, $this->user, ['level' => 5]);
         app(EdTriageService::class)->triage($urgent, $this->user, ['level' => 1]);
 
-        $json = $this->getJson('/admin/emergency/board/data')->assertOk()->assertHeader('Cache-Control')->json('board');
+        $json = $this->getJson('/emergency/board/data')->assertOk()->assertHeader('Cache-Control')->json('board');
 
         $this->assertSame(3, $json['counts']['total']);
         $this->assertSame([$urgent->visit_number, $slow->visit_number, $untriaged->visit_number], array_column($json['visits'], 'visit_number'));
         $this->assertCount(3, array_unique(array_column($json['visits'], 'id')), 'nobody is listed twice');
-        $this->get('/admin/emergency')->assertOk()->assertSee('Emergency tracking board');
+        $this->get('/emergency')->assertOk()->assertSee('Emergency tracking board');
     }
 
     public function test_a_closed_visit_leaves_the_board_and_other_branches_and_organizations_are_invisible(): void
@@ -87,7 +87,7 @@ class EdScreensTest extends EdTestCase
         $foreignStaff = $this->staff(['super_admin'], $foreignOrg, $foreignBranch);
         $elsewhere = app(EdVisitService::class)->arrive($foreignStaff, $foreignBranch, ['arrival_mode' => 'walk_in']);
 
-        $visits = collect($this->getJson('/admin/emergency/board/data')->json('board.visits'));
+        $visits = collect($this->getJson('/emergency/board/data')->json('board.visits'));
         $this->assertSame([$mine->visit_number], $visits->pluck('visit_number')->all());
 
         $this->get(route('admin.ed.visits.show', $elsewhere))->assertNotFound();
@@ -103,17 +103,17 @@ class EdScreensTest extends EdTestCase
         $nobody = $this->staff();
         $this->actingAs($nobody);
 
-        $this->get('/admin/emergency')->assertForbidden();
-        $this->getJson('/admin/emergency/board/data')->assertForbidden();
+        $this->get('/emergency')->assertForbidden();
+        $this->getJson('/emergency/board/data')->assertForbidden();
         $this->get(route('admin.ed.visits.show', $visit))->assertForbidden();
 
         $this->actingAs($this->user);
         app(ModuleManager::class)->set('ed', false, $this->organization->id);
-        $this->get('/admin/emergency')->assertNotFound();
+        $this->get('/emergency')->assertNotFound();
     }
 
     public function test_menu_entry_follows_the_module_flag_and_permission(): void
     {
-        $this->get('/admin/emergency')->assertOk()->assertSee('Tracking board');
+        $this->get('/emergency')->assertOk()->assertSee('Tracking board');
     }
 }

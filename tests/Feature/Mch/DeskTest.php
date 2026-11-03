@@ -22,11 +22,11 @@ class DeskTest extends VitalTestCase
     public function test_every_screen_needs_its_own_right(): void
     {
         $nobody = $this->actor(['patients.view']);
-        foreach (['/admin/mch', '/admin/mch/pregnancies', '/admin/mch/pregnancies/new', '/admin/mch/immunisation'] as $url) {
+        foreach (['/mch', '/mch/pregnancies', '/mch/pregnancies/new', '/mch/immunisation'] as $url) {
             $this->as($nobody)->get($url)->assertForbidden();
         }
-        $this->as($this->actor(['mch.immunisation.view']))->get('/admin/mch/pregnancies')->assertForbidden();
-        $this->as($this->actor(['mch.pregnancy.view']))->get('/admin/mch/immunisation')->assertForbidden();
+        $this->as($this->actor(['mch.immunisation.view']))->get('/mch/pregnancies')->assertForbidden();
+        $this->as($this->actor(['mch.pregnancy.view']))->get('/mch/immunisation')->assertForbidden();
     }
 
     public function test_a_pregnancy_is_booked_visited_and_delivered_from_the_screens(): void
@@ -34,11 +34,11 @@ class DeskTest extends VitalTestCase
         $midwife = $this->actor(['mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'vital.birth.view']);
         $woman = $this->mother();
 
-        $this->as($midwife)->post('/admin/mch/pregnancies', ['patient_id' => $woman->id, 'lmp' => now()->subWeeks(30)->toDateString(), 'gravida' => 1, 'para' => 0, 'risk_factors' => ['twins']])->assertRedirect();
+        $this->as($midwife)->post('/mch/pregnancies', ['patient_id' => $woman->id, 'lmp' => now()->subWeeks(30)->toDateString(), 'gravida' => 1, 'para' => 0, 'risk_factors' => ['twins']])->assertRedirect();
         $p = MchPregnancy::firstOrFail();
-        $this->as($midwife)->post("/admin/mch/pregnancies/{$p->public_id}/visits", ['bp_systolic' => 160, 'bp_diastolic' => 100])->assertSessionHas('warning');
-        $this->as($midwife)->get("/admin/mch/pregnancies/{$p->public_id}")->assertOk()->assertSee('Bp Severe')->assertSee('Twins');
-        $this->as($midwife)->post("/admin/mch/pregnancies/{$p->public_id}/delivery", ['mode' => 'normal', 'babies' => [['sex' => 'female', 'weight_g' => 3000]]])->assertSessionHas('success');
+        $this->as($midwife)->post("/mch/pregnancies/{$p->public_id}/visits", ['bp_systolic' => 160, 'bp_diastolic' => 100])->assertSessionHas('warning');
+        $this->as($midwife)->get("/mch/pregnancies/{$p->public_id}")->assertOk()->assertSee('Bp Severe')->assertSee('Twins');
+        $this->as($midwife)->post("/mch/pregnancies/{$p->public_id}/delivery", ['mode' => 'normal', 'babies' => [['sex' => 'female', 'weight_g' => 3000]]])->assertSessionHas('success');
 
         $this->assertSame('delivered', $p->refresh()->status);
     }
@@ -48,9 +48,9 @@ class DeskTest extends VitalTestCase
         $p = $this->svc()->book($this->mother(), ['lmp' => now()->subWeeks(12)->toDateString()], $this->actor());
         $nurse = $this->actor(['mch.pregnancy.view', 'mch.anc.record']);
 
-        $this->as($nurse)->post("/admin/mch/pregnancies/{$p->public_id}/visits", ['bp_systolic' => 110, 'bp_diastolic' => 70])->assertSessionHas('success');
-        $this->as($nurse)->post("/admin/mch/pregnancies/{$p->public_id}/delivery", ['mode' => 'normal', 'babies' => [['sex' => 'female']]])->assertForbidden();
-        $this->as($nurse)->get('/admin/mch/pregnancies/new')->assertForbidden();
+        $this->as($nurse)->post("/mch/pregnancies/{$p->public_id}/visits", ['bp_systolic' => 110, 'bp_diastolic' => 70])->assertSessionHas('success');
+        $this->as($nurse)->post("/mch/pregnancies/{$p->public_id}/delivery", ['mode' => 'normal', 'babies' => [['sex' => 'female']]])->assertForbidden();
+        $this->as($nurse)->get('/mch/pregnancies/new')->assertForbidden();
     }
 
     public function test_another_hospitals_pregnancy_is_not_found(): void
@@ -58,7 +58,7 @@ class DeskTest extends VitalTestCase
         $other = Organization::factory()->create();
         $theirs = MchPregnancy::factory()->create(['organization_id' => $other->id, 'patient_id' => Patient::factory()->create(['organization_id' => $other->id])->id]);
 
-        $this->as($this->actor(['mch.pregnancy.view']))->get("/admin/mch/pregnancies/{$theirs->public_id}")->assertNotFound();
+        $this->as($this->actor(['mch.pregnancy.view']))->get("/mch/pregnancies/{$theirs->public_id}")->assertNotFound();
     }
 
     public function test_vaccines_are_given_from_the_card_page_and_a_second_try_is_refused(): void
@@ -66,10 +66,10 @@ class DeskTest extends VitalTestCase
         $nurse = $this->actor(['mch.immunisation.view', 'mch.immunisation.give']);
         $child = $this->patient(['date_of_birth' => now()->subDays(2)->toDateString()]);
 
-        $this->as($nurse)->get("/admin/mch/immunisation/{$child->id}")->assertOk()->assertSee('Due now');
-        $this->as($nurse)->post("/admin/mch/immunisation/{$child->id}", ['vaccine' => 'bcg', 'batch_no' => 'B9'])->assertSessionHas('success');
-        $this->as($nurse)->post("/admin/mch/immunisation/{$child->id}", ['vaccine' => 'bcg', 'batch_no' => 'B9'])->assertSessionHasErrors('vaccine');
-        $this->as($this->actor(['mch.immunisation.view']))->post("/admin/mch/immunisation/{$child->id}", ['vaccine' => 'opv0', 'batch_no' => 'B9'])->assertForbidden();
+        $this->as($nurse)->get("/mch/immunisation/{$child->id}")->assertOk()->assertSee('Due now');
+        $this->as($nurse)->post("/mch/immunisation/{$child->id}", ['vaccine' => 'bcg', 'batch_no' => 'B9'])->assertSessionHas('success');
+        $this->as($nurse)->post("/mch/immunisation/{$child->id}", ['vaccine' => 'bcg', 'batch_no' => 'B9'])->assertSessionHasErrors('vaccine');
+        $this->as($this->actor(['mch.immunisation.view']))->post("/mch/immunisation/{$child->id}", ['vaccine' => 'opv0', 'batch_no' => 'B9'])->assertForbidden();
     }
 
     public function test_the_overview_counts_the_women_and_children_who_need_attention(): void
@@ -96,7 +96,7 @@ class DeskTest extends VitalTestCase
 
     public function test_the_overview_page_states_its_question(): void
     {
-        $html = $this->as($this->actor(['mch.dashboard.view']))->get('/admin/mch')->assertOk()->getContent();
+        $html = $this->as($this->actor(['mch.dashboard.view']))->get('/mch')->assertOk()->getContent();
 
         $this->assertStringContainsString('data-dashboard-question', $html);
         $this->assertStringContainsString('High-risk pregnancies', $html);

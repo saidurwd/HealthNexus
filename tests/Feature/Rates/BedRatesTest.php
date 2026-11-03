@@ -155,8 +155,8 @@ class BedRatesTest extends FrontDoorTestCase
         $this->bedType('WARD', 'General ward');
         $this->item('WARD', 1500);
 
-        $this->as($this->actor(['patients.view']))->get('/admin/rates/beds')->assertForbidden();
-        $html = $this->as($this->actor(['rates.bed.view']))->get('/admin/rates/beds')->assertOk()->getContent();
+        $this->as($this->actor(['patients.view']))->get('/rates/beds')->assertForbidden();
+        $html = $this->as($this->actor(['rates.bed.view']))->get('/rates/beds')->assertOk()->getContent();
 
         $this->assertStringContainsString('data-dashboard-question', $html);
         $this->assertStringContainsString('General ward', $html);
@@ -169,9 +169,9 @@ class BedRatesTest extends FrontDoorTestCase
         $this->bedType('CABIN', 'Private cabin');
         $this->item('CABIN', 4000);
 
-        $html = $this->as($this->actor(['rates.bed.view']))->get('/admin/rates/beds?bed_type=CABIN&days=2')->assertOk()->getContent();
+        $html = $this->as($this->actor(['rates.bed.view']))->get('/rates/beds?bed_type=CABIN&days=2')->assertOk()->getContent();
         $this->assertStringContainsString('2 ×', $html);
-        $this->as($this->actor(['rates.bed.view']))->get('/admin/rates/beds?bed_type=CABIN&days=0')->assertSessionHasErrors('days');
-        $this->assertStringContainsString('has no price in Billing', $this->as($this->actor(['rates.bed.view']))->get('/admin/rates/beds?bed_type=NOPE&days=2')->getContent());
+        $this->as($this->actor(['rates.bed.view']))->get('/rates/beds?bed_type=CABIN&days=0')->assertSessionHasErrors('days');
+        $this->assertStringContainsString('has no price in Billing', $this->as($this->actor(['rates.bed.view']))->get('/rates/beds?bed_type=NOPE&days=2')->getContent());
     }
 }

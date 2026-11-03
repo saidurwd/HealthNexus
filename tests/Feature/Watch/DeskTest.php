@@ -13,11 +13,11 @@ class DeskTest extends WatchTestCase
     public function test_every_screen_needs_its_own_right(): void
     {
         $nobody = $this->actor(['patients.view']);
-        foreach (['/admin/watch', '/admin/watch/signals', '/admin/watch/conditions'] as $url) {
+        foreach (['/watch', '/watch/signals', '/watch/conditions'] as $url) {
             $this->as($nobody)->get($url)->assertForbidden();
         }
-        $this->as($this->actor(['watch.signal.view']))->get('/admin/watch')->assertForbidden();
-        $this->as($this->actor(['watch.dashboard.view']))->get('/admin/watch/signals')->assertForbidden();
+        $this->as($this->actor(['watch.signal.view']))->get('/watch')->assertForbidden();
+        $this->as($this->actor(['watch.dashboard.view']))->get('/watch/signals')->assertForbidden();
     }
 
     public function test_an_officer_looks_decides_and_reports_from_the_screens(): void
@@ -28,11 +28,11 @@ class DeskTest extends WatchTestCase
         }
         $officer = $this->actor(['watch.dashboard.view', 'watch.signal.view', 'watch.signal.decide', 'watch.signal.report']);
 
-        $this->as($officer)->post('/admin/watch/scan')->assertRedirect('/admin/watch/signals');
+        $this->as($officer)->post('/watch/scan')->assertRedirect('/watch/signals');
         $s = SvSignal::firstOrFail();
-        $this->as($officer)->get('/admin/watch/signals')->assertOk()->assertSee('Dengue');
-        $this->as($officer)->post("/admin/watch/signals/{$s->public_id}/decide", ['outcome' => 'confirm', 'decision_note' => 'A real rise in the ward area.'])->assertSessionHas('success');
-        $this->as($officer)->post("/admin/watch/signals/{$s->public_id}/report", ['reported_to' => 'IEDCR', 'report_reference' => 'R-1'])->assertSessionHas('success');
+        $this->as($officer)->get('/watch/signals')->assertOk()->assertSee('Dengue');
+        $this->as($officer)->post("/watch/signals/{$s->public_id}/decide", ['outcome' => 'confirm', 'decision_note' => 'A real rise in the ward area.'])->assertSessionHas('success');
+        $this->as($officer)->post("/watch/signals/{$s->public_id}/report", ['reported_to' => 'IEDCR', 'report_reference' => 'R-1'])->assertSessionHas('success');
 
         $this->assertSame(['confirmed', 'IEDCR'], [$s->refresh()->status, $s->reported_to]);
     }
@@ -42,11 +42,11 @@ class DeskTest extends WatchTestCase
         $s = SvSignal::factory()->create(['organization_id' => $this->organization->id, 'condition_id' => $this->condition()->id]);
         $viewer = $this->actor(['watch.dashboard.view', 'watch.signal.view']);
 
-        $this->as($viewer)->post("/admin/watch/signals/{$s->public_id}/decide", ['outcome' => 'confirm', 'decision_note' => 'A real rise.'])->assertForbidden();
-        $this->as($viewer)->post("/admin/watch/signals/{$s->public_id}/report", ['reported_to' => 'IEDCR'])->assertForbidden();
-        $this->as($viewer)->post('/admin/watch/scan')->assertForbidden();
-        $this->as($viewer)->post('/admin/watch/conditions/install')->assertForbidden();
-        $this->as($viewer)->get("/admin/watch/signals/{$s->public_id}")->assertOk()->assertDontSee('Save the decision');
+        $this->as($viewer)->post("/watch/signals/{$s->public_id}/decide", ['outcome' => 'confirm', 'decision_note' => 'A real rise.'])->assertForbidden();
+        $this->as($viewer)->post("/watch/signals/{$s->public_id}/report", ['reported_to' => 'IEDCR'])->assertForbidden();
+        $this->as($viewer)->post('/watch/scan')->assertForbidden();
+        $this->as($viewer)->post('/watch/conditions/install')->assertForbidden();
+        $this->as($viewer)->get("/watch/signals/{$s->public_id}")->assertOk()->assertDontSee('Save the decision');
     }
 
     public function test_another_hospitals_signal_is_not_found(): void
@@ -54,15 +54,15 @@ class DeskTest extends WatchTestCase
         $other = Organization::factory()->create();
         $theirs = SvSignal::factory()->create(['organization_id' => $other->id]);
 
-        $this->as($this->actor(['watch.signal.view']))->get("/admin/watch/signals/{$theirs->public_id}")->assertNotFound();
+        $this->as($this->actor(['watch.signal.view']))->get("/watch/signals/{$theirs->public_id}")->assertNotFound();
     }
 
     public function test_the_manager_edits_a_condition_and_the_viewer_cannot(): void
     {
         $c = $this->condition();
-        $this->as($this->actor(['watch.signal.view']))->post("/admin/watch/conditions/{$c->id}", ['window_days' => 7, 'min_cases' => 9, 'spike_factor' => 2, 'cluster_cases' => 3, 'severity' => 'warning'])->assertForbidden();
+        $this->as($this->actor(['watch.signal.view']))->post("/watch/conditions/{$c->id}", ['window_days' => 7, 'min_cases' => 9, 'spike_factor' => 2, 'cluster_cases' => 3, 'severity' => 'warning'])->assertForbidden();
 
-        $this->as($this->actor(['watch.signal.view', 'watch.condition.manage']))->post("/admin/watch/conditions/{$c->id}", ['window_days' => 7, 'min_cases' => 9, 'spike_factor' => 2, 'cluster_cases' => 3, 'severity' => 'critical'])->assertSessionHas('success');
+        $this->as($this->actor(['watch.signal.view', 'watch.condition.manage']))->post("/watch/conditions/{$c->id}", ['window_days' => 7, 'min_cases' => 9, 'spike_factor' => 2, 'cluster_cases' => 3, 'severity' => 'critical'])->assertSessionHas('success');
 
         $this->assertSame([9, 'critical'], [$c->refresh()->min_cases, $c->severity]);
     }
@@ -88,7 +88,7 @@ class DeskTest extends WatchTestCase
 
     public function test_the_overview_page_states_its_question(): void
     {
-        $html = $this->as($this->actor(['watch.dashboard.view']))->get('/admin/watch')->assertOk()->getContent();
+        $html = $this->as($this->actor(['watch.dashboard.view']))->get('/watch')->assertOk()->getContent();
 
         $this->assertStringContainsString('data-dashboard-question', $html);
         $this->assertStringContainsString('Confirmed, not yet reported', $html);

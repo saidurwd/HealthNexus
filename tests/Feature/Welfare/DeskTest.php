@@ -31,11 +31,11 @@ class DeskTest extends WelfareTestCase
         $fund = WfFund::query()->first();
         $this->as($this->user);
         foreach (['', '/assessments', '/grants', '/funds', '/funds/'.$fund->public_id, '/reports'] as $p) {
-            $this->get('/admin/welfare'.$p)->assertOk();
+            $this->get('/welfare'.$p)->assertOk();
         }
         $this->as($this->actor([]));
         foreach (['', '/assessments', '/grants', '/funds', '/funds/'.$fund->public_id, '/reports'] as $p) {
-            $this->get('/admin/welfare'.$p)->assertForbidden();
+            $this->get('/welfare'.$p)->assertForbidden();
         }
     }
 
@@ -47,24 +47,24 @@ class DeskTest extends WelfareTestCase
         $committee = $this->actor(['welfare.dashboard.view', 'welfare.assessment.view', 'welfare.assessment.decide', 'welfare.grant.view', 'welfare.grant.approve']);
         $officer = $this->actor(['welfare.dashboard.view', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.grant.request', 'welfare.grant.apply']);
 
-        $this->as($assessor)->post('/admin/welfare/assessments', ['patient_no' => $patient->enterprise_patient_no, 'monthly_income' => 3000, 'household_size' => 5, 'factors' => ['no_earner'], 'evidence_note' => 'Visited the house, father lost his job.'])->assertRedirect();
+        $this->as($assessor)->post('/welfare/assessments', ['patient_no' => $patient->enterprise_patient_no, 'monthly_income' => 3000, 'household_size' => 5, 'factors' => ['no_earner'], 'evidence_note' => 'Visited the house, father lost his job.'])->assertRedirect();
         $a = WfAssessment::query()->first();
         $this->assertSame('free', $a->category);
-        $this->as($assessor)->post('/admin/welfare/assessments/'.$a->public_id.'/submit')->assertSessionHas('success');
-        $this->as($assessor)->post('/admin/welfare/assessments/'.$a->public_id.'/decide', ['decision' => 'approve'])->assertForbidden();
-        $this->as($committee)->post('/admin/welfare/assessments/'.$a->public_id.'/decide', ['decision' => 'approve', 'note' => 'Agreed'])->assertSessionHas('success');
+        $this->as($assessor)->post('/welfare/assessments/'.$a->public_id.'/submit')->assertSessionHas('success');
+        $this->as($assessor)->post('/welfare/assessments/'.$a->public_id.'/decide', ['decision' => 'approve'])->assertForbidden();
+        $this->as($committee)->post('/welfare/assessments/'.$a->public_id.'/decide', ['decision' => 'approve', 'note' => 'Agreed'])->assertSessionHas('success');
 
-        $this->as($officer)->post('/admin/welfare/assessments/'.$a->public_id.'/grants', ['fund_id' => $fund->id, 'cap_amount' => 6000, 'purpose' => 'Delivery'])->assertRedirect();
+        $this->as($officer)->post('/welfare/assessments/'.$a->public_id.'/grants', ['fund_id' => $fund->id, 'cap_amount' => 6000, 'purpose' => 'Delivery'])->assertRedirect();
         $g = WfGrant::query()->first();
-        $this->as($officer)->post('/admin/welfare/grants/'.$g->public_id.'/approve')->assertForbidden();
-        $this->as($committee)->post('/admin/welfare/grants/'.$g->public_id.'/approve', ['note' => 'Fine'])->assertSessionHas('success');
+        $this->as($officer)->post('/welfare/grants/'.$g->public_id.'/approve')->assertForbidden();
+        $this->as($committee)->post('/welfare/grants/'.$g->public_id.'/approve', ['note' => 'Fine'])->assertSessionHas('success');
 
         $invoice = $this->bill($patient, '4000.00');
-        $this->as($officer)->post('/admin/welfare/grants/'.$g->public_id.'/apply', ['invoice_id' => $invoice->id])->assertSessionHas('success');
-        $this->as($officer)->get('/admin/welfare/grants/'.$g->public_id)->assertOk()->assertSee('Waiting for Billing');
+        $this->as($officer)->post('/welfare/grants/'.$g->public_id.'/apply', ['invoice_id' => $invoice->id])->assertSessionHas('success');
+        $this->as($officer)->get('/welfare/grants/'.$g->public_id)->assertOk()->assertSee('Waiting for Billing');
         $adj = BillingAdjustment::query()->first();
         app(AdjustmentService::class)->approve($adj, $this->actor([]));
-        $this->as($committee)->get('/admin/welfare/grants/'.$g->public_id)->assertOk()->assertSee('4,000.00');
+        $this->as($committee)->get('/welfare/grants/'.$g->public_id)->assertOk()->assertSee('4,000.00');
         $this->assertSame('16000.00', app(FundService::class)->balance($fund));
     }
 
@@ -73,8 +73,8 @@ class DeskTest extends WelfareTestCase
         $a = $this->approvedAssessment(null, ['monthly_income' => 1234, 'household_size' => 2]);
         $reportsOnly = $this->actor(['welfare.dashboard.view', 'welfare.report.view']);
 
-        $this->as($reportsOnly)->get('/admin/welfare/assessments/'.$a->public_id)->assertForbidden();
-        $html = $this->as($reportsOnly)->get('/admin/welfare/reports')->assertOk()->getContent();
+        $this->as($reportsOnly)->get('/welfare/assessments/'.$a->public_id)->assertForbidden();
+        $html = $this->as($reportsOnly)->get('/welfare/reports')->assertOk()->getContent();
         $this->assertStringNotContainsString('1,234', $html);
         $this->assertStringNotContainsString((string) $a->patient->display_name, $html);
     }
@@ -83,7 +83,7 @@ class DeskTest extends WelfareTestCase
     {
         $other = Organization::factory()->create();
         $foreign = WfFund::factory()->create(['organization_id' => $other->id]);
-        $this->as($this->user)->get('/admin/welfare/funds/'.$foreign->public_id)->assertNotFound();
+        $this->as($this->user)->get('/welfare/funds/'.$foreign->public_id)->assertNotFound();
     }
 
     public function test_the_api_needs_a_login_the_right_and_the_hospital_and_carries_no_patient_data(): void

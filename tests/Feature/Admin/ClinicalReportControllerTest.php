@@ -51,7 +51,7 @@ class ClinicalReportControllerTest extends TestCase
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical');
+        $response = $this->get('/reports/clinical');
 
         $response->assertStatus(200);
         $response->assertViewHas('stats');
@@ -68,7 +68,7 @@ class ClinicalReportControllerTest extends TestCase
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/daily-opd');
+        $response = $this->get('/reports/clinical/daily-opd');
 
         $response->assertStatus(200);
         $response->assertViewHas('encounters');
@@ -82,7 +82,7 @@ class ClinicalReportControllerTest extends TestCase
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/provider-workload');
+        $response = $this->get('/reports/clinical/provider-workload');
 
         $response->assertStatus(200);
         $response->assertViewHas('workload');
@@ -105,7 +105,7 @@ class ClinicalReportControllerTest extends TestCase
             'recorded_at' => now(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/diagnosis-statistics');
+        $response = $this->get('/reports/clinical/diagnosis-statistics');
 
         $response->assertStatus(200);
         $response->assertViewHas('diagnoses');

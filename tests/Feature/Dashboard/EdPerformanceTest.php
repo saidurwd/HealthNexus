@@ -32,17 +32,17 @@ class EdPerformanceTest extends FrontDoorTestCase
 
     public function test_it_states_itself_defaults_to_seven_days_and_is_refused_without_the_right(): void
     {
-        $html = $this->assertDashboardStatesItself('/admin/emergency/dashboard', $this->user());
+        $html = $this->assertDashboardStatesItself('/emergency/dashboard', $this->user());
         $this->assertStringContainsString('Is the emergency department meeting its targets?', $html);
         $this->assertStringContainsString('Last 7 days', $html);
         $this->assertStringContainsString('No arrivals in this period.', $html);
-        $this->assertDashboardRefuses('/admin/emergency/dashboard', $this->actor(['ed.board.view']));
+        $this->assertDashboardRefuses('/emergency/dashboard', $this->actor(['ed.board.view']));
     }
 
     public function test_the_old_days_link_still_means_the_same_period(): void
     {
-        $this->as($this->user())->get('/admin/emergency/dashboard?days=30')->assertOk()->assertSee('Last 30 days')->assertViewHas('days', 30);
-        $this->as($this->user())->get('/admin/emergency/dashboard?days=1')->assertOk()->assertSee('Today');
+        $this->as($this->user())->get('/emergency/dashboard?days=30')->assertOk()->assertSee('Last 30 days')->assertViewHas('days', 30);
+        $this->as($this->user())->get('/emergency/dashboard?days=1')->assertOk()->assertSee('Today');
     }
 
     public function test_times_to_triage_and_to_the_doctor_are_medians_with_the_ninetieth_percentile(): void
@@ -70,7 +70,7 @@ class EdPerformanceTest extends FrontDoorTestCase
         $s = $this->summary('7d');
 
         $this->assertSame([2, 4], [$s['kpi']['arrivals'], $s['previous']['arrivals']]);
-        $html = $this->as($this->user())->get('/admin/emergency/dashboard')->getContent();
+        $html = $this->as($this->user())->get('/emergency/dashboard')->getContent();
         $this->assertStringContainsString('−50%', $html);
         $this->assertStringContainsString('vs the period before', $html);
     }
@@ -107,11 +107,11 @@ class EdPerformanceTest extends FrontDoorTestCase
     {
         $this->visit('2026-11-10 03:00:00', ['doctor_seen_at' => '2026-11-10 03:50:00']);   // 50 minutes
         $user = $this->user();
-        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/admin/emergency/dashboard')->getContent(), 'no target ships');
+        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/emergency/dashboard')->getContent(), 'no target ships');
 
         app(SettingsService::class)->set('dashboard.target.ed_door_to_doctor', '30');
         Cache::flush();
-        $html = $this->as($user)->get('/admin/emergency/dashboard')->getContent();
+        $html = $this->as($user)->get('/emergency/dashboard')->getContent();
         $this->assertStringContainsString('Off target', $html);
         $this->assertStringContainsString('bi-x-circle', $html);
     }
@@ -123,7 +123,7 @@ class EdPerformanceTest extends FrontDoorTestCase
         $p = Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => 'Zubaida']);
         $this->visit('2026-11-10 03:00:00', ['patient_id' => $p->id]);
 
-        $html = $this->as($this->user())->get('/admin/emergency/dashboard')->getContent();
+        $html = $this->as($this->user())->get('/emergency/dashboard')->getContent();
 
         $this->assertSame(1, $this->summary()['kpi']['arrivals']);
         $this->assertNoPatientIdentity($html, ['Zubaida']);
@@ -132,8 +132,8 @@ class EdPerformanceTest extends FrontDoorTestCase
     public function test_a_custom_period_is_honoured(): void
     {
         $this->visit('2026-10-20 03:00:00');
-        $html = $this->as($this->user())->get('/admin/emergency/dashboard?period=custom&from=2026-10-19&to=2026-10-21')->assertOk()->getContent();
+        $html = $this->as($this->user())->get('/emergency/dashboard?period=custom&from=2026-10-19&to=2026-10-21')->assertOk()->getContent();
         $this->assertStringContainsString('3', $html);
-        $this->assertSame(1, $this->as($this->user())->get('/admin/emergency/dashboard?period=custom&from=2026-10-19&to=2026-10-21')->viewData('kpi')['arrivals']);
+        $this->assertSame(1, $this->as($this->user())->get('/emergency/dashboard?period=custom&from=2026-10-19&to=2026-10-21')->viewData('kpi')['arrivals']);
     }
 }

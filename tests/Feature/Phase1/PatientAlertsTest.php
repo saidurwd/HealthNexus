@@ -60,13 +60,13 @@ class PatientAlertsTest extends TestCase
 
     public function test_admin_can_view_alerts_page(): void
     {
-        $this->get('/admin/patients/'.$this->patient->public_id.'/alerts')->assertOk();
+        $this->get('/patients/'.$this->patient->public_id.'/alerts')->assertOk();
     }
 
     public function test_admin_can_add_alert_and_it_is_audited(): void
     {
-        $this->post('/admin/patients/'.$this->patient->public_id.'/alerts', $this->alertPayload())
-            ->assertRedirect('/admin/patients/'.$this->patient->public_id.'/alerts');
+        $this->post('/patients/'.$this->patient->public_id.'/alerts', $this->alertPayload())
+            ->assertRedirect('/patients/'.$this->patient->public_id.'/alerts');
 
         $this->assertDatabaseHas('patient_alerts', [
             'patient_id' => $this->patient->id,
@@ -85,7 +85,7 @@ class PatientAlertsTest extends TestCase
     {
         app(PatientService::class)->addAlert($this->patient, $this->alertPayload());
 
-        $this->get('/admin/patients/'.$this->patient->public_id.'/alerts')
+        $this->get('/patients/'.$this->patient->public_id.'/alerts')
             ->assertOk()
             ->assertSee('Penicillin Allergy');
     }
@@ -98,7 +98,7 @@ class PatientAlertsTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->put('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id.'/resolve', [
+        $this->put('/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id.'/resolve', [
             'resolution_note' => 'Confirmed via chart review.',
         ])->assertRedirect();
 
@@ -115,7 +115,7 @@ class PatientAlertsTest extends TestCase
             'organization_id' => $this->organization->id,
         ]);
 
-        $this->delete('/admin/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id)
+        $this->delete('/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id)
             ->assertRedirect();
 
         $this->assertSoftDeleted($alert);

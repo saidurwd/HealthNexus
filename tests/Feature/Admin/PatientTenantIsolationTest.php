@@ -59,7 +59,7 @@ class PatientTenantIsolationTest extends TestCase
 
     public function test_cannot_update_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->put('/admin/patients/'.$this->otherOrganizationPatient->public_id, [
+        $response = $this->put('/patients/'.$this->otherOrganizationPatient->public_id, [
             'organization_id' => $this->otherOrganization->id,
             'first_name' => 'Hacked',
             'last_name' => 'Name',
@@ -72,7 +72,7 @@ class PatientTenantIsolationTest extends TestCase
 
     public function test_cannot_delete_another_organizations_patient_despite_having_permission(): void
     {
-        $response = $this->delete('/admin/patients/'.$this->otherOrganizationPatient->public_id);
+        $response = $this->delete('/patients/'.$this->otherOrganizationPatient->public_id);
 
         $response->assertForbidden();
         $this->assertDatabaseHas('patients', ['id' => $this->otherOrganizationPatient->id, 'deleted_at' => null]);
@@ -82,14 +82,14 @@ class PatientTenantIsolationTest extends TestCase
     {
         $patient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
 
-        $response = $this->put('/admin/patients/'.$patient->public_id, [
+        $response = $this->put('/patients/'.$patient->public_id, [
             'organization_id' => $this->ownOrganization->id,
             'first_name' => 'Updated',
             'last_name' => 'Name',
             'status' => 'active',
         ]);
 
-        $response->assertRedirect('/admin/patients');
+        $response->assertRedirect('/patients');
         $this->assertDatabaseHas('patients', ['id' => $patient->id, 'first_name' => 'Updated']);
     }
 
@@ -97,7 +97,7 @@ class PatientTenantIsolationTest extends TestCase
     {
         $this->user->revokePermissionTo('patients.create');
 
-        $response = $this->post('/admin/patients', [
+        $response = $this->post('/patients', [
             'organization_id' => $this->ownOrganization->id,
             'first_name' => 'New',
             'last_name' => 'Patient',
@@ -112,7 +112,7 @@ class PatientTenantIsolationTest extends TestCase
     {
         $ownPatient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id]);
 
-        $response = $this->post('/admin/patients/merge', [
+        $response = $this->post('/patients/merge', [
             'master_patient_id' => $ownPatient->id,
             'duplicate_patient_id' => $this->otherOrganizationPatient->id,
         ]);
@@ -125,7 +125,7 @@ class PatientTenantIsolationTest extends TestCase
     {
         $ownPatient = Patient::factory()->create(['organization_id' => $this->ownOrganization->id, 'first_name' => 'Findme']);
 
-        $response = $this->get('/admin/patients/search?q=Findme');
+        $response = $this->get('/patients/search?q=Findme');
 
         $response->assertOk();
         $response->assertViewHas('patients', function ($patients) use ($ownPatient) {
@@ -141,7 +141,7 @@ class PatientTenantIsolationTest extends TestCase
             'patient_id' => $this->otherOrganizationPatient->id,
         ]);
 
-        $response = $this->get("/admin/patients/{$this->otherOrganizationPatient->public_id}/documents/{$document->public_id}/download");
+        $response = $this->get("/patients/{$this->otherOrganizationPatient->public_id}/documents/{$document->public_id}/download");
 
         $response->assertForbidden();
     }

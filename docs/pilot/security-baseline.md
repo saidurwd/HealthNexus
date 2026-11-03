@@ -28,7 +28,7 @@ Book it **before** go-live; the test is on a staging copy built with `demo:build
 | Item | Fill in |
 |---|---|
 | Tester / company, contact | |
-| Scope | Web application (all `/admin/*` screens), REST API `/api/v1/*`, login/MFA/password reset, file upload and download, exports, imports, document printing |
+| Scope | Web application (all `/*` screens), REST API `/api/v1/*`, login/MFA/password reset, file upload and download, exports, imports, document printing |
 | Out of scope | The hospital's network, third-party gateways |
 | Environment and dates | Staging URL ____ ; window ____ ; test users: one per role (create with `demo:build`) |
 | Rules of engagement | No denial-of-service; stop and call if real data is found |

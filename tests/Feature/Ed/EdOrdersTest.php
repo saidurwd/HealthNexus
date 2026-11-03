@@ -81,7 +81,7 @@ class EdOrdersTest extends EdTestCase
     public function test_screens_post_each_form_and_the_visit_page_lists_them(): void
     {
         $visit = $this->visit();
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
         $this->post("$base/orders", ['order_type' => 'laboratory', 'items' => [['name' => 'CBC']]])->assertRedirect();
         $this->post("$base/prescriptions", ['items' => [['medicine_name' => 'Ondansetron', 'frequency' => 'once', 'duration' => '1 day']]])->assertRedirect();
         $this->post("$base/medications", ['drug_name' => 'Morphine', 'dose' => '2 mg', 'route' => 'IV'])->assertRedirect();
@@ -99,7 +99,7 @@ class EdOrdersTest extends EdTestCase
         $this->seed(PermissionSeeder::class);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $this->actingAs($nurse);
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
 
         $this->post("$base/orders", ['order_type' => 'laboratory', 'items' => [['name' => 'CBC']]])->assertForbidden();
         $this->post("$base/medications", ['drug_name' => 'Saline', 'dose' => '500 ml', 'route' => 'IV'])->assertRedirect();

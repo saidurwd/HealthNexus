@@ -31,11 +31,11 @@ class TodayTest extends FrontDoorTestCase
 
     public function test_it_states_itself_is_refused_without_the_right_and_says_when_and_how_it_reloads(): void
     {
-        $html = $this->assertDashboardStatesItself('/admin/today', $this->director());
+        $html = $this->assertDashboardStatesItself('/today', $this->director());
         $this->assertStringContainsString('Is today going well?', $html);
         $this->assertStringContainsString('Reloads every 300 seconds', $html);
         $this->assertStringContainsString('Thursday', $html);
-        $this->assertDashboardRefuses('/admin/today', $this->actor(['encounters.view']));
+        $this->assertDashboardRefuses('/today', $this->actor(['encounters.view']));
     }
 
     public function test_outpatients_today_are_compared_with_the_average_of_the_same_weekday_over_four_weeks(): void
@@ -50,7 +50,7 @@ class TodayTest extends FrontDoorTestCase
         $s = $this->summary();
         $this->assertSame(6, $s['opd']['today']);
         $this->assertSame(5.0, $s['opd']['usual']);
-        $html = $this->as($this->director())->get('/admin/today')->assertOk()->getContent();
+        $html = $this->as($this->director())->get('/today')->assertOk()->getContent();
         $this->assertStringContainsString('+20%', $html);
         $this->assertStringContainsString('the usual Thursday', $html);
     }
@@ -127,7 +127,7 @@ class TodayTest extends FrontDoorTestCase
         $patient = Patient::factory()->create(['organization_id' => $this->organization->id, 'first_name' => 'Rubina', 'last_name' => 'Parveen']);
         $this->row('encounters', ['encounter_type' => 'OPD', 'encounter_date' => '2026-11-12', 'status' => 'completed', 'encounter_no' => 'E1', 'patient_id' => $patient->id]);
 
-        $html = $this->as($this->director())->get('/admin/today')->assertOk()->getContent();
+        $html = $this->as($this->director())->get('/today')->assertOk()->getContent();
         $this->assertSame(1, $this->summary()['opd']['today']);
         $this->assertNoPatientIdentity($html, ['Rubina', 'Parveen']);
     }
@@ -135,9 +135,9 @@ class TodayTest extends FrontDoorTestCase
     public function test_a_figure_links_only_to_a_page_the_person_may_open(): void
     {
         $this->row('ipd_beds', ['room_id' => 1, 'bed_code' => 'B1', 'is_active' => true, 'status' => 'available']);
-        $plain = $this->as($this->director())->get('/admin/today')->getContent();
+        $plain = $this->as($this->director())->get('/today')->getContent();
         $this->assertNull($this->tileLink($plain, 'Inpatients now'));
-        $with = $this->as($this->director(['ipd.dashboard.view']))->get('/admin/today')->getContent();
+        $with = $this->as($this->director(['ipd.dashboard.view']))->get('/today')->getContent();
         $this->assertSame(route('admin.ipd.dashboard'), $this->tileLink($with, 'Inpatients now'));
     }
 
@@ -145,7 +145,7 @@ class TodayTest extends FrontDoorTestCase
     {
         $this->row('billing_invoices', ['invoice_number' => 'I1', 'patient_id' => 1, 'invoice_date' => '2026-11-12', 'status' => 'paid', 'grand_total' => 1234567, 'finalized_at' => now(), 'invoice_type' => 'opd']);
         app(SettingsService::class)->set('ux.number_grouping', 'south_asian');
-        $this->assertStringContainsString('৳ 12,34,567', $this->as($this->director())->get('/admin/today')->getContent());
+        $this->assertStringContainsString('৳ 12,34,567', $this->as($this->director())->get('/today')->getContent());
     }
 
     public function test_the_day_helper_buckets_a_utc_time_by_its_dhaka_date(): void

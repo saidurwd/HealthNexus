@@ -6,7 +6,7 @@ use Modules\Ai\Http\Controllers\Web\AiGovernanceController;
 use Modules\Ai\Http\Controllers\Web\AiHomeController;
 use Modules\Ai\Http\Controllers\Web\AiOversightController;
 
-// AI and clinical intelligence: /admin/ai/*. Using the assistant needs ai.use; governing it needs its own rights. Nothing here writes to a clinical record.
+// AI and clinical intelligence: /ai/*. Using the assistant needs ai.use; governing it needs its own rights. Nothing here writes to a clinical record.
 Route::prefix('ai')->name('ai.')->group(function () {
     Route::get('/', [AiHomeController::class, 'index'])->name('index');
     Route::post('start-local', [AiHomeController::class, 'startLocal'])->name('start');

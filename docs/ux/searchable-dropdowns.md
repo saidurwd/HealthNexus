@@ -21,7 +21,7 @@ Nobody remembers an internal ID. Use:
 <x-ui.encounter-select name="encounter_id" depends-on="[name=patient_id]" class="form-control" />   {{-- the patient's visits --}}
 <x-ui.admission-select name="admission_id" depends-on="[name=patient_id]" class="form-control" />   {{-- the patient's admissions --}}
 ```
-They send the same numeric ID as before, so the controller is unchanged; the earlier answer (after a validation error) comes back by name. The lookups (`/admin/lookup/patients|encounters|admissions`) return only the person's own hospital, need a right on a screen that picks one (`config/ux.php` `lookup_permissions`), treat `%` and `_` as plain letters, and find by name, number, phone or national ID. `LookupTest` fails if any form asks for a raw `patient_id`, `encounter_id` or `admission_id` again.
+They send the same numeric ID as before, so the controller is unchanged; the earlier answer (after a validation error) comes back by name. The lookups (`/lookup/patients|encounters|admissions`) return only the person's own hospital, need a right on a screen that picks one (`config/ux.php` `lookup_permissions`), treat `%` and `_` as plain letters, and find by name, number, phone or national ID. `LookupTest` fails if any form asks for a raw `patient_id`, `encounter_id` or `admission_id` again.
 
 ## Tests
 - PHP: `tests/Feature/Ux/SearchableSelectTest.php` (files unchanged, nothing from the internet, every page type loads them), `LookupTest.php` (the three searches and the forms).

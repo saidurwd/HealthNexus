@@ -81,7 +81,7 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_admin_can_create_organization(): void
     {
-        $response = $this->post('/admin/organizations', [
+        $response = $this->post('/organizations', [
             'name' => 'Test Hospital',
             'code' => 'TEST01',
             'slug' => 'test-hospital',
@@ -90,7 +90,7 @@ class Phase0AcceptanceTest extends TestCase
             'address' => '123 Test Street',
         ]);
 
-        $response->assertRedirect('/admin/organizations');
+        $response->assertRedirect('/organizations');
         $this->assertDatabaseHas('organizations', [
             'name' => 'Test Hospital',
             'code' => 'TEST01',
@@ -99,7 +99,7 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_admin_can_create_branch(): void
     {
-        $response = $this->post('/admin/organizations/'.$this->organization->id.'/branches', [
+        $response = $this->post('/organizations/'.$this->organization->id.'/branches', [
             'organization_id' => $this->organization->id,
             'name' => 'Main Branch',
             'code' => 'MAIN',
@@ -109,7 +109,7 @@ class Phase0AcceptanceTest extends TestCase
             'address' => '456 Main Street',
         ]);
 
-        $response->assertRedirect('/admin/organizations/'.$this->organization->id.'/branches');
+        $response->assertRedirect('/organizations/'.$this->organization->id.'/branches');
         $this->assertDatabaseHas('branches', [
             'name' => 'Main Branch',
             'code' => 'MAIN',
@@ -119,7 +119,7 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_admin_can_create_department(): void
     {
-        $response = $this->post('/admin/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments', [
+        $response = $this->post('/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments', [
             'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'name' => 'Cardiology',
@@ -127,7 +127,7 @@ class Phase0AcceptanceTest extends TestCase
             'description' => 'Cardiology Department',
         ]);
 
-        $response->assertRedirect('/admin/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments');
+        $response->assertRedirect('/organizations/'.$this->organization->id.'/branches/'.$this->branch->id.'/departments');
         $this->assertDatabaseHas('departments', [
             'name' => 'Cardiology',
             'code' => 'CARD',
@@ -138,7 +138,7 @@ class Phase0AcceptanceTest extends TestCase
 
     public function test_admin_can_create_user(): void
     {
-        $response = $this->post('/admin/users', [
+        $response = $this->post('/users', [
             'name' => 'Test User',
             'email' => 'testuser@example.com',
             'password' => 'password',
@@ -146,7 +146,7 @@ class Phase0AcceptanceTest extends TestCase
             'phone' => '1234567890',
         ]);
 
-        $response->assertRedirect('/admin/users');
+        $response->assertRedirect('/users');
         $this->assertDatabaseHas('users', [
             'email' => 'testuser@example.com',
         ]);
@@ -172,14 +172,14 @@ class Phase0AcceptanceTest extends TestCase
         $unauthorizedUser = User::factory()->create();
         $this->actingAs($unauthorizedUser);
 
-        $response = $this->get('/admin/organizations');
+        $response = $this->get('/organizations');
 
         $response->assertStatus(403);
     }
 
     public function test_audit_logs_are_generated(): void
     {
-        $this->post('/admin/organizations', [
+        $this->post('/organizations', [
             'name' => 'Audit Test Hospital',
             'code' => 'AUDIT01',
             'slug' => 'audit-test',

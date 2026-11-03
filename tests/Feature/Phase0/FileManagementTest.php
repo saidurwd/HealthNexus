@@ -54,7 +54,7 @@ class FileManagementTest extends TestCase
         app(FileService::class)->store(UploadedFile::fake()->image('a.jpg'), null, $this->owner, 'local');
 
         $this->actingAs($this->owner)
-            ->get('/admin/files')
+            ->get('/files')
             ->assertOk()
             ->assertSee('a.jpg');
     }
@@ -66,7 +66,7 @@ class FileManagementTest extends TestCase
         $file = app(FileService::class)->store(UploadedFile::fake()->image('doc.jpg'), null, $this->owner, 'local');
 
         $this->actingAs($this->owner)
-            ->get('/admin/files/'.$file->id)
+            ->get('/files/'.$file->id)
             ->assertOk()
             ->assertSee($file->original_name);
     }
@@ -80,7 +80,7 @@ class FileManagementTest extends TestCase
         $other = User::factory()->create();
         $this->actingAs($other);
 
-        $this->get('/admin/files/'.$file->id)->assertForbidden();
+        $this->get('/files/'.$file->id)->assertForbidden();
     }
 
     public function test_owner_can_delete_file(): void
@@ -90,7 +90,7 @@ class FileManagementTest extends TestCase
         $file = app(FileService::class)->store(UploadedFile::fake()->image('temp.jpg'), null, $this->owner, 'local');
 
         $this->actingAs($this->owner)
-            ->delete('/admin/files/'.$file->id)
+            ->delete('/files/'.$file->id)
             ->assertRedirect();
 
         $this->assertDatabaseMissing('files', ['id' => $file->id]);

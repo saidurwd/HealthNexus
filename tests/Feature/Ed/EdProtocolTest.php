@@ -101,16 +101,16 @@ class EdProtocolTest extends EdTestCase
     public function test_screens_work_and_other_organization_steps_are_404(): void
     {
         $visit = $this->visit();
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
         $this->post("$base/protocols", ['protocol' => 'stroke'])->assertRedirect();
         $step = EdProtocolRun::where('visit_id', $visit->id)->firstOrFail()->steps()->first();
-        $this->post("/admin/emergency/protocol-steps/{$step->public_id}/done")->assertRedirect();
+        $this->post("/emergency/protocol-steps/{$step->public_id}/done")->assertRedirect();
         $this->post("$base/injuries", ['body_region' => 'head', 'injury_type' => 'laceration', 'severity' => 'minor'])->assertRedirect();
-        $this->post('/admin/emergency/mci', ['action' => 'activate'])->assertRedirect();
+        $this->post('/emergency/mci', ['action' => 'activate'])->assertRedirect();
         $this->get($base)->assertOk()->assertSee('Blood glucose checked')->assertSee('Laceration');
-        $this->get('/admin/emergency')->assertOk()->assertSee('Mass-casualty mode is on');
+        $this->get('/emergency')->assertOk()->assertSee('Mass-casualty mode is on');
 
         $step->update(['organization_id' => Organization::factory()->create()->id]);
-        $this->post("/admin/emergency/protocol-steps/{$step->public_id}/done")->assertNotFound();
+        $this->post("/emergency/protocol-steps/{$step->public_id}/done")->assertNotFound();
     }
 }

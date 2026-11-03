@@ -64,7 +64,7 @@ class PatientDocumentPrivacyTest extends TestCase
     {
         $file = UploadedFile::fake()->create('report.pdf', 100, 'application/pdf');
 
-        $this->post("/admin/patients/{$this->patient->public_id}/documents", [
+        $this->post("/patients/{$this->patient->public_id}/documents", [
             'document' => $file,
             'document_type' => 'lab_report',
         ])->assertRedirect();
@@ -83,7 +83,7 @@ class PatientDocumentPrivacyTest extends TestCase
         ]);
 
         $this->assertStringContainsString(
-            "/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download",
+            "/patients/{$this->patient->public_id}/documents/{$document->public_id}/download",
             $document->url
         );
         $this->assertStringNotContainsString('/storage/', $document->url);
@@ -103,7 +103,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/secret.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
+        $this->get("/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertForbidden();
     }
 
@@ -116,7 +116,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/report.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
+        $this->get("/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertOk();
     }
 
@@ -129,7 +129,7 @@ class PatientDocumentPrivacyTest extends TestCase
             'file_path' => 'patient-documents/to-delete.pdf',
         ]);
 
-        $this->delete("/admin/patients/{$this->patient->public_id}/documents/{$document->public_id}")
+        $this->delete("/patients/{$this->patient->public_id}/documents/{$document->public_id}")
             ->assertRedirect();
 
         Storage::disk('local')->assertMissing('patient-documents/to-delete.pdf');
@@ -139,7 +139,7 @@ class PatientDocumentPrivacyTest extends TestCase
     {
         $file = UploadedFile::fake()->create('script.php', 10, 'application/x-php');
 
-        $response = $this->post("/admin/patients/{$this->patient->public_id}/documents", [
+        $response = $this->post("/patients/{$this->patient->public_id}/documents", [
             'document' => $file,
             'document_type' => 'lab_report',
         ]);

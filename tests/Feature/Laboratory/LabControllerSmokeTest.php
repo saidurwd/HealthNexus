@@ -77,30 +77,30 @@ class LabControllerSmokeTest extends LabTestCase
 
     public function test_dashboard_loads(): void
     {
-        $this->get('/admin/lab')->assertOk();
+        $this->get('/lab')->assertOk();
     }
 
     public function test_test_catalog_pages_load(): void
     {
-        $this->get('/admin/lab/tests')->assertOk();
-        $this->get('/admin/lab/tests/create')->assertOk();
-        $this->get('/admin/lab/panels')->assertOk();
-        $this->get('/admin/lab/panels/create')->assertOk();
+        $this->get('/lab/tests')->assertOk();
+        $this->get('/lab/tests/create')->assertOk();
+        $this->get('/lab/panels')->assertOk();
+        $this->get('/lab/panels/create')->assertOk();
     }
 
     public function test_order_and_specimen_pages_load(): void
     {
-        $this->get('/admin/lab/orders')->assertOk();
-        $this->get('/admin/lab/orders/'.$this->order->public_id)->assertOk();
-        $this->get('/admin/lab/specimens')->assertOk();
-        $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->public_id)->assertOk();
-        $this->get('/admin/lab/specimens/'.$this->order->specimens->first()->public_id.'/label')->assertOk()->assertSee('Paper size: label 50', false)->assertSee('<svg', false);
+        $this->get('/lab/orders')->assertOk();
+        $this->get('/lab/orders/'.$this->order->public_id)->assertOk();
+        $this->get('/lab/specimens')->assertOk();
+        $this->get('/lab/specimens/'.$this->order->specimens->first()->public_id)->assertOk();
+        $this->get('/lab/specimens/'.$this->order->specimens->first()->public_id.'/label')->assertOk()->assertSee('Paper size: label 50', false)->assertSee('<svg', false);
     }
 
     public function test_worklist_and_critical_results_pages_load(): void
     {
-        $this->get('/admin/lab/worklist')->assertOk();
-        $this->get('/admin/lab/critical-results')->assertOk();
+        $this->get('/lab/worklist')->assertOk();
+        $this->get('/lab/critical-results')->assertOk();
     }
 
     /**
@@ -114,32 +114,32 @@ class LabControllerSmokeTest extends LabTestCase
     {
         $this->order->items()->first()->update(['status' => 'received']);
 
-        $this->get('/admin/lab/worklist')->assertOk();
+        $this->get('/lab/worklist')->assertOk();
     }
 
     public function test_report_pages_load(): void
     {
         $report = $this->order->reports()->first();
 
-        $this->get('/admin/lab/reports')->assertOk();
-        $this->get('/admin/lab/reports/'.$report->public_id)->assertOk();
-        $this->get('/admin/lab/reports/'.$report->public_id.'/print')->assertOk();
-        $this->get('/admin/lab/reports-analytics/daily-volume')->assertOk();
-        $this->get('/admin/lab/reports-analytics/sample-rejection')->assertOk();
-        $this->get('/admin/lab/reports-analytics/critical-results')->assertOk();
-        $this->get('/admin/lab/reports-analytics/result-amendments')->assertOk();
+        $this->get('/lab/reports')->assertOk();
+        $this->get('/lab/reports/'.$report->public_id)->assertOk();
+        $this->get('/lab/reports/'.$report->public_id.'/print')->assertOk();
+        $this->get('/lab/reports-analytics/daily-volume')->assertOk();
+        $this->get('/lab/reports-analytics/sample-rejection')->assertOk();
+        $this->get('/lab/reports-analytics/critical-results')->assertOk();
+        $this->get('/lab/reports-analytics/result-amendments')->assertOk();
     }
 
     public function test_analyzer_and_qc_pages_load(): void
     {
-        $this->get('/admin/lab/analyzers')->assertOk();
-        $this->get('/admin/lab/analyzers/create')->assertOk();
-        $this->get('/admin/lab/qc')->assertOk();
-        $this->get('/admin/lab/qc/create')->assertOk();
+        $this->get('/lab/analyzers')->assertOk();
+        $this->get('/lab/analyzers/create')->assertOk();
+        $this->get('/lab/qc')->assertOk();
+        $this->get('/lab/qc/create')->assertOk();
     }
 
     public function test_settings_page_loads(): void
     {
-        $this->get('/admin/lab/settings')->assertOk();
+        $this->get('/lab/settings')->assertOk();
     }
 }

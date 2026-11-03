@@ -82,82 +82,82 @@ class PharmacyControllerSmokeTest extends PharmacyTestCase
 
     public function test_dashboard_loads(): void
     {
-        $this->get('/admin/pharmacy')->assertOk();
+        $this->get('/pharmacy')->assertOk();
     }
 
     public function test_catalog_pages_load(): void
     {
-        $this->get('/admin/pharmacy/medications')->assertOk();
-        $this->get('/admin/pharmacy/medications/create')->assertOk();
-        $this->get('/admin/pharmacy/medications/'.$this->medication->id.'/edit')->assertOk();
-        $this->get('/admin/pharmacy/generics')->assertOk();
-        $this->get('/admin/pharmacy/generics/create')->assertOk();
-        $this->get('/admin/pharmacy/brands')->assertOk();
-        $this->get('/admin/pharmacy/brands/create')->assertOk();
+        $this->get('/pharmacy/medications')->assertOk();
+        $this->get('/pharmacy/medications/create')->assertOk();
+        $this->get('/pharmacy/medications/'.$this->medication->id.'/edit')->assertOk();
+        $this->get('/pharmacy/generics')->assertOk();
+        $this->get('/pharmacy/generics/create')->assertOk();
+        $this->get('/pharmacy/brands')->assertOk();
+        $this->get('/pharmacy/brands/create')->assertOk();
     }
 
     public function test_order_pages_load(): void
     {
-        $this->get('/admin/pharmacy/orders')->assertOk();
-        $this->get('/admin/pharmacy/orders/'.$this->order->public_id)->assertOk();
+        $this->get('/pharmacy/orders')->assertOk();
+        $this->get('/pharmacy/orders/'.$this->order->public_id)->assertOk();
     }
 
     public function test_dispensing_pages_load(): void
     {
-        $this->get('/admin/pharmacy/dispensing')->assertOk();
-        $this->get('/admin/pharmacy/dispensing/'.$this->dispensing->public_id)->assertOk();
-        $this->get('/admin/pharmacy/orders/'.$this->order->public_id.'/dispense')->assertOk();
+        $this->get('/pharmacy/dispensing')->assertOk();
+        $this->get('/pharmacy/dispensing/'.$this->dispensing->public_id)->assertOk();
+        $this->get('/pharmacy/orders/'.$this->order->public_id.'/dispense')->assertOk();
     }
 
     public function test_stock_pages_load(): void
     {
-        $this->get('/admin/pharmacy/stock?store_id='.$this->store->id)->assertOk();
-        $this->get('/admin/pharmacy/batches')->assertOk();
-        $this->get('/admin/pharmacy/stock/receive')->assertOk();
+        $this->get('/pharmacy/stock?store_id='.$this->store->id)->assertOk();
+        $this->get('/pharmacy/batches')->assertOk();
+        $this->get('/pharmacy/stock/receive')->assertOk();
     }
 
     public function test_transfer_pages_load(): void
     {
-        $this->get('/admin/pharmacy/transfers')->assertOk();
-        $this->get('/admin/pharmacy/transfers/create')->assertOk();
-        $this->get('/admin/pharmacy/transfers/'.$this->transfer->id)->assertOk();
+        $this->get('/pharmacy/transfers')->assertOk();
+        $this->get('/pharmacy/transfers/create')->assertOk();
+        $this->get('/pharmacy/transfers/'.$this->transfer->id)->assertOk();
     }
 
     public function test_stock_count_pages_load(): void
     {
-        $this->get('/admin/pharmacy/stock-counts')->assertOk();
-        $this->get('/admin/pharmacy/stock-counts/'.$this->stockCount->id)->assertOk();
+        $this->get('/pharmacy/stock-counts')->assertOk();
+        $this->get('/pharmacy/stock-counts/'.$this->stockCount->id)->assertOk();
     }
 
     public function test_quarantine_page_loads(): void
     {
         $this->assertGreaterThan(0, PharmacyQuarantine::count());
-        $this->get('/admin/pharmacy/quarantine')->assertOk();
+        $this->get('/pharmacy/quarantine')->assertOk();
     }
 
     public function test_recall_pages_load(): void
     {
-        $this->get('/admin/pharmacy/recalls')->assertOk();
-        $this->get('/admin/pharmacy/recalls/'.$this->recall->id)->assertOk();
+        $this->get('/pharmacy/recalls')->assertOk();
+        $this->get('/pharmacy/recalls/'.$this->recall->id)->assertOk();
     }
 
     public function test_safety_alerts_page_loads(): void
     {
-        $this->get('/admin/pharmacy/safety-alerts')->assertOk();
+        $this->get('/pharmacy/safety-alerts')->assertOk();
     }
 
     public function test_controlled_drugs_page_loads(): void
     {
-        $this->get('/admin/pharmacy/controlled-drugs')->assertOk();
+        $this->get('/pharmacy/controlled-drugs')->assertOk();
     }
 
     public function test_settings_page_loads(): void
     {
-        $this->get('/admin/pharmacy/settings')->assertOk();
+        $this->get('/pharmacy/settings')->assertOk();
     }
 
     public function test_patient_history_page_loads(): void
     {
-        $this->get('/admin/patients/'.$this->patient->public_id.'/pharmacy-history')->assertOk();
+        $this->get('/patients/'.$this->patient->public_id.'/pharmacy-history')->assertOk();
     }
 }

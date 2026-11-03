@@ -82,7 +82,7 @@ class SnapshotTest extends AnalyticsTestCase
     public function test_a_month_with_no_pack_is_not_found_and_a_malformed_month_has_no_route(): void
     {
         $this->get(route('admin.analytics.pack', '2020-01'))->assertNotFound();
-        $this->get('/admin/analytics/pack/abc')->assertNotFound();
+        $this->get('/analytics/pack/abc')->assertNotFound();
     }
 
     public function test_only_people_with_the_right_may_see_or_take_snapshots_and_another_hospital_is_invisible(): void

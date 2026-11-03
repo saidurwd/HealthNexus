@@ -5,7 +5,7 @@ _Updated in every slice (guideline 7.4). Phase 13 slices S00–S13 are built; ev
 - Phase / owner: 13 / **owner to be named by the hospital** (blood-bank medical officer)
 - Status: built · switchable per organization / hospital (`bloodbank`, depends on patient)
 - Purpose: one traceable chain from donor to recipient — donor, donation, components, tests, quarantine, storage, request, sample, cross-match, reservation, issue, bedside check, transfusion, reaction — answerable in both directions in under two seconds.
-- Permission prefix: `bloodbank` (see docs/registry/permissions.md). Table prefix: `blood_`. Routes: `/admin/blood-bank/*`. API: none yet.
+- Permission prefix: `bloodbank` (see docs/registry/permissions.md). Table prefix: `blood_`. Routes: `/blood-bank/*`. API: none yet.
 - Owns: donors, screenings, donations, donor adverse events, blood units and their append-only event trail, unit test outcomes, storage locations and temperature logs, requests, samples, cross-matches, reservations, issues, transfusions, reactions, incidents, recalls, discards.
 - Does NOT own: the person (MPI `patients` — a donor is a patient row), the screening and grouping **results** (Laboratory: the tests are lab orders on a "blood donation" encounter, results are read from `lab_results` and never retyped), prices (Billing), alerts (Alert Service), transfusion vital signs (Observation Service, context `transfusion`). Blood is not stock: nothing touches the Stock Ledger.
 - Events consumed: `LabReportFinalized` (reads a donation's results). Gateway: `BloodRequestGateway` is bound to `BloodBankRequestGateway` (answers "not enabled" when the module is off).

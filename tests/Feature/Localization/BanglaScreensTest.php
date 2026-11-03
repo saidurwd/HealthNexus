@@ -36,7 +36,7 @@ class BanglaScreensTest extends TestCase
     {
         $this->bengaliUser();
 
-        $this->get('/admin/patients')->assertOk()->assertSee('রোগী')->assertSee('খুঁজুন');
+        $this->get('/patients')->assertOk()->assertSee('রোগী')->assertSee('খুঁজুন');
     }
 
     public function test_the_same_page_stays_english_for_an_english_user(): void
@@ -44,7 +44,7 @@ class BanglaScreensTest extends TestCase
         $user = $this->bengaliUser();
         $user->update(['locale' => 'en']);
 
-        $this->get('/admin/patients')->assertOk()->assertSee('Search')->assertDontSee('খুঁজুন');
+        $this->get('/patients')->assertOk()->assertSee('Search')->assertDontSee('খুঁজুন');
     }
 
     public function test_validation_messages_are_in_bangla(): void

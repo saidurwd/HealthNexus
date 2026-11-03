@@ -44,11 +44,11 @@ class UserRoleAssignmentTest extends TestCase
         Role::firstOrCreate(['name' => 'charge_nurse', 'guard_name' => 'web']);
         $admin = $this->actor('hospital_admin');
 
-        $this->actingAs($admin)->post('/admin/users', $this->payload(['roles' => ['staff_nurse']]))->assertRedirect();
+        $this->actingAs($admin)->post('/users', $this->payload(['roles' => ['staff_nurse']]))->assertRedirect();
         $nurse = User::where('email', 'nina@example.com')->firstOrFail();
         $this->assertTrue($nurse->hasRole('staff_nurse'));
 
-        $this->actingAs($admin)->put('/admin/users/'.$nurse->id, [
+        $this->actingAs($admin)->put('/users/'.$nurse->id, [
             'name' => 'Nina Nurse', 'email' => 'nina@example.com', 'roles_present' => 1, 'roles' => ['charge_nurse'],
         ])->assertRedirect();
 
@@ -62,7 +62,7 @@ class UserRoleAssignmentTest extends TestCase
         Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
         $admin = $this->actor('hospital_admin');
 
-        $this->actingAs($admin)->post('/admin/users', $this->payload(['roles' => ['super_admin']]))->assertSessionHasErrors('roles.0');
+        $this->actingAs($admin)->post('/users', $this->payload(['roles' => ['super_admin']]))->assertSessionHasErrors('roles.0');
 
         $this->assertDatabaseMissing('users', ['email' => 'nina@example.com']);
     }
@@ -75,10 +75,10 @@ class UserRoleAssignmentTest extends TestCase
         $admin = $this->actor('hospital_admin');
         $base = ['name' => $target->name, 'email' => $target->email];
 
-        $this->actingAs($admin)->put('/admin/users/'.$target->id, $base)->assertRedirect();
+        $this->actingAs($admin)->put('/users/'.$target->id, $base)->assertRedirect();
         $this->assertTrue($target->fresh()->hasRole('super_admin'));
 
-        $this->actingAs($admin)->put('/admin/users/'.$target->id, $base + ['roles_present' => 1, 'roles' => []])->assertRedirect();
+        $this->actingAs($admin)->put('/users/'.$target->id, $base + ['roles_present' => 1, 'roles' => []])->assertRedirect();
         $this->assertTrue($target->fresh()->hasRole('super_admin'), 'A non-super_admin must not be able to strip super_admin.');
     }
 
@@ -88,7 +88,7 @@ class UserRoleAssignmentTest extends TestCase
         $admin = $this->actor('hospital_admin');
         $target = User::factory()->create();
 
-        $this->actingAs($admin)->get('/admin/users/create')->assertOk()->assertSee('roles[]', false)->assertSee('Staff Nurse');
-        $this->actingAs($admin)->get('/admin/users/'.$target->id.'/edit')->assertOk()->assertSee('roles_present', false);
+        $this->actingAs($admin)->get('/users/create')->assertOk()->assertSee('roles[]', false)->assertSee('Staff Nurse');
+        $this->actingAs($admin)->get('/users/'.$target->id.'/edit')->assertOk()->assertSee('roles_present', false);
     }
 }

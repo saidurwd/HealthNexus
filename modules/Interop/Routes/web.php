@@ -5,7 +5,7 @@ use Modules\Interop\Http\Controllers\Web\InteropMessageController;
 use Modules\Interop\Http\Controllers\Web\InteropPartnerController;
 use Modules\Interop\Http\Controllers\Web\InteropToolsController;
 
-// Staff side of interoperability: /admin/interop/*.
+// Staff side of interoperability: /interop/*.
 Route::prefix('interop')->name('interop.')->group(function () {
     Route::get('/', [InteropMessageController::class, 'dashboard'])->name('dashboard');
 

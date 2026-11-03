@@ -60,7 +60,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_record_vital_signs(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/vitals", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -81,7 +81,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_add_diagnosis(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/diagnoses", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
             'coding_system' => 'ICD-10',
             'code' => 'I10',
@@ -99,7 +99,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_create_prescription(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
             'clinical_notes' => 'Take after meals',
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15],
@@ -126,7 +126,7 @@ class EncounterClinicalControllerTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->public_id}/vitals", [
+        $this->post("/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -134,17 +134,17 @@ class EncounterClinicalControllerTest extends TestCase
             'oxygen_saturation' => 98,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->public_id}/diagnoses", [
+        $this->post("/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
+        $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days'],
             ],
         ]);
 
-        $response = $this->get("/admin/encounters/{$this->encounter->public_id}");
+        $response = $this->get("/encounters/{$this->encounter->public_id}");
 
         $response->assertStatus(200);
         $response->assertSee('Penicillin');
@@ -155,13 +155,13 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_prescription_prints_as_a_slip_marked_when_not_issued(): void
     {
-        $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
+        $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
             'advice' => 'Plenty of fluids',
             'items' => [['medicine_name' => 'Paracetamol', 'strength' => '500 mg', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15]],
         ]);
         $prescription = Prescription::query()->firstOrFail();
 
-        $this->get("/admin/prescriptions/{$prescription->public_id}/print")
+        $this->get("/prescriptions/{$prescription->public_id}/print")
             ->assertOk()
             ->assertSee('Paracetamol')
             ->assertSee('Plenty of fluids')

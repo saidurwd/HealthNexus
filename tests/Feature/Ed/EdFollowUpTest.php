@@ -101,13 +101,13 @@ class EdFollowUpTest extends EdTestCase
     public function test_screens_work_and_show_results(): void
     {
         $visit = $this->visit();
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
         $this->post("$base/orders", ['order_type' => 'laboratory', 'items' => [['name' => 'CBC']]])->assertRedirect();
         $this->post("$base/consults", ['specialty' => 'Neurology', 'urgency' => 'routine'])->assertRedirect();
-        $this->post('/admin/emergency/consults/'.EdConsult::firstOrFail()->public_id.'/respond', ['response_note' => 'Seen'])->assertRedirect();
+        $this->post('/emergency/consults/'.EdConsult::firstOrFail()->public_id.'/respond', ['response_note' => 'Seen'])->assertRedirect();
         $this->post("$base/observation")->assertRedirect();
         $this->get($base)->assertOk()->assertSee('CBC')->assertSee('Neurology')->assertSee('In observation since');
-        $this->post('/admin/emergency/observation/'.EdObservationStay::firstOrFail()->public_id.'/end')->assertRedirect();
+        $this->post('/emergency/observation/'.EdObservationStay::firstOrFail()->public_id.'/end')->assertRedirect();
         $this->assertNotNull(EdObservationStay::first()->ended_at);
     }
 
@@ -116,6 +116,6 @@ class EdFollowUpTest extends EdTestCase
         $visit = $this->visit();
         $consult = app(EdConsultService::class)->request($visit, $this->user, 'ENT', 'routine');
         $visit->update(['organization_id' => Organization::factory()->create()->id]);
-        $this->post('/admin/emergency/consults/'.$consult->public_id.'/respond')->assertNotFound();
+        $this->post('/emergency/consults/'.$consult->public_id.'/respond')->assertNotFound();
     }
 }

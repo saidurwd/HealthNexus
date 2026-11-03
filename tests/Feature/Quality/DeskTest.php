@@ -55,11 +55,11 @@ class DeskTest extends QualityTestCase
             '/documents', '/documents/new', '/documents/to-read', '/documents/'.$doc->public_id, '/privileges', '/compliance', '/accreditation', '/accreditation/'.$assessment->public_id, '/committees', '/meetings/'.$meeting->public_id, '/complaints'];
         $this->as($super);
         foreach ($pages as $p) {
-            $this->get('/admin/quality'.$p)->assertOk();
+            $this->get('/quality'.$p)->assertOk();
         }
         $this->as($nobody);
         foreach (['', '/incidents', '/incidents/new', '/actions', '/infection', '/indicators', '/audits', '/mortality', '/documents', '/privileges', '/compliance', '/accreditation', '/committees', '/complaints'] as $p) {
-            $this->get('/admin/quality'.$p)->assertForbidden();
+            $this->get('/quality'.$p)->assertForbidden();
         }
         $this->assertNotNull($inv);
     }
@@ -68,29 +68,29 @@ class DeskTest extends QualityTestCase
     {
         $nurse = $this->actor(['quality.incident.report']);
         $other = $this->actor(['quality.incident.report']);
-        $this->as($nurse)->post('/admin/quality/incidents', ['kind' => 'incident', 'category' => 'medication', 'harm' => 'minor', 'occurred_at' => '2026-09-09T10:30', 'description' => 'Wrong strength of a medicine was drawn up.'])->assertRedirect('/admin/quality/incidents/mine');
+        $this->as($nurse)->post('/quality/incidents', ['kind' => 'incident', 'category' => 'medication', 'harm' => 'minor', 'occurred_at' => '2026-09-09T10:30', 'description' => 'Wrong strength of a medicine was drawn up.'])->assertRedirect('/quality/incidents/mine');
         $i = QaIncident::query()->first();
         $this->assertFalse($i->is_anonymous);
         $this->assertSame($this->branch->id, $i->branch_id);
-        $this->as($nurse)->get('/admin/quality/incidents/mine')->assertOk()->assertSee($i->number);
-        $this->as($nurse)->get('/admin/quality/incidents/'.$i->public_id)->assertOk()->assertDontSee(__('Show who reported this'));
-        $this->as($other)->get('/admin/quality/incidents/'.$i->public_id)->assertForbidden();
-        $this->as($other)->get('/admin/quality/incidents/mine')->assertOk()->assertDontSee($i->number);
-        $this->as($nurse)->get('/admin/quality/incidents')->assertForbidden();
+        $this->as($nurse)->get('/quality/incidents/mine')->assertOk()->assertSee($i->number);
+        $this->as($nurse)->get('/quality/incidents/'.$i->public_id)->assertOk()->assertDontSee(__('Show who reported this'));
+        $this->as($other)->get('/quality/incidents/'.$i->public_id)->assertForbidden();
+        $this->as($other)->get('/quality/incidents/mine')->assertOk()->assertDontSee($i->number);
+        $this->as($nurse)->get('/quality/incidents')->assertForbidden();
     }
 
     public function test_an_anonymous_report_cannot_be_traced_through_the_screens(): void
     {
         $nurse = $this->actor(['quality.incident.report']);
-        $this->as($nurse)->post('/admin/quality/incidents', ['kind' => 'near_miss', 'category' => 'fall', 'harm' => 'none', 'occurred_at' => '2026-09-09T10:30', 'description' => 'A wet floor was noticed before anyone slipped.', 'anonymous' => '1'])->assertRedirect();
+        $this->as($nurse)->post('/quality/incidents', ['kind' => 'near_miss', 'category' => 'fall', 'harm' => 'none', 'occurred_at' => '2026-09-09T10:30', 'description' => 'A wet floor was noticed before anyone slipped.', 'anonymous' => '1'])->assertRedirect();
         $i = QaIncident::query()->first();
         $this->assertTrue($i->is_anonymous);
         $this->assertSame(0, QaIncidentReporter::query()->count());
-        $this->as($nurse)->get('/admin/quality'); // the confirmation message is shown once
-        $this->as($nurse)->get('/admin/quality/incidents/mine')->assertOk()->assertDontSee($i->number);
-        $this->as($nurse)->get('/admin/quality/incidents/'.$i->public_id)->assertForbidden();
+        $this->as($nurse)->get('/quality'); // the confirmation message is shown once
+        $this->as($nurse)->get('/quality/incidents/mine')->assertOk()->assertDontSee($i->number);
+        $this->as($nurse)->get('/quality/incidents/'.$i->public_id)->assertForbidden();
         $boss = $this->actor(['quality.incident.view', 'quality.incident.reveal']);
-        $this->as($boss)->post('/admin/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'We need to follow this up properly'])->assertSessionHas('warning');
+        $this->as($boss)->post('/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'We need to follow this up properly'])->assertSessionHas('warning');
     }
 
     public function test_the_reporter_is_shown_only_to_those_with_the_reveal_right_and_a_reason(): void
@@ -98,12 +98,12 @@ class DeskTest extends QualityTestCase
         $nurse = $this->actor(['quality.incident.report']);
         $i = $this->incident($nurse);
         $viewer = $this->actor(['quality.incident.view', 'quality.incident.triage']);
-        $this->as($viewer)->post('/admin/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'Need to ask a question'])->assertForbidden();
+        $this->as($viewer)->post('/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'Need to ask a question'])->assertForbidden();
         $revealer = $this->actor(['quality.incident.view', 'quality.incident.reveal']);
-        $this->as($revealer)->post('/admin/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'short'])->assertSessionHasErrors('reason');
-        $this->as($revealer)->post('/admin/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'We need to ask what the floor looked like'])->assertSessionHas('success', 'Reported by '.$nurse->name.'. This was recorded.');
-        $this->as($viewer)->get('/admin/quality'); // the earlier message is shown once
-        $html = $this->as($viewer)->get('/admin/quality/incidents/'.$i->public_id)->assertOk()->getContent();
+        $this->as($revealer)->post('/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'short'])->assertSessionHasErrors('reason');
+        $this->as($revealer)->post('/quality/incidents/'.$i->public_id.'/reveal', ['reason' => 'We need to ask what the floor looked like'])->assertSessionHas('success', 'Reported by '.$nurse->name.'. This was recorded.');
+        $this->as($viewer)->get('/quality'); // the earlier message is shown once
+        $html = $this->as($viewer)->get('/quality/incidents/'.$i->public_id)->assertOk()->getContent();
         $timeline = substr($html, (int) strpos($html, 'What has happened since'));
         $timeline = substr($timeline, 0, (int) strpos($timeline, '</ul>'));
         $this->assertStringNotContainsString($nurse->name, $timeline, 'the timeline never names the reporter');
@@ -116,10 +116,10 @@ class DeskTest extends QualityTestCase
         $here = $this->incident(null, ['branch_id' => $this->branch->id]);
         $there = $this->incident(null, ['branch_id' => $other->id]);
         $limited = $this->actor(['quality.incident.view']);
-        $this->as($limited)->get('/admin/quality/incidents')->assertOk()->assertSee($here->number)->assertDontSee($there->number);
-        $this->as($limited)->get('/admin/quality/incidents/'.$there->public_id)->assertForbidden();
+        $this->as($limited)->get('/quality/incidents')->assertOk()->assertSee($here->number)->assertDontSee($there->number);
+        $this->as($limited)->get('/quality/incidents/'.$there->public_id)->assertForbidden();
         $manager = $this->manager();
-        $this->as($manager)->get('/admin/quality/incidents')->assertOk()->assertSee($here->number)->assertSee($there->number);
+        $this->as($manager)->get('/quality/incidents')->assertOk()->assertSee($here->number)->assertSee($there->number);
     }
 
     public function test_another_hospitals_records_do_not_exist(): void
@@ -131,7 +131,7 @@ class DeskTest extends QualityTestCase
         session()->put(['tenant_organization_id' => $other->id]);
         $this->actingAs($user);
         app(TenantContextResolver::class)->setOrganizationId($other->id);
-        $this->get('/admin/quality/incidents/'.$i->public_id)->assertNotFound();
+        $this->get('/quality/incidents/'.$i->public_id)->assertNotFound();
     }
 
     public function test_the_action_screen_lets_an_owner_finish_their_own_action_but_not_someone_elses(): void
@@ -140,12 +140,12 @@ class DeskTest extends QualityTestCase
         $owner = $this->actor(['quality.incident.report']);
         $stranger = $this->actor(['quality.incident.report']);
         $a = app(ActionService::class)->create($this->organization->id, ['action_type' => 'improvement', 'description' => 'Put up the new hand hygiene posters', 'owner_id' => $owner->id], $m);
-        $this->as($stranger)->post('/admin/quality/actions/'.$a->public_id.'/complete', ['note' => 'I did it for them'])->assertSessionHasErrors('action');
-        $this->as($owner)->post('/admin/quality/actions/'.$a->public_id.'/complete', ['note' => 'Posters are up in all wards'])->assertSessionHas('success');
+        $this->as($stranger)->post('/quality/actions/'.$a->public_id.'/complete', ['note' => 'I did it for them'])->assertSessionHasErrors('action');
+        $this->as($owner)->post('/quality/actions/'.$a->public_id.'/complete', ['note' => 'Posters are up in all wards'])->assertSessionHas('success');
         $this->assertSame('done', QaAction::find($a->id)->status);
-        $this->as($owner)->post('/admin/quality/actions/'.$a->public_id.'/verify', ['effective' => 'yes'])->assertForbidden();
-        $this->as($m)->post('/admin/quality/actions/'.$a->public_id.'/verify', ['effective' => 'yes', 'note' => 'Seen'])->assertSessionHas('success');
-        $this->as($owner)->get('/admin/quality/actions')->assertOk()->assertSee($a->number);
+        $this->as($owner)->post('/quality/actions/'.$a->public_id.'/verify', ['effective' => 'yes'])->assertForbidden();
+        $this->as($m)->post('/quality/actions/'.$a->public_id.'/verify', ['effective' => 'yes', 'note' => 'Seen'])->assertSessionHas('success');
+        $this->as($owner)->get('/quality/actions')->assertOk()->assertSee($a->number);
     }
 
     public function test_the_documents_screen_asks_staff_to_read_and_records_it(): void
@@ -157,12 +157,12 @@ class DeskTest extends QualityTestCase
         $doc = $svc->create($this->organization->id, ['code' => 'SOP-9', 'title' => 'Safe injection practice', 'category' => 'sop', 'body' => 'Use a new needle and syringe for every injection.'], $author);
         $svc->assign($doc, 'all');
         $svc->submit($doc->versions()->first(), $author);
-        $this->as($approver)->post('/admin/quality/document-versions/'.$doc->versions()->first()->id.'/decide', ['decision' => 'approve'])->assertSessionHas('success');
-        $this->as($nurse)->get('/admin/quality/documents/to-read')->assertOk()->assertSee('SOP-9');
-        $this->as($nurse)->get('/admin/quality/documents/'.$doc->public_id)->assertOk()->assertSee('Use a new needle');
-        $this->as($nurse)->post('/admin/quality/documents/'.$doc->public_id.'/acknowledge')->assertSessionHas('success');
-        $this->as($nurse)->get('/admin/quality/documents/to-read')->assertOk()->assertDontSee('SOP-9');
-        $this->as($nurse)->post('/admin/quality/documents/'.$doc->public_id.'/version', ['body' => 'x', 'change_note' => 'y'])->assertForbidden();
+        $this->as($approver)->post('/quality/document-versions/'.$doc->versions()->first()->id.'/decide', ['decision' => 'approve'])->assertSessionHas('success');
+        $this->as($nurse)->get('/quality/documents/to-read')->assertOk()->assertSee('SOP-9');
+        $this->as($nurse)->get('/quality/documents/'.$doc->public_id)->assertOk()->assertSee('Use a new needle');
+        $this->as($nurse)->post('/quality/documents/'.$doc->public_id.'/acknowledge')->assertSessionHas('success');
+        $this->as($nurse)->get('/quality/documents/to-read')->assertOk()->assertDontSee('SOP-9');
+        $this->as($nurse)->post('/quality/documents/'.$doc->public_id.'/version', ['body' => 'x', 'change_note' => 'y'])->assertForbidden();
     }
 
     public function test_the_read_only_api_needs_a_login_the_right_and_the_header(): void

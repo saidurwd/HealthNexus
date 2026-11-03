@@ -38,10 +38,10 @@ class ClinicalBoardsTest extends FrontDoorTestCase
 
     public function test_ipd_states_itself_refuses_without_the_right_and_has_honest_empty_states(): void
     {
-        $html = $this->board('/admin/ipd', ['ipd.dashboard.view']);
+        $html = $this->board('/ipd', ['ipd.dashboard.view']);
         $this->assertStringContainsString('Where are the beds', $html);
         $this->assertStringContainsString('No wards or beds are set up.', $html);
-        $this->assertDashboardRefuses('/admin/ipd', $this->actor(['ipd.bed.view']));
+        $this->assertDashboardRefuses('/ipd', $this->actor(['ipd.bed.view']));
     }
 
     public function test_ipd_occupancy_is_of_the_usable_beds_and_each_ward_is_shown(): void
@@ -94,9 +94,9 @@ class ClinicalBoardsTest extends FrontDoorTestCase
     public function test_ipd_figures_link_only_to_pages_the_person_may_open_and_carry_no_patient(): void
     {
         $this->ward('Male', ['occupied']);
-        $plain = $this->board('/admin/ipd', ['ipd.dashboard.view']);
+        $plain = $this->board('/ipd', ['ipd.dashboard.view']);
         $this->assertNull($this->tileLink($plain, 'Inpatients now'));
-        $with = $this->board('/admin/ipd', ['ipd.dashboard.view', 'ipd.admission.view', 'ipd.bed.view', 'ipd.discharge.view']);
+        $with = $this->board('/ipd', ['ipd.dashboard.view', 'ipd.admission.view', 'ipd.bed.view', 'ipd.discharge.view']);
         $this->assertSame(route('admin.ipd.admissions.index'), $this->tileLink($with, 'Inpatients now'));
         $this->assertSame(route('admin.ipd.bed-board.index'), $this->tileLink($with, 'Bed occupancy'));
         $this->assertSame(route('admin.ipd.discharge.index'), $this->tileLink($with, 'Delayed discharges'));
@@ -137,9 +137,9 @@ class ClinicalBoardsTest extends FrontDoorTestCase
 
         $this->assertSame(2, app(NursingOverview::class)->summary($this->organization->id, $this->branch->id, $a->id)['my_overdue_tasks']);
         $this->assertSame(1, app(NursingOverview::class)->summary($this->organization->id, $this->branch->id, $b->id)['my_overdue_tasks']);
-        $this->as($a)->get('/admin/nursing')->assertOk()->assertSee('Reloads every 60 seconds');
-        $this->as($b)->get('/admin/nursing')->assertOk();
-        $this->assertSame(1, $this->as($b)->get('/admin/nursing')->viewData('metrics')['my_overdue_tasks'], 'the second nurse is not shown the first nurse\'s count from the cache');
+        $this->as($a)->get('/nursing')->assertOk()->assertSee('Reloads every 60 seconds');
+        $this->as($b)->get('/nursing')->assertOk();
+        $this->assertSame(1, $this->as($b)->get('/nursing')->viewData('metrics')['my_overdue_tasks'], 'the second nurse is not shown the first nurse\'s count from the cache');
     }
 
     public function test_nursing_alerts_handovers_and_scope(): void
@@ -184,13 +184,13 @@ class ClinicalBoardsTest extends FrontDoorTestCase
         $ep = $this->row('icu_episodes', ['episode_number' => 'E1', 'patient_id' => $patient->id, 'encounter_id' => 1, 'admitted_at' => now(), 'status' => 'admitted']);
         $this->row('icu_critical_alerts', ['episode_id' => $ep, 'rule' => 'low oxygen', 'triggered_at' => now()->subMinutes(20)]);
 
-        $html = $this->board('/admin/icu', ['icu.dashboard.view', 'icu.alert.view']);
+        $html = $this->board('/icu', ['icu.dashboard.view', 'icu.alert.view']);
 
         $this->assertStringContainsString('Who is critical', $html);
         $this->assertStringContainsString('low oxygen', $html);
         $this->assertStringContainsString('Zubaida', $html, 'the clinical team\'s own worklist names the patient');
         $this->assertSame(route('admin.icu.alerts.index'), $this->tileLink($html, 'Alerts not acknowledged'));
-        $this->assertDashboardRefuses('/admin/icu', $this->actor(['icu.alert.view']));
+        $this->assertDashboardRefuses('/icu', $this->actor(['icu.alert.view']));
     }
 
     // ---- OT -----------------------------------------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ class ClinicalBoardsTest extends FrontDoorTestCase
         $m = app(OtOverview::class)->summary($this->organization->id, $this->branch->id);
         $this->assertNull($m['average_start_delay']);
         $this->assertNull($m['called_off_rate']);
-        $html = $this->board('/admin/ot', ['ot.dashboard.view']);
+        $html = $this->board('/ot', ['ot.dashboard.view']);
         $this->assertStringContainsString('No started cases in 30 days.', $html);
         $this->assertStringContainsString('No cases are planned for today.', $html);
         $this->assertStringContainsString('—', $html, 'a figure that cannot be worked out is a dash, not 0');
@@ -234,20 +234,20 @@ class ClinicalBoardsTest extends FrontDoorTestCase
     {
         $this->surgery('2026-11-10', 'closed', '2026-11-10 02:00:00', '2026-11-10 03:00:00');
         $user = $this->actor(['ot.dashboard.view']);
-        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/admin/ot')->getContent(), 'no target ships');
+        $this->assertStringNotContainsString('Off target', $this->as($user)->get('/ot')->getContent(), 'no target ships');
 
         app(SettingsService::class)->set('dashboard.target.ot_start_delay', '15');
         Cache::flush();
-        $this->assertStringContainsString('Off target', $this->as($user)->get('/admin/ot')->getContent());
+        $this->assertStringContainsString('Off target', $this->as($user)->get('/ot')->getContent());
     }
 
     public function test_every_clinical_board_is_scoped_cached_per_person_and_refreshes_on_request(): void
     {
         $user = $this->actor(['ipd.dashboard.view']);
         $this->ward('Male', ['occupied']);
-        $this->as($user)->get('/admin/ipd')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 1);
+        $this->as($user)->get('/ipd')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 1);
         $this->row('ipd_beds', ['room_id' => 1, 'bed_code' => 'X', 'status' => 'available', 'is_active' => true]);
-        $this->as($user)->get('/admin/ipd')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 1);
-        $this->as($user)->get('/admin/ipd?fresh=1')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 2);
+        $this->as($user)->get('/ipd')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 1);
+        $this->as($user)->get('/ipd?fresh=1')->assertOk()->assertViewHas('summary', fn ($s) => $s['total_beds'] === 2);
     }
 }

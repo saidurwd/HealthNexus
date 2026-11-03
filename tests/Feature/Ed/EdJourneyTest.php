@@ -13,10 +13,10 @@ class EdJourneyTest extends EdTestCase
     {
         $bay = $this->bay('R1', 'RESUS');
 
-        $this->post('/admin/emergency/arrivals', ['arrival_mode' => 'ambulance', 'sex' => 'M', 'estimated_age' => 45, 'description' => 'Collapsed in the market'])->assertRedirect();
+        $this->post('/emergency/arrivals', ['arrival_mode' => 'ambulance', 'sex' => 'M', 'estimated_age' => 45, 'description' => 'Collapsed in the market'])->assertRedirect();
         $visit = EdVisit::firstOrFail();
         $this->assertTrue($visit->is_unknown_patient);
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
 
         $this->post("$base/triage", ['level' => 1, 'complaint' => 'Collapse', 'vitals' => ['pulse' => 38, 'oxygen_saturation' => 82]])->assertRedirect();
         $this->post("$base/bay", ['bay' => $bay->public_id])->assertRedirect();
@@ -34,7 +34,7 @@ class EdJourneyTest extends EdTestCase
         $this->assertDatabaseHas('clinical_alerts', ['category' => 'code_blue']);
         $this->assertDatabaseHas('clinical_alerts', ['category' => 'ed_resuscitation']);
         $this->assertSame(0, IpdAdmissionRequest::count());
-        $this->get('/admin/emergency')->assertOk();
-        $this->getJson('/admin/emergency/board/data')->assertOk()->assertJsonPath('board.visits', []);
+        $this->get('/emergency')->assertOk();
+        $this->getJson('/emergency/board/data')->assertOk()->assertJsonPath('board.visits', []);
     }
 }

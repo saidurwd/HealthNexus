@@ -104,8 +104,8 @@ class GeographyTest extends TestCase
     {
         $dhaka = GeoDivision::query()->where('name_en', 'Dhaka')->firstOrFail();
 
-        $this->getJson('/admin/lookup/geo/district')->assertOk()->assertExactJson([]);
-        $rows = $this->getJson('/admin/lookup/geo/district?division_id='.$dhaka->id)->assertOk()->json();
+        $this->getJson('/lookup/geo/district')->assertOk()->assertExactJson([]);
+        $rows = $this->getJson('/lookup/geo/district?division_id='.$dhaka->id)->assertOk()->json();
 
         $this->assertSame($dhaka->districts()->count(), count($rows));
         $this->assertContains('Gazipur · গাজীপুর', array_column($rows, 'text'));
@@ -114,20 +114,20 @@ class GeographyTest extends TestCase
 
     public function test_places_are_found_by_their_english_or_their_bangla_name(): void
     {
-        $en = $this->getJson('/admin/lookup/geo/division?q=dha')->assertOk()->json();
-        $bn = $this->getJson('/admin/lookup/geo/division?q='.urlencode('ঢাকা'))->assertOk()->json();
+        $en = $this->getJson('/lookup/geo/division?q=dha')->assertOk()->json();
+        $bn = $this->getJson('/lookup/geo/division?q='.urlencode('ঢাকা'))->assertOk()->json();
 
         $this->assertSame('Dhaka · ঢাকা', $en[0]['text']);
         $this->assertSame($en[0]['value'], $bn[0]['value']);
-        $this->assertSame([], $this->getJson('/admin/lookup/geo/division?q=%25')->json(), 'a percent sign is a letter, not a wildcard');
+        $this->assertSame([], $this->getJson('/lookup/geo/division?q=%25')->json(), 'a percent sign is a letter, not a wildcard');
     }
 
     public function test_the_lookup_needs_a_right_that_picks_places_and_knows_only_four_levels(): void
     {
-        $this->getJson('/admin/lookup/geo/planet')->assertNotFound();
+        $this->getJson('/lookup/geo/planet')->assertNotFound();
         $this->actingAs($this->person(['reports.view']));
 
-        $this->getJson('/admin/lookup/geo/division')->assertForbidden();
+        $this->getJson('/lookup/geo/division')->assertForbidden();
     }
 
     // ---- the address on a patient ----------------------------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ class GeographyTest extends TestCase
         [$division, $district, $upazila] = $this->place('Dhaka', 'Savar');
         $union = app(GeoService::class)->addUnion($upazila, 'Ashulia', 'আশুলিয়া');
 
-        $this->post("/admin/patients/{$this->patient->public_id}/addresses", ['address_type' => 'permanent', 'division_id' => $division, 'district_id' => $district, 'upazila_id' => $upazila, 'union_id' => $union->id, 'village_area' => 'Uttar Para', 'is_primary' => true])->assertRedirect();
+        $this->post("/patients/{$this->patient->public_id}/addresses", ['address_type' => 'permanent', 'division_id' => $division, 'district_id' => $district, 'upazila_id' => $upazila, 'union_id' => $union->id, 'village_area' => 'Uttar Para', 'is_primary' => true])->assertRedirect();
 
         $a = PatientAddress::query()->where('patient_id', $this->patient->id)->firstOrFail();
         $this->assertSame([$division, $district, $upazila, $union->id, 'Uttar Para', 'Dhaka'], [$a->division_id, $a->district_id, $a->upazila_id, $a->union_id, $a->village_area, $a->district]);
@@ -147,7 +147,7 @@ class GeographyTest extends TestCase
     {
         [$division, $district, $upazila] = $this->place('Sylhet');
 
-        $this->post("/admin/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'upazila_id' => $upazila])->assertRedirect();
+        $this->post("/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'upazila_id' => $upazila])->assertRedirect();
 
         $a = PatientAddress::query()->firstOrFail();
         $this->assertSame([$division, $district, $upazila], [$a->division_id, $a->district_id, $a->upazila_id]);
@@ -158,16 +158,16 @@ class GeographyTest extends TestCase
         [, $dhakaDistrict] = $this->place('Dhaka');
         [$sylhetDivision] = $this->place('Sylhet');
 
-        $this->post("/admin/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'division_id' => $sylhetDivision, 'district_id' => $dhakaDistrict])->assertSessionHasErrors('district_id');
+        $this->post("/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'division_id' => $sylhetDivision, 'district_id' => $dhakaDistrict])->assertSessionHasErrors('district_id');
         $this->assertSame(0, PatientAddress::count());
     }
 
     public function test_the_address_page_offers_the_four_searchable_levels_each_waiting_for_the_one_above(): void
     {
-        $html = $this->get("/admin/patients/{$this->patient->public_id}/addresses")->assertOk()->getContent();
+        $html = $this->get("/patients/{$this->patient->public_id}/addresses")->assertOk()->getContent();
 
         foreach (['division', 'district', 'upazila', 'union'] as $level) {
-            $this->assertStringContainsString('data-remote="'.url('/admin/lookup/geo/'.$level).'"', $html);
+            $this->assertStringContainsString('data-remote="'.url('/lookup/geo/'.$level).'"', $html);
         }
         $this->assertStringContainsString('data-remote-depends="#addr-division"', $html);
         $this->assertStringContainsString('data-remote-depends="#addr-upazila"', $html);
@@ -179,8 +179,8 @@ class GeographyTest extends TestCase
     {
         [, , $upazila] = $this->place('Dhaka', 'Savar');
 
-        $this->post('/admin/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'Birulia'])->assertRedirect();
-        $this->post('/admin/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'Birulia', 'name_bn' => 'বিরুলিয়া'])->assertRedirect();
+        $this->post('/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'Birulia'])->assertRedirect();
+        $this->post('/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'Birulia', 'name_bn' => 'বিরুলিয়া'])->assertRedirect();
 
         $this->assertSame(1, GeoUnion::count());
         $this->assertSame('বিরুলিয়া', GeoUnion::firstOrFail()->name_bn);
@@ -215,8 +215,8 @@ class GeographyTest extends TestCase
         $this->actingAs($this->person(['settings.view']));
         [, , $upazila] = $this->place('Dhaka');
 
-        $this->post('/admin/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'X'])->assertForbidden();
-        $this->post('/admin/master-data/geography/unions/import', ['file' => UploadedFile::fake()->createWithContent('u.csv', "division,district,upazila,union_en\n")])->assertForbidden();
+        $this->post('/master-data/geography/unions', ['upazila_id' => $upazila, 'name_en' => 'X'])->assertForbidden();
+        $this->post('/master-data/geography/unions/import', ['file' => UploadedFile::fake()->createWithContent('u.csv', "division,district,upazila,union_en\n")])->assertForbidden();
         $this->assertSame(0, GeoUnion::count());
     }
 
@@ -263,7 +263,7 @@ class GeographyTest extends TestCase
 
     public function test_the_page_states_its_question_and_says_when_there_are_no_unions(): void
     {
-        $html = $this->get('/admin/master-data/geography')->assertOk()->getContent();
+        $html = $this->get('/master-data/geography')->assertOk()->getContent();
 
         $this->assertStringContainsString('data-dashboard-question', $html);
         $this->assertStringContainsString('data-dashboard-asof', $html);
@@ -274,10 +274,10 @@ class GeographyTest extends TestCase
     public function test_the_page_is_for_people_who_may_see_master_data_and_only_they_who_may_change_it_see_the_forms(): void
     {
         $this->actingAs($this->person(['settings.view']));
-        $html = $this->get('/admin/master-data/geography')->assertOk()->getContent();
+        $html = $this->get('/master-data/geography')->assertOk()->getContent();
         $this->assertStringNotContainsString('Add a union', $html);
 
         $this->actingAs($this->person(['patients.view']));
-        $this->get('/admin/master-data/geography')->assertForbidden();
+        $this->get('/master-data/geography')->assertForbidden();
     }
 }

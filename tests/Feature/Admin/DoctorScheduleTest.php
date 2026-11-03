@@ -51,7 +51,7 @@ class DoctorScheduleTest extends TestCase
 
     public function test_user_can_view_schedules_index(): void
     {
-        $response = $this->get('/admin/schedules');
+        $response = $this->get('/schedules');
 
         $response->assertStatus(200);
         $response->assertViewHas('schedules');
@@ -64,7 +64,7 @@ class DoctorScheduleTest extends TestCase
 
         $department = Department::factory()->create(['organization_id' => $this->organization->id]);
 
-        $response = $this->post('/admin/schedules', [
+        $response = $this->post('/schedules', [
             'doctor_id' => $doctor->id,
             'department_id' => $department->id,
             'name' => 'Morning Schedule',
@@ -75,7 +75,7 @@ class DoctorScheduleTest extends TestCase
             'slot_duration_minutes' => 30,
         ]);
 
-        $response->assertRedirect('/admin/schedules');
+        $response->assertRedirect('/schedules');
         $this->assertDatabaseHas('doctor_schedules', [
             'doctor_id' => $doctor->id,
             'name' => 'Morning Schedule',
@@ -90,7 +90,7 @@ class DoctorScheduleTest extends TestCase
             'branch_id' => $this->branch->id,
         ]);
 
-        $response = $this->put('/admin/schedules/'.$schedule->id, [
+        $response = $this->put('/schedules/'.$schedule->id, [
             'doctor_id' => $schedule->doctor_id,
             'name' => 'Updated Schedule',
             'description' => 'Updated description',
@@ -100,7 +100,7 @@ class DoctorScheduleTest extends TestCase
             'slot_duration_minutes' => 45,
         ]);
 
-        $response->assertRedirect('/admin/schedules');
+        $response->assertRedirect('/schedules');
         $this->assertDatabaseHas('doctor_schedules', [
             'id' => $schedule->id,
             'name' => 'Updated Schedule',
@@ -115,9 +115,9 @@ class DoctorScheduleTest extends TestCase
             'branch_id' => $this->branch->id,
         ]);
 
-        $response = $this->delete('/admin/schedules/'.$schedule->id);
+        $response = $this->delete('/schedules/'.$schedule->id);
 
-        $response->assertRedirect('/admin/schedules');
+        $response->assertRedirect('/schedules');
         $this->assertSoftDeleted('doctor_schedules', ['id' => $schedule->id]);
     }
 }

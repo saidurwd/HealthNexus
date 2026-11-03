@@ -7,13 +7,13 @@ acceptance test with real users. Components live in `resources/views/components`
 ## The seven templates and where they apply today
 | Template | Current screens |
 |---|---|
-| T1 Dashboard | `/dashboard`, `/admin/{billing,lab,radiology,pharmacy,ipd,nursing,ot,icu}` module dashboards |
-| T2 Worklist / queue | `/admin/queue`, `/admin/lab/worklist`, `/admin/radiology/worklist`, `/admin/pharmacy/orders`, `/admin/nursing/tasks` |
+| T1 Dashboard | `/dashboard`, `/{billing,lab,radiology,pharmacy,ipd,nursing,ot,icu}` module dashboards |
+| T2 Worklist / queue | `/queue`, `/lab/worklist`, `/radiology/worklist`, `/pharmacy/orders`, `/nursing/tasks` |
 | T3 List + filter | patients, appointments, encounters, invoices, payments, catalogues (master data) |
 | T4 Form / wizard | patient registration, appointment booking, admission request, billing item |
 | T5 Record 360 | patient profile, encounter, admission, invoice, ICU episode, surgery |
 | T6 Board | IPD bed board (ED tracking board and OT schedule board arrive with their phases) |
-| T7 Print preview | `/admin/documents/{type}/{reference}` (receipt, prescription, wristband) |
+| T7 Print preview | `/documents/{type}/{reference}` (receipt, prescription, wristband) |
 
 ## What H-14 put in place
 - Role home: login lands on the user's worklist (`RoleHome`): receptionist/doctor → queue, nurse → my patients, pharmacist → prescriptions,

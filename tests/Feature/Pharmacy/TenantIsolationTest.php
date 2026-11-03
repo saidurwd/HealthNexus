@@ -44,7 +44,7 @@ class TenantIsolationTest extends PharmacyTestCase
 
         $this->assertFalse($otherUser->can('view', $order));
 
-        $response = $this->get('/admin/pharmacy/orders/'.$order->public_id);
+        $response = $this->get('/pharmacy/orders/'.$order->public_id);
         $response->assertForbidden();
     }
 

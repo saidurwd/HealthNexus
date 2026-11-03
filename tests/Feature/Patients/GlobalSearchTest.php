@@ -161,7 +161,7 @@ class GlobalSearchTest extends TestCase
         $this->getJson('/api/v1/search?q=jahid')->assertOk()->assertJsonFragment(['id' => $patient->public_id]);
         $this->getJson('/api/v1/scan?code=DHC-00000999')->assertOk()->assertJsonFragment(['type' => 'patient']);
         $this->getJson('/api/v1/scan?code=unknown-code')->assertNotFound();
-        $this->get('/admin/search?q=DHC-00000999')->assertRedirect(route('admin.patients.show', $patient));
-        $this->get('/admin/search?q=jahid')->assertOk()->assertSee('Jahid');
+        $this->get('/search?q=DHC-00000999')->assertRedirect(route('admin.patients.show', $patient));
+        $this->get('/search?q=jahid')->assertOk()->assertSee('Jahid');
     }
 }

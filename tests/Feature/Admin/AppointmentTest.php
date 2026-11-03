@@ -63,7 +63,7 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
-        $response = $this->get('/admin/appointments');
+        $response = $this->get('/appointments');
 
         $response->assertStatus(200);
         $response->assertViewHas('appointments');
@@ -74,7 +74,7 @@ class AppointmentTest extends TestCase
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
 
-        $response = $this->post('/admin/appointments', [
+        $response = $this->post('/appointments', [
             'patient_id' => $this->patient->id,
             'doctor_id' => $doctor->id,
             'appointment_date' => '2025-01-15',
@@ -84,7 +84,7 @@ class AppointmentTest extends TestCase
             'reason' => 'Routine checkup',
         ]);
 
-        $response->assertRedirect('/admin/appointments');
+        $response->assertRedirect('/appointments');
         $this->assertDatabaseHas('appointments', [
             'patient_id' => $this->patient->id,
             'doctor_id' => $doctor->id,
@@ -103,7 +103,7 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
-        $response = $this->get('/admin/appointments/'.$appointment->public_id);
+        $response = $this->get('/appointments/'.$appointment->public_id);
 
         $response->assertStatus(200);
         $response->assertViewHas('appointment');
@@ -120,7 +120,7 @@ class AppointmentTest extends TestCase
         // status is deliberately not accepted by this endpoint any more — it only changes
         // through the dedicated confirm/check-in/cancel/no-show actions, each enforced by
         // AppointmentStateMachine (see UpdateAppointmentRequest).
-        $response = $this->put('/admin/appointments/'.$appointment->public_id, [
+        $response = $this->put('/appointments/'.$appointment->public_id, [
             'doctor_id' => $this->user->id,
             'appointment_date' => '2025-01-20',
             'appointment_time' => '14:00',
@@ -128,7 +128,7 @@ class AppointmentTest extends TestCase
             'notes' => 'Updated notes',
         ]);
 
-        $response->assertRedirect('/admin/appointments');
+        $response->assertRedirect('/appointments');
         $this->assertDatabaseHas('appointments', [
             'id' => $appointment->id,
             'appointment_time' => '14:00',
@@ -144,9 +144,9 @@ class AppointmentTest extends TestCase
             'patient_id' => $this->patient->id,
         ]);
 
-        $response = $this->delete('/admin/appointments/'.$appointment->public_id);
+        $response = $this->delete('/appointments/'.$appointment->public_id);
 
-        $response->assertRedirect('/admin/appointments');
+        $response->assertRedirect('/appointments');
         $this->assertSoftDeleted('appointments', ['id' => $appointment->id]);
     }
 }

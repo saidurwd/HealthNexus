@@ -94,62 +94,62 @@ class RadiologyControllerSmokeTest extends RadiologyTestCase
 
     public function test_dashboard_loads(): void
     {
-        $this->get('/admin/radiology')->assertOk();
+        $this->get('/radiology')->assertOk();
     }
 
     public function test_catalog_pages_load(): void
     {
-        $this->get('/admin/radiology/procedures')->assertOk();
-        $this->get('/admin/radiology/procedures/create')->assertOk();
-        $this->get('/admin/radiology/modalities')->assertOk();
-        $this->get('/admin/radiology/modalities/create')->assertOk();
+        $this->get('/radiology/procedures')->assertOk();
+        $this->get('/radiology/procedures/create')->assertOk();
+        $this->get('/radiology/modalities')->assertOk();
+        $this->get('/radiology/modalities/create')->assertOk();
     }
 
     public function test_order_and_scheduling_pages_load(): void
     {
-        $this->get('/admin/radiology/orders')->assertOk();
-        $this->get('/admin/radiology/orders/'.$this->order->public_id)->assertOk();
+        $this->get('/radiology/orders')->assertOk();
+        $this->get('/radiology/orders/'.$this->order->public_id)->assertOk();
     }
 
     public function test_examination_and_worklist_pages_load(): void
     {
-        $this->get('/admin/radiology/examinations')->assertOk();
-        $this->get('/admin/radiology/examinations/'.$this->examination->public_id)->assertOk();
-        $this->get('/admin/radiology/worklist')->assertOk();
+        $this->get('/radiology/examinations')->assertOk();
+        $this->get('/radiology/examinations/'.$this->examination->public_id)->assertOk();
+        $this->get('/radiology/worklist')->assertOk();
     }
 
     public function test_study_pages_load(): void
     {
-        $this->get('/admin/radiology/studies')->assertOk();
+        $this->get('/radiology/studies')->assertOk();
     }
 
     public function test_report_pages_load(): void
     {
-        $this->get('/admin/radiology/reports')->assertOk();
-        $this->get('/admin/radiology/reports/'.$this->report->public_id)->assertOk();
+        $this->get('/radiology/reports')->assertOk();
+        $this->get('/radiology/reports/'.$this->report->public_id)->assertOk();
     }
 
     public function test_critical_findings_page_loads(): void
     {
-        $this->get('/admin/radiology/critical-findings')->assertOk();
+        $this->get('/radiology/critical-findings')->assertOk();
     }
 
     public function test_analytics_pages_load(): void
     {
-        $this->get('/admin/radiology/analytics/daily-volume')->assertOk();
-        $this->get('/admin/radiology/analytics/modality-utilization')->assertOk();
-        $this->get('/admin/radiology/analytics/turnaround-time')->assertOk();
-        $this->get('/admin/radiology/analytics/critical-findings')->assertOk();
+        $this->get('/radiology/analytics/daily-volume')->assertOk();
+        $this->get('/radiology/analytics/modality-utilization')->assertOk();
+        $this->get('/radiology/analytics/turnaround-time')->assertOk();
+        $this->get('/radiology/analytics/critical-findings')->assertOk();
     }
 
     public function test_pacs_pages_load(): void
     {
-        $this->get('/admin/radiology/pacs')->assertOk();
-        $this->get('/admin/radiology/pacs/create')->assertOk();
+        $this->get('/radiology/pacs')->assertOk();
+        $this->get('/radiology/pacs/create')->assertOk();
     }
 
     public function test_settings_page_loads(): void
     {
-        $this->get('/admin/radiology/settings')->assertOk();
+        $this->get('/radiology/settings')->assertOk();
     }
 }

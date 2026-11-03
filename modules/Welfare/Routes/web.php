@@ -6,7 +6,7 @@ use Modules\Welfare\Http\Controllers\Web\FundController;
 use Modules\Welfare\Http\Controllers\Web\GrantController;
 use Modules\Welfare\Http\Controllers\Web\WelfareHomeController;
 
-// Patient welfare: /admin/welfare/*. Every screen checks its own right; income and circumstances are only for those who hold the assessment right.
+// Patient welfare: /welfare/*. Every screen checks its own right; income and circumstances are only for those who hold the assessment right.
 Route::prefix('welfare')->name('welfare.')->group(function () {
     Route::get('/', [WelfareHomeController::class, 'index'])->name('index');
     Route::get('reports', [WelfareHomeController::class, 'reports'])->name('reports');

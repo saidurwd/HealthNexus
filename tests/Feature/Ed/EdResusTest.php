@@ -77,12 +77,12 @@ class EdResusTest extends EdTestCase
     public function test_screens_post_and_other_branch_is_404(): void
     {
         $visit = $this->visit();
-        $this->post("/admin/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'cpr_started'])->assertRedirect();
-        $this->post("/admin/emergency/visits/{$visit->public_id}/monitor", ['vitals' => ['pulse' => 150]])->assertRedirect()->assertSessionHas('warning');
-        $this->get("/admin/emergency/visits/{$visit->public_id}")->assertOk()->assertSee('Cpr Started');
+        $this->post("/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'cpr_started'])->assertRedirect();
+        $this->post("/emergency/visits/{$visit->public_id}/monitor", ['vitals' => ['pulse' => 150]])->assertRedirect()->assertSessionHas('warning');
+        $this->get("/emergency/visits/{$visit->public_id}")->assertOk()->assertSee('Cpr Started');
 
         $other = $this->staff(['super_admin']);
         $visit->update(['organization_id' => Organization::factory()->create()->id]);
-        $this->post("/admin/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'note'])->assertNotFound();
+        $this->post("/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'note'])->assertNotFound();
     }
 }

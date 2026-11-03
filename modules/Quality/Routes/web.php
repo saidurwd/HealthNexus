@@ -9,7 +9,7 @@ use Modules\Quality\Http\Controllers\Web\InfectionController;
 use Modules\Quality\Http\Controllers\Web\ProgrammeController;
 use Modules\Quality\Http\Controllers\Web\QualityHomeController;
 
-// Quality, safety and compliance: /admin/quality/*. Every staff member can report an incident and read documents; the rest needs a quality right.
+// Quality, safety and compliance: /quality/*. Every staff member can report an incident and read documents; the rest needs a quality right.
 Route::prefix('quality')->name('quality.')->group(function () {
     Route::get('/', [QualityHomeController::class, 'index'])->name('index');
 

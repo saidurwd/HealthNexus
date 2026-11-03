@@ -33,16 +33,16 @@ class EdSecurityTest extends EdTestCase
         $stay = app(EdObservationService::class)->start($visit, $this->user);
         $run = app(EdProtocolService::class)->start($visit, $this->user, 'stroke');
         $step = $run->steps->first();
-        $v = "/admin/emergency/visits/{$visit->public_id}";
+        $v = "/emergency/visits/{$visit->public_id}";
 
         return [
             ['GET', $v], ['POST', "$v/triage"], ['POST', "$v/bay"], ['DELETE', "$v/bay"], ['POST', "$v/start"], ['PUT', "$v/team"],
             ['POST', "$v/resus"], ['POST', "$v/monitor"], ['POST', "$v/orders"], ['POST', "$v/prescriptions"], ['POST', "$v/medications"], ['POST', "$v/procedures"],
             ['POST', "$v/protocols"], ['POST', "$v/injuries"], ['POST', "$v/consults"], ['POST', "$v/observation"], ['POST', "$v/disposition"],
-            ['POST', "/admin/emergency/consults/{$consult->public_id}/respond"], ['DELETE', "/admin/emergency/consults/{$consult->public_id}"],
-            ['POST', "/admin/emergency/observation/{$stay->public_id}/end"], ['DELETE', "/admin/emergency/protocol-runs/{$run->public_id}"],
-            ['POST', "/admin/emergency/protocol-steps/{$step->public_id}/done"],
-            ['PUT', "/admin/emergency/bays/{$bay->public_id}/status"], ['POST', "/admin/emergency/zones/{$bay->zone->public_id}/bays"],
+            ['POST', "/emergency/consults/{$consult->public_id}/respond"], ['DELETE', "/emergency/consults/{$consult->public_id}"],
+            ['POST', "/emergency/observation/{$stay->public_id}/end"], ['DELETE', "/emergency/protocol-runs/{$run->public_id}"],
+            ['POST', "/emergency/protocol-steps/{$step->public_id}/done"],
+            ['PUT', "/emergency/bays/{$bay->public_id}/status"], ['POST', "/emergency/zones/{$bay->zone->public_id}/bays"],
         ];
     }
 
@@ -91,20 +91,20 @@ class EdSecurityTest extends EdTestCase
         $this->user->branches()->attach($second->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
         $this->context($this->organization, $second);
 
-        $this->get("/admin/emergency/visits/{$visit->public_id}")->assertNotFound();
+        $this->get("/emergency/visits/{$visit->public_id}")->assertNotFound();
 
         BreakGlassAccess::create([
             'user_id' => $this->user->id, 'encounter_id' => $visit->encounter_id, 'patient_id' => $visit->patient_id, 'reason' => 'Covering the emergency department',
             'ip_address' => '127.0.0.1', 'user_agent' => 'test', 'expires_at' => now()->addHour(),
         ]);
-        $this->get("/admin/emergency/visits/{$visit->public_id}")->assertOk();
-        $this->post("/admin/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'note'])->assertNotFound();
+        $this->get("/emergency/visits/{$visit->public_id}")->assertOk();
+        $this->post("/emergency/visits/{$visit->public_id}/resus", ['event_type' => 'note'])->assertNotFound();
     }
 
     public function test_the_numeric_id_is_not_exposed_by_the_board_feed(): void
     {
         $this->visit();
-        $json = $this->getJson('/admin/emergency/board/data')->assertOk()->json();
+        $json = $this->getJson('/emergency/board/data')->assertOk()->json();
 
         $this->assertMatchesRegularExpression('/^[0-9A-Z]{26}$/', $json['board']['visits'][0]['id']);
     }

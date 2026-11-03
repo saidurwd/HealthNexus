@@ -12,7 +12,7 @@ use Modules\Facility\Http\Controllers\Web\SuppliesController;
 use Modules\Facility\Http\Controllers\Web\VisitorController;
 use Modules\Facility\Http\Controllers\Web\WorkOrderController;
 
-// Facility and support services: /admin/facility/*. Any staff member can report a broken device; the rest needs a facility right.
+// Facility and support services: /facility/*. Any staff member can report a broken device; the rest needs a facility right.
 Route::prefix('facility')->name('facility.')->group(function () {
     Route::get('/', [FacilityHomeController::class, 'index'])->name('index');
 

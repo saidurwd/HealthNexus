@@ -10,36 +10,36 @@ Counted from the routes. "Links" = clickable drill-through in the view. "Charts"
 | # | Dashboard | Route | Today's content | Links | Period | Auto-refresh | Charts |
 |---|---|---|---|---|---|---|---|
 | 1 | **Main dashboard** | `/dashboard` | 4 admin widgets (users, organizations, branches, system health) from `DashboardWidgetRegistry`; role users are sent to a worklist instead (`config/ux.php` role_homes) | 1 | – | – | – |
-| 2 | Billing and cashier | `/admin/billing` | today and cashier-session cards | 0 | – | – | – |
-| 3 | Laboratory | `/admin/lab` | order and result counts | 0 | – | – | – |
-| 4 | Radiology | `/admin/radiology` | orders, studies, reports counts | 0 | – | – | – |
-| 5 | Pharmacy | `/admin/pharmacy` | orders, dispensing, stock alerts | 0 | – | – | – |
-| 6 | IPD (Indoor) | `/admin/ipd` | beds, admissions, discharges | 0 | – | – | – |
-| 7 | Nursing | `/admin/nursing` | ward patients, tasks, escalations | 1 | – | – | – |
-| 8 | OT / Surgery | `/admin/ot` | cases, theatres | 1 | days | – | – |
-| 9 | ICU | `/admin/icu` | beds, alerts, ventilated | 1 | – | – | – |
-| 10 | Emergency board | `/admin/emergency` | live tracking board | 1 | – | **yes** | – |
-| 11 | Emergency performance | `/admin/emergency/dashboard` | door-to-doctor, LWBS, etc. | 0 | **yes** | – | – |
-| 12 | Blood bank | `/admin/blood-bank` | stock by group, requests | 2 | – | – | – |
-| 13 | Insurance and corporate | `/admin/insurance` | claims, denials, aging | 1 | days | – | – |
-| 14 | Stores and supplies | `/admin/inventory` | stock, expiry, requests | 1 | days | – | – |
-| 15 | Purchasing (reorder) | `/admin/procurement/reorder` | what to buy next (a list, not a dashboard) | – | – | – | – |
-| 16 | HR / People | `/admin/hr` | headcount, leave, attendance | 2 | days | – | – |
-| 17 | Patient portal | `/admin/portal` | logins, requests, payments | 1 | days | – | – |
-| 18 | Patient relations (CRM) | `/admin/crm` | contacts, complaints, ratings | 1 | days | – | – |
-| 19 | Reports and analytics | `/admin/analytics` | list of the BI dashboards below | 3 | – | – | in BI |
-| 20 | Quality and safety | `/admin/quality` | incidents, actions, indicators | 15 | days | – | – (uses the KPI tile) |
-| 21 | Facility and support | `/admin/facility` | equipment, work orders, beds to clean… | 13 | days | – | – (uses the KPI tile) |
-| 22 | AI assistant | `/admin/ai` | functions and drafts | 1 | days | – | – |
-| 23 | Finance | `/admin/finance` | receivables, payables, cash | 3 | – | – | – |
-| 24 | Connections (interoperability) | `/admin/interop` | messages, failures | 2 | days | – | – |
-| 25 | Patient welfare | `/admin/welfare` | funds, given, waiting | 6 | days | – | – |
+| 2 | Billing and cashier | `/billing` | today and cashier-session cards | 0 | – | – | – |
+| 3 | Laboratory | `/lab` | order and result counts | 0 | – | – | – |
+| 4 | Radiology | `/radiology` | orders, studies, reports counts | 0 | – | – | – |
+| 5 | Pharmacy | `/pharmacy` | orders, dispensing, stock alerts | 0 | – | – | – |
+| 6 | IPD (Indoor) | `/ipd` | beds, admissions, discharges | 0 | – | – | – |
+| 7 | Nursing | `/nursing` | ward patients, tasks, escalations | 1 | – | – | – |
+| 8 | OT / Surgery | `/ot` | cases, theatres | 1 | days | – | – |
+| 9 | ICU | `/icu` | beds, alerts, ventilated | 1 | – | – | – |
+| 10 | Emergency board | `/emergency` | live tracking board | 1 | – | **yes** | – |
+| 11 | Emergency performance | `/emergency/dashboard` | door-to-doctor, LWBS, etc. | 0 | **yes** | – | – |
+| 12 | Blood bank | `/blood-bank` | stock by group, requests | 2 | – | – | – |
+| 13 | Insurance and corporate | `/insurance` | claims, denials, aging | 1 | days | – | – |
+| 14 | Stores and supplies | `/inventory` | stock, expiry, requests | 1 | days | – | – |
+| 15 | Purchasing (reorder) | `/procurement/reorder` | what to buy next (a list, not a dashboard) | – | – | – | – |
+| 16 | HR / People | `/hr` | headcount, leave, attendance | 2 | days | – | – |
+| 17 | Patient portal | `/portal` | logins, requests, payments | 1 | days | – | – |
+| 18 | Patient relations (CRM) | `/crm` | contacts, complaints, ratings | 1 | days | – | – |
+| 19 | Reports and analytics | `/analytics` | list of the BI dashboards below | 3 | – | – | in BI |
+| 20 | Quality and safety | `/quality` | incidents, actions, indicators | 15 | days | – | – (uses the KPI tile) |
+| 21 | Facility and support | `/facility` | equipment, work orders, beds to clean… | 13 | days | – | – (uses the KPI tile) |
+| 22 | AI assistant | `/ai` | functions and drafts | 1 | days | – | – |
+| 23 | Finance | `/finance` | receivables, payables, cash | 3 | – | – | – |
+| 24 | Connections (interoperability) | `/interop` | messages, failures | 2 | days | – | – |
+| 25 | Patient welfare | `/welfare` | funds, given, waiting | 6 | days | – | – |
 
 Also: **role homes** (reception, doctor, nurse, pharmacist, cashier, lab and others land on a worklist, `config/ux.php`), and the read-only `/api/v1/*/overview` endpoints for Facility, Quality, Welfare, ICU, IPD, Nursing and OT.
 
 ### 1.2 BI dashboards (Analytics module, built in Phase 19)
 Five **system role dashboards** over the semantic layer, each of KPI tiles + charts + tables, with target-aware KPIs, drill into *Explore*, scheduled reports, and small-number suppression:
-**Chief executive · Medical director · Finance · Nursing and wards · Pharmacy and stores.** Hospitals can add their own (`/admin/analytics/dashboards/new`). A real SVG chart component (`x-analytics.chart`, bar and line) and a KPI tile (`x-analytics.kpi-tile`) already exist.
+**Chief executive · Medical director · Finance · Nursing and wards · Pharmacy and stores.** Hospitals can add their own (`/analytics/dashboards/new`). A real SVG chart component (`x-analytics.chart`, bar and line) and a KPI tile (`x-analytics.kpi-tile`) already exist.
 
 ## 2. What is wrong (so the plan fixes the right things)
 1. **The front door is a placeholder.** `/dashboard` shows four administrator numbers. A director, a ward manager or a cashier gets nothing useful there.

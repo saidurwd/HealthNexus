@@ -53,15 +53,15 @@ class InsuranceScreensTest extends InsuranceTestCase
         $w = $this->world();
         $corporate = BillingCorporate::create(['organization_id' => $this->organization->id, 'name' => 'Acme', 'code' => 'ACME1', 'credit_limit' => '1000', 'status' => 'active']);
         foreach (['', '/payers', '/policies', '/policies?q=POL', '/preauths', '/worklist', '/claims', '/claims?status=submitted', '/claims/'.$w['claim']->public_id, '/claims/'.$w['denied']->public_id, '/remittances', '/remittances/'.$w['remittance']->public_id, '/corporate'] as $path) {
-            $this->get('/admin/insurance'.$path)->assertOk();
+            $this->get('/insurance'.$path)->assertOk();
         }
-        $this->get('/admin/insurance/submissions/'.$w['batch']->public_id.'/download')->assertOk();
+        $this->get('/insurance/submissions/'.$w['batch']->public_id.'/download')->assertOk();
         $this->assertNotNull($corporate);
     }
 
     public function test_the_forms_work_on_screen(): void
     {
-        $b = '/admin/insurance';
+        $b = '/insurance';
         $this->post("$b/payers", ['code' => 'TPA1', 'name' => 'Metro TPA', 'payer_type' => 'tpa', 'submission_method' => 'file_export'])->assertRedirect()->assertSessionHas('success');
         $payer = InsurancePayer::where('code', 'TPA1')->firstOrFail();
         $this->post("$b/payers/{$payer->public_id}/plans", ['code' => 'GOLD', 'name' => 'Gold', 'copay_percent' => 10])->assertRedirect()->assertSessionHas('success');
@@ -102,7 +102,7 @@ class InsuranceScreensTest extends InsuranceTestCase
         $query = InsuranceClaimQuery::firstOrFail();
         $w['claim']->refresh();
         $writeoff = InsuranceWriteoff::create(['organization_id' => $this->organization->id, 'claim_id' => $w['claim']->id, 'amount' => 10, 'reason' => 'x']);
-        $b = '/admin/insurance';
+        $b = '/insurance';
         $doc = $w['denied']->documents()->first();
         $batch = CorporateBatch::create(['organization_id' => $this->organization->id, 'corporate_id' => BillingCorporate::create(['organization_id' => $this->organization->id, 'name' => 'Z', 'code' => 'Z1', 'status' => 'active'])->id, 'batch_number' => 'CRP-T', 'period_from' => now(), 'period_to' => now()]);
 
@@ -156,9 +156,9 @@ class InsuranceScreensTest extends InsuranceTestCase
         $viewer = User::where('email', 'insurance.viewer@'.strtolower($this->organization->code).'.example.invalid')->firstOrFail();
         $this->actingAs($viewer);
 
-        $this->get('/admin/insurance')->assertOk();
-        $this->get('/admin/insurance/claims')->assertOk();
-        $this->post('/admin/insurance/remittances', ['payer' => 'x', 'amount' => 1, 'received_on' => now()->toDateString()])->assertForbidden();
-        $this->post('/admin/insurance/payers', ['code' => 'X', 'name' => 'X', 'payer_type' => 'tpa', 'submission_method' => 'file_export'])->assertForbidden();
+        $this->get('/insurance')->assertOk();
+        $this->get('/insurance/claims')->assertOk();
+        $this->post('/insurance/remittances', ['payer' => 'x', 'amount' => 1, 'received_on' => now()->toDateString()])->assertForbidden();
+        $this->post('/insurance/payers', ['code' => 'X', 'name' => 'X', 'payer_type' => 'tpa', 'submission_method' => 'file_export'])->assertForbidden();
     }
 }

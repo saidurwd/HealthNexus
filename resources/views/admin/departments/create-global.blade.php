@@ -35,7 +35,7 @@
 // The page needs both ids in its address, so Continue builds it from the two choices.
 document.getElementById('departmentCreateForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    window.location = '/admin/organizations/' + encodeURIComponent(document.getElementById('organization_id').value)
+    window.location = '/organizations/' + encodeURIComponent(document.getElementById('organization_id').value)
         + '/branches/' + encodeURIComponent(document.getElementById('branch_id').value) + '/departments/create';
 });
 

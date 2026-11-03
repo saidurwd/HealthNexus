@@ -60,23 +60,23 @@ class AppointmentAdminPagesSmokeTest extends TestCase
     {
         $provider = Provider::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->get('/admin/providers')->assertOk();
-        $this->get('/admin/providers/create')->assertOk();
-        $this->get("/admin/providers/{$provider->id}")->assertOk();
-        $this->get("/admin/providers/{$provider->id}/edit")->assertOk();
+        $this->get('/providers')->assertOk();
+        $this->get('/providers/create')->assertOk();
+        $this->get("/providers/{$provider->id}")->assertOk();
+        $this->get("/providers/{$provider->id}/edit")->assertOk();
     }
 
     public function test_holiday_pages_render(): void
     {
         HospitalHoliday::create(['organization_id' => $this->organization->id, 'name' => 'New Year', 'date' => '2026-01-01']);
 
-        $this->get('/admin/holidays')->assertOk();
-        $this->get('/admin/holidays/create')->assertOk();
+        $this->get('/holidays')->assertOk();
+        $this->get('/holidays/create')->assertOk();
     }
 
     public function test_provider_unavailability_page_renders(): void
     {
-        $this->get('/admin/provider-unavailability')->assertOk();
+        $this->get('/provider-unavailability')->assertOk();
     }
 
     public function test_appointment_room_pages_render(): void
@@ -85,18 +85,18 @@ class AppointmentAdminPagesSmokeTest extends TestCase
             'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'name' => 'Room 1', 'room_type' => 'consultation',
         ]);
 
-        $this->get('/admin/appointment-rooms')->assertOk();
-        $this->get('/admin/appointment-rooms/create')->assertOk();
-        $this->get("/admin/appointment-rooms/{$room->id}/edit")->assertOk();
+        $this->get('/appointment-rooms')->assertOk();
+        $this->get('/appointment-rooms/create')->assertOk();
+        $this->get("/appointment-rooms/{$room->id}/edit")->assertOk();
     }
 
     public function test_appointment_type_pages_render(): void
     {
         $type = AppointmentType::create(['code' => 'consult', 'name' => 'Consultation']);
 
-        $this->get('/admin/appointment-types')->assertOk();
-        $this->get('/admin/appointment-types/create')->assertOk();
-        $this->get("/admin/appointment-types/{$type->id}/edit")->assertOk();
+        $this->get('/appointment-types')->assertOk();
+        $this->get('/appointment-types/create')->assertOk();
+        $this->get("/appointment-types/{$type->id}/edit")->assertOk();
     }
 
     public function test_schedule_show_and_edit_pages_render(): void
@@ -108,14 +108,14 @@ class AppointmentAdminPagesSmokeTest extends TestCase
             'doctor_id' => $doctor->id,
         ]);
 
-        $this->get("/admin/schedules/{$schedule->id}")->assertOk();
-        $this->get("/admin/schedules/{$schedule->id}/edit")->assertOk();
+        $this->get("/schedules/{$schedule->id}")->assertOk();
+        $this->get("/schedules/{$schedule->id}/edit")->assertOk();
     }
 
     public function test_calendar_pages_render(): void
     {
-        $this->get('/admin/appointments-calendar')->assertOk();
-        $this->get('/admin/appointments-calendar/provider')->assertOk();
+        $this->get('/appointments-calendar')->assertOk();
+        $this->get('/appointments-calendar/provider')->assertOk();
     }
 
     public function test_appointment_print_page_renders(): void
@@ -135,6 +135,6 @@ class AppointmentAdminPagesSmokeTest extends TestCase
             'source' => 'online',
         ]);
 
-        $this->get("/admin/appointments/{$appointment->public_id}/print")->assertOk();
+        $this->get("/appointments/{$appointment->public_id}/print")->assertOk();
     }
 }

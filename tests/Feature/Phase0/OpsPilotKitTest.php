@@ -244,7 +244,7 @@ class OpsPilotKitTest extends TestCase
         session()->put('tenant_organization_id', $organization->id);
         app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
-        $this->get('/admin/downtime')->assertOk()->assertSee('data-training-banner', false);
+        $this->get('/downtime')->assertOk()->assertSee('data-training-banner', false);
     }
 
     public function test_downtime_forms_print_in_bangla_and_need_the_permission(): void
@@ -256,16 +256,16 @@ class OpsPilotKitTest extends TestCase
         session()->put('tenant_organization_id', $organization->id);
         app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
-        $this->get('/admin/downtime/forms/mar')->assertForbidden();
+        $this->get('/downtime/forms/mar')->assertForbidden();
 
         Permission::firstOrCreate(['name' => 'downtime.view', 'guard_name' => 'web']);
         $user->givePermissionTo('downtime.view');
 
-        $this->get('/admin/downtime/forms/mar?lang=bn')->assertOk()->assertSee('ঔষধ প্রদানের রেকর্ড')->assertSee('রোগীর নাম');
-        $this->get('/admin/downtime/forms/prescription?lang=en+bn')->assertOk()->assertSee('প্রেসক্রিপশন (ডাউনটাইম) / Prescription (downtime)');
-        $this->get('/admin/downtime/forms/nope')->assertNotFound();
+        $this->get('/downtime/forms/mar?lang=bn')->assertOk()->assertSee('ঔষধ প্রদানের রেকর্ড')->assertSee('রোগীর নাম');
+        $this->get('/downtime/forms/prescription?lang=en+bn')->assertOk()->assertSee('প্রেসক্রিপশন (ডাউনটাইম) / Prescription (downtime)');
+        $this->get('/downtime/forms/nope')->assertNotFound();
         foreach (array_keys(config('downtime_forms')) as $form) {
-            $this->get("/admin/downtime/forms/$form")->assertOk();
+            $this->get("/downtime/forms/$form")->assertOk();
         }
     }
 
@@ -292,9 +292,9 @@ class OpsPilotKitTest extends TestCase
         app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
         foreach (array_keys(trans('quickstart', [], 'en')) as $role) {
-            $this->get("/admin/help/quick-start/$role")->assertOk()->assertSee('Steps')->assertSee('ধাপসমূহ');
+            $this->get("/help/quick-start/$role")->assertOk()->assertSee('Steps')->assertSee('ধাপসমূহ');
         }
-        $this->get('/admin/help/quick-start/janitor')->assertNotFound();
+        $this->get('/help/quick-start/janitor')->assertNotFound();
     }
 
     public function test_security_headers_are_sent_on_every_response(): void

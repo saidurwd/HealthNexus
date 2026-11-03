@@ -39,14 +39,14 @@ class BloodScreensTest extends BloodTestCase
             '', '/donors', '/donors/create', "/donors/{$donor->public_id}", "/donations/{$donation->public_id}", '/inventory', '/inventory/storage', "/units/{$unit->public_id}",
             '/requests', '/requests/create', "/requests/{$request->public_id}", '/transfusions', "/transfusions/{$transfusion->public_id}", '/incidents', '/lookback', "/lookback?q={$donor->donor_number}", "/lookback?q={$unit->unit_number}", '/reports', '/reports?days=90',
         ] as $path) {
-            $this->get('/admin/blood-bank'.$path)->assertOk();
+            $this->get('/blood-bank'.$path)->assertOk();
         }
         $this->assertNotNull($incident);
     }
 
     public function test_the_forms_work_end_to_end_on_screen(): void
     {
-        $base = '/admin/blood-bank';
+        $base = '/blood-bank';
         $this->post("$base/donors", ['first_name' => 'Nadia', 'last_name' => 'Akter', 'sex' => 'F', 'date_of_birth' => now()->subYears(28)->toDateString(), 'consent' => 1])->assertRedirect();
         $donor = BloodDonor::firstOrFail();
         $this->post("$base/donors/{$donor->public_id}/screening", ['weight_kg' => 60, 'hemoglobin' => 13.5, 'systolic' => 118, 'diastolic' => 76, 'pulse' => 70, 'temperature_c' => 36.7])->assertRedirect()->assertSessionHas('success');
@@ -87,7 +87,7 @@ class BloodScreensTest extends BloodTestCase
         $off = $gateway->requestUnits(['patient_id' => $patient->id, 'user_id' => $this->user->id, 'component' => 'prbc', 'units' => 1]);
         $this->assertFalse($off->handled);
         $this->assertStringContainsString('not enabled', $off->reason);
-        $this->get('/admin/blood-bank')->assertNotFound();
+        $this->get('/blood-bank')->assertNotFound();
     }
 
     public function test_the_emergency_gateway_releases_the_pack(): void
@@ -110,7 +110,7 @@ class BloodScreensTest extends BloodTestCase
         $donation = BloodDonation::first();
         $location = BloodStorageLocation::first();
         $incident = BloodIncident::create(['organization_id' => $this->organization->id, 'incident_type' => 'near_miss', 'description' => 'x', 'occurred_at' => now()]);
-        $b = '/admin/blood-bank';
+        $b = '/blood-bank';
 
         return [
             ['GET', "$b/donors/{$donor->public_id}"], ['POST', "$b/donors/{$donor->public_id}/screening"], ['POST', "$b/donors/{$donor->public_id}/donations"], ['GET', "$b/donations/{$donation->public_id}"],
@@ -136,7 +136,7 @@ class BloodScreensTest extends BloodTestCase
         foreach ($routes as [$method, $uri]) {
             $status = $this->call($method, $uri, [], [], [], ['HTTP_ACCEPT' => 'application/json'])->getStatusCode();
             // pages of the other organization's own (empty) module may open; a record of ours may not
-            if (str_contains($uri, '/admin/blood-bank/') && preg_match('#/[0-9A-Z]{26}#', $uri) && ! in_array($status, [403, 404], true)) {
+            if (str_contains($uri, '/blood-bank/') && preg_match('#/[0-9A-Z]{26}#', $uri) && ! in_array($status, [403, 404], true)) {
                 $leaks[] = "$method $uri → $status";
             }
         }
@@ -164,9 +164,9 @@ class BloodScreensTest extends BloodTestCase
         $viewer = User::where('email', 'bloodbank.viewer@'.strtolower($this->organization->code).'.example.invalid')->firstOrFail();
         $this->actingAs($viewer);
 
-        $this->get('/admin/blood-bank')->assertOk();
-        $this->get('/admin/blood-bank/inventory')->assertOk();
-        $this->post('/admin/blood-bank/requests', ['patient' => 'x', 'component' => 'prbc', 'units_requested' => 1, 'priority' => 'routine'])->assertForbidden();
-        $this->post('/admin/blood-bank/recall', ['donor' => 'x', 'reason' => 'x'])->assertForbidden();
+        $this->get('/blood-bank')->assertOk();
+        $this->get('/blood-bank/inventory')->assertOk();
+        $this->post('/blood-bank/requests', ['patient' => 'x', 'component' => 'prbc', 'units_requested' => 1, 'priority' => 'routine'])->assertForbidden();
+        $this->post('/blood-bank/recall', ['donor' => 'x', 'reason' => 'x'])->assertForbidden();
     }
 }

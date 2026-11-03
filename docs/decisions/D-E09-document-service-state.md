@@ -5,7 +5,7 @@ Done: `DocumentService::render()` (permission check, org-scoped lookup, 404 for 
 optional Bangla numerals via setting `documents.bangla_numerals`, reprints of financial documents need a reason and print
 "DUPLICATE COPY #n", every print written to `document_prints` + audit `PRINT`), `SafeTemplate` (admin-editable templates
 with no code execution; raw output only for `*_svg` variables), versioned DB overrides (`saveTemplate`), shipped templates
-for receipt (80 mm), prescription (A5) and patient wristband (label), web route `GET /admin/documents/{type}/{reference}`.
+for receipt (80 mm), prescription (A5) and patient wristband (label), web route `GET /documents/{type}/{reference}`.
 
 Output is HTML with `@page` rules, printed by the browser. NOT done:
 - Server-side PDF and the "Bangla PDF test passes on all templates" criterion — blocked on the PDF engine decision

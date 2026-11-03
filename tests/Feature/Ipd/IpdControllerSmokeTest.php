@@ -84,72 +84,72 @@ class IpdControllerSmokeTest extends IpdTestCase
 
     public function test_dashboard_loads(): void
     {
-        $this->get('/admin/ipd')->assertOk();
+        $this->get('/ipd')->assertOk();
     }
 
     public function test_ward_room_bed_pages_load(): void
     {
-        $this->get('/admin/ipd/wards')->assertOk();
-        $this->get('/admin/ipd/wards/create')->assertOk();
-        $this->get('/admin/ipd/rooms')->assertOk();
-        $this->get('/admin/ipd/rooms/create')->assertOk();
-        $this->get('/admin/ipd/beds')->assertOk();
-        $this->get('/admin/ipd/beds/create')->assertOk();
+        $this->get('/ipd/wards')->assertOk();
+        $this->get('/ipd/wards/create')->assertOk();
+        $this->get('/ipd/rooms')->assertOk();
+        $this->get('/ipd/rooms/create')->assertOk();
+        $this->get('/ipd/beds')->assertOk();
+        $this->get('/ipd/beds/create')->assertOk();
     }
 
     public function test_bed_board_and_availability_pages_load(): void
     {
-        $this->get('/admin/ipd/bed-board')->assertOk();
-        $this->get('/admin/ipd/bed-availability')->assertOk();
+        $this->get('/ipd/bed-board')->assertOk();
+        $this->get('/ipd/bed-availability')->assertOk();
     }
 
     public function test_admission_request_pages_load(): void
     {
-        $this->get('/admin/ipd/admission-requests')->assertOk();
-        $this->get('/admin/ipd/admission-requests/create')->assertOk();
+        $this->get('/ipd/admission-requests')->assertOk();
+        $this->get('/ipd/admission-requests/create')->assertOk();
     }
 
     public function test_admission_pages_load(): void
     {
-        $this->get('/admin/ipd/admissions')->assertOk();
-        $this->get('/admin/ipd/admissions/'.$this->admission->public_id)->assertOk();
-        $this->get('/admin/ipd/admissions/create')->assertOk();
+        $this->get('/ipd/admissions')->assertOk();
+        $this->get('/ipd/admissions/'.$this->admission->public_id)->assertOk();
+        $this->get('/ipd/admissions/create')->assertOk();
     }
 
     public function test_transfer_pages_load(): void
     {
-        $this->get('/admin/ipd/transfers')->assertOk();
-        $this->get('/admin/ipd/transfers/'.$this->transfer->public_id)->assertOk();
-        $this->get('/admin/ipd/admissions/'.$this->admission->public_id.'/transfer')->assertOk();
+        $this->get('/ipd/transfers')->assertOk();
+        $this->get('/ipd/transfers/'.$this->transfer->public_id)->assertOk();
+        $this->get('/ipd/admissions/'.$this->admission->public_id.'/transfer')->assertOk();
     }
 
     public function test_discharge_pages_load(): void
     {
-        $this->get('/admin/ipd/discharge')->assertOk();
-        $this->get('/admin/ipd/discharge/'.$this->dischargeRequest->public_id)->assertOk();
+        $this->get('/ipd/discharge')->assertOk();
+        $this->get('/ipd/discharge/'.$this->dischargeRequest->public_id)->assertOk();
     }
 
     public function test_leave_pages_load(): void
     {
-        $this->get('/admin/ipd/leave')->assertOk();
-        $this->get('/admin/ipd/leave/'.$this->leave->public_id)->assertOk();
+        $this->get('/ipd/leave')->assertOk();
+        $this->get('/ipd/leave/'.$this->leave->public_id)->assertOk();
     }
 
     public function test_report_pages_load(): void
     {
-        $this->get('/admin/ipd/reports/occupancy')->assertOk();
-        $this->get('/admin/ipd/reports/admissions')->assertOk();
-        $this->get('/admin/ipd/reports/discharges')->assertOk();
-        $this->get('/admin/ipd/reports/transfers')->assertOk();
+        $this->get('/ipd/reports/occupancy')->assertOk();
+        $this->get('/ipd/reports/admissions')->assertOk();
+        $this->get('/ipd/reports/discharges')->assertOk();
+        $this->get('/ipd/reports/transfers')->assertOk();
     }
 
     public function test_settings_page_loads(): void
     {
-        $this->get('/admin/ipd/settings')->assertOk();
+        $this->get('/ipd/settings')->assertOk();
     }
 
     public function test_patient_history_page_loads(): void
     {
-        $this->get('/admin/patients/'.$this->patient->public_id.'/ipd-history')->assertOk();
+        $this->get('/patients/'.$this->patient->public_id.'/ipd-history')->assertOk();
     }
 }

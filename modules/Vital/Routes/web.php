@@ -6,7 +6,7 @@ use Modules\Vital\Http\Controllers\Web\DeathController;
 use Modules\Vital\Http\Controllers\Web\MedicoLegalController;
 use Modules\Vital\Http\Controllers\Web\VitalHomeController;
 
-// Births, deaths and police cases: /admin/vital/*. Every screen checks its own right; the police-case section is only for those who hold the medico-legal right.
+// Births, deaths and police cases: /vital/*. Every screen checks its own right; the police-case section is only for those who hold the medico-legal right.
 Route::prefix('vital')->name('vital.')->group(function () {
     Route::get('/', [VitalHomeController::class, 'index'])->name('index');
 

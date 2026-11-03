@@ -147,7 +147,7 @@ class EdDispositionTest extends EdTestCase
     public function test_screen_closes_and_shows_the_outcome(): void
     {
         $visit = $this->visit();
-        $base = "/admin/emergency/visits/{$visit->public_id}";
+        $base = "/emergency/visits/{$visit->public_id}";
         $this->post("$base/disposition", ['type' => 'discharge', 'reason' => 'Minor sprain'])->assertRedirect();
         $this->get($base)->assertOk()->assertSee('Minor sprain');
         $this->post("$base/disposition", ['type' => 'discharge'])->assertSessionHasErrors('visit');

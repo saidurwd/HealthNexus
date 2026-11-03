@@ -115,7 +115,7 @@ class AssetService
     /** The label's QR code: an address that needs a staff sign-in; the token carries no patient data. */
     public function qrSvg(FacAsset $asset, int $size = 160): string
     {
-        return (string) QrCode::format('svg')->size($size)->margin(1)->generate(url('/admin/facility/scan/'.$asset->qr_token));
+        return (string) QrCode::format('svg')->size($size)->margin(1)->generate(url('/facility/scan/'.$asset->qr_token));
     }
 
     private function clip(mixed $v, int $n): ?string

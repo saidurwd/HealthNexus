@@ -106,8 +106,8 @@ class EdReportingTest extends EdTestCase
     {
         $visit = $this->visit();
         $visit->update(['doctor_id' => $this->user->id]);
-        $this->get('/admin/emergency/dashboard?days=30')->assertOk()->assertSee('Door to triage');
-        $this->get('/admin/emergency/workspace')->assertOk()->assertSee($visit->visit_number);
-        $this->get('/admin/emergency/dashboard?days=5')->assertSessionHasErrors('days');
+        $this->get('/emergency/dashboard?days=30')->assertOk()->assertSee('Door to triage');
+        $this->get('/emergency/workspace')->assertOk()->assertSee($visit->visit_number);
+        $this->get('/emergency/dashboard?days=5')->assertSessionHasErrors('days');
     }
 }

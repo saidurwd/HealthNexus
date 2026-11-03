@@ -39,21 +39,21 @@ class PatientRoutingTest extends TestCase
 
     public function test_create_page_is_not_swallowed_by_the_show_wildcard(): void
     {
-        $this->get('/admin/patients/create')->assertOk();
+        $this->get('/patients/create')->assertOk();
     }
 
     public function test_search_page_is_not_swallowed_by_the_show_wildcard(): void
     {
-        $this->get('/admin/patients/search')->assertOk();
+        $this->get('/patients/search')->assertOk();
     }
 
     public function test_duplicates_page_is_not_swallowed_by_the_show_wildcard(): void
     {
-        $this->get('/admin/patients/duplicates')->assertOk();
+        $this->get('/patients/duplicates')->assertOk();
     }
 
     public function test_amendments_page_is_not_swallowed_by_the_show_wildcard(): void
     {
-        $this->get('/admin/patients/amendments')->assertOk();
+        $this->get('/patients/amendments')->assertOk();
     }
 }

@@ -36,7 +36,7 @@ class TenantContextInputTest extends TestCase
     {
         $this->boot();
 
-        foreach (['/admin/patients/create', '/admin/encounters/create', '/admin/ipd/wards/create', '/admin/pharmacy/medications/create', '/admin/lab/tests/create', '/admin/billing/items/create'] as $url) {
+        foreach (['/patients/create', '/encounters/create', '/ipd/wards/create', '/pharmacy/medications/create', '/lab/tests/create', '/billing/items/create'] as $url) {
             $this->get($url)->assertOk()->assertDontSee('name="organization_id"', false)->assertDontSee('name="branch_id"', false);
         }
     }
@@ -47,7 +47,7 @@ class TenantContextInputTest extends TestCase
         $other = Organization::factory()->create();
         $otherBranch = Branch::factory()->create(['organization_id' => $other->id]);
 
-        $this->post('/admin/ipd/wards', ['code' => 'ICU', 'name' => 'ICU', 'gender_policy' => 'any', 'organization_id' => $other->id, 'branch_id' => $otherBranch->id])->assertRedirect();
+        $this->post('/ipd/wards', ['code' => 'ICU', 'name' => 'ICU', 'gender_policy' => 'any', 'organization_id' => $other->id, 'branch_id' => $otherBranch->id])->assertRedirect();
 
         $this->assertDatabaseHas('ipd_wards', ['code' => 'ICU', 'organization_id' => $organization->id, 'branch_id' => $branch->id]);
         $this->assertDatabaseMissing('ipd_wards', ['organization_id' => $other->id]);
@@ -59,6 +59,6 @@ class TenantContextInputTest extends TestCase
         $foreign = Organization::factory()->create();
         session()->put('tenant_organization_id', $foreign->id);
 
-        $this->post('/admin/ipd/wards', ['code' => 'X', 'name' => 'X', 'gender_policy' => 'any'])->assertForbidden();
+        $this->post('/ipd/wards', ['code' => 'X', 'name' => 'X', 'gender_policy' => 'any'])->assertForbidden();
     }
 }

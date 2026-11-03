@@ -12,7 +12,7 @@ use Modules\Finance\Http\Controllers\Web\FinanceReportController;
 use Modules\Finance\Http\Controllers\Web\FinanceSetupController;
 use Modules\Finance\Http\Controllers\Web\FinanceTaxController;
 
-// Finance and accounting: /admin/finance/*.
+// Finance and accounting: /finance/*.
 Route::prefix('finance')->name('finance.')->group(function () {
     Route::get('/', [FinanceDashboardController::class, 'index'])->name('dashboard');
     Route::get('postings', [FinanceDashboardController::class, 'postings'])->name('postings');
