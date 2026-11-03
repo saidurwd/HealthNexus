@@ -38,4 +38,12 @@ class PageHeaderTest extends FrontDoorTestCase
         $this->assertStringContainsString('breadcrumb small mb-1 justify-content-end', $html);
         $this->assertStringContainsString('id="page-actions"', $html);
     }
+
+    public function test_a_dashboard_header_has_no_print_or_export(): void
+    {
+        $html = $this->as($this->actor(['dashboard.today.view']))->get('/today')->assertOk()->getContent();
+
+        $this->assertStringNotContainsString('id="auto-print"', $html);
+        $this->assertStringNotContainsString('id="auto-export"', $html);
+    }
 }

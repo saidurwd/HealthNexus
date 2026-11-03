@@ -110,7 +110,9 @@
         </div>
     @endif
     @php
-        $printable = request()->isMethod('GET') && ! str_contains((string) request()->route()?->getName(), 'create') && ! str_contains((string) request()->route()?->getName(), 'edit');
+        $routeName = (string) request()->route()?->getName();
+        $isDashboard = $routeName === 'home' || $routeName === 'admin.today' || str_ends_with($routeName, '.dashboard') || str_contains($routeName, '.dashboards.');
+        $printable = ! $isDashboard && request()->isMethod('GET') && ! str_contains((string) request()->route()?->getName(), 'create') && ! str_contains((string) request()->route()?->getName(), 'edit');
         $headTitle = trim((string) $__env->yieldContent('page_title', 'Dashboard'));
     @endphp
     <div class="container-fluid page-head d-print-none">
@@ -203,6 +205,10 @@
                     window.location.href = u.toString();
                 });
             });
+        }
+        // A dashboard is read on screen: no Print or Export in its header.
+        if (document.querySelector('[data-dashboard]')) {
+            ['auto-print', 'auto-export'].forEach(function (id) { var b = document.getElementById(id); if (b) { b.remove(); } });
         }
         var auto = document.getElementById('auto-print');
         if (auto && document.querySelector('[onclick*="window.print"]:not(#auto-print)')) { auto.remove(); }
