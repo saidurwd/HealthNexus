@@ -101,6 +101,7 @@ Schedule::command('analytics:load')->everyFifteenMinutes()->name('analytics-load
 Schedule::command('analytics:check')->hourly()->name('analytics-check')->withoutOverlapping();
 Schedule::command('analytics:run-schedules')->everyFiveMinutes()->name('analytics-schedules')->withoutOverlapping();
 Schedule::command('analytics:dashboard-pack')->monthlyOn(1, '06:10')->name('analytics-dashboard-pack')->withoutOverlapping();
+Schedule::command('watch:scan')->dailyAt('06:50')->name('watch-scan')->withoutOverlapping();
 Schedule::command('analytics:forecast')->dailyAt('05:30')->name('analytics-forecast')->withoutOverlapping();
 Schedule::command('quality:check')->dailyAt('06:00')->name('quality-check')->withoutOverlapping();
 Schedule::command('facility:check')->dailyAt('06:30')->name('facility-check')->withoutOverlapping();

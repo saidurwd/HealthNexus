@@ -1031,6 +1031,14 @@ _Generated from database/seeders/PermissionSeeder.php. Convention: `module.resou
 - `12`
 - `13`
 
+## watch (5)
+
+- `0`
+- `1`
+- `2`
+- `3`
+- `4`
+
 ## welfare (13)
 
 - `0`

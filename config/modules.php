@@ -28,6 +28,7 @@ return [
     'portal' => ['name' => 'Patient Portal / CRM', 'phase' => 17, 'built' => true, 'always_on' => false, 'depends_on' => ['patient'], 'permissions' => ['portal', 'crm'], 'tables' => ['portal', 'crm'], 'api' => ['portal', 'mobile']],
     'interop' => ['name' => 'Interoperability', 'phase' => 18, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['interoperability'], 'tables' => ['integration', 'fhir', 'hl7', 'dicom', 'terminology'], 'api' => ['interoperability', 'fhir', 'hl7', 'dicom']],
     'analytics' => ['name' => 'BI / Analytics', 'phase' => 19, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['analytics'], 'tables' => ['fact', 'dim', 'analytics'], 'api' => ['analytics']],
+    'watch' => ['name' => 'Disease Watch', 'phase' => 26, 'built' => true, 'always_on' => false, 'depends_on' => ['core', 'patient'], 'permissions' => ['watch'], 'tables' => ['sv'], 'api' => []],
     'mch' => ['name' => 'Mothers & Babies (MCH)', 'phase' => 26, 'built' => true, 'always_on' => false, 'depends_on' => ['core', 'patient'], 'permissions' => ['mch'], 'tables' => ['mch'], 'api' => []],
     'vital' => ['name' => 'Births, Deaths & Police Cases', 'phase' => 26, 'built' => true, 'always_on' => false, 'depends_on' => ['core', 'patient'], 'permissions' => ['vital'], 'tables' => ['vr'], 'api' => []],
     'welfare' => ['name' => 'Patient Welfare Fund', 'phase' => 26, 'built' => true, 'always_on' => false, 'depends_on' => ['core'], 'permissions' => ['welfare'], 'tables' => ['wf'], 'api' => ['welfare']],

@@ -680,6 +680,11 @@ _Generated from the Schema::create calls in database/migrations._
 - `vr_death_certifications`
 - `vr_medicolegal_cases`
 
+## watch (2)
+
+- `sv_conditions`
+- `sv_signals`
+
 ## welfare (6)
 
 - `wf_applications`

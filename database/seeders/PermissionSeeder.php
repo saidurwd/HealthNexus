@@ -968,6 +968,13 @@ class PermissionSeeder extends Seeder
             'mch.immunisation.view',
             'mch.immunisation.give',
 
+            // Disease watch (Phase 26, Bangladesh pack)
+            'watch.dashboard.view',
+            'watch.signal.view',
+            'watch.signal.decide',
+            'watch.signal.report',
+            'watch.condition.manage',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -2186,6 +2193,12 @@ class PermissionSeeder extends Seeder
             'welfare_manager' => [
                 'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.fund.manage', 'welfare.donation.record', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.report.view', 'welfare.settings.manage',
             ],
+            'surveillance_officer' => [
+                'patients.view', 'watch.dashboard.view', 'watch.signal.view', 'watch.signal.decide', 'watch.signal.report',
+            ],
+            'surveillance_manager' => [
+                'patients.view', 'watch.dashboard.view', 'watch.signal.view', 'watch.signal.decide', 'watch.signal.report', 'watch.condition.manage',
+            ],
             'mch_midwife' => [
                 'patients.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'mch.immunisation.view', 'vital.birth.view', 'vital.birth.create',
             ],
@@ -2218,7 +2231,7 @@ class PermissionSeeder extends Seeder
             }
         }
         if (isset($roles['hospital_director'])) {
-            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['mch.dashboard.view'])));
+            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['mch.dashboard.view', 'watch.dashboard.view', 'watch.signal.view'])));
         }
 
         // A doctor writes and certifies the cause of death of a patient they treated, notifies the births they attend, and registers a police case.

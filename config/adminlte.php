@@ -1948,8 +1948,8 @@ return [
         ],
         [
             'header' => 'Hospital services',
-            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.immunisation.view'],
-            'modules' => ['facility', 'quality', 'portal', 'vital', 'mch'],
+            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.immunisation.view', 'watch.dashboard.view', 'watch.signal.view'],
+            'modules' => ['facility', 'quality', 'portal', 'vital', 'mch', 'watch'],
         ],
         [
             'text' => 'Facility and support',
@@ -1969,6 +1969,17 @@ return [
                 ['text' => 'Mortuary', 'url' => '/admin/facility/mortuary', 'icon' => 'bi bi-door-closed', 'can' => 'facility.mortuary.view'],
                 ['text' => 'Visitors and attendants', 'url' => '/admin/facility/visitors', 'icon' => 'bi bi-people', 'can' => 'facility.visitor.view'],
                 ['text' => 'The gate', 'url' => '/admin/facility/gate', 'icon' => 'bi bi-box-arrow-in-right', 'can' => 'facility.visitor.gate'],
+            ],
+        ],
+        [
+            'text' => 'Disease watch',
+            'module' => 'watch',
+            'icon' => 'bi bi-virus2',
+            'can' => ['watch.dashboard.view', 'watch.signal.view'],
+            'submenu' => [
+                ['text' => 'Overview', 'url' => '/admin/watch', 'icon' => 'bi bi-speedometer2', 'can' => 'watch.dashboard.view'],
+                ['text' => 'Signals', 'url' => '/admin/watch/signals', 'icon' => 'bi bi-bell', 'can' => 'watch.signal.view'],
+                ['text' => 'Conditions watched', 'url' => '/admin/watch/conditions', 'icon' => 'bi bi-list-check', 'can' => 'watch.signal.view'],
             ],
         ],
         [

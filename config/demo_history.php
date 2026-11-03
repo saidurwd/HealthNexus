@@ -29,6 +29,7 @@ use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\Demo\History\Modules\QualityHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
 use App\Services\Demo\History\Modules\VitalHistory;
+use App\Services\Demo\History\Modules\WatchHistory;
 use App\Services\Demo\History\Modules\WelfareHistory;
 
 /*
@@ -63,6 +64,7 @@ return [
         WelfareHistory::class,
         VitalHistory::class,
         MchHistory::class,
+        WatchHistory::class,
         AnalyticsHistory::class,
         QualityHistory::class,
         FacilityHistory::class,

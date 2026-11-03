@@ -103,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware('module:welfare')->group(fn () => require __DIR__.'/../modules/Welfare/Routes/web.php');
         Route::middleware('module:vital')->group(fn () => require __DIR__.'/../modules/Vital/Routes/web.php');
         Route::middleware('module:mch')->group(fn () => require __DIR__.'/../modules/Mch/Routes/web.php');
+        Route::middleware('module:watch')->group(fn () => require __DIR__.'/../modules/Watch/Routes/web.php');
         require __DIR__.'/../modules/Audit/Routes/web.php';
         require __DIR__.'/../modules/System/Routes/web.php';
         require __DIR__.'/../modules/Workflow/Routes/web.php';

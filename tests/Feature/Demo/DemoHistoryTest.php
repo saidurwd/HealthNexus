@@ -324,6 +324,13 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('mch_immunisations as i')->join('patients as c', 'c.id', '=', 'i.patient_id')->whereRaw('date(i.given_at) < date(c.date_of_birth)')->count(), 'no vaccine was given before the child was born');
         $this->assertSame(0, DB::table('mch_immunisations')->where('status', 'given')->where(fn ($q) => $q->whereNull('batch_no')->orWhere('batch_no', ''))->count(), 'every dose given here has a vaccine batch');
         $this->assertGreaterThan(0, DB::table('mch_immunisations')->where('organization_id', $org)->count(), 'babies were vaccinated');
+        // disease watch: a signal is for a condition of this hospital, a decision has a person and a reason, and only a confirmed signal was reported
+        $this->assertGreaterThan(0, DB::table('sv_conditions')->where('organization_id', $org)->count(), 'conditions are watched');
+        $this->assertGreaterThan(0, DB::table('sv_signals')->where('organization_id', $org)->count(), 'a rise was noticed');
+        $this->assertSame(0, DB::table('sv_signals as s')->join('sv_conditions as c', 'c.id', '=', 's.condition_id')->whereColumn('c.organization_id', '<>', 's.organization_id')->count(), 'a signal belongs to a condition of its own hospital');
+        $this->assertSame(0, DB::table('sv_signals')->whereIn('status', ['confirmed', 'dismissed'])->where(fn ($q) => $q->whereNull('decided_by')->orWhereNull('decision_note'))->count(), 'every decision has a person and a reason');
+        $this->assertSame(0, DB::table('sv_signals')->whereNotNull('reported_at')->where('status', '<>', 'confirmed')->count(), 'only a confirmed signal is reported');
+        $this->assertSame(0, DB::table('sv_signals')->whereNotNull('reported_at')->where(fn ($q) => $q->whereNull('reported_to')->orWhereNull('reported_by'))->count(), 'a report says to whom and by whom');
         foreach (['medication_review', 'radiology_worklist', 'insurance_claim_check', 'risk_scoring'] as $code) {
             $this->assertSame(1, DB::table('ai_use_cases')->where('code', $code)->where('status', 'enabled')->whereColumn('approved_by', '!=', 'registered_by')->count(), "$code was switched on by a second person");
             $waiting = $code === 'radiology_worklist' ? DB::table('radiology_examinations as e')->join('radiology_order_items as i', 'i.id', '=', 'e.order_item_id')->whereIn('e.status', ['completed', 'images_available'])->whereNotIn('i.status', ['reported', 'cancelled'])->count() : 1;
