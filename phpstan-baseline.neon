@@ -1207,12 +1207,6 @@ parameters:
 			path: app/Services/Billing/RefundService.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Patient\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Breadcrumbs.php
-
-		-
 			message: '#^Method App\\Services\\Clinical\\EncounterClinicalService\:\:addComplaint\(\) should return App\\Models\\EncounterComplaint but returns Illuminate\\Database\\Eloquent\\Model\.$#'
 			identifier: return.type
 			count: 1

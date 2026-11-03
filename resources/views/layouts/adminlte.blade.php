@@ -92,6 +92,13 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('css/print.css') }}" media="all">
+    <style>
+        .page-head { padding: .25rem .75rem .5rem; }
+        .page-head .breadcrumb { background: transparent; padding: 0; margin: 0; flex-wrap: wrap; }
+        .page-head .breadcrumb-item + .breadcrumb-item::before { content: "›"; }
+        .page-head .breadcrumb a { text-decoration: none; }
+        .page-head-title { letter-spacing: -.01em; }
+    </style>
 @endpush
 
 @section('content_header')
@@ -101,21 +108,21 @@
             {{ __('TRAINING — practice only. Nothing here is real, and nothing is sent to real people.') }}
         </div>
     @endif
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 d-print-none">@yield('page_title', 'Dashboard')</h1>
-            </div>
-            <div class="col-sm-6 d-print-none">
-                @php $printable = request()->isMethod('GET') && ! str_contains((string) request()->route()?->getName(), 'create') && ! str_contains((string) request()->route()?->getName(), 'edit'); @endphp
+    @php
+        $printable = request()->isMethod('GET') && ! str_contains((string) request()->route()?->getName(), 'create') && ! str_contains((string) request()->route()?->getName(), 'edit');
+        $headTitle = trim((string) $__env->yieldContent('page_title', 'Dashboard'));
+    @endphp
+    <div class="container-fluid page-head d-print-none">
+        @auth
+            <nav aria-label="{{ __('Breadcrumb') }}"><ol class="breadcrumb small mb-1 justify-content-end">{!! app(\App\Services\Breadcrumbs::class)->render($headTitle) !!}</ol></nav>
+        @endauth
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <h1 class="page-head-title h3 fw-semibold mb-0" id="page-title">{{ $headTitle }}</h1>
+            <div id="page-actions" class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
+                @yield('page_actions')
                 @if($printable)
-                    <button type="button" id="auto-print" class="btn btn-sm btn-outline-secondary float-sm-end ms-2" onclick="window.print()" title="{{ __('Print this page') }}"><i class="bi bi-printer"></i> {{ __('Print') }}</button>
+                    <button type="button" id="auto-print" class="btn btn-sm btn-outline-secondary" onclick="window.print()" title="{{ __('Print this page') }}"><i class="bi bi-printer"></i> {{ __('Print') }}</button>
                 @endif
-                <ol class="breadcrumb float-sm-end">
-                    @auth
-                        {!! app(\App\Services\Breadcrumbs::class)->render() !!}
-                    @endauth
-                </ol>
             </div>
         </div>
     </div>
@@ -142,6 +149,35 @@
 <script>
     // A screen that already carries its own print button (A4 cards, certificates) keeps that one only.
     document.addEventListener('DOMContentLoaded', function () {
+        // A heading in the page that only repeats the page title is hidden, so the title shows once.
+        var flat = function (t) { return (t || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ''); };
+        var title = document.getElementById('page-title');
+        if (title) {
+            var want = flat(title.textContent);
+            var main = document.querySelector('.app-content');
+            if (main && want) {
+                main.querySelectorAll('h1,h2,h3,h4,h5,h6,.card-title').forEach(function (h) {
+                    if (flat(h.textContent) !== want) { return; }
+                    h.classList.add('d-none');
+                    var head = h.closest('.card-header');
+                    if (head && head.textContent.trim() === '' && !head.querySelector('a,button,form,input,select')) { head.classList.add('d-none'); }
+                });
+            }
+        }
+        // A row at the top of the page that holds only buttons moves up to the right of the title.
+        var bar = document.getElementById('page-actions');
+        var wrap = document.querySelector('.app-content > .container-fluid') || document.querySelector('.app-content');
+        if (bar && wrap) {
+            Array.prototype.slice.call(wrap.children, 0, 3).some(function (el) {
+                if (el.matches('script,style,.alert,.card,.row,table,form[method="GET" i]') || el.querySelector('.btn') === null) { return false; }
+                var probe = el.cloneNode(true);
+                probe.querySelectorAll('.btn,.badge,script,style').forEach(function (n) { n.remove(); });
+                if (probe.textContent.trim() !== '' || probe.querySelector('input:not([type=hidden]),select,textarea,table,.card')) { return false; }
+                el.classList.remove('mb-3', 'mb-2', 'mb-4', 'mt-3', 'mt-2');
+                bar.insertBefore(el, bar.firstChild);
+                return true;
+            });
+        }
         var auto = document.getElementById('auto-print');
         if (auto && document.querySelector('[onclick*="window.print"]:not(#auto-print)')) { auto.remove(); }
     });

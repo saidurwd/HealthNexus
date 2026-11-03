@@ -10,7 +10,7 @@
     /* Chrome that means nothing on paper */
     .app-header, .app-sidebar, .app-footer, .sidebar-overlay, .breadcrumb, .btn, .pagination,
     .d-print-none, .dropdown-menu, .modal, .toast-container, .nav-tabs, .tom-select-hidden,
-    .alert-dismissible .btn-close, #auto-print, [data-training-banner] { display: none !important; }
+    .alert-dismissible .btn-close, #auto-print, #page-actions, [data-training-banner] { display: none !important; }
 
     .app-wrapper, .app-main, .app-content, .app-content-header, .container-fluid { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
     .app-main { min-height: 0 !important; }
