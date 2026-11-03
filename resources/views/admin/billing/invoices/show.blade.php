@@ -35,6 +35,7 @@
             </div>
 
             <div class="mt-3">
+                @if($invoice->invoice_number)<a href="{{ route('admin.billing.invoices.print', $invoice) }}" target="_blank" class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer"></i> {{ __('Print invoice (A4)') }}</a>@endif
                 @can('finalize', $invoice)
                     @if($invoice->isMutable())
                         <form action="{{ route('admin.billing.invoices.finalize', $invoice) }}" method="post" class="d-inline" onsubmit="return confirm('Finalize this invoice? It cannot be edited afterward.')">

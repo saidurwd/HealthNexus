@@ -82,6 +82,7 @@ Route::prefix('billing')->name('billing.')->group(function () {
     });
     Route::middleware(['can:billing.invoice.view'])->group(function () {
         Route::get('invoices/{invoice}', [BillingInvoiceController::class, 'show'])->name('invoices.show');
+        Route::get('invoices/{invoice}/print', [BillingInvoiceController::class, 'print'])->name('invoices.print');
     });
     Route::middleware(['can:billing.invoice.update'])->group(function () {
         Route::post('invoices/{invoice}/charges', [BillingInvoiceController::class, 'addCharges'])->name('invoices.add-charges');

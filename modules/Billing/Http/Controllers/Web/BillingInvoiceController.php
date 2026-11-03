@@ -84,6 +84,16 @@ class BillingInvoiceController extends Controller
         return view('admin.billing.invoices.show', compact('invoice', 'uninvoicedCharges'));
     }
 
+    /** The invoice as a printable A4 bill: patient, lines, totals, payments taken and balance. */
+    public function print(BillingInvoice $invoice)
+    {
+        $this->authorize('view', $invoice);
+
+        $invoice->load(['patient', 'items', 'payments' => fn ($q) => $q->where('status', 'completed'), 'payments.method', 'finalizedBy']);
+
+        return view('admin.billing.invoices.print', compact('invoice'));
+    }
+
     public function addCharges(Request $request, BillingInvoice $invoice)
     {
         $this->authorize('update', $invoice);

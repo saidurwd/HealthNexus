@@ -123,4 +123,16 @@ class BillingInvoiceControllerTest extends BillingTestCase
         $response->assertOk();
         $response->assertViewHas('invoice');
     }
+
+    public function test_the_invoice_prints_as_an_a4_bill(): void
+    {
+        $this->post('/admin/billing/invoices', ['patient_id' => $this->patient->id, 'invoice_type' => 'opd']);
+        $invoice = BillingInvoice::first();
+
+        $this->get('/admin/billing/invoices/'.$invoice->public_id.'/print')
+            ->assertOk()
+            ->assertSee('invoice-sheet', false)
+            ->assertSee($this->patient->enterprise_patient_no)
+            ->assertSee('Patient / guardian signature');
+    }
 }

@@ -7476,5 +7476,22 @@
     "± days": "± দিন",
     "Print this page": "এই পাতা ছাপুন",
     "Printed by :name on :when": ":when তারিখে :name ছাপিয়েছেন",
-    "Confidential — patient and hospital information": "গোপনীয় — রোগী ও হাসপাতালের তথ্য"
+    "Confidential — patient and hospital information": "গোপনীয় — রোগী ও হাসপাতালের তথ্য",
+    "Print invoice (A4)": "চালান ছাপুন (A4)",
+    "Back to the invoice": "চালানে ফিরুন",
+    "INVOICE": "চালান",
+    "Draft — not yet finalised": "খসড়া — এখনও চূড়ান্ত হয়নি",
+    "Invoice type": "চালানের ধরন",
+    "Billed to": "বিল প্রাপক",
+    "Unit price": "একক মূল্য",
+    "Payments received": "গৃহীত পেমেন্ট",
+    "Grand total": "সর্বমোট",
+    "Balance due": "বাকি",
+    "Patient / guardian signature": "রোগী / অভিভাবকের স্বাক্ষর",
+    "This is a computer-generated invoice.": "এটি কম্পিউটারে তৈরি চালান।",
+    "PAID": "পরিশোধিত",
+    "cancelled": "বাতিল",
+    "written off": "অবলোপিত",
+    "refunded": "ফেরত",
+    "draft": "খসড়া"
 }
