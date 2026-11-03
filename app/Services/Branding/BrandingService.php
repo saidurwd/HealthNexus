@@ -25,7 +25,12 @@ class BrandingService
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $value = $this->settings->get($key);
+        // An error page must still draw when the database cannot be read, so a failed lookup is just "not set".
+        try {
+            $value = $this->settings->get($key);
+        } catch (\Throwable) {
+            return $default;
+        }
 
         return $value === null || $value === '' ? $default : $value;
     }
@@ -63,7 +68,11 @@ class BrandingService
     {
         $path = $this->get(self::ASSETS[$kind] ?? '');
 
-        return is_string($path) && Storage::disk(self::DISK)->exists($path) ? Storage::disk(self::DISK)->url($path) : null;
+        try {
+            return is_string($path) && Storage::disk(self::DISK)->exists($path) ? Storage::disk(self::DISK)->url($path) : null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     /** @param  array<string, mixed>  $data */
