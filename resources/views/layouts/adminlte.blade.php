@@ -81,13 +81,21 @@
 @endpush
 
 @section('footer')
-    <strong>&copy; {{ date('Y') }} Health Nexus</strong>
+    @php $brand = app(\App\Services\Branding\BrandingService::class); @endphp
+    <strong>&copy; {{ date('Y') }} {{ config('app.name') }}</strong>
+    @if($line = $brand->get('brand.footer_text'))<span class="mx-2">|</span><small>{{ $line }}</small>@endif
     <span class="mx-2">|</span>
     <small>v{{ config('app.version', '1.0.0') }}</small>
-    <span class="d-none d-md-inline">
-        <span class="mx-2">|</span>
-        <a href="https://github.com/Kilo-Org/kilocode" class="text-reset text-decoration-none" target="_blank">{{ __('Support') }}</a>
-    </span>
+    @php $supportMail = $brand->get('brand.support_email'); $supportPhone = $brand->get('brand.support_phone'); $supportUrl = $brand->get('brand.support_url'); @endphp
+    @if($supportMail || $supportPhone || $supportUrl)
+        <span class="d-none d-md-inline">
+            <span class="mx-2">|</span>
+            {{ __('Support') }}:
+            @if($supportUrl)<a href="{{ $supportUrl }}" class="text-reset" target="_blank" rel="noopener">{{ parse_url($supportUrl, PHP_URL_HOST) ?: $supportUrl }}</a>@endif
+            @if($supportMail)<a href="mailto:{{ $supportMail }}" class="text-reset">{{ $supportMail }}</a>@endif
+            @if($supportPhone)<span>{{ $supportPhone }}</span>@endif
+        </span>
+    @endif
 @stop
 
 @push('css')
@@ -148,7 +156,8 @@
         $printUser = auth()->user()?->name;
     @endphp
     <div class="print-only print-letterhead">
-        @if($printOrg?->logo)<img class="logo" src="{{ \Illuminate\Support\Str::startsWith($printOrg->logo, ['http', '/']) ? $printOrg->logo : asset('storage/'.$printOrg->logo) }}" alt="">@endif
+        @php $printLogo = $printOrg?->logo ? (\Illuminate\Support\Str::startsWith($printOrg->logo, ['http', '/']) ? $printOrg->logo : asset('storage/'.$printOrg->logo)) : app(\App\Services\Branding\BrandingService::class)->assetUrl('logo'); @endphp
+        @if($printLogo)<img class="logo" src="{{ $printLogo }}" alt="">@endif
         <div class="org">{{ $printOrg?->name ?? config('app.name') }}</div>
         <div class="meta">{{ collect([$printBranch?->name, $printOrg?->address, $printOrg?->phone, $printOrg?->email])->filter()->implode(' · ') }}</div>
         <div class="title">@yield('page_title', 'Dashboard')</div>

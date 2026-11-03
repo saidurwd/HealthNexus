@@ -126,6 +126,7 @@ use App\Models\PatientIdentifier;
 use App\Observers\PatientSearchObserver;
 use App\Services\Billing\Events\BillingChargeEventPublisher;
 use App\Services\Billing\NullRevenuePoster;
+use App\Services\Branding\BrandingService;
 use App\Services\Breadcrumbs;
 use App\Services\Documents\BrowsershotPdfRenderer;
 use App\Services\Interop\DeliveryWorker;
@@ -189,6 +190,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // The name, logo and mail account the hospital chose on the set-up page lie over the shipped config.
+        $this->app->make(BrandingService::class)->apply();
+
         // The screens are Bootstrap 5; the default page links are Tailwind and render as oversized arrows.
         Paginator::useBootstrapFive();
 

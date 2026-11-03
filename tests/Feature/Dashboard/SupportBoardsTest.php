@@ -14,7 +14,7 @@ class SupportBoardsTest extends FrontDoorTestCase
             'stores' => ['/inventory', 'inventory.dashboard.view', 'inventory.item.view', 'stocked', 'Value of stock held'],
             'people' => ['/hr', 'hr.dashboard.view', 'hr.employee.view', 'absent', 'People working here'],
             'patient relations' => ['/crm', 'crm.dashboard.view', 'crm.interaction.view', 'heard', 'Complaints open'],
-            'portal' => ['/portal', 'portal.dashboard.view', 'portal.account.view', 'portal being used', 'Patients with a login'],
+            'portal' => ['/patient-portal', 'portal.dashboard.view', 'portal.account.view', 'portal being used', 'Patients with a login'],
             'connections' => ['/interop', 'interoperability.dashboard.view', 'interoperability.message.view', 'delivering', 'Partners switched on'],
             'facility' => ['/facility', 'facility.dashboard.view', 'facility.asset.view', 'keeping the wards running', 'Equipment in the register'],
             'quality' => ['/quality', 'quality.dashboard.view', 'quality.incident.view', 'learning from incidents', 'Open incidents'],

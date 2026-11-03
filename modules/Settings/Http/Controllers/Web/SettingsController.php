@@ -16,7 +16,8 @@ class SettingsController extends Controller
 
     public function index(Request $request)
     {
-        $settings = $this->settings->all(true);
+        // Name, logo, contact lines and e-mail have their own page (Branding, e-mail and contact).
+        $settings = collect($this->settings->all(true))->except(['brand', 'mail'])->all();
 
         return view('admin.settings.index', compact('settings'));
     }
