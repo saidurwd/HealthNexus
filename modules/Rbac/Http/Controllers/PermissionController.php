@@ -30,7 +30,7 @@ class PermissionController extends Controller
 
         Permission::create(['name' => $validated['name'], 'guard_name' => 'web']);
 
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission created successfully.');
+        return redirect()->route('admin.permissions.index')->with('success', __('Permission created successfully.'));
     }
 
     public function edit(Permission $permission)
@@ -46,13 +46,13 @@ class PermissionController extends Controller
 
         $permission->update(['name' => $validated['name']]);
 
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission updated successfully.');
+        return redirect()->route('admin.permissions.index')->with('success', __('Permission updated successfully.'));
     }
 
     public function destroy(Permission $permission)
     {
         $permission->delete();
 
-        return redirect()->route('admin.permissions.index')->with('success', 'Permission deleted successfully.');
+        return redirect()->route('admin.permissions.index')->with('success', __('Permission deleted successfully.'));
     }
 }

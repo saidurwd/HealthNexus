@@ -41,14 +41,14 @@ class IpdAdmissionRequestService
             }
 
             $workflow = Workflow::query()
-                ->where('company_id', $data['company_id'])
+                ->where('organization_id', $data['organization_id'])
                 ->where('code', 'ipd_admission')
                 ->where('is_active', true)
                 ->first();
 
             if ($workflow) {
                 $instance = $this->engine->start($workflow, $request, $user, [
-                    'company_id' => $data['company_id'],
+                    'organization_id' => $data['organization_id'],
                     'branch_id' => $data['branch_id'] ?? null,
                     'notes' => $data['reason'] ?? null,
                 ]);
@@ -59,7 +59,7 @@ class IpdAdmissionRequestService
                     'status' => $instance->status === 'approved' ? IpdAdmissionRequest::STATUS_APPROVED : IpdAdmissionRequest::STATUS_PENDING_APPROVAL,
                 ]);
             } else {
-                // No approval workflow configured for this company — fall back to a direct,
+                // No approval workflow configured for this organization — fall back to a direct,
                 // audited "requested" state a coordinator can still explicitly approve/reject.
                 $request->update(['status' => IpdAdmissionRequest::STATUS_PENDING_APPROVAL]);
             }

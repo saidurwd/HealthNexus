@@ -6,12 +6,12 @@
     <form action="{{ route('password.update') }}" method="post">
         @csrf
 
-        <label for="email" class="visually-hidden">Email</label>
+        <label for="email" class="visually-hidden">{{ __('Email') }}</label>
 
         <div class="input-group mb-3">
             <input type="email" name="email" id="email"
                 class="form-control @error('email') is-invalid @enderror"
-                value="{{ old('email') }}" placeholder="Email" autofocus>
+                value="{{ old('email') }}" placeholder="{{ __('Email') }}" autofocus>
 
             <div class="input-group-text">
                 <span class="bi bi-envelope"></span>
@@ -28,7 +28,7 @@
             <div class="col-12">
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">
-                        Send Password Reset Link
+                        {{ __('Send Password Reset Link') }}
                     </button>
                 </div>
             </div>
@@ -36,6 +36,6 @@
     </form>
 
     <p class="mt-3 text-center">
-        <a href="{{ route('login') }}">Back to login</a>
+        <a href="{{ route('login') }}">{{ __('Back to login') }}</a>
     </p>
 @stop

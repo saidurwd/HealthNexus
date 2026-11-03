@@ -5,7 +5,7 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Duplicate Review Queue</h2>
+            <h2 class="mb-0">{{ __('Duplicate Review Queue') }}</h2>
         </div>
 
         <div class="card">
@@ -14,13 +14,13 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Patient A</th>
-                                <th>Patient B</th>
-                                <th class="text-center">Score</th>
-                                <th>Classification</th>
-                                <th>Match Reasons</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Patient A') }}</th>
+                                <th>{{ __('Patient B') }}</th>
+                                <th class="text-center">{{ __('Score') }}</th>
+                                <th>{{ __('Classification') }}</th>
+                                <th>{{ __('Match Reasons') }}</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,20 +50,20 @@
                                                 @csrf
                                                 @method('put')
                                                 <input type="hidden" name="status" value="confirmed_duplicate">
-                                                <button class="btn btn-sm btn-outline-danger" title="Confirm duplicate">Confirm</button>
+                                                <button class="btn btn-sm btn-outline-danger" title="{{ __('Confirm duplicate') }}">{{ __('Confirm') }}</button>
                                             </form>
                                             <form action="{{ route('admin.patients.duplicates.review', $candidate) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('put')
                                                 <input type="hidden" name="status" value="not_duplicate">
-                                                <button class="btn btn-sm btn-outline-success" title="Not a duplicate">Not Duplicate</button>
+                                                <button class="btn btn-sm btn-outline-success" title="{{ __('Not a duplicate') }}">{{ __('Not Duplicate') }}</button>
                                             </form>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">No duplicate candidates pending review.</td>
+                                    <td colspan="7" class="text-center py-4 text-muted">{{ __('No duplicate candidates pending review.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

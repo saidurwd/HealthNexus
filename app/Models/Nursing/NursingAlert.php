@@ -21,7 +21,7 @@ class NursingAlert extends Model
     public const SEVERITY_CRITICAL = 'critical';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'observation_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'observation_id',
         'trigger_description', 'severity', 'created_by', 'assigned_to', 'acknowledged_at',
         'acknowledged_by', 'action', 'resolved_at',
     ];
@@ -61,8 +61,8 @@ class NursingAlert extends Model
         return $this->belongsTo(User::class, 'acknowledged_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

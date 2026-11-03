@@ -42,7 +42,7 @@ class NursingNotePolicy
 
     private function inScope(User $user, NursingNote $note): bool
     {
-        return $user->companies()->where('companies.id', $note->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $note->organization_id)->exists()
             && (! $note->branch_id || $user->branches()->where('branches.id', $note->branch_id)->exists());
     }
 }

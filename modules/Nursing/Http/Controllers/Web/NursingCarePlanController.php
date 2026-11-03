@@ -4,6 +4,9 @@ namespace Modules\Nursing\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Nursing\NursingCarePlan;
+use App\Models\Nursing\NursingCarePlanGoal;
+use App\Models\Nursing\NursingCarePlanIntervention;
+use App\Models\Nursing\NursingDiagnosis;
 use App\Models\Nursing\NursingEpisode;
 use App\Services\AuditLogger;
 use App\Services\Nursing\NursingCarePlanService;
@@ -33,7 +36,7 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('CREATE', NursingCarePlan::class, $carePlan->id, null, $carePlan->toArray(), $request);
 
-        return redirect()->route('admin.nursing.care-plans.show', $carePlan)->with('success', 'Care plan created.');
+        return redirect()->route('admin.nursing.care-plans.show', $carePlan)->with('success', __('Care plan created.'));
     }
 
     public function storeDiagnosis(Request $request, NursingCarePlan $carePlan)
@@ -49,9 +52,9 @@ class NursingCarePlanController extends Controller
 
         $diagnosis = $this->carePlans->addDiagnosis($carePlan, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingDiagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingDiagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
-        return back()->with('success', 'Nursing diagnosis added.');
+        return back()->with('success', __('Nursing diagnosis added.'));
     }
 
     public function storeGoal(Request $request, NursingCarePlan $carePlan)
@@ -66,9 +69,9 @@ class NursingCarePlanController extends Controller
 
         $goal = $this->carePlans->addGoal($carePlan, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingCarePlanGoal::class, $goal->id, null, $goal->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingCarePlanGoal::class, $goal->id, null, $goal->toArray(), $request);
 
-        return back()->with('success', 'Goal added.');
+        return back()->with('success', __('Goal added.'));
     }
 
     public function storeIntervention(Request $request, NursingCarePlan $carePlan)
@@ -84,9 +87,9 @@ class NursingCarePlanController extends Controller
 
         $intervention = $this->carePlans->addIntervention($carePlan, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingCarePlanIntervention::class, $intervention->id, null, $intervention->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingCarePlanIntervention::class, $intervention->id, null, $intervention->toArray(), $request);
 
-        return back()->with('success', 'Intervention added.');
+        return back()->with('success', __('Intervention added.'));
     }
 
     public function complete(Request $request, NursingCarePlan $carePlan)
@@ -97,6 +100,6 @@ class NursingCarePlanController extends Controller
 
         $this->auditLogger->log('COMPLETE', NursingCarePlan::class, $carePlan->id, null, ['status' => 'completed'], $request);
 
-        return back()->with('success', 'Care plan completed.');
+        return back()->with('success', __('Care plan completed.'));
     }
 }

@@ -30,7 +30,7 @@ class NursingAssessmentController extends Controller
 
         $this->auditLogger->log('CREATE', NursingAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
-        return redirect()->route('admin.nursing.episodes.show', $episode)->with('success', 'Assessment created.');
+        return redirect()->route('admin.nursing.episodes.show', $episode)->with('success', __('Assessment created.'));
     }
 
     public function update(Request $request, NursingAssessment $assessment)
@@ -43,7 +43,7 @@ class NursingAssessmentController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingAssessment::class, $assessment->id, null, $validated, $request);
 
-        return back()->with('success', 'Assessment updated.');
+        return back()->with('success', __('Assessment updated.'));
     }
 
     public function finalize(Request $request, NursingAssessment $assessment)
@@ -54,6 +54,6 @@ class NursingAssessmentController extends Controller
 
         $this->auditLogger->log('FINALIZE', NursingAssessment::class, $assessment->id, null, ['status' => 'final'], $request);
 
-        return back()->with('success', 'Assessment finalized.');
+        return back()->with('success', __('Assessment finalized.'));
     }
 }

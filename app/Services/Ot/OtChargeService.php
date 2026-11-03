@@ -50,7 +50,7 @@ class OtChargeService
     private function context(OtSurgery $surgery): array
     {
         return [
-            'company_id' => $surgery->company_id,
+            'organization_id' => $surgery->organization_id,
             'branch_id' => $surgery->branch_id,
             'patient_id' => $surgery->patient_id,
             'encounter_id' => $surgery->encounter_id,

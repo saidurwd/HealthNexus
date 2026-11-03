@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
 use App\Models\User;
@@ -11,12 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingNote extends Model
 {
+    use HasPublicId;
+
     public const STATUS_DRAFT = 'draft';
 
     public const STATUS_FINAL = 'final';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'note_type',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'note_type',
         'content', 'status', 'created_by', 'signed_at', 'signed_by',
     ];
 
@@ -55,8 +58,8 @@ class NursingNote extends Model
         return $this->hasMany(NursingNoteAmendment::class, 'note_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

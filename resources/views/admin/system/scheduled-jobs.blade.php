@@ -4,7 +4,7 @@
 
 @section('page_content')
 <div class="card">
-    <div class="card-header"><h3 class="card-title">Scheduled Jobs</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('Scheduled Jobs') }}</h3></div>
     <div class="card-body">
         <pre class="mb-0">{{ $output }}</pre>
     </div>

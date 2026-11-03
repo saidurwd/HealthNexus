@@ -45,3 +45,9 @@ php artisan boost:install
 
 Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
 </laravel-boost-guidelines>
+
+---
+
+## HealthNexus project rules
+
+Before any work read `docs/AI-RULES.md` and the guideline it points to.

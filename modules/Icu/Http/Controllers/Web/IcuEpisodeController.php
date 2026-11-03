@@ -24,10 +24,10 @@ class IcuEpisodeController extends Controller
     {
         $this->authorize('viewAny', IcuEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $episodes = IcuEpisode::forTenant($companyId, $branchId)
+        $episodes = IcuEpisode::forTenant($organizationId, $branchId)
             ->with(['patient', 'icuBed', 'icuUnit'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('admitted_at')
@@ -69,7 +69,7 @@ class IcuEpisodeController extends Controller
 
         $this->auditLogger->log('CREATE', IcuEpisode::class, $episode->id, null, $episode->toArray(), $request);
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Patient admitted to ICU.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Patient admitted to ICU.'));
     }
 
     public function show(IcuEpisode $episode)
@@ -96,6 +96,6 @@ class IcuEpisodeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'ICU episode transferred.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('ICU episode transferred.'));
     }
 }

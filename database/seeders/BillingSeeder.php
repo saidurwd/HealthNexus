@@ -8,11 +8,11 @@ use App\Models\Billing\BillingPaymentMethod;
 use App\Models\Billing\BillingPriceList;
 use App\Models\Billing\BillingPriceListItem;
 use App\Models\Billing\BillingTaxCategory;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Database\Seeder;
 
 /**
- * Minimal viable billing catalog per company: categories, one tax category, standard payment
+ * Minimal viable billing catalog per organization: categories, one tax category, standard payment
  * methods, a handful of items (including one clinically-chargeable mapping so the
  * Clinical->Billing listener has something to match in dev/testing), and a default price list.
  */
@@ -20,16 +20,16 @@ class BillingSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
-            $categories = $this->seedCategories($company);
-            $taxCategory = $this->seedTaxCategory($company);
-            $this->seedPaymentMethods($company);
-            $items = $this->seedItems($company, $categories, $taxCategory);
-            $this->seedPriceList($company, $items);
+        Organization::all()->each(function (Organization $organization) {
+            $categories = $this->seedCategories($organization);
+            $taxCategory = $this->seedTaxCategory($organization);
+            $this->seedPaymentMethods($organization);
+            $items = $this->seedItems($organization, $categories, $taxCategory);
+            $this->seedPriceList($organization, $items);
         });
     }
 
-    private function seedCategories(Company $company): array
+    private function seedCategories(Organization $organization): array
     {
         $definitions = [
             'CONSULT' => 'Consultation',
@@ -42,7 +42,7 @@ class BillingSeeder extends Seeder
 
         foreach ($definitions as $code => $name) {
             $categories[$code] = BillingCategory::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $code],
                 ['name' => $name, 'description' => $name, 'is_active' => true],
             );
         }
@@ -50,15 +50,15 @@ class BillingSeeder extends Seeder
         return $categories;
     }
 
-    private function seedTaxCategory(Company $company): BillingTaxCategory
+    private function seedTaxCategory(Organization $organization): BillingTaxCategory
     {
         return BillingTaxCategory::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'VAT'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'VAT'],
             ['name' => 'VAT', 'rate' => '0.0000', 'is_inclusive' => false, 'is_active' => true],
         );
     }
 
-    private function seedPaymentMethods(Company $company): void
+    private function seedPaymentMethods(Organization $organization): void
     {
         $definitions = [
             ['code' => 'CASH', 'name' => 'Cash', 'type' => 'cash'],
@@ -69,7 +69,7 @@ class BillingSeeder extends Seeder
 
         foreach ($definitions as $definition) {
             BillingPaymentMethod::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'code' => $definition['code']],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'code' => $definition['code']],
                 ['name' => $definition['name'], 'type' => $definition['type'], 'is_active' => true],
             );
         }
@@ -78,7 +78,7 @@ class BillingSeeder extends Seeder
     /**
      * @return array<string, BillingItem>
      */
-    private function seedItems(Company $company, array $categories, BillingTaxCategory $taxCategory): array
+    private function seedItems(Organization $organization, array $categories, BillingTaxCategory $taxCategory): array
     {
         $definitions = [
             'OPD-CONSULT' => [
@@ -108,7 +108,7 @@ class BillingSeeder extends Seeder
 
         foreach ($definitions as $code => $definition) {
             $items[$code] = BillingItem::query()->firstOrCreate(
-                ['company_id' => $company->id, 'branch_id' => null, 'item_code' => $code],
+                ['organization_id' => $organization->id, 'branch_id' => null, 'item_code' => $code],
                 [
                     'category_id' => $categories[$definition['category']]->id,
                     'tax_category_id' => $taxCategory->id,
@@ -132,10 +132,10 @@ class BillingSeeder extends Seeder
     /**
      * @param  array<string, BillingItem>  $items
      */
-    private function seedPriceList(Company $company, array $items): void
+    private function seedPriceList(Organization $organization, array $items): void
     {
         $priceList = BillingPriceList::query()->firstOrCreate(
-            ['company_id' => $company->id, 'branch_id' => null, 'code' => 'DEFAULT'],
+            ['organization_id' => $organization->id, 'branch_id' => null, 'code' => 'DEFAULT'],
             [
                 'name' => 'Default Price List',
                 'currency' => 'BDT',

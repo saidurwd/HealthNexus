@@ -21,7 +21,7 @@ class NursingObservationService
     {
         $observation = NursingObservation::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'admission_id' => $episode->admission_id,
@@ -41,7 +41,7 @@ class NursingObservationService
     {
         $corrected = NursingObservation::create([
             ...$data,
-            'company_id' => $original->company_id,
+            'organization_id' => $original->organization_id,
             'branch_id' => $original->branch_id,
             'episode_id' => $original->episode_id,
             'admission_id' => $original->admission_id,

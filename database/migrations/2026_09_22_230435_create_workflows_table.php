@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('workflows', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('code');
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'code']);
+            $table->unique(['organization_id', 'code']);
         });
     }
 

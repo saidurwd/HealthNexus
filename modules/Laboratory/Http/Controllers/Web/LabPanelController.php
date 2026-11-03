@@ -4,9 +4,9 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Laboratory\LabPanel;
 use App\Models\Laboratory\LabTest;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Laboratory\LabPanelService;
 use App\Services\TenantContextResolver;
@@ -25,11 +25,11 @@ class LabPanelController extends Controller
     {
         $this->authorize('viewAny', LabTest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $panels = LabPanel::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->withCount('items')
             ->orderBy('name')
             ->paginate(20);
@@ -41,12 +41,12 @@ class LabPanelController extends Controller
     {
         $this->authorize('create', LabTest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $tests = LabTest::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $tests = LabTest::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.lab.panels.create', compact('tests', 'companies', 'branches'));
+        return view('admin.lab.panels.create', compact('tests', 'organizations', 'branches'));
     }
 
     public function store(StoreLabPanelRequest $request)
@@ -58,7 +58,7 @@ class LabPanelController extends Controller
 
         $this->auditLogger->log('CREATE', LabPanel::class, $panel->id, null, $panel->toArray(), $request);
 
-        return redirect()->route('admin.lab.panels.index')->with('success', 'Lab panel created.');
+        return redirect()->route('admin.lab.panels.index')->with('success', __('Lab panel created.'));
     }
 
     public function edit(LabPanel $panel)
@@ -66,7 +66,7 @@ class LabPanelController extends Controller
         $this->authorize('update', LabTest::class);
 
         $panel->load('items');
-        $tests = LabTest::query()->forTenant($panel->company_id)->where('is_active', true)->orderBy('name')->get();
+        $tests = LabTest::query()->forTenant($panel->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.panels.edit', compact('panel', 'tests'));
     }
@@ -81,6 +81,6 @@ class LabPanelController extends Controller
 
         $this->auditLogger->log('UPDATE', LabPanel::class, $panel->id, $oldValues, $panel->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.panels.index')->with('success', 'Lab panel updated.');
+        return redirect()->route('admin.lab.panels.index')->with('success', __('Lab panel updated.'));
     }
 }

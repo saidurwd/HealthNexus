@@ -36,7 +36,7 @@ class OtReceptionService
 
     public function start(OtSurgery $surgery, User $user): OtSurgery
     {
-        return DB::transaction(function () use ($surgery, $user) {
+        return DB::transaction(function () use ($surgery) {
             if (! $this->checklist->isPhaseComplete($surgery, OtSurgicalSafetyChecklist::PHASE_SIGN_IN)) {
                 throw ValidationException::withMessages(['checklist' => 'The Sign In safety checklist must be completed before the procedure can start.']);
             }

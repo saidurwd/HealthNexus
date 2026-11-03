@@ -5,6 +5,7 @@ namespace Modules\Pharmacy\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Pharmacy\PharmacyDispensing;
 use App\Models\Pharmacy\PharmacyOrder;
+use App\Models\Pharmacy\PharmacyReturn;
 use App\Models\Pharmacy\PharmacyStore;
 use App\Services\AuditLogger;
 use App\Services\Pharmacy\PharmacyDispensingService;
@@ -25,11 +26,11 @@ class PharmacyDispensingController extends Controller
     {
         $this->authorize('viewAny', PharmacyDispensing::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $dispensings = PharmacyDispensing::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'store'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('dispensed_at')
@@ -44,7 +45,7 @@ class PharmacyDispensingController extends Controller
         $this->authorize('create', PharmacyDispensing::class);
 
         $order->load(['patient', 'items.medication']);
-        $stores = PharmacyStore::query()->forTenant($order->company_id, $order->branch_id)->where('is_active', true)->orderBy('name')->get();
+        $stores = PharmacyStore::query()->forTenant($order->organization_id, $order->branch_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.pharmacy.dispensing.create', compact('order', 'stores'));
     }
@@ -72,7 +73,7 @@ class PharmacyDispensingController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyDispensing::class, $dispensing->id, null, $dispensing->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Medications dispensed.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Medications dispensed.'));
     }
 
     public function show(PharmacyDispensing $dispensing)
@@ -93,7 +94,7 @@ class PharmacyDispensingController extends Controller
 
         $this->auditLogger->log('VERIFY', PharmacyDispensing::class, $dispensing->id, $oldValues, $dispensing->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Dispensing verified.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Dispensing verified.'));
     }
 
     public function storeReturn(Request $request, PharmacyDispensing $dispensing)
@@ -109,8 +110,8 @@ class PharmacyDispensingController extends Controller
 
         $return = $this->returns->request($dispensing, $validated['items'], $validated['reason'], $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Pharmacy\PharmacyReturn::class, $return->id, null, $return->toArray(), $request);
+        $this->auditLogger->log('CREATE', PharmacyReturn::class, $return->id, null, $return->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', 'Return requested.');
+        return redirect()->route('admin.pharmacy.dispensing.show', $dispensing)->with('success', __('Return requested.'));
     }
 }

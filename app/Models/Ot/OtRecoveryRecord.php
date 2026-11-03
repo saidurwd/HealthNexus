@@ -2,6 +2,7 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OtRecoveryRecord extends Model
 {
+    use HasPublicId;
+
     public const STATUS_IN_RECOVERY = 'in_recovery';
 
     public const STATUS_READY_FOR_TRANSFER = 'ready_for_transfer';

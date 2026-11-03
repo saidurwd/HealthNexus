@@ -23,11 +23,11 @@ class RadiologyReportService
     {
         return DB::transaction(function () use ($examination, $radiologist, $data) {
             return RadiologyReport::create([
-                'company_id' => $examination->company_id,
+                'organization_id' => $examination->organization_id,
                 'branch_id' => $examination->branch_id,
                 'examination_id' => $examination->id,
                 'template_id' => $data['template_id'] ?? null,
-                'report_number' => $this->numbers->generate($examination->company_id, $examination->branch_id, 'RPT', 'RPT'),
+                'report_number' => $this->numbers->generate($examination->organization_id, $examination->branch_id, 'RPT', 'RPT'),
                 'status' => 'draft',
                 'radiologist_id' => $radiologist->id,
                 'clinical_indication' => $data['clinical_indication'] ?? $examination->orderItem->radiologyOrder->clinical_indication,
@@ -119,7 +119,7 @@ class RadiologyReportService
 
             $amended = RadiologyReport::create([
                 ...$report->only([
-                    'company_id', 'branch_id', 'examination_id', 'template_id', 'radiologist_id',
+                    'organization_id', 'branch_id', 'examination_id', 'template_id', 'radiologist_id',
                 ]),
                 'report_number' => $report->report_number,
                 'status' => 'amended',

@@ -12,7 +12,7 @@ class EncounterType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'name',
         'code',
         'description',
@@ -23,9 +23,9 @@ class EncounterType extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function encounters(): HasMany

@@ -45,14 +45,14 @@ class PaymentService
             }
 
             $payment = BillingPayment::create([
-                'company_id' => $invoice->company_id,
+                'organization_id' => $invoice->organization_id,
                 'branch_id' => $invoice->branch_id,
                 'patient_id' => $invoice->patient_id,
                 'invoice_id' => $invoice->id,
                 'corporate_id' => $paymentData['corporate_id'] ?? $invoice->corporate_id,
                 'payment_method_id' => $paymentData['payment_method_id'],
                 'cashier_session_id' => $session?->id,
-                'payment_number' => $this->numbers->generatePaymentNumber($invoice->company_id, $invoice->branch_id),
+                'payment_number' => $this->numbers->generatePaymentNumber($invoice->organization_id, $invoice->branch_id),
                 'currency' => $paymentData['currency'] ?? $invoice->currency,
                 'amount' => $amount,
                 'transaction_reference' => $paymentData['transaction_reference'] ?? null,

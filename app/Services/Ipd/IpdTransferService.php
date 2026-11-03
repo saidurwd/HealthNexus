@@ -40,7 +40,7 @@ class IpdTransferService
             }
 
             $movement = IpdBedMovement::create([
-                'company_id' => $admission->company_id,
+                'organization_id' => $admission->organization_id,
                 'branch_id' => $admission->branch_id,
                 'admission_id' => $admission->id,
                 'patient_id' => $admission->patient_id,
@@ -118,7 +118,7 @@ class IpdTransferService
 
     public function cancel(IpdBedMovement $movement, User $user, ?string $reason = null): IpdBedMovement
     {
-        return DB::transaction(function () use ($movement, $user, $reason) {
+        return DB::transaction(function () use ($movement, $reason) {
             if (! in_array($movement->status, [IpdBedMovement::STATUS_REQUESTED, IpdBedMovement::STATUS_APPROVED], true)) {
                 throw ValidationException::withMessages(['movement' => "This transfer is already '{$movement->status}'."]);
             }

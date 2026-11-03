@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdBed;
+use App\Models\Ipd\IpdBedAllocation;
+use App\Models\Ipd\IpdBedReservation;
 use App\Models\Patient;
 use App\Services\AuditLogger;
 use App\Services\Ipd\IpdBedAllocationService;
@@ -42,7 +44,7 @@ class IpdBedController extends Controller
             return ApiResponse::validationError($e->errors());
         }
 
-        $this->auditLogger->log('RESERVE', \App\Models\Ipd\IpdBedReservation::class, $reservation->id, null, $reservation->toArray(), $request);
+        $this->auditLogger->log('RESERVE', IpdBedReservation::class, $reservation->id, null, $reservation->toArray(), $request);
 
         return ApiResponse::success($reservation, 'Bed reserved.', 201);
     }
@@ -65,7 +67,7 @@ class IpdBedController extends Controller
             return ApiResponse::validationError($e->errors());
         }
 
-        $this->auditLogger->log('ALLOCATE', \App\Models\Ipd\IpdBedAllocation::class, $allocation->id, null, $allocation->toArray(), $request);
+        $this->auditLogger->log('ALLOCATE', IpdBedAllocation::class, $allocation->id, null, $allocation->toArray(), $request);
 
         return ApiResponse::success($allocation, 'Bed allocated.', 201);
     }
@@ -83,7 +85,7 @@ class IpdBedController extends Controller
             return ApiResponse::validationError($e->errors());
         }
 
-        $this->auditLogger->log('RELEASE', \App\Models\Ipd\IpdBedAllocation::class, $allocation->id, $oldValues, $allocation->fresh()->toArray(), $request);
+        $this->auditLogger->log('RELEASE', IpdBedAllocation::class, $allocation->id, $oldValues, $allocation->fresh()->toArray(), $request);
 
         return ApiResponse::success($allocation->fresh(), 'Bed released.');
     }

@@ -21,8 +21,8 @@
         <img src="{{ $logoImg }}" alt="{{ $logoImgAlt }}" width="30" height="30"
              class="{{ $logoImgClass }} me-2">
 
-        {{-- Brand text --}}
-        <span class="{{ $brandTextClass }}">{!! $logoText !!}</span>
+        {{-- Brand text (left out when the hospital's own logo stands alone) --}}
+        @if(trim(strip_tags((string) $logoText)) !== '')<span class="{{ $brandTextClass }}">{!! $logoText !!}</span>@endif
 
     </a>
 
@@ -35,8 +35,8 @@
             {{-- Brand logo --}}
             <img src="{{ $logoImg }}" alt="{{ $logoImgAlt }}" class="{{ $logoImgClass }}">
 
-            {{-- Brand text --}}
-            <span class="brand-text {{ $brandTextClass }}">{!! $logoText !!}</span>
+            {{-- Brand text (left out when the hospital's own logo stands alone) --}}
+            @if(trim(strip_tags((string) $logoText)) !== '')<span class="brand-text {{ $brandTextClass }}">{!! $logoText !!}</span>@endif
 
         </a>
     </div>

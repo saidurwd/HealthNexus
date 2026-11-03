@@ -5,11 +5,11 @@
 @section('page_content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Activity Logs</h3>
+        <h3 class="card-title">{{ __('Activity Logs') }}</h3>
         <div class="card-tools">
             <form method="get" action="{{ route('admin.activity.index') }}" class="input-group input-group-sm" style="width: 250px;">
                 <input type="text" name="search" value="{{ request('search') }}" class="form-control">
-                <button class="btn btn-primary">Search</button>
+                <button class="btn btn-primary">{{ __('Search') }}</button>
             </form>
         </div>
     </div>
@@ -17,12 +17,12 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Action</th>
-                    <th>Entity</th>
-                    <th>Request ID</th>
-                    <th>Created At</th>
+                    <th>{{ __('ID') }}</th>
+                    <th>{{ __('User') }}</th>
+                    <th>{{ __('Action') }}</th>
+                    <th>{{ __('Entity') }}</th>
+                    <th>{{ __('Request ID') }}</th>
+                    <th>{{ __('Created At') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,7 +36,7 @@
                         <td>{{ $log->created_at?->format('Y-m-d H:i') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="text-center">No activity logs found.</td></tr>
+                    <tr><td colspan="6" class="text-center">{{ __('No activity logs found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

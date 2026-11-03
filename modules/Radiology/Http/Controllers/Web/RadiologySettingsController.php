@@ -43,6 +43,6 @@ class RadiologySettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'radiology_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.radiology.settings.index')->with('success', 'Radiology settings updated successfully.');
+        return redirect()->route('admin.radiology.settings.index')->with('success', __('Radiology settings updated successfully.'));
     }
 }

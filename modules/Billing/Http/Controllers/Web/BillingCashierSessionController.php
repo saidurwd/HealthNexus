@@ -23,11 +23,11 @@ class BillingCashierSessionController extends Controller
     {
         $this->authorize('viewAny', BillingCashierSession::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $sessions = BillingCashierSession::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('user')
             ->latest('opened_at')
             ->paginate(20);
@@ -51,8 +51,8 @@ class BillingCashierSessionController extends Controller
     {
         $this->authorize('open', BillingCashierSession::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $counters = Department::where('company_id', $companyId)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $counters = Department::where('organization_id', $organizationId)->orderBy('name')->get();
 
         return view('admin.billing.cashier.open', compact('counters'));
     }
@@ -61,15 +61,15 @@ class BillingCashierSessionController extends Controller
     {
         $this->authorize('open', BillingCashierSession::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $counter = $request->validated('counter_id') ? Department::find($request->validated('counter_id')) : null;
 
-        $session = $this->sessions->open($request->user(), $companyId, $branchId, (string) $request->validated('opening_balance'), $counter);
+        $session = $this->sessions->open($request->user(), $organizationId, $branchId, (string) $request->validated('opening_balance'), $counter);
 
         $this->auditLogger->log('CREATE', BillingCashierSession::class, $session->id, null, $session->toArray(), $request);
 
-        return redirect()->route('admin.billing.cashier.my-session')->with('success', 'Cashier session opened.');
+        return redirect()->route('admin.billing.cashier.my-session')->with('success', __('Cashier session opened.'));
     }
 
     public function edit(BillingCashierSession $session)
@@ -91,7 +91,7 @@ class BillingCashierSessionController extends Controller
 
         $this->auditLogger->log('CLOSE', BillingCashierSession::class, $session->id, $oldValues, $session->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.cashier.my-session')->with('success', 'Cashier session closed.');
+        return redirect()->route('admin.billing.cashier.my-session')->with('success', __('Cashier session closed.'));
     }
 
     public function reconciliation(BillingCashierSession $session)

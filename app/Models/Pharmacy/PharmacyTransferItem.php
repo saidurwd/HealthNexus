@@ -21,7 +21,18 @@ class PharmacyTransferItem extends Model
         ];
     }
 
-    public function transfer(): BelongsTo { return $this->belongsTo(PharmacyTransfer::class, 'transfer_id'); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function batch(): BelongsTo { return $this->belongsTo(PharmacyBatch::class, 'batch_id'); }
+    public function transfer(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyTransfer::class, 'transfer_id');
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyBatch::class, 'batch_id');
+    }
 }

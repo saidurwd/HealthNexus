@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -13,7 +13,7 @@ class PatientFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'enterprise_patient_no' => fake()->unique()->numerify('EPT-########'),
             'national_identifier' => fake()->optional()->numerify('##########'),
             'first_name' => fake()->firstName(),

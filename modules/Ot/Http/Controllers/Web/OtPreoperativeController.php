@@ -53,7 +53,7 @@ class OtPreoperativeController extends Controller
 
         $this->auditLogger->log('CREATE', OtPreoperativeAssessment::class, $assessment->id, null, $assessment->toArray(), $request);
 
-        return back()->with('success', 'Preoperative assessment saved.');
+        return back()->with('success', __('Preoperative assessment saved.'));
     }
 
     public function finalizeAssessment(Request $request, OtPreoperativeAssessment $assessment)
@@ -66,7 +66,7 @@ class OtPreoperativeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Preoperative assessment finalized.');
+        return back()->with('success', __('Preoperative assessment finalized.'));
     }
 
     public function completeChecklistItem(Request $request, OtPreoperativeChecklistItem $item)
@@ -85,7 +85,7 @@ class OtPreoperativeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Checklist item updated.');
+        return back()->with('success', __('Checklist item updated.'));
     }
 
     public function completeChecklist(Request $request, OtPreoperativeChecklist $checklist)
@@ -99,7 +99,7 @@ class OtPreoperativeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Preoperative checklist completed.');
+        return back()->with('success', __('Preoperative checklist completed.'));
     }
 
     public function storeConsent(Request $request, OtSurgery $surgery)
@@ -124,6 +124,6 @@ class OtPreoperativeController extends Controller
 
         $this->auditLogger->log('CREATE', PatientConsent::class, $consent->id, null, $consent->toArray(), $request);
 
-        return back()->with('success', 'Consent recorded.');
+        return back()->with('success', __('Consent recorded.'));
     }
 }

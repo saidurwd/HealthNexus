@@ -3,7 +3,10 @@
 namespace App\Models\Radiology;
 
 use App\Models\Appointment;
+use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
@@ -14,8 +17,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RadiologyExamination extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
-        'company_id', 'branch_id', 'order_item_id', 'modality_id', 'patient_id', 'encounter_id',
+        'organization_id', 'branch_id', 'order_item_id', 'modality_id', 'patient_id', 'encounter_id',
         'appointment_id', 'scheduled_at', 'check_in_at', 'started_at', 'completed_at', 'status',
         'technologist_id', 'performing_provider_id', 'assigned_radiologist_id', 'assigned_at', 'assigned_by',
         'clinical_notes', 'technical_notes', 'mri_safety_screening', 'mri_screened_by', 'mri_screened_at',
@@ -37,28 +42,98 @@ class RadiologyExamination extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function orderItem(): BelongsTo { return $this->belongsTo(RadiologyOrderItem::class, 'order_item_id'); }
-    public function modality(): BelongsTo { return $this->belongsTo(RadiologyModality::class, 'modality_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(Patient::class); }
-    public function encounter(): BelongsTo { return $this->belongsTo(Encounter::class); }
-    public function appointment(): BelongsTo { return $this->belongsTo(Appointment::class); }
-    public function technologist(): BelongsTo { return $this->belongsTo(Provider::class, 'technologist_id'); }
-    public function performingProvider(): BelongsTo { return $this->belongsTo(Provider::class, 'performing_provider_id'); }
-    public function assignedRadiologist(): BelongsTo { return $this->belongsTo(Provider::class, 'assigned_radiologist_id'); }
-    public function assignedBy(): BelongsTo { return $this->belongsTo(User::class, 'assigned_by'); }
-    public function mriScreenedBy(): BelongsTo { return $this->belongsTo(User::class, 'mri_screened_by'); }
-    public function contrastAgent(): BelongsTo { return $this->belongsTo(RadiologyContrastAgent::class, 'contrast_agent_id'); }
-    public function contrastAdministeredBy(): BelongsTo { return $this->belongsTo(User::class, 'contrast_administered_by'); }
-    public function studies(): HasMany { return $this->hasMany(RadiologyStudy::class, 'radiology_examination_id'); }
-    public function report(): HasOne { return $this->hasOne(RadiologyReport::class, 'examination_id')->where('is_current', true); }
-    public function reports(): HasMany { return $this->hasMany(RadiologyReport::class, 'examination_id'); }
-
-    public function isAssigned(): bool { return $this->assigned_radiologist_id !== null; }
-
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function organization(): BelongsTo
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function orderItem(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyOrderItem::class, 'order_item_id');
+    }
+
+    public function modality(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyModality::class, 'modality_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function encounter(): BelongsTo
+    {
+        return $this->belongsTo(Encounter::class);
+    }
+
+    public function appointment(): BelongsTo
+    {
+        return $this->belongsTo(Appointment::class);
+    }
+
+    public function technologist(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'technologist_id');
+    }
+
+    public function performingProvider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'performing_provider_id');
+    }
+
+    public function assignedRadiologist(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'assigned_radiologist_id');
+    }
+
+    public function assignedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_by');
+    }
+
+    public function mriScreenedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'mri_screened_by');
+    }
+
+    public function contrastAgent(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyContrastAgent::class, 'contrast_agent_id');
+    }
+
+    public function contrastAdministeredBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'contrast_administered_by');
+    }
+
+    public function studies(): HasMany
+    {
+        return $this->hasMany(RadiologyStudy::class, 'radiology_examination_id');
+    }
+
+    public function report(): HasOne
+    {
+        return $this->hasOne(RadiologyReport::class, 'examination_id')->where('is_current', true);
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(RadiologyReport::class, 'examination_id');
+    }
+
+    public function isAssigned(): bool
+    {
+        return $this->assigned_radiologist_id !== null;
+    }
+
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
+    {
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

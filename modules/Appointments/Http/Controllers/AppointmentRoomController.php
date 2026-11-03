@@ -17,8 +17,8 @@ class AppointmentRoomController extends Controller
     {
         $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $rooms = AppointmentRoom::where('company_id', $companyId)->orderBy('name')->paginate(20);
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $rooms = AppointmentRoom::where('organization_id', $organizationId)->orderBy('name')->paginate(20);
 
         return view('admin.appointment-rooms.index', compact('rooms'));
     }
@@ -35,14 +35,14 @@ class AppointmentRoomController extends Controller
         $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $this->validated($request);
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $validated['branch_id'] = app(TenantContextResolver::class)->getBranchId();
 
         $room = AppointmentRoom::create($validated);
 
         $this->auditLogger->log('CREATE', AppointmentRoom::class, $room->id, null, $room->toArray(), $request);
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room added successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room added successfully.'));
     }
 
     public function edit(AppointmentRoom $appointmentRoom)
@@ -62,7 +62,7 @@ class AppointmentRoomController extends Controller
 
         $this->auditLogger->log('UPDATE', AppointmentRoom::class, $appointmentRoom->id, $oldValues, $appointmentRoom->toArray(), $request);
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room updated successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room updated successfully.'));
     }
 
     public function destroy(AppointmentRoom $appointmentRoom)
@@ -74,7 +74,7 @@ class AppointmentRoomController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentRoom::class, $appointmentRoom->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointment-rooms.index')->with('success', 'Room removed successfully.');
+        return redirect()->route('admin.appointment-rooms.index')->with('success', __('Room removed successfully.'));
     }
 
     private function validated(Request $request): array

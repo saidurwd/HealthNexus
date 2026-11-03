@@ -5,21 +5,21 @@
         @unless($t)
         @endunless
         <div class="mb-3">
-            <label class="form-label">Code</label>
+            <label class="form-label">{{ __('Code') }}</label>
             <input type="text" name="code" value="{{ old('code', $t?->code) }}" class="form-control @error('code') is-invalid @enderror" required>
             @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label class="form-label">Name</label>
+            <label class="form-label">{{ __('Name') }}</label>
             <input type="text" name="name" value="{{ old('name', $t?->name) }}" class="form-control @error('name') is-invalid @enderror" required>
             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label class="form-label">Short Name</label>
+            <label class="form-label">{{ __('Short Name') }}</label>
             <input type="text" name="short_name" value="{{ old('short_name', $t?->short_name) }}" class="form-control">
         </div>
         <div class="mb-3">
-            <label class="form-label">Category</label>
+            <label class="form-label">{{ __('Category') }}</label>
             <select name="category_id" class="form-control">
                 <option value="">-</option>
                 @foreach($categories as $category)
@@ -28,7 +28,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Section</label>
+            <label class="form-label">{{ __('Section') }}</label>
             <select name="section_id" class="form-control">
                 <option value="">-</option>
                 @foreach($sections as $section)
@@ -37,7 +37,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Test Type</label>
+            <label class="form-label">{{ __('Test Type') }}</label>
             <select name="test_type" class="form-control @error('test_type') is-invalid @enderror" required>
                 @foreach(['quantitative','qualitative','semi_quantitative','text','categorical','calculated','microbiology','culture','pathology'] as $type)
                     <option value="{{ $type }}" {{ old('test_type', $t?->test_type ?? 'quantitative') == $type ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $type)) }}</option>
@@ -47,7 +47,7 @@
     </div>
     <div class="col-md-6">
         <div class="mb-3">
-            <label class="form-label">Specimen Type</label>
+            <label class="form-label">{{ __('Specimen Type') }}</label>
             <select name="specimen_type_id" class="form-control">
                 <option value="">-</option>
                 @foreach($specimenTypes as $specimenType)
@@ -56,7 +56,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Container Type</label>
+            <label class="form-label">{{ __('Container Type') }}</label>
             <select name="container_type_id" class="form-control">
                 <option value="">-</option>
                 @foreach($containerTypes as $containerType)
@@ -65,31 +65,31 @@
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Method</label>
+            <label class="form-label">{{ __('Method') }}</label>
             <input type="text" name="method" value="{{ old('method', $t?->method) }}" class="form-control">
         </div>
         <div class="mb-3">
-            <label class="form-label">Unit</label>
-            <input type="text" name="unit" value="{{ old('unit', $t?->unit) }}" class="form-control" placeholder="e.g. g/dL, mmol/L">
+            <label class="form-label">{{ __('Unit') }}</label>
+            <input type="text" name="unit" value="{{ old('unit', $t?->unit) }}" class="form-control" placeholder="{{ __('e.g. g/dL, mmol/L') }}">
         </div>
         <div class="mb-3">
-            <label class="form-label">Turnaround Time (minutes)</label>
+            <label class="form-label">{{ __('Turnaround Time (minutes)') }}</label>
             <input type="number" min="0" name="turnaround_time_minutes" value="{{ old('turnaround_time_minutes', $t?->turnaround_time_minutes) }}" class="form-control">
         </div>
         <div class="form-check mb-2">
             <input type="checkbox" name="fasting_required" value="1" class="form-check-input" id="fasting_required" {{ old('fasting_required', $t?->fasting_required) ? 'checked' : '' }}>
-            <label class="form-check-label" for="fasting_required">Fasting required</label>
+            <label class="form-check-label" for="fasting_required">{{ __('Fasting required') }}</label>
         </div>
         <div class="form-check mb-2">
             <input type="checkbox" name="requires_pathologist_approval" value="1" class="form-check-input" id="requires_pathologist_approval" {{ old('requires_pathologist_approval', $t?->requires_pathologist_approval) ? 'checked' : '' }}>
-            <label class="form-check-label" for="requires_pathologist_approval">Requires pathologist approval</label>
+            <label class="form-check-label" for="requires_pathologist_approval">{{ __('Requires pathologist approval') }}</label>
         </div>
         <div class="form-check mb-2">
             <input type="checkbox" name="is_active" value="1" class="form-check-input" id="is_active" {{ old('is_active', $t?->is_active ?? true) ? 'checked' : '' }}>
-            <label class="form-check-label" for="is_active">Active</label>
+            <label class="form-check-label" for="is_active">{{ __('Active') }}</label>
         </div>
         <div class="mb-3">
-            <label class="form-label">Description</label>
+            <label class="form-label">{{ __('Description') }}</label>
             <textarea name="description" class="form-control">{{ old('description', $t?->description) }}</textarea>
         </div>
     </div>

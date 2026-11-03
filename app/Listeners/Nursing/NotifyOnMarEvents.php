@@ -24,7 +24,7 @@ class NotifyOnMarEvents
     private function notifyPrescriber($mar, string $action): void
     {
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['charge_nurse', 'doctor']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $mar->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $mar->organization_id))
             ->get();
 
         if ($recipients->isEmpty()) {

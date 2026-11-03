@@ -42,7 +42,7 @@ class PharmacyDispensingPolicy
 
     private function inScope(User $user, PharmacyDispensing $dispensing): bool
     {
-        return $user->companies()->where('companies.id', $dispensing->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $dispensing->organization_id)->exists()
             && $user->branches()->where('branches.id', $dispensing->branch_id)->exists();
     }
 }

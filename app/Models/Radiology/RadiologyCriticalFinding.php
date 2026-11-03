@@ -2,6 +2,9 @@
 
 namespace App\Models\Radiology;
 
+use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
+use App\Models\Organization;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -9,8 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RadiologyCriticalFinding extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
-        'company_id', 'branch_id', 'report_id', 'finding_text', 'detected_by', 'detected_at',
+        'organization_id', 'branch_id', 'report_id', 'finding_text', 'detected_by', 'detected_at',
         'notified_to', 'notification_method', 'notified_at', 'acknowledged_by', 'acknowledged_at',
         'notes', 'status',
     ];
@@ -20,17 +25,43 @@ class RadiologyCriticalFinding extends Model
         return ['detected_at' => 'datetime', 'notified_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function report(): BelongsTo { return $this->belongsTo(RadiologyReport::class, 'report_id'); }
-    public function detectedBy(): BelongsTo { return $this->belongsTo(Provider::class, 'detected_by'); }
-    public function notifiedTo(): BelongsTo { return $this->belongsTo(User::class, 'notified_to'); }
-    public function acknowledgedBy(): BelongsTo { return $this->belongsTo(User::class, 'acknowledged_by'); }
-
-    public function isAcknowledged(): bool { return $this->acknowledged_at !== null; }
-
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function organization(): BelongsTo
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function report(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyReport::class, 'report_id');
+    }
+
+    public function detectedBy(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'detected_by');
+    }
+
+    public function notifiedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'notified_to');
+    }
+
+    public function acknowledgedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'acknowledged_by');
+    }
+
+    public function isAcknowledged(): bool
+    {
+        return $this->acknowledged_at !== null;
+    }
+
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
+    {
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

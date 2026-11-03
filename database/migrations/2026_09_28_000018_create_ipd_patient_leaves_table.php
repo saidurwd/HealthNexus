@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_patient_leaves', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('admission_id')->constrained('ipd_admissions')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('admission_id');
         });
     }

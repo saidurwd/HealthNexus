@@ -5,6 +5,7 @@ namespace Tests\Feature\Laboratory;
 use App\Models\Department;
 use App\Models\Encounter;
 use App\Models\Laboratory\LabContainerType;
+use App\Models\Laboratory\LabCriticalValue;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabOrderItem;
 use App\Models\Laboratory\LabReferenceRange;
@@ -32,11 +33,11 @@ class ResultWorkflowTest extends LabTestCase
     {
         parent::setUp();
 
-        $specimenType = LabSpecimenType::create(['company_id' => $this->company->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
-        $containerType = LabContainerType::create(['company_id' => $this->company->id, 'branch_id' => null, 'code' => 'EDTA', 'name' => 'EDTA Tube', 'is_active' => true]);
+        $specimenType = LabSpecimenType::create(['organization_id' => $this->organization->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
+        $containerType = LabContainerType::create(['organization_id' => $this->organization->id, 'branch_id' => null, 'code' => 'EDTA', 'name' => 'EDTA Tube', 'is_active' => true]);
 
         $this->test = LabTest::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'HGB', 'name' => 'Hemoglobin', 'test_type' => 'quantitative', 'unit' => 'g/dL',
             'specimen_type_id' => $specimenType->id, 'container_type_id' => $containerType->id, 'is_active' => true,
         ]);
@@ -46,23 +47,23 @@ class ResultWorkflowTest extends LabTestCase
             'low' => '12.0', 'high' => '16.0', 'pregnancy_status' => 'any', 'is_active' => true,
         ]);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id, 'sex' => 'M']);
-        $department = Department::create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id, 'sex' => 'M']);
+        $department = Department::create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
         $encounter = Encounter::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
             'encounter_no' => 'ENC-'.uniqid(), 'encounter_type' => 'opd', 'provider_id' => $this->user->id,
             'department_id' => $department->id, 'encounter_date' => now()->toDateString(),
             'status' => 'in_progress', 'source' => 'walk_in', 'created_by' => $this->user->id,
         ]);
 
         $order = LabOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id, 'order_number' => 'LAB-'.uniqid(),
             'priority' => 'routine', 'status' => 'received', 'ordered_by' => $this->user->id, 'ordered_at' => now(),
         ]);
 
         $specimen = LabSpecimen::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'lab_order_id' => $order->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'lab_order_id' => $order->id,
             'specimen_type_id' => $specimenType->id, 'accession_number' => 'ACC-'.uniqid(), 'status' => 'received',
             'collected_by' => $this->user->id, 'collected_at' => now(), 'received_by' => $this->user->id, 'received_at' => now(),
         ]);
@@ -92,7 +93,7 @@ class ResultWorkflowTest extends LabTestCase
 
     public function test_full_validation_workflow_moves_through_entered_technical_pathologist(): void
     {
-        \App\Models\Laboratory\LabTest::whereKey($this->test->id)->update(['requires_pathologist_approval' => true]);
+        LabTest::whereKey($this->test->id)->update(['requires_pathologist_approval' => true]);
 
         $result = app(ResultEntryService::class)->enter($this->item, ['numeric_value' => '14.0'], $this->user);
 
@@ -130,7 +131,7 @@ class ResultWorkflowTest extends LabTestCase
 
     public function test_critical_value_detection_sets_flag_and_creates_an_alert(): void
     {
-        \App\Models\Laboratory\LabCriticalValue::create(['test_id' => $this->test->id, 'low_threshold' => '5.0', 'high_threshold' => '20.0', 'is_active' => true]);
+        LabCriticalValue::create(['test_id' => $this->test->id, 'low_threshold' => '5.0', 'high_threshold' => '20.0', 'is_active' => true]);
 
         $result = app(ResultEntryService::class)->enter($this->item, ['numeric_value' => '3.0'], $this->user);
 

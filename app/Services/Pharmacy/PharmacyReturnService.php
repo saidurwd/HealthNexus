@@ -31,11 +31,11 @@ class PharmacyReturnService
 
         return DB::transaction(function () use ($dispensing, $items, $reason, $user) {
             $return = PharmacyReturn::create([
-                'company_id' => $dispensing->company_id,
+                'organization_id' => $dispensing->organization_id,
                 'branch_id' => $dispensing->branch_id,
                 'dispensing_id' => $dispensing->id,
                 'store_id' => $dispensing->store_id,
-                'return_number' => $this->numbers->generateReturnNumber($dispensing->company_id, $dispensing->branch_id),
+                'return_number' => $this->numbers->generateReturnNumber($dispensing->organization_id, $dispensing->branch_id),
                 'status' => 'requested',
                 'reason' => $reason,
                 'requested_by' => $user->id,

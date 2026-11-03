@@ -2,6 +2,8 @@
 
 namespace App\Services\Dashboard;
 
+use Illuminate\Support\Facades\Route;
+
 /**
  * A single dashboard stat tile. The value is a closure rather than a plain scalar so it's only
  * ever evaluated for users who are actually permitted to see it (DashboardWidgetRegistry::forUser
@@ -32,6 +34,6 @@ final class DashboardWidget
             return null;
         }
 
-        return \Illuminate\Support\Facades\Route::has($this->routeName) ? route($this->routeName) : null;
+        return Route::has($this->routeName) ? route($this->routeName) : null;
     }
 }

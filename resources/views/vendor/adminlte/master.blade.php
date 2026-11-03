@@ -238,7 +238,10 @@
     @yield('adminlte_css')
 
     {{-- Favicon --}}
-    @if(config('adminlte.use_ico_only'))
+    @if($brandFavicon = app(\App\Services\Branding\BrandingService::class)->assetUrl('favicon'))
+        <link rel="icon" href="{{ $brandFavicon }}" />
+        <link rel="apple-touch-icon" href="{{ $brandFavicon }}" />
+    @elseif(config('adminlte.use_ico_only'))
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />
     @elseif(config('adminlte.use_full_favicon'))
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />

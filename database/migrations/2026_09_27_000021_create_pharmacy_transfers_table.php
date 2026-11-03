@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('source_store_id')->constrained('pharmacy_stores')->cascadeOnDelete();
             $table->foreignId('destination_store_id')->constrained('pharmacy_stores')->cascadeOnDelete();
@@ -27,8 +27,8 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'transfer_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'transfer_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
         });
     }
 

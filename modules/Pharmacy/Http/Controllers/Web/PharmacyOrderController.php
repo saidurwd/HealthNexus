@@ -22,11 +22,11 @@ class PharmacyOrderController extends Controller
     {
         $this->authorize('viewAny', PharmacyOrder::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $orders = PharmacyOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'items'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('order_number', 'like', '%'.$request->input('search').'%'))
@@ -43,7 +43,7 @@ class PharmacyOrderController extends Controller
 
         $order->load(['patient', 'encounter', 'prescription', 'items.medication', 'items.safetyAlerts', 'dispensings.items']);
 
-        $availableMedications = PharmacyMedication::query()->forTenant($order->company_id)->where('is_active', true)->orderBy('name')->get();
+        $availableMedications = PharmacyMedication::query()->forTenant($order->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.pharmacy.orders.show', compact('order', 'availableMedications'));
     }
@@ -64,7 +64,7 @@ class PharmacyOrderController extends Controller
 
         $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', PharmacyOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', 'Order item matched to a medication.');
+        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', __('Order item matched to a medication.'));
     }
 
     public function cancel(Request $request, PharmacyOrder $order)
@@ -78,6 +78,6 @@ class PharmacyOrderController extends Controller
 
         $this->auditLogger->log('CANCEL', PharmacyOrder::class, $order->id, $oldValues, $order->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', 'Pharmacy order cancelled.');
+        return redirect()->route('admin.pharmacy.orders.show', $order)->with('success', __('Pharmacy order cancelled.'));
     }
 }

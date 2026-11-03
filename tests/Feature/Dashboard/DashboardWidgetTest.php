@@ -3,7 +3,7 @@
 namespace Tests\Feature\Dashboard;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use App\Services\Dashboard\DashboardWidget;
 use App\Services\Dashboard\DashboardWidgetRegistry;
@@ -19,7 +19,7 @@ class DashboardWidgetTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     protected function setUp(): void
     {
@@ -27,23 +27,23 @@ class DashboardWidgetTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['manage companies', 'manage users', 'manage branches'] as $permission) {
+        foreach (['manage organizations', 'manage users', 'manage branches'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
         $this->actingAs($this->user);
-        // /dashboard is wrapped in EnsureTenantContext, which requires both a company AND a
+        // /dashboard is wrapped in EnsureTenantContext, which requires both an organization AND a
         // branch to be resolved — unlike the admin.* routes, which don't enforce this.
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $branch->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(TenantContextResolver::class)->setBranchId($branch->id);
     }
 
@@ -54,12 +54,12 @@ class DashboardWidgetTest extends TestCase
             key: 'gated',
             title: 'Gated',
             valueResolver: fn () => 'should-not-be-called',
-            permission: 'manage companies',
+            permission: 'manage organizations',
         ));
 
         $this->assertCount(0, $registry->forUser($this->user));
 
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->assertCount(1, $registry->forUser($this->user));
     }
 
@@ -84,7 +84,7 @@ class DashboardWidgetTest extends TestCase
 
                 return 42;
             },
-            permission: 'manage companies',
+            permission: 'manage organizations',
         ));
 
         $registry->forUser($this->user);
@@ -94,7 +94,7 @@ class DashboardWidgetTest extends TestCase
 
     public function test_dashboard_page_renders_core_widgets(): void
     {
-        $this->user->givePermissionTo(['manage companies', 'manage users', 'manage branches']);
+        $this->user->givePermissionTo(['manage organizations', 'manage users', 'manage branches']);
 
         $response = $this->get('/dashboard');
 
@@ -103,17 +103,17 @@ class DashboardWidgetTest extends TestCase
 
         $keys = collect($response->viewData('widgets'))->pluck('key');
         $this->assertContains('total_users', $keys);
-        $this->assertContains('total_companies', $keys);
+        $this->assertContains('total_organizations', $keys);
         $this->assertContains('total_branches', $keys);
     }
 
     public function test_dashboard_widget_count_reflects_real_data(): void
     {
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
 
         $response = $this->get('/dashboard');
 
-        $widget = collect($response->viewData('widgets'))->firstWhere('key', 'total_companies');
-        $this->assertSame(Company::count(), $widget->resolveValue());
+        $widget = collect($response->viewData('widgets'))->firstWhere('key', 'total_organizations');
+        $this->assertSame(Organization::count(), $widget->resolveValue());
     }
 }

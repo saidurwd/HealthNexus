@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mail\SystemNotification;
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\Ops\TrainingMode;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 
@@ -34,6 +35,10 @@ class NotificationService
         'sample_rejected' => [
             'title' => 'Lab Sample Rejected',
             'message' => 'Specimen :accession_number for :patient was rejected (:reason). Recollection is required.',
+        ],
+        'clinical_alert' => [
+            'title' => 'Clinical Alert',
+            'message' => ':message',
         ],
         'critical_result' => [
             'title' => 'Critical Lab Result',
@@ -181,11 +186,17 @@ class NotificationService
      */
     public function send($recipients, string $template, array $params = [], array $channels = ['database']): void
     {
-        $rendered = $this->render($template, $params);
-
         $users = $recipients instanceof User ? [$recipients] : $recipients;
 
+        // Training organizations never reach real inboxes (guideline 19.7).
+        if (app(TrainingMode::class)->active()) {
+            $channels = array_values(array_diff($channels, ['mail', 'sms']));
+        }
+
         foreach ($users as $user) {
+            // Each person gets the message in their own language (Bangla SMS/in-app/e-mail text, guideline 19.4).
+            $rendered = $this->render($template, $params, $user->locale ?? null);
+
             if (in_array('database', $channels)) {
                 Notification::create([
                     'user_id' => $user->id,
@@ -207,14 +218,20 @@ class NotificationService
         }
     }
 
-    public function render(string $template, array $params): array
+    public function render(string $template, array $params, ?string $locale = null): array
     {
         $base = $this->templates[$template] ?? ['title' => $template, 'message' => ''];
 
+        // The English template text is the translation key (lang/{locale}.json); a missing translation falls back to English.
         return [
-            'title' => $this->interpolate($base['title'], $params),
-            'message' => $this->interpolate($base['message'], $params),
+            'title' => $this->interpolate($this->translate($base['title'], $locale), $params),
+            'message' => $this->interpolate($this->translate($base['message'], $locale), $params),
         ];
+    }
+
+    private function translate(string $text, ?string $locale): string
+    {
+        return $text === '' ? $text : __($text, [], $locale ?: app()->getLocale());
     }
 
     public function templates(): array

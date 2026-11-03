@@ -17,6 +17,13 @@ class IcuInfusionTitration extends Model
         return ['previous_rate' => 'float', 'new_rate' => 'float', 'changed_at' => 'datetime'];
     }
 
-    public function infusion(): BelongsTo { return $this->belongsTo(IcuInfusion::class, 'infusion_id'); }
-    public function changedBy(): BelongsTo { return $this->belongsTo(User::class, 'changed_by'); }
+    public function infusion(): BelongsTo
+    {
+        return $this->belongsTo(IcuInfusion::class, 'infusion_id');
+    }
+
+    public function changedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'changed_by');
+    }
 }

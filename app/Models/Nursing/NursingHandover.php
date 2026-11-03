@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingHandover extends Model
 {
+    use HasPublicId;
+
     public const STATUS_DRAFT = 'draft';
 
     public const STATUS_PENDING_ACKNOWLEDGEMENT = 'pending_acknowledgement';
@@ -19,7 +22,7 @@ class NursingHandover extends Model
     protected $table = 'nursing_handover';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'outgoing_nurse_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'outgoing_nurse_id',
         'incoming_nurse_id', 'shift_id', 'status', 'prepared_at', 'acknowledged_at',
     ];
 
@@ -58,8 +61,8 @@ class NursingHandover extends Model
         return $this->hasMany(NursingHandoverItem::class, 'handover_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -4,11 +4,11 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">Cashier Sessions</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('Cashier Sessions') }}</h3></div>
         <div class="card-body p-0">
             <table class="table table-striped">
                 <thead>
-                    <tr><th>User</th><th>Opening</th><th>Expected Closing</th><th>Actual Closing</th><th>Variance</th><th>Status</th><th>Opened At</th><th></th></tr>
+                    <tr><th>{{ __('User') }}</th><th>{{ __('Opening') }}</th><th>{{ __('Expected Closing') }}</th><th>{{ __('Actual Closing') }}</th><th>{{ __('Variance') }}</th><th>{{ __('Status') }}</th><th>{{ __('Opened At') }}</th><th></th></tr>
                 </thead>
                 <tbody>
                     @forelse($sessions as $session)
@@ -18,16 +18,16 @@
                             <td>{{ number_format($session->expected_closing, 2) }}</td>
                             <td>{{ number_format($session->actual_closing, 2) }}</td>
                             <td class="{{ (float) $session->variance != 0 ? 'text-danger' : '' }}">{{ number_format($session->variance, 2) }}</td>
-                            <td><span class="badge {{ $session->status === 'open' ? 'bg-success' : 'bg-secondary' }}">{{ ucfirst($session->status) }}</span></td>
+                            <td><x-ui.status-badge :status="$session->status" /></td>
                             <td>{{ $session->opened_at?->format('Y-m-d H:i') }}</td>
                             <td>
                                 @if($session->status === 'closed')
-                                    <a href="{{ route('admin.billing.cashier.reconciliation', $session) }}" class="btn btn-xs btn-info">Reconciliation</a>
+                                    <a href="{{ route('admin.billing.cashier.reconciliation', $session) }}" class="btn btn-xs btn-info">{{ __('Reconciliation') }}</a>
                                 @endif
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="text-center">No cashier sessions found.</td></tr>
+                        <tr><td colspan="8" class="text-center">{{ __('No cashier sessions found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

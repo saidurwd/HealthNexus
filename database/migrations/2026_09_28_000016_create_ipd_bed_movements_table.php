@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_bed_movements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('admission_id')->constrained('ipd_admissions')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['admission_id', 'movement_type']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('from_bed_id');
             $table->index('to_bed_id');
             $table->index('moved_at');

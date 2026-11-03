@@ -9,10 +9,10 @@
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3"><input type="date" name="from" value="{{ $from }}" class="form-control"></div>
                 <div class="col-md-3"><input type="date" name="to" value="{{ $to }}" class="form-control"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Test</th><th>Patient</th><th>Amended By</th><th>Reason</th><th>At</th></tr></thead>
+                <thead><tr><th>{{ __('Test') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Amended By') }}</th><th>{{ __('Reason') }}</th><th>{{ __('At') }}</th></tr></thead>
                 <tbody>
                     @forelse($amendments as $amendment)
                         <tr>
@@ -23,7 +23,7 @@
                             <td>{{ $amendment->entered_at?->format('Y-m-d H:i') }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center">No amendments in this period.</td></tr>
+                        <tr><td colspan="5" class="text-center">{{ __('No amendments in this period.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

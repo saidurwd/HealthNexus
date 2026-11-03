@@ -16,11 +16,11 @@ class RadiologyCatalogController extends Controller
     {
         $this->authorize('viewAny', RadiologyProcedure::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $procedures = RadiologyProcedure::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->with(['section', 'bodyPart'])
             ->paginate((int) $request->input('per_page', 20));
@@ -32,11 +32,11 @@ class RadiologyCatalogController extends Controller
     {
         Gate::authorize('radiology.modality.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $modalities = RadiologyModality::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->paginate((int) $request->input('per_page', 20));
 

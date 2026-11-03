@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Workflow;
 use App\Models\WorkflowApprover;
 use App\Models\WorkflowStep;
 use Illuminate\Database\Seeder;
 
 /**
- * Seeds one example workflow per company as a reference implementation for future modules
+ * Seeds one example workflow per organization as a reference implementation for future modules
  * (billing discounts, insurance approvals, purchase requisitions, etc.) to model their own
  * workflow definitions on — not meant to be the only workflow the system ever has.
  */
@@ -17,9 +17,9 @@ class WorkflowSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::all()->each(function (Company $company) {
+        Organization::all()->each(function (Organization $organization) {
             $workflow = Workflow::query()->firstOrCreate(
-                ['company_id' => $company->id, 'code' => 'generic_approval'],
+                ['organization_id' => $organization->id, 'code' => 'generic_approval'],
                 ['name' => 'Generic Approval', 'description' => 'Two-step reference approval workflow: supervisor review, then final sign-off.', 'is_active' => true],
             );
 
@@ -41,10 +41,10 @@ class WorkflowSeeder extends Seeder
                 'workflow_step_id' => $final->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'super_admin',
             ]);
 
-            $this->seedPatientAmendmentWorkflow($company);
-            $this->seedIpdAdmissionWorkflow($company);
-            $this->seedOtSurgeryRequestWorkflow($company);
-            $this->seedIcuAdmissionWorkflow($company);
+            $this->seedPatientAmendmentWorkflow($organization);
+            $this->seedIpdAdmissionWorkflow($organization);
+            $this->seedOtSurgeryRequestWorkflow($organization);
+            $this->seedIcuAdmissionWorkflow($organization);
         });
     }
 
@@ -53,10 +53,10 @@ class WorkflowSeeder extends Seeder
      * PatientAmendmentService): a single hospital_admin approval step for sensitive-field
      * corrections (name, DOB, sex, national identifier).
      */
-    private function seedPatientAmendmentWorkflow(Company $company): void
+    private function seedPatientAmendmentWorkflow(Organization $organization): void
     {
         $workflow = Workflow::query()->firstOrCreate(
-            ['company_id' => $company->id, 'code' => 'patient_amendment'],
+            ['organization_id' => $organization->id, 'code' => 'patient_amendment'],
             ['name' => 'Patient Record Amendment', 'description' => 'Approval required to correct sensitive patient identity fields.', 'is_active' => true],
         );
 
@@ -78,10 +78,10 @@ class WorkflowSeeder extends Seeder
      * honoring the spec's explicit instruction to reuse the generic engine rather than build a
      * second approval framework.
      */
-    private function seedIpdAdmissionWorkflow(Company $company): void
+    private function seedIpdAdmissionWorkflow(Organization $organization): void
     {
         $workflow = Workflow::query()->firstOrCreate(
-            ['company_id' => $company->id, 'code' => 'ipd_admission'],
+            ['organization_id' => $organization->id, 'code' => 'ipd_admission'],
             ['name' => 'IPD Admission Approval', 'description' => 'Approval required before an admission request becomes an active admission.', 'is_active' => true],
         );
 
@@ -105,10 +105,10 @@ class WorkflowSeeder extends Seeder
      * a single approval step, eligible to either an ot_coordinator or a hospital_admin, honoring
      * the same narrow reuse of the generic engine as IPD admission approval.
      */
-    private function seedOtSurgeryRequestWorkflow(Company $company): void
+    private function seedOtSurgeryRequestWorkflow(Organization $organization): void
     {
         $workflow = Workflow::query()->firstOrCreate(
-            ['company_id' => $company->id, 'code' => 'ot_surgery_request'],
+            ['organization_id' => $organization->id, 'code' => 'ot_surgery_request'],
             ['name' => 'OT Surgery Request Approval', 'description' => 'Approval required before a surgery request can be scheduled.', 'is_active' => true],
         );
 
@@ -133,10 +133,10 @@ class WorkflowSeeder extends Seeder
      * hospital_admin, honoring the same narrow reuse of the generic engine as IPD admission and
      * OT surgery request approval.
      */
-    private function seedIcuAdmissionWorkflow(Company $company): void
+    private function seedIcuAdmissionWorkflow(Organization $organization): void
     {
         $workflow = Workflow::query()->firstOrCreate(
-            ['company_id' => $company->id, 'code' => 'icu_admission'],
+            ['organization_id' => $organization->id, 'code' => 'icu_admission'],
             ['name' => 'ICU Admission Approval', 'description' => 'Approval required before an ICU admission request becomes an active ICU episode.', 'is_active' => true],
         );
 

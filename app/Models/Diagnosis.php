@@ -12,7 +12,7 @@ class Diagnosis extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'appointment_id',
         'encounter_id',
@@ -35,9 +35,9 @@ class Diagnosis extends Model
         'is_primary' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

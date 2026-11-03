@@ -37,7 +37,7 @@ class NursingCarePlanPolicy
 
     private function inScope(User $user, NursingCarePlan $carePlan): bool
     {
-        return $user->companies()->where('companies.id', $carePlan->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $carePlan->organization_id)->exists()
             && (! $carePlan->branch_id || $user->branches()->where('branches.id', $carePlan->branch_id)->exists());
     }
 }

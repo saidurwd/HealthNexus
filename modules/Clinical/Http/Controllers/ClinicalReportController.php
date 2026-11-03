@@ -12,14 +12,14 @@ class ClinicalReportController extends Controller
 {
     public function index(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
         $base = Encounter::query()
-            ->when($companyId, fn ($q) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->whereBetween('encounter_date', [$from, $to]);
 
@@ -36,13 +36,13 @@ class ClinicalReportController extends Controller
 
     public function dailyOpd(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $date = $request->input('date', now()->toDateString());
 
         $encounters = Encounter::query()
-            ->when($companyId, fn ($q) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->whereDate('encounter_date', $date)
             ->with(['patient', 'provider', 'encounterType'])
@@ -55,14 +55,14 @@ class ClinicalReportController extends Controller
 
     public function providerWorkload(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
         $workload = Encounter::query()
-            ->when($companyId, fn ($q) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->whereBetween('encounter_date', [$from, $to])
             ->whereNotNull('provider_id')
@@ -77,14 +77,14 @@ class ClinicalReportController extends Controller
 
     public function diagnosisStatistics(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
         $diagnoses = Diagnosis::query()
-            ->when($companyId, fn ($q) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->whereBetween('recorded_at', [$from, $to.' 23:59:59'])
             ->selectRaw('description, coding_system, count(*) as aggregate')

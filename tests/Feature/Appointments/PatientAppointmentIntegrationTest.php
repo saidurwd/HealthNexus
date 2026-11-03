@@ -4,7 +4,7 @@ namespace Tests\Feature\Appointments;
 
 use App\Models\Appointment;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -24,7 +24,7 @@ class PatientAppointmentIntegrationTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Patient $patient;
 
@@ -34,11 +34,11 @@ class PatientAppointmentIntegrationTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         foreach (['patients.view', 'appointments.view', 'appointments.create'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -46,17 +46,17 @@ class PatientAppointmentIntegrationTest extends TestCase
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $branch->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
         app(TenantContextResolver::class)->setBranchId($branch->id);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
     }
 
     public function test_book_appointment_button_preselects_the_patient(): void
     {
-        $response = $this->get('/admin/appointments/create?patient_id='.$this->patient->id);
+        $response = $this->get('/appointments/create?patient_id='.$this->patient->id);
 
         $response->assertOk();
         $response->assertViewHas('selectedPatient', fn ($selected) => $selected->id === $this->patient->id);
@@ -67,7 +67,7 @@ class PatientAppointmentIntegrationTest extends TestCase
         $doctor = User::factory()->create();
         $countBefore = Patient::count();
 
-        $this->post('/admin/appointments', [
+        $this->post('/appointments', [
             'patient_id' => $this->patient->id,
             'doctor_id' => $doctor->id,
             'appointment_date' => now()->addDays(2)->toDateString(),
@@ -84,7 +84,7 @@ class PatientAppointmentIntegrationTest extends TestCase
     {
         $doctor = User::factory()->create();
 
-        $this->post('/admin/appointments', [
+        $this->post('/appointments', [
             'patient_id' => 999999,
             'doctor_id' => $doctor->id,
             'appointment_date' => now()->addDays(2)->toDateString(),
@@ -97,12 +97,12 @@ class PatientAppointmentIntegrationTest extends TestCase
     public function test_patient_profile_shows_appointment_history(): void
     {
         $appointment = Appointment::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'appointment_no' => 'APT-HIST-1',
         ]);
 
-        $response = $this->get("/admin/patients/{$this->patient->id}/appointments");
+        $response = $this->get("/patients/{$this->patient->public_id}/appointments");
 
         $response->assertOk();
         $response->assertSee($appointment->appointment_no);

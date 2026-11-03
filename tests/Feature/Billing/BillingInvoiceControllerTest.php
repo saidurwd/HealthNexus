@@ -19,15 +19,15 @@ class BillingInvoiceControllerTest extends BillingTestCase
     {
         parent::setUp();
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $this->item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
@@ -36,7 +36,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
     public function test_user_can_view_invoice_index(): void
     {
-        $response = $this->get('/admin/billing/invoices');
+        $response = $this->get('/billing/invoices');
 
         $response->assertOk();
         $response->assertViewHas('invoices');
@@ -44,13 +44,13 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
     public function test_user_can_create_a_draft_invoice(): void
     {
-        $response = $this->post('/admin/billing/invoices', [
+        $response = $this->post('/billing/invoices', [
             'patient_id' => $this->patient->id,
             'invoice_type' => 'opd',
         ]);
 
         $invoice = BillingInvoice::first();
-        $response->assertRedirect('/admin/billing/invoices/'.$invoice->id);
+        $response->assertRedirect('/billing/invoices/'.$invoice->public_id);
         $this->assertSame('draft', $invoice->status);
         $this->assertNull($invoice->invoice_number);
     }
@@ -58,7 +58,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
     public function test_full_invoice_to_payment_happy_path(): void
     {
         // 1. Create draft invoice.
-        $this->post('/admin/billing/invoices', [
+        $this->post('/billing/invoices', [
             'patient_id' => $this->patient->id,
             'invoice_type' => 'opd',
         ]);
@@ -66,7 +66,7 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
         // 2. Add a manually-created charge to it.
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id, 'billing_item_id' => $this->item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '500.00', 'gross_amount' => '500.00',
@@ -74,16 +74,16 @@ class BillingInvoiceControllerTest extends BillingTestCase
             'net_amount' => '500.00', 'charged_at' => now(),
         ]);
 
-        $this->post("/admin/billing/invoices/{$invoice->id}/charges", [
+        $this->post("/billing/invoices/{$invoice->public_id}/charges", [
             'charge_ids' => [$charge->id],
-        ])->assertRedirect("/admin/billing/invoices/{$invoice->id}");
+        ])->assertRedirect("/billing/invoices/{$invoice->public_id}");
 
         $invoice->refresh();
         $this->assertSame('500.00', (string) $invoice->grand_total);
 
         // 3. Finalize.
-        $this->post("/admin/billing/invoices/{$invoice->id}/finalize")
-            ->assertRedirect("/admin/billing/invoices/{$invoice->id}");
+        $this->post("/billing/invoices/{$invoice->public_id}/finalize")
+            ->assertRedirect("/billing/invoices/{$invoice->public_id}");
 
         $invoice->refresh();
         $this->assertSame('finalized', $invoice->status);
@@ -91,11 +91,11 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
         // 4. Collect payment.
         $method = BillingPaymentMethod::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 
-        $this->post('/admin/billing/payments', [
+        $this->post('/billing/payments', [
             'invoice_id' => $invoice->id,
             'payment_method_id' => $method->id,
             'amount' => '500.00',
@@ -112,15 +112,27 @@ class BillingInvoiceControllerTest extends BillingTestCase
 
     public function test_view_invoice_show_page(): void
     {
-        $this->post('/admin/billing/invoices', [
+        $this->post('/billing/invoices', [
             'patient_id' => $this->patient->id,
             'invoice_type' => 'opd',
         ]);
         $invoice = BillingInvoice::first();
 
-        $response = $this->get('/admin/billing/invoices/'.$invoice->id);
+        $response = $this->get('/billing/invoices/'.$invoice->public_id);
 
         $response->assertOk();
         $response->assertViewHas('invoice');
+    }
+
+    public function test_the_invoice_prints_as_an_a4_bill(): void
+    {
+        $this->post('/billing/invoices', ['patient_id' => $this->patient->id, 'invoice_type' => 'opd']);
+        $invoice = BillingInvoice::first();
+
+        $this->get('/billing/invoices/'.$invoice->public_id.'/print')
+            ->assertOk()
+            ->assertSee('invoice-sheet', false)
+            ->assertSee($this->patient->enterprise_patient_no)
+            ->assertSee('Patient / guardian signature');
     }
 }

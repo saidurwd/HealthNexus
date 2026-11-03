@@ -24,11 +24,11 @@ class RadiologyCriticalFindingController extends Controller
     {
         $this->authorize('viewAny', RadiologyCriticalFinding::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $findings = RadiologyCriticalFinding::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['report.examination.orderItem.radiologyOrder.patient'])
             ->when($request->filled('unacknowledged'), fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('detected_at')

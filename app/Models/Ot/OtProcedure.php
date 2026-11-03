@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OtProcedure extends Model
 {
     protected $fillable = [
-        'company_id', 'branch_id', 'category_id', 'specialty_id', 'code', 'name', 'description',
+        'organization_id', 'branch_id', 'category_id', 'specialty_id', 'code', 'name', 'description',
         'default_duration_minutes', 'anesthesia_category', 'laterality_applicable', 'site_applicable',
         'day_care_eligible', 'emergency_eligible', 'requires_implant', 'requires_blood',
         'requires_specimen', 'is_active',
@@ -39,9 +39,9 @@ class OtProcedure extends Model
         return $this->belongsTo(Specialty::class);
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)
+        return $query->where('organization_id', $organizationId)
             ->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

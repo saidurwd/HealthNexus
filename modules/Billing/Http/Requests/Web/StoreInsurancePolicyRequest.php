@@ -14,7 +14,7 @@ class StoreInsurancePolicyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'insurance_provider_id' => ['required', 'integer', 'exists:billing_insurance_providers,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],

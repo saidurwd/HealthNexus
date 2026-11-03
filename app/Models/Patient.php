@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasPublicId, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'country_id',
         'state_id',
         'patient_type_id',
@@ -66,9 +68,9 @@ class Patient extends Model
         'portal_enabled' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function country(): BelongsTo
@@ -141,7 +143,7 @@ class Patient extends Model
         return $this->consents()->where('status', 'active');
     }
 
-    public function preference(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function preference(): HasOne
     {
         return $this->hasOne(PatientPreference::class);
     }
@@ -156,7 +158,7 @@ class Patient extends Model
         return $this->hasMany(PatientTimelineEvent::class);
     }
 
-    public function portalAccount(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function portalAccount(): HasOne
     {
         return $this->hasOne(PatientPortalAccount::class);
     }
@@ -238,7 +240,7 @@ class Patient extends Model
 
     public function getFullNameAttribute(): string
     {
-        return trim($this->first_name.' '.$this->middle_name.' '.$this->last_name);
+        return trim(preg_replace('/\s+/u', ' ', $this->first_name.' '.$this->middle_name.' '.$this->last_name));
     }
 
     /**

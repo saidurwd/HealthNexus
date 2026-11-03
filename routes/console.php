@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\Clinical\EscalateUnacknowledgedAlerts;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -76,3 +77,33 @@ Schedule::command('icu:escalate-unacknowledged-alerts')->everyFifteenMinutes()->
 Schedule::command('icu:detect-missing-documentation')->hourly()->name('icu-detect-missing-documentation')->withoutOverlapping();
 Schedule::command('icu:generate-daily-census')->dailyAt('00:05')->name('icu-generate-daily-census')->withoutOverlapping();
 Schedule::command('icu:generate-charge-events')->dailyAt('00:15')->name('icu-generate-charge-events')->withoutOverlapping();
+
+Schedule::job(new EscalateUnacknowledgedAlerts)->everyMinute()->name('clinical-escalate-unacknowledged-alerts')->withoutOverlapping();
+
+Schedule::command('exports:prune')->hourly()->name('exports-prune')->withoutOverlapping();
+
+Schedule::command('ops:heartbeat')->everyMinute()->name('ops-heartbeat');
+Schedule::command('backup:run')->dailyAt('01:30')->name('backup-run')->withoutOverlapping();
+Schedule::command('backup:restore-drill')->monthlyOn(1, '03:30')->name('backup-restore-drill')->withoutOverlapping();
+
+Schedule::command('downtime:census')->cron('0 */'.max(1, (int) config('ops.downtime.census_hours', 6)).' * * *')->name('downtime-census')->withoutOverlapping();
+
+Schedule::command('ed:check-timers')->everyMinute()->name('ed-check-timers')->withoutOverlapping();
+Schedule::command('blood:check')->hourly()->name('blood-check')->withoutOverlapping();
+Schedule::command('inventory:check')->dailyAt('06:30')->name('inventory-check')->withoutOverlapping();
+Schedule::command('hr:check')->dailyAt('01:30')->name('hr-check')->withoutOverlapping();
+Schedule::command('portal:check')->everyFiveMinutes()->name('portal-check')->withoutOverlapping();
+Schedule::command('integration:work')->everyMinute()->name('integration-work')->withoutOverlapping();
+Schedule::command('interop:check')->everyFiveMinutes()->name('interop-check')->withoutOverlapping();
+Schedule::command('finance:post')->everyTenMinutes()->name('finance-post')->withoutOverlapping();
+Schedule::command('finance:check')->dailyAt('07:00')->name('finance-check')->withoutOverlapping();
+Schedule::command('analytics:load')->everyFifteenMinutes()->name('analytics-load')->withoutOverlapping();
+Schedule::command('analytics:check')->hourly()->name('analytics-check')->withoutOverlapping();
+Schedule::command('analytics:run-schedules')->everyFiveMinutes()->name('analytics-schedules')->withoutOverlapping();
+Schedule::command('analytics:dashboard-pack')->monthlyOn(1, '06:10')->name('analytics-dashboard-pack')->withoutOverlapping();
+Schedule::command('watch:scan')->dailyAt('06:50')->name('watch-scan')->withoutOverlapping();
+Schedule::command('analytics:forecast')->dailyAt('05:30')->name('analytics-forecast')->withoutOverlapping();
+Schedule::command('quality:check')->dailyAt('06:00')->name('quality-check')->withoutOverlapping();
+Schedule::command('facility:check')->dailyAt('06:30')->name('facility-check')->withoutOverlapping();
+Schedule::command('welfare:check')->dailyAt('06:40')->name('welfare-check')->withoutOverlapping();
+Schedule::command('ai:check')->dailyAt('06:45')->name('ai-check')->withoutOverlapping();

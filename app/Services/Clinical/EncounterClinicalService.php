@@ -2,29 +2,30 @@
 
 namespace App\Services\Clinical;
 
-use App\Models\Diagnosis;
-use App\Models\Encounter;
-use App\Models\EncounterComplaint;
-use App\Models\EncounterHistory;
-use App\Models\EncounterExamination;
-use App\Models\EncounterReviewOfSystem;
-use App\Models\PatientProblem;
-use App\Models\EncounterProcedure;
-use App\Models\ClinicalOrder;
-use App\Models\Prescription;
-use App\Models\EncounterReferral;
-use App\Models\EncounterInstruction;
-use App\Models\EncounterNote;
-use App\Models\EncounterDocument;
-use App\Models\EncounterAmendment;
-use App\Models\User;
-use App\Models\VitalSign;
+use App\Events\Clinical\ClinicalAmendmentCreated;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\PrescriptionCreated;
+use App\Events\Clinical\PrescriptionIssued;
 use App\Events\Clinical\ReferralCreated;
-use App\Events\Clinical\ClinicalAmendmentCreated;
 use App\Events\Clinical\VitalRecorded;
+use App\Models\ClinicalOrder;
+use App\Models\Diagnosis;
+use App\Models\Encounter;
+use App\Models\EncounterAmendment;
+use App\Models\EncounterComplaint;
+use App\Models\EncounterDocument;
+use App\Models\EncounterExamination;
+use App\Models\EncounterHistory;
+use App\Models\EncounterInstruction;
+use App\Models\EncounterNote;
+use App\Models\EncounterProcedure;
+use App\Models\EncounterReferral;
+use App\Models\EncounterReviewOfSystem;
+use App\Models\PatientProblem;
+use App\Models\Prescription;
+use App\Models\User;
+use App\Models\VitalSign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -41,7 +42,7 @@ class EncounterClinicalService
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
             $vital = VitalSign::create([
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'branch_id' => $encounter->branch_id,
                 'appointment_id' => $encounter->appointment_id,
                 'encounter_id' => $encounter->id,
@@ -88,7 +89,7 @@ class EncounterClinicalService
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
             $diagnosis = Diagnosis::create([
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'branch_id' => $encounter->branch_id,
                 'appointment_id' => $encounter->appointment_id,
                 'encounter_id' => $encounter->id,
@@ -116,13 +117,13 @@ class EncounterClinicalService
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
             $prescription = Prescription::create([
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'branch_id' => $encounter->branch_id,
                 'appointment_id' => $encounter->appointment_id,
                 'encounter_id' => $encounter->id,
                 'patient_id' => $encounter->patient_id,
                 'doctor_id' => $data['doctor_id'] ?? $encounter->provider_id ?? ($user?->id ?? auth()->id()),
-                'prescription_no' => $this->numberGenerator->generatePrescriptionNumber($encounter->company, $encounter->branch_id),
+                'prescription_no' => $this->numberGenerator->generatePrescriptionNumber($encounter->organization, $encounter->branch_id),
                 'status' => 'draft',
                 'clinical_notes' => $data['clinical_notes'] ?? null,
                 'advice' => $data['advice'] ?? null,
@@ -131,7 +132,7 @@ class EncounterClinicalService
             ]);
 
             foreach ($data['items'] ?? [] as $itemData) {
-                $prescription->items()->create(array_merge($itemData, ['company_id' => $encounter->company_id]));
+                $prescription->items()->create(array_merge($itemData, ['organization_id' => $encounter->organization_id]));
             }
 
             PrescriptionCreated::dispatch($encounter, $prescription);
@@ -139,12 +140,13 @@ class EncounterClinicalService
             return $prescription;
         });
     }
+
     public function addComplaint(Encounter $encounter, array $data, ?User $user = null): EncounterComplaint
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->complaints()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'complaint' => $data['complaint'],
                 'duration' => $data['duration'] ?? null,
                 'duration_unit' => $data['duration_unit'] ?? null,
@@ -159,10 +161,10 @@ class EncounterClinicalService
 
     public function addHistory(Encounter $encounter, array $data, ?User $user = null): EncounterHistory
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->histories()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'history_type' => $data['history_type'],
                 'onset' => $data['onset'] ?? null,
                 'duration' => $data['duration'] ?? null,
@@ -178,10 +180,10 @@ class EncounterClinicalService
 
     public function addExamination(Encounter $encounter, array $data, ?User $user = null): EncounterExamination
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->examinations()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'section_name' => $data['section_name'],
                 'findings' => $data['findings'] ?? null,
                 'notes' => $data['notes'] ?? null,
@@ -191,10 +193,10 @@ class EncounterClinicalService
 
     public function addReviewOfSystem(Encounter $encounter, array $data, ?User $user = null): EncounterReviewOfSystem
     {
-        return DB::transaction(function () use ($encounter, $data, $user) {
+        return DB::transaction(function () use ($encounter, $data) {
             return $encounter->reviewOfSystems()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'system_name' => $data['system_name'],
                 'status' => $data['status'],
                 'notes' => $data['notes'] ?? null,
@@ -207,7 +209,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             return PatientProblem::create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'problem_code' => $data['problem_code'] ?? null,
                 'problem_name' => $data['problem_name'],
                 'coding_system' => $data['coding_system'] ?? null,
@@ -227,7 +229,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             return $encounter->procedures()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'procedure_code' => $data['procedure_code'] ?? null,
                 'procedure_name' => $data['procedure_name'],
                 'procedure_date' => $data['procedure_date'] ?? now()->toDateString(),
@@ -244,9 +246,9 @@ class EncounterClinicalService
     {
         return DB::transaction(function () use ($encounter, $data, $user) {
             $order = ClinicalOrder::create([
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'branch_id' => $encounter->branch_id,
-                'order_number' => $this->numberGenerator->generateOrderNumber($encounter->company, $encounter->branch_id),
+                'order_number' => $this->numberGenerator->generateOrderNumber($encounter->organization, $encounter->branch_id),
                 'patient_id' => $encounter->patient_id,
                 'encounter_id' => $encounter->id,
                 'provider_id' => $data['provider_id'] ?? $user?->id,
@@ -259,7 +261,7 @@ class EncounterClinicalService
             ]);
 
             foreach ($data['items'] ?? [] as $itemData) {
-                $order->items()->create(array_merge($itemData, ['company_id' => $encounter->company_id]));
+                $order->items()->create(array_merge($itemData, ['organization_id' => $encounter->organization_id]));
             }
 
             event(new ClinicalOrderCreated($encounter, $order));
@@ -273,7 +275,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             $referral = $encounter->referrals()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'referral_type' => $data['referral_type'],
                 'referred_to' => $data['referred_to'] ?? null,
                 'referred_by' => $data['referred_by'] ?? null,
@@ -294,7 +296,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             return $encounter->instructions()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'instruction_type' => $data['instruction_type'],
                 'content' => $data['content'],
                 'created_by' => $user?->id ?? auth()->id(),
@@ -307,7 +309,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             return $encounter->notes()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'section' => $data['section'] ?? null,
                 'content' => $data['content'],
                 'created_by' => $user?->id ?? auth()->id(),
@@ -320,7 +322,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             return $encounter->documents()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'document_type' => $data['document_type'],
                 'file_name' => $data['file_name'],
                 'file_path' => $data['file_path'],
@@ -351,7 +353,7 @@ class EncounterClinicalService
             'issued_by' => $user?->id ?? auth()->id(),
         ]);
 
-        \App\Events\Clinical\PrescriptionIssued::dispatch($encounter, $prescription);
+        PrescriptionIssued::dispatch($encounter, $prescription);
 
         return $prescription;
     }
@@ -385,7 +387,7 @@ class EncounterClinicalService
         return DB::transaction(function () use ($encounter, $data, $user) {
             $amendment = $encounter->amendments()->create([
                 'patient_id' => $encounter->patient_id,
-                'company_id' => $encounter->company_id,
+                'organization_id' => $encounter->organization_id,
                 'amendment_type' => $data['amendment_type'],
                 'reason' => $data['reason'],
                 'content' => $data['content'],

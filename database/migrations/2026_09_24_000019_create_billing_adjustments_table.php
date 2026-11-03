@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_adjustments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('invoice_id')->nullable()->constrained('billing_invoices')->nullOnDelete();
             $table->foreignId('payment_id')->nullable()->constrained('billing_payments')->nullOnDelete();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['adjustable_type', 'adjustable_id']);
-            $table->index(['company_id', 'branch_id', 'invoice_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'invoice_id', 'status'], 'billing_adjustments_7ffdc0b0_idx');
             $table->index(['payment_id', 'status']);
         });
     }

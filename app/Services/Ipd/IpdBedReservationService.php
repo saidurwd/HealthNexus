@@ -19,7 +19,7 @@ class IpdBedReservationService
             $locked = $this->bedStatus->lockAndTransitionFromAvailable($bed->id, IpdBed::STATUS_RESERVED, $user, $reason);
 
             return IpdBedReservation::create([
-                'company_id' => $locked->company_id,
+                'organization_id' => $locked->organization_id,
                 'branch_id' => $locked->branch_id,
                 'patient_id' => $patient->id,
                 'admission_request_id' => $admissionRequestId,

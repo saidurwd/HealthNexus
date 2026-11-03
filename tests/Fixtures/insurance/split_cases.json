@@ -1,0 +1,81 @@
+{
+  "deductible then co-pay": {
+    "plan": {"copay_percent": 20, "deductible_amount": 1000, "annual_limit": 50000},
+    "rules": [],
+    "lines": [{"key": "consult", "item_code": "OPD", "gross": "500.00"}, {"key": "lab", "item_code": "CBC", "gross": "3000.00"}],
+    "expect": {"consult": {"payer": "0.00", "patient": "500.00", "deductible": "500.00", "copay": "0.00"}, "lab": {"payer": "2000.00", "patient": "1000.00", "deductible": "500.00", "copay": "500.00"}},
+    "totals": {"gross": "3500.00", "payer": "2000.00", "patient": "1500.00", "adjustment": "0.00"}
+  },
+  "an exclusion takes the whole line out": {
+    "plan": {"copay_percent": 10, "deductible_amount": 0},
+    "rules": [{"rule_type": "exclude", "match_type": "category", "match_value": "COSMETIC"}],
+    "lines": [{"key": "cosmetic", "category": "COSMETIC", "gross": "8000.00"}, {"key": "consult", "category": "CONSULT", "gross": "1000.00"}],
+    "expect": {"cosmetic": {"payer": "0.00", "patient": "8000.00", "non_covered": "8000.00"}, "consult": {"payer": "900.00", "patient": "100.00", "copay": "100.00"}},
+    "totals": {"gross": "9000.00", "payer": "900.00", "patient": "8100.00", "adjustment": "0.00"}
+  },
+  "the agreed contract rate caps what the payer considers": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0},
+    "rules": [],
+    "lines": [{"key": "xray", "item_code": "XR", "quantity": 2, "gross": "1000.00", "agreed_unit_rate": "400.00"}],
+    "expect": {"xray": {"payer": "800.00", "patient": "0.00", "adjustment": "200.00"}},
+    "totals": {"gross": "1000.00", "payer": "800.00", "patient": "0.00", "adjustment": "200.00"}
+  },
+  "a rate above the price never raises the price": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0},
+    "rules": [],
+    "lines": [{"key": "a", "item_code": "A", "quantity": 1, "gross": "300.00", "agreed_unit_rate": "500.00"}],
+    "expect": {"a": {"payer": "300.00", "patient": "0.00", "adjustment": "0.00"}},
+    "totals": {"gross": "300.00", "payer": "300.00", "patient": "0.00", "adjustment": "0.00"}
+  },
+  "a limit rule caps the lines it matches across the claim": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0},
+    "rules": [{"rule_type": "limit", "match_type": "category", "match_value": "LAB", "limit_amount": 2000}],
+    "lines": [{"key": "l1", "category": "LAB", "gross": "1500.00"}, {"key": "l2", "category": "LAB", "gross": "1500.00"}],
+    "expect": {"l1": {"payer": "1500.00", "patient": "0.00"}, "l2": {"payer": "500.00", "patient": "1000.00", "non_covered": "1000.00"}},
+    "totals": {"gross": "3000.00", "payer": "2000.00", "patient": "1000.00", "adjustment": "0.00"}
+  },
+  "the visit limit stops the payer part-way": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0, "per_visit_limit": 1000},
+    "rules": [],
+    "lines": [{"key": "a", "gross": "600.00"}, {"key": "b", "gross": "600.00"}],
+    "expect": {"a": {"payer": "600.00", "patient": "0.00"}, "b": {"payer": "400.00", "patient": "200.00"}},
+    "totals": {"gross": "1200.00", "payer": "1000.00", "patient": "200.00", "adjustment": "0.00"}
+  },
+  "the annual allowance left on the policy applies": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0, "annual_limit": 10000},
+    "state": {"annual_remaining": "700.00"},
+    "rules": [],
+    "lines": [{"key": "a", "gross": "1000.00"}],
+    "expect": {"a": {"payer": "700.00", "patient": "300.00"}},
+    "totals": {"gross": "1000.00", "payer": "700.00", "patient": "300.00", "adjustment": "0.00"}
+  },
+  "a repeating percentage leaves the remainder with the patient": {
+    "plan": {"copay_percent": 33.33, "deductible_amount": 0},
+    "rules": [],
+    "lines": [{"key": "a", "gross": "100.00"}],
+    "expect": {"a": {"payer": "66.67", "patient": "33.33", "copay": "33.33"}},
+    "totals": {"gross": "100.00", "payer": "66.67", "patient": "33.33", "adjustment": "0.00"}
+  },
+  "half a paisa rounds up": {
+    "plan": {"copay_percent": 15, "deductible_amount": 0},
+    "rules": [],
+    "lines": [{"key": "a", "gross": "10.10"}],
+    "expect": {"a": {"payer": "8.58", "patient": "1.52", "copay": "1.52"}},
+    "totals": {"gross": "10.10", "payer": "8.58", "patient": "1.52", "adjustment": "0.00"}
+  },
+  "a rule's own co-pay replaces the plan's": {
+    "plan": {"copay_percent": 20, "deductible_amount": 0},
+    "rules": [{"rule_type": "cover", "match_type": "item_code", "match_value": "MATERNITY", "copay_percent": 0}],
+    "lines": [{"key": "m", "item_code": "MATERNITY", "gross": "5000.00"}, {"key": "o", "item_code": "OPD", "gross": "1000.00"}],
+    "expect": {"m": {"payer": "5000.00", "patient": "0.00"}, "o": {"payer": "800.00", "patient": "200.00"}},
+    "totals": {"gross": "6000.00", "payer": "5800.00", "patient": "200.00", "adjustment": "0.00"}
+  },
+  "the pre-authorization caps lines that need one": {
+    "plan": {"copay_percent": 0, "deductible_amount": 0},
+    "state": {"preauth_remaining": "1500.00"},
+    "rules": [{"rule_type": "cover", "match_type": "category", "match_value": "SURGERY", "requires_preauth": true}],
+    "lines": [{"key": "s", "category": "SURGERY", "gross": "2000.00"}, {"key": "o", "category": "CONSULT", "gross": "500.00"}],
+    "expect": {"s": {"payer": "1500.00", "patient": "500.00"}, "o": {"payer": "500.00", "patient": "0.00"}},
+    "totals": {"gross": "2500.00", "payer": "2000.00", "patient": "500.00", "adjustment": "0.00"}
+  }
+}

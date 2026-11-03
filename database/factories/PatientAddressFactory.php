@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAddress;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,7 +14,7 @@ class PatientAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'patient_id' => Patient::factory(),
             'address_type' => fake()->randomElement(['permanent', 'present', 'work', 'mailing']),
             'line1' => fake()->streetAddress(),

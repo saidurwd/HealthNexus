@@ -21,10 +21,10 @@ class OtSurgeryRequestController extends Controller
     {
         $this->authorize('viewAny', OtSurgeryRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $requests = OtSurgeryRequest::forTenant($companyId, $branchId)
+        $requests = OtSurgeryRequest::forTenant($organizationId, $branchId)
             ->with(['patient', 'procedure', 'requestingProvider'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('requested_at')
@@ -79,7 +79,7 @@ class OtSurgeryRequestController extends Controller
 
         $this->auditLogger->log('CREATE', OtSurgeryRequest::class, $surgeryRequest->id, null, $surgeryRequest->toArray(), $request);
 
-        return redirect()->route('admin.ot.surgery-requests.show', $surgeryRequest)->with('success', 'Surgery request created.');
+        return redirect()->route('admin.ot.surgery-requests.show', $surgeryRequest)->with('success', __('Surgery request created.'));
     }
 
     public function approve(Request $request, OtSurgeryRequest $surgeryRequest)
@@ -94,7 +94,7 @@ class OtSurgeryRequestController extends Controller
 
         $this->auditLogger->log('APPROVE', OtSurgeryRequest::class, $surgeryRequest->id, null, ['status' => 'approved'], $request);
 
-        return back()->with('success', 'Surgery request approved.');
+        return back()->with('success', __('Surgery request approved.'));
     }
 
     public function reject(Request $request, OtSurgeryRequest $surgeryRequest)
@@ -111,7 +111,7 @@ class OtSurgeryRequestController extends Controller
 
         $this->auditLogger->log('REJECT', OtSurgeryRequest::class, $surgeryRequest->id, null, $validated, $request);
 
-        return back()->with('success', 'Surgery request rejected.');
+        return back()->with('success', __('Surgery request rejected.'));
     }
 
     public function cancel(Request $request, OtSurgeryRequest $surgeryRequest)
@@ -128,6 +128,6 @@ class OtSurgeryRequestController extends Controller
 
         $this->auditLogger->log('CANCEL', OtSurgeryRequest::class, $surgeryRequest->id, null, $validated, $request);
 
-        return back()->with('success', 'Surgery request cancelled.');
+        return back()->with('success', __('Surgery request cancelled.'));
     }
 }

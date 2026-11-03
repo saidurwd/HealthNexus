@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('action');
             $table->string('model_type')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('method')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'action']);
+            $table->index(['organization_id', 'action']);
             $table->index(['user_id', 'action']);
             $table->index(['model_type', 'model_id']);
             $table->index('created_at');

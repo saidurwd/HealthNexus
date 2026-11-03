@@ -49,7 +49,7 @@ class OtSafetyChecklistController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Checklist item updated.');
+        return back()->with('success', __('Checklist item updated.'));
     }
 
     public function completePhase(Request $request, OtSurgicalSafetyChecklist $checklist)

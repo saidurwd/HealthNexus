@@ -2,21 +2,40 @@
 
 namespace App\Providers;
 
+use App\Contracts\Billing\ChargeEventPublisher;
 use App\Contracts\Billing\RevenuePostingInterface;
+use App\Contracts\Documents\PdfRenderer;
+use App\Contracts\Integration\BloodRequestGateway;
+use App\Contracts\Integration\FinanceGateway;
+use App\Contracts\Integration\NationalExchangeGateway;
+use App\Contracts\Integration\PaymentGateway;
 use App\Contracts\Laboratory\LabAnalyzerAdapterInterface;
 use App\Contracts\Pharmacy\DrugInformationProviderInterface;
+use App\Contracts\Stock\StockLedger;
 use App\Events\Appointments\AppointmentCancelled;
 use App\Events\Appointments\AppointmentCreated;
 use App\Events\Appointments\AppointmentNoShow;
 use App\Events\Appointments\AppointmentRescheduled;
+use App\Events\Billing\AdjustmentApproved;
+use App\Events\Billing\ChargeReversalRequested;
+use App\Events\Billing\InvoiceCancelled;
+use App\Events\Billing\InvoiceFinalized;
+use App\Events\Billing\PaymentCompleted;
+use App\Events\Billing\RefundProcessed;
 use App\Events\Clinical\ClinicalOrderCreated;
 use App\Events\Clinical\DiagnosisAdded;
 use App\Events\Clinical\EncounterCompleted;
 use App\Events\Clinical\EncounterCreated;
 use App\Events\Clinical\PrescriptionIssued;
 use App\Events\Clinical\ReferralCreated;
+use App\Events\Icu\ICUCodeBlueStarted;
+use App\Events\Icu\ICUCriticalAlertTriggered;
+use App\Events\Icu\ICUDischarged;
+use App\Events\Icu\ICUPatientAdmitted;
+use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ipd\AdmissionApproved;
 use App\Events\Ipd\BedAllocated;
+use App\Events\Ipd\BedReleased;
 use App\Events\Ipd\DischargeRequested;
 use App\Events\Ipd\PatientAdmitted;
 use App\Events\Ipd\PatientDischarged;
@@ -25,7 +44,6 @@ use App\Events\Laboratory\CriticalResultDetected;
 use App\Events\Laboratory\LabReportAmended;
 use App\Events\Laboratory\LabReportFinalized;
 use App\Events\Laboratory\SampleRejected;
-use App\Events\Pharmacy\DispensingCompleted;
 use App\Events\Nursing\CarePlanCompleted;
 use App\Events\Nursing\CriticalObservationDetected;
 use App\Events\Nursing\MedicationAdministrationRecorded;
@@ -37,11 +55,6 @@ use App\Events\Nursing\NursingEpisodeStarted;
 use App\Events\Nursing\NursingEscalationCreated;
 use App\Events\Nursing\NursingEscalationResolved;
 use App\Events\Nursing\NursingHandoverCreated;
-use App\Events\Icu\ICUCodeBlueStarted;
-use App\Events\Icu\ICUCriticalAlertTriggered;
-use App\Events\Icu\ICUDischarged;
-use App\Events\Icu\ICUPatientAdmitted;
-use App\Events\Icu\ICUPatientTransferred;
 use App\Events\Ot\PatientReceivedForSurgery;
 use App\Events\Ot\RecoveryCompleted;
 use App\Events\Ot\SurgeryCancelled;
@@ -50,19 +63,41 @@ use App\Events\Ot\SurgeryPostponed;
 use App\Events\Ot\SurgeryScheduled;
 use App\Events\Ot\SurgeryStarted;
 use App\Events\Ot\SurgicalComplicationRecorded;
+use App\Events\Pharmacy\DispensingCompleted;
 use App\Events\Radiology\CriticalFindingDetected;
 use App\Events\Radiology\RadiologyExamCompleted;
 use App\Events\Radiology\RadiologyReportAmended;
 use App\Events\Radiology\RadiologyReportFinalized;
+use App\Integrations\BloodBankRequestGateway;
+use App\Integrations\Finance\LedgerFinanceGateway;
+use App\Integrations\Null\NullNationalExchangeGateway;
+use App\Integrations\Null\NullPaymentGateway;
+use App\Integrations\Sandbox\SandboxNationalExchangeGateway;
+use App\Integrations\Sandbox\SandboxPaymentGateway;
 use App\Listeners\Appointments\CancelAppointmentReminders;
 use App\Listeners\Appointments\ScheduleAppointmentReminders;
 use App\Listeners\Billing\CreateChargeOnClinicalOrderCreated;
 use App\Listeners\Billing\CreateChargeOnEncounterCompleted;
+use App\Listeners\Billing\ReverseChargeOnReversalRequested;
+use App\Listeners\Blood\SyncDonationTestsOnLabReport;
 use App\Listeners\Clinical\RecordEncounterTimelineEvent;
+use App\Listeners\Facility\CreateCleaningTask;
+use App\Listeners\Finance\PostToLedger;
+use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
+use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
+use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
+use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
+use App\Listeners\Insurance\DraftClaimWhenInvoiceFinalized;
+use App\Listeners\Interop\PublishDomainEvent;
 use App\Listeners\Ipd\NotifyOnAdmissionEvents;
 use App\Listeners\Ipd\NotifyOnDischargeEvents;
 use App\Listeners\Ipd\NotifyOnTransferEvents;
 use App\Listeners\Ipd\RecordAdmissionOnPatientTimeline;
+use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
+use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
+use App\Listeners\Laboratory\NotifyOnLabReportEvents;
+use App\Listeners\Laboratory\NotifyOnSampleRejected;
+use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
 use App\Listeners\Nursing\CompleteEpisodeOnDischarge;
 use App\Listeners\Nursing\FlagHandoverOnTransfer;
 use App\Listeners\Nursing\NotifyOnAssignmentEvents;
@@ -72,32 +107,39 @@ use App\Listeners\Nursing\NotifyOnMarEvents;
 use App\Listeners\Nursing\RaiseAlertOnCriticalObservation;
 use App\Listeners\Nursing\RecordNursingEventsOnPatientTimeline;
 use App\Listeners\Nursing\StartEpisodeOnAdmission;
-use App\Listeners\Laboratory\CreateLabOrderOnClinicalOrderCreated;
-use App\Listeners\Laboratory\NotifyOnCriticalResultDetected;
-use App\Listeners\Laboratory\NotifyOnLabReportEvents;
-use App\Listeners\Laboratory\NotifyOnSampleRejected;
-use App\Listeners\Laboratory\RecordLabReportOnPatientTimeline;
-use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
-use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
-use App\Listeners\Icu\CreateIcuAlertOnLabCriticalResult;
-use App\Listeners\Icu\NotifyOnIcuCriticalAlerts;
-use App\Listeners\Icu\NotifyOnIcuEpisodeEvents;
-use App\Listeners\Icu\RecordIcuEventsOnPatientTimeline;
 use App\Listeners\Ot\CreateSurgeryRequestOnClinicalOrderCreated;
 use App\Listeners\Ot\NotifyOnSurgeryScheduleEvents;
 use App\Listeners\Ot\NotifyOnSurgeryTeamEvents;
 use App\Listeners\Ot\RecordSurgeryEventsOnPatientTimeline;
+use App\Listeners\Pharmacy\CreatePharmacyOrderOnPrescriptionIssued;
+use App\Listeners\Pharmacy\RecordDispensingOnPatientTimeline;
 use App\Listeners\Radiology\CreateRadiologyOrderOnClinicalOrderCreated;
 use App\Listeners\Radiology\DispatchPacsSyncOnExamCompleted;
 use App\Listeners\Radiology\NotifyOnCriticalFindingDetected;
 use App\Listeners\Radiology\NotifyOnRadiologyReportEvents;
 use App\Listeners\Radiology\RecordRadiologyReportOnPatientTimeline;
+use App\Listeners\Welfare\SettleWelfareApplication;
+use App\Models\Patient;
+use App\Models\PatientBranchRegistration;
+use App\Models\PatientContact;
+use App\Models\PatientIdentifier;
+use App\Observers\PatientSearchObserver;
+use App\Services\Billing\Events\BillingChargeEventPublisher;
 use App\Services\Billing\NullRevenuePoster;
+use App\Services\Branding\BrandingService;
 use App\Services\Breadcrumbs;
+use App\Services\Documents\BrowsershotPdfRenderer;
+use App\Services\Interop\DeliveryWorker;
 use App\Services\Laboratory\NullLabAnalyzerAdapter;
+use App\Services\ModuleManager;
+use App\Services\Ops\ShellRunner;
+use App\Services\Ops\SymfonyShellRunner;
 use App\Services\Pharmacy\NullDrugInformationProvider;
+use App\Services\Search\PatientSearchIndexer;
 use App\Services\SettingsService;
+use App\Services\Stock\DatabaseStockLedger;
 use App\Services\TenantContextResolver;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -108,6 +150,30 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TenantContextResolver::class, function ($app) {
             return new TenantContextResolver;
         });
+
+        $this->app->singleton(ModuleManager::class);
+        $this->app->bind(ShellRunner::class, SymfonyShellRunner::class);
+        $this->app->bind(PdfRenderer::class, BrowsershotPdfRenderer::class);
+        $this->app->bind(StockLedger::class, DatabaseStockLedger::class);
+        $this->app->bind(ChargeEventPublisher::class, BillingChargeEventPublisher::class);
+
+        // Phase 13: the real Blood Bank answers the gateway (it replies "not enabled" itself when the module is off for the organization).
+        $this->app->bind(BloodRequestGateway::class, BloodBankRequestGateway::class);
+
+        // Phase 17: the payment gateway is the sandbox only where the config says so (development, tests, the demo); otherwise the null adapter answers.
+        $this->app->bind(PaymentGateway::class, fn () => config('portal.payments.driver') === 'sandbox' ? new SandboxPaymentGateway : new NullPaymentGateway);
+
+        $this->app->singleton(DeliveryWorker::class); // one sender per process, so a transport set on it (tests, a hospital adapter) is the one used
+
+        // Phase 18: the national exchange answers with the sandbox test client only where the config says so; otherwise the null adapter does.
+        $this->app->bind(NationalExchangeGateway::class, fn () => config('interop.national.driver') === 'sandbox' ? new SandboxNationalExchangeGateway : new NullNationalExchangeGateway);
+
+        // Phase 21: the books answer the hand-offs from payroll, insurance and purchasing (they say "not enabled" like the null adapter when Finance is off for the hospital).
+        $this->app->bind(FinanceGateway::class, LedgerFinanceGateway::class);
+
+        foreach (config('integrations.gateways', []) as $contract => $nullAdapter) {
+            $this->app->bindIf($contract, $nullAdapter);
+        }
 
         $this->app->singleton(Breadcrumbs::class, function ($app) {
             return new Breadcrumbs($app['request']);
@@ -124,6 +190,32 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // The name, logo and mail account the hospital chose on the set-up page lie over the shipped config.
+        $this->app->make(BrandingService::class)->apply();
+
+        // The screens are Bootstrap 5; the default page links are Tailwind and render as oversized arrows.
+        Paginator::useBootstrapFive();
+
+        Patient::observe(PatientSearchObserver::class);
+        foreach ([PatientIdentifier::class, PatientContact::class, PatientBranchRegistration::class] as $child) {
+            $reindex = function ($row) {
+                $patient = Patient::withoutGlobalScopes()->find($row->patient_id);
+                $patient && app(PatientSearchIndexer::class)->reindex($patient);
+            };
+            $child::saved($reindex);
+            $child::deleted($reindex);
+        }
+
+        // Phase 21: Billing's money events are posted to the books.
+        Event::listen(BedReleased::class, CreateCleaningTask::class);
+        Event::listen(AdjustmentApproved::class, SettleWelfareApplication::class);
+        Event::listen(InvoiceFinalized::class, [PostToLedger::class, 'invoiceFinalized']);
+        Event::listen(InvoiceCancelled::class, [PostToLedger::class, 'invoiceCancelled']);
+        Event::listen(PaymentCompleted::class, [PostToLedger::class, 'paymentCompleted']);
+        Event::listen(RefundProcessed::class, [PostToLedger::class, 'refundProcessed']);
+        Event::listen(AdjustmentApproved::class, [PostToLedger::class, 'adjustmentApproved']);
+
+        Event::listen(ChargeReversalRequested::class, ReverseChargeOnReversalRequested::class);
         Event::listen(EncounterCompleted::class, CreateChargeOnEncounterCompleted::class);
         Event::listen(ClinicalOrderCreated::class, CreateChargeOnClinicalOrderCreated::class);
 
@@ -145,6 +237,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(LabReportFinalized::class, [RecordLabReportOnPatientTimeline::class, 'handleFinalized']);
         Event::listen(LabReportAmended::class, [RecordLabReportOnPatientTimeline::class, 'handleAmended']);
         Event::listen(LabReportFinalized::class, [NotifyOnLabReportEvents::class, 'handleFinalized']);
+        Event::listen(LabReportFinalized::class, [SyncDonationTestsOnLabReport::class, 'handle']);
+        Event::listen(InvoiceFinalized::class, [DraftClaimWhenInvoiceFinalized::class, 'handle']);
         Event::listen(LabReportAmended::class, [NotifyOnLabReportEvents::class, 'handleAmended']);
 
         Event::listen(ClinicalOrderCreated::class, CreateRadiologyOrderOnClinicalOrderCreated::class);
@@ -203,5 +297,10 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ICUPatientTransferred::class, [NotifyOnIcuEpisodeEvents::class, 'handleTransferred']);
         Event::listen(ICUCriticalAlertTriggered::class, [NotifyOnIcuCriticalAlerts::class, 'handleAlertTriggered']);
         Event::listen(ICUCodeBlueStarted::class, [NotifyOnIcuCriticalAlerts::class, 'handleCodeBlueStarted']);
+
+        // Phase 18: the domain events offered to integration routing rules (config/interop.php).
+        foreach (array_values((array) config('interop.events', [])) as $eventClass) {
+            Event::listen($eventClass, [PublishDomainEvent::class, 'handle']);
+        }
     }
 }

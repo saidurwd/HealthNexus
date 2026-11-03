@@ -32,6 +32,6 @@ class NursingAssignmentPolicy
 
     private function inScope(User $user, NursingAssignment $assignment): bool
     {
-        return $user->companies()->where('companies.id', $assignment->episode->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $assignment->episode->organization_id)->exists();
     }
 }

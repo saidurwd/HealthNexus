@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\EncounterTemplate;
+use App\Models\EncounterTemplateSection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EncounterTemplateSectionFactory extends Factory
 {
-    protected $model = \App\Models\EncounterTemplateSection::class;
+    protected $model = EncounterTemplateSection::class;
 
     public function definition(): array
     {

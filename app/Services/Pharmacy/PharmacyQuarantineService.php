@@ -27,7 +27,7 @@ class PharmacyQuarantineService
             $batch->update(['is_quarantined' => true]);
 
             return PharmacyQuarantine::create([
-                'company_id' => $store->company_id,
+                'organization_id' => $store->organization_id,
                 'branch_id' => $store->branch_id,
                 'store_id' => $store->id,
                 'medication_id' => $batch->medication_id,

@@ -14,7 +14,7 @@ class Department extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'name',
         'code',
@@ -29,9 +29,9 @@ class Department extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('lab_critical_result_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('result_id')->constrained('lab_results')->cascadeOnDelete();
             $table->timestamp('detected_at');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'acknowledged_at'], 'lab_crit_alerts_scope_ack_idx');
+            $table->index(['organization_id', 'branch_id', 'acknowledged_at'], 'lab_crit_alerts_scope_ack_idx');
             $table->index(['result_id']);
         });
     }

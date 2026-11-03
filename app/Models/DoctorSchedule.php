@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ class DoctorSchedule extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'doctor_id',
         'provider_id',
@@ -48,9 +49,9 @@ class DoctorSchedule extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo
@@ -92,7 +93,7 @@ class DoctorSchedule extends Model
      * Whether $date falls within this session's own effective_from/effective_to window (either
      * bound is optional; an unset bound means "no restriction on that side").
      */
-    public function isEffectiveOn(\Carbon\Carbon $date): bool
+    public function isEffectiveOn(Carbon $date): bool
     {
         if ($this->effective_from && $date->lt($this->effective_from)) {
             return false;

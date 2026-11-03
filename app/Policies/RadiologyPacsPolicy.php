@@ -27,6 +27,6 @@ class RadiologyPacsPolicy
 
     private function inScope(User $user, RadiologyPacsServer $server): bool
     {
-        return $user->companies()->where('companies.id', $server->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $server->organization_id)->exists();
     }
 }

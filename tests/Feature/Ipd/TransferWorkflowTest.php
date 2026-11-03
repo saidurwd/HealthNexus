@@ -10,6 +10,7 @@ use App\Models\Ipd\IpdBedMovement;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdTransferService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves a transfer is atomic (spec §15/§83): the patient is never simultaneously occupying two
@@ -55,19 +56,19 @@ class TransferWorkflowTest extends IpdTestCase
         $movement = app(IpdTransferService::class)->request($admission, $destinationBed, $this->user);
         app(IpdTransferService::class)->complete($movement->fresh(), $this->user);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdTransferService::class)->complete($movement->fresh(), $this->user);
     }
 
     private function makeAdmittedPatient(IpdBed $bed): IpdAdmission
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
         $admission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);

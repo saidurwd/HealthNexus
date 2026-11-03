@@ -34,7 +34,7 @@ class BranchPolicy
 
     public function delete(User $user, Branch $branch): bool
     {
-        $access = $user->companies()->where('companies.id', $branch->company_id)->first()?->pivot?->access_level;
+        $access = $user->organizations()->where('organizations.id', $branch->organization_id)->first()?->pivot?->access_level;
 
         return $access === 'owner' || $user->hasRole('super_admin');
     }

@@ -1,0 +1,14 @@
+@extends('layouts.adminlte')
+
+@section('page_title', $c->number)
+
+@section('page_content')
+    @include('admin.crm._flash')
+    <div class="card"><div class="card-body"><div class="d-flex justify-content-between flex-wrap gap-2"><div>{{ __(\Illuminate\Support\Str::headline($c->category)) }} · {{ __('via') }} {{ __(\Illuminate\Support\Str::headline($c->channel)) }} · {{ $c->patient ? $c->patient->first_name.' '.$c->patient->last_name.' ('.$c->patient->enterprise_patient_no.')' : __('Not a known patient') }}
+        <div class="mt-2 p-2 bg-light border rounded" style="white-space: pre-wrap">{{ $c->description }}</div>@if($c->resolution)<div class="mt-2"><strong>{{ __('Answer') }}:</strong> {{ $c->resolution }}</div>@endif @if($c->satisfaction)<div class="small">{{ __('The complainant rated the answer') }} {{ $c->satisfaction }}/5</div>@endif</div>
+        <div class="text-end"><x-ui.status-badge :status="$c->status" /> <x-ui.status-badge :status="$c->severity" /><div class="small {{ $c->due_at && $c->due_at->isPast() && ! in_array($c->status, ['resolved', 'closed']) ? 'text-danger' : 'text-muted' }}">{{ __('answer by') }} {{ $c->due_at?->format('d M H:i') }}</div><div class="small text-muted">{{ $c->assignee?->name }}</div></div></div></div>
+        @can('crm.complaint.manage')@if($c->status !== 'closed')<div class="card-footer"><form method="POST" action="{{ route('admin.crm.complaints.action', $c->public_id) }}" class="d-flex flex-wrap gap-2">@csrf
+            <select name="assigned_to" class="form-select form-select-sm w-auto"><option value="">{{ __('Choose a person') }}</option>@foreach($staff as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach</select><button name="action" value="assign" class="btn btn-sm btn-outline-secondary">{{ __('Assign') }}</button>
+            <input name="note" class="form-control form-control-sm w-auto flex-grow-1" placeholder="{{ __('Note, or the answer for the patient') }}"><button name="action" value="investigate" class="btn btn-sm btn-outline-primary">{{ __('Looking into it') }}</button><button name="action" value="resolve" class="btn btn-sm btn-outline-success">{{ __('Answer / resolve') }}</button>@can('crm.complaint.close')@if($c->status === 'resolved')<button name="action" value="close" class="btn btn-sm btn-success">{{ __('Close') }}</button>@endif @endcan</form></div>@endif @endcan</div>
+    <div class="card"><div class="card-header"><h3 class="card-title">{{ __('What has happened') }}</h3></div><ul class="list-group list-group-flush small">@foreach($events as $e)<li class="list-group-item d-flex justify-content-between"><span><strong>{{ __(\Illuminate\Support\Str::headline($e->kind)) }}</strong> @if($e->note) · {{ $e->note }}@endif @if($e->user) <span class="text-muted">({{ $e->user->name }})</span>@endif</span><span class="text-muted">{{ $e->created_at?->format('d M H:i') }}</span></li>@endforeach</ul></div>
+@stop

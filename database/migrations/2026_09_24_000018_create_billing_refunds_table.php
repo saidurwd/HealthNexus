@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_refunds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('payment_id')->constrained('billing_payments')->cascadeOnDelete();
             $table->foreignId('invoice_id')->nullable()->constrained('billing_invoices')->nullOnDelete();
@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('processor_reference')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'refund_number']);
-            $table->index(['company_id', 'branch_id', 'payment_id', 'status']);
+            $table->unique(['organization_id', 'refund_number']);
+            $table->index(['organization_id', 'branch_id', 'payment_id', 'status'], 'billing_refunds_38ce2c79_idx');
             $table->index(['invoice_id', 'status']);
         });
     }

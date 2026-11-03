@@ -14,7 +14,7 @@ class StoreRadiologyProcedureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'section_id' => ['nullable', 'integer', 'exists:radiology_sections,id'],
             'body_part_id' => ['nullable', 'integer', 'exists:radiology_body_parts,id'],

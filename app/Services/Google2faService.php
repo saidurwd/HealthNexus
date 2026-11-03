@@ -14,10 +14,10 @@ class Google2faService
 
     public function getQRCodeUrl(User $user, string $secret): string
     {
-        $company = $user->companies()->first();
-        $companyName = $company ? $company->name : config('app.name');
+        $organization = $user->organizations()->first();
+        $organizationName = $organization ? $organization->name : config('app.name');
 
-        return Google2FA::getQRCodeUrl($companyName, $user->email, $secret);
+        return Google2FA::getQRCodeUrl($organizationName, $user->email, $secret);
     }
 
     public function verifySecret(User $user, string $secret, string $code): bool

@@ -37,7 +37,7 @@ class OtPreoperativeAssessmentPolicy
 
     private function inScope(User $user, OtPreoperativeAssessment $assessment): bool
     {
-        return $user->companies()->where('companies.id', $assessment->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $assessment->organization_id)->exists()
             && (! $assessment->branch_id || $user->branches()->where('branches.id', $assessment->branch_id)->exists());
     }
 }

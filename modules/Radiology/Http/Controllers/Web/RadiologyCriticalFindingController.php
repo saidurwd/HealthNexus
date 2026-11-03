@@ -22,11 +22,11 @@ class RadiologyCriticalFindingController extends Controller
     {
         $this->authorize('viewAny', RadiologyCriticalFinding::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $findings = RadiologyCriticalFinding::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['report.examination.orderItem.radiologyOrder.patient', 'notifiedTo'])
             ->when($request->filled('status') && $request->input('status') === 'unacknowledged', fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('detected_at')
@@ -46,7 +46,7 @@ class RadiologyCriticalFindingController extends Controller
 
         $this->auditLogger->log('CRITICAL_FINDING_FLAGGED', RadiologyCriticalFinding::class, $finding->id, null, $finding->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Critical finding flagged and the ordering provider notified.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Critical finding flagged and the ordering provider notified.'));
     }
 
     public function acknowledge(Request $request, RadiologyCriticalFinding $finding)
@@ -60,6 +60,6 @@ class RadiologyCriticalFindingController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', RadiologyCriticalFinding::class, $finding->id, $oldValues, $finding->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.critical-findings.index')->with('success', 'Critical finding acknowledged.');
+        return redirect()->route('admin.radiology.critical-findings.index')->with('success', __('Critical finding acknowledged.'));
     }
 }

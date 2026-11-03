@@ -13,13 +13,13 @@
                         <span class="badge bg-{{ $row['episode'] ? 'danger' : 'success' }}">{{ $row['episode'] ? 'Occupied' : ucwords($row['status']) }}</span>
                         @if($row['patient'])
                             <div class="mt-2">{{ $row['patient']->full_name }}</div>
-                            <a href="{{ route('admin.icu.episodes.show', $row['episode']) }}" class="btn btn-xs btn-info mt-1">Open</a>
+                            <a href="{{ route('admin.icu.episodes.show', $row['episode']) }}" class="btn btn-xs btn-info mt-1">{{ __('Open') }}</a>
                         @endif
                     </div>
                 </div>
             </div>
         @empty
-            <div class="col-12"><p class="text-center">No ICU-capable beds configured.</p></div>
+            <div class="col-12"><p class="text-center">{{ __('No ICU-capable beds configured.') }}</p></div>
         @endforelse
     </div>
 @stop

@@ -76,12 +76,12 @@ class DischargeWorkflowTest extends IpdTestCase
 
     private function makeAdmittedPatient(IpdBed $bed): IpdAdmission
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
         $admission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
@@ -89,5 +89,18 @@ class DischargeWorkflowTest extends IpdTestCase
         app(IpdBedAllocationService::class)->allocate($admission, $bed, $this->user);
 
         return $admission->fresh();
+    }
+
+    public function test_the_discharge_summary_prints_marked_not_final_until_completed(): void
+    {
+        $admission = $this->makeAdmittedPatient($this->makeBed());
+        $request = app(IpdDischargeService::class)->request($admission, ['discharge_type' => 'routine', 'discharge_diagnosis' => 'Community acquired pneumonia', 'instructions' => 'Rest and plenty of fluids'], $this->user);
+
+        $this->get('/ipd/discharge/'.$request->public_id.'/print')
+            ->assertOk()
+            ->assertSee('Community acquired pneumonia')
+            ->assertSee('Rest and plenty of fluids')
+            ->assertSee('ds-stamp', false)
+            ->assertSee($admission->admission_number);
     }
 }

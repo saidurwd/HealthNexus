@@ -26,7 +26,7 @@ class IpdChargeService
         $admission->loadMissing('admissionType');
 
         return $this->charges->createFromClinicalEvent($admission, 'ipd_admission_fee', $admission->admissionType?->code ?? 'general', [
-            'company_id' => $admission->company_id,
+            'organization_id' => $admission->organization_id,
             'branch_id' => $admission->branch_id,
             'patient_id' => $admission->patient_id,
             'encounter_id' => $admission->encounter_id,
@@ -47,7 +47,7 @@ class IpdChargeService
             ]);
 
             return $this->charges->createFromClinicalEvent($event, 'ipd_bed_day', $bed->bedType?->code ?? 'general', [
-                'company_id' => $admission->company_id,
+                'organization_id' => $admission->organization_id,
                 'branch_id' => $admission->branch_id,
                 'patient_id' => $admission->patient_id,
                 'encounter_id' => $admission->encounter_id,

@@ -6,8 +6,10 @@ use App\Events\Billing\ChargeCreated;
 use App\Models\Billing\BillingCharge;
 use App\Models\Billing\BillingItem;
 use App\Models\User;
+use App\Services\Billing\Events\ChargeEventLogger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -20,15 +22,16 @@ class ChargeService
     public function __construct(
         private readonly BillingPricingService $pricing,
         private readonly BillingCalculationService $calculator,
+        private readonly ChargeEventLogger $eventLog,
     ) {}
 
     /**
-     * @param  array{company_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
+     * @param  array{organization_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
      */
     public function createFromClinicalEvent(Model $sourceModel, string $eventType, string $eventKey, array $context): ?BillingCharge
     {
         $item = BillingItem::query()
-            ->forTenant($context['company_id'], $context['branch_id'] ?? null)
+            ->forTenant($context['organization_id'], $context['branch_id'] ?? null)
             ->where('is_clinically_chargeable', true)
             ->where('clinical_event_type', $eventType)
             ->where('clinical_event_key', $eventKey)
@@ -43,25 +46,37 @@ class ChargeService
 
         return DB::transaction(function () use ($sourceModel, $item, $context, $idempotencyKey) {
             $existing = BillingCharge::query()
-                ->where('company_id', $context['company_id'])
+                ->where('organization_id', $context['organization_id'])
                 ->where('idempotency_key', $idempotencyKey)
                 ->first();
 
-            if ($existing) {
-                return $existing;
-            }
+            $charge = $existing ?? $this->create($item, $sourceModel, 1, $context, $idempotencyKey);
 
-            return $this->create($item, $sourceModel, 1, $context, $idempotencyKey);
+            // Adapter for modules that still call Billing directly: the Charge Event Contract log sees every charge (H-05).
+            $this->eventLog->recordAdapted($charge, $item, $sourceModel, $existing !== null);
+
+            return $charge;
+        });
+    }
+
+    /** Entry point for the Charge Event Publisher; the key is the contract key, so a repeat never double-charges. */
+    public function createForEvent(BillingItem $item, int $quantity, array $context, string $idempotencyKey, ?string $sourceType, string|int|null $sourceId, ?int $userId): BillingCharge
+    {
+        return DB::transaction(function () use ($item, $quantity, $context, $idempotencyKey, $sourceType, $sourceId, $userId) {
+            $existing = BillingCharge::query()
+                ->where('organization_id', $context['organization_id'])->where('idempotency_key', $idempotencyKey)->first();
+
+            return $existing ?? $this->create($item, null, $quantity, $context, $idempotencyKey, $userId ? User::find($userId) : null, $sourceType, $sourceId);
         });
     }
 
     /**
-     * @param  array{company_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
+     * @param  array{organization_id:int,branch_id:int,patient_id:int,encounter_id?:int|null,department_id?:int|null,provider_id?:int|null,patient_category?:string|null,corporate_id?:int|null,insurance_policy_id?:int|null}  $context
      */
     public function createManual(BillingItem $item, int $quantity, array $context, User $user): BillingCharge
     {
         return DB::transaction(function () use ($item, $quantity, $context, $user) {
-            $idempotencyKey = hash('sha256', sprintf('manual:%d:%s', $user->id, (string) \Illuminate\Support\Str::uuid()));
+            $idempotencyKey = hash('sha256', sprintf('manual:%d:%s', $user->id, (string) Str::uuid()));
 
             return $this->create($item, null, $quantity, $context, $idempotencyKey, $user);
         });
@@ -85,7 +100,7 @@ class ChargeService
         });
     }
 
-    private function create(BillingItem $item, ?Model $source, int $quantity, array $context, string $idempotencyKey, ?User $user = null): BillingCharge
+    private function create(BillingItem $item, ?Model $source, int $quantity, array $context, string $idempotencyKey, ?User $user = null, ?string $sourceType = null, string|int|null $sourceId = null): BillingCharge
     {
         $price = $this->pricing->resolvePrice($item, $context);
 
@@ -102,15 +117,15 @@ class ChargeService
         );
 
         $charge = BillingCharge::create([
-            'company_id' => $context['company_id'],
+            'organization_id' => $context['organization_id'],
             'branch_id' => $context['branch_id'],
             'patient_id' => $context['patient_id'],
             'encounter_id' => $context['encounter_id'] ?? null,
             'billing_item_id' => $item->id,
             'department_id' => $context['department_id'] ?? null,
             'provider_id' => $context['provider_id'] ?? null,
-            'source_type' => $source?->getMorphClass(),
-            'source_id' => $source?->getKey(),
+            'source_type' => $source?->getMorphClass() ?? $sourceType,
+            'source_id' => $source?->getKey() ?? $sourceId,
             'idempotency_key' => $idempotencyKey,
             'status' => 'pending',
             'quantity' => $quantity,

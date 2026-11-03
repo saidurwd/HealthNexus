@@ -10,8 +10,8 @@
             @method('PUT')
             @include('admin.lab.tests._form', ['test' => $test])
             <div class="card-footer">
-                <a href="{{ route('admin.lab.tests.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Test</button>
+                <a href="{{ route('admin.lab.tests.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Update Test') }}</button>
             </div>
         </form>
     </div>

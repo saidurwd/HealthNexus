@@ -46,11 +46,11 @@ class IcuClinicalApiController extends Controller
     {
         $this->authorize('viewAny', IcuCriticalAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::paginated(
-            IcuCriticalAlert::forTenant($companyId, $branchId)->whereNull('acknowledged_at')->with('episode.patient')->latest('triggered_at')->paginate(20)
+            IcuCriticalAlert::forTenant($organizationId, $branchId)->whereNull('acknowledged_at')->with('episode.patient')->latest('triggered_at')->paginate(20)
         );
     }
 

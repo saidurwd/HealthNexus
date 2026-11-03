@@ -37,7 +37,7 @@ class LabSpecimenPolicy
 
     private function inScope(User $user, LabSpecimen $specimen): bool
     {
-        return $user->companies()->where('companies.id', $specimen->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $specimen->organization_id)->exists()
             && $user->branches()->where('branches.id', $specimen->branch_id)->exists();
     }
 }

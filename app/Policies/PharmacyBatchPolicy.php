@@ -32,7 +32,7 @@ class PharmacyBatchPolicy
 
     private function inScope(User $user, PharmacyBatch $batch): bool
     {
-        return $user->companies()->where('companies.id', $batch->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $batch->organization_id)->exists()
             && (! $batch->branch_id || $user->branches()->where('branches.id', $batch->branch_id)->exists());
     }
 }

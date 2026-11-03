@@ -26,11 +26,11 @@ class IpdAdmissionController extends Controller
     {
         $this->authorize('viewAny', IpdAdmission::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $admissions = IpdAdmission::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'currentAllocation.bed.room.ward'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('admitted_at')
@@ -44,7 +44,7 @@ class IpdAdmissionController extends Controller
         $this->authorize('create', IpdAdmission::class);
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'admission_request_id' => ['nullable', 'integer', 'exists:ipd_admission_requests,id'],
@@ -98,11 +98,11 @@ class IpdAdmissionController extends Controller
     {
         Gate::authorize('ipd.admission.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $admissionRequests = IpdAdmissionRequest::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'admissionType'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()
@@ -116,7 +116,7 @@ class IpdAdmissionController extends Controller
         Gate::authorize('ipd.admission.create');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'source_encounter_id' => ['nullable', 'integer', 'exists:encounters,id'],

@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Middleware\EnsureBranchAccess;
-use App\Http\Middleware\EnsureCompanyAccess;
+use App\Http\Middleware\EnsureOrganizationAccess;
 use Illuminate\Support\Facades\Route;
 use Modules\Ot\Http\Controllers\Api\V1\OtCareController;
 use Modules\Ot\Http\Controllers\Api\V1\OtClinicalController;
 
-Route::middleware([EnsureCompanyAccess::class, EnsureBranchAccess::class])->prefix('ot')->group(function () {
+Route::middleware([EnsureOrganizationAccess::class, EnsureBranchAccess::class])->prefix('ot')->group(function () {
     Route::get('/dashboard', [OtCareController::class, 'dashboard']);
 
     Route::get('/surgery-requests', [OtCareController::class, 'requests']);

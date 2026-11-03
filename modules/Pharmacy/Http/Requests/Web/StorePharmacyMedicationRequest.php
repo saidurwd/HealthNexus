@@ -14,7 +14,7 @@ class StorePharmacyMedicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'generic_id' => ['nullable', 'integer', 'exists:pharmacy_generics,id'],
             'brand_id' => ['nullable', 'integer', 'exists:pharmacy_brands,id'],

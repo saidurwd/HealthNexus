@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('icu_fluid_balance_entries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('episode_id')->constrained('icu_episodes')->cascadeOnDelete();
             $table->string('type');

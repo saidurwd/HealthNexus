@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Icu;
 
-use App\Models\Ipd\IpdAdmission;
 use App\Services\Icu\IcuBedAllocationService;
 use Illuminate\Validation\ValidationException;
 

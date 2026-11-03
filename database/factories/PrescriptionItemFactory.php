@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Prescription;
 use App\Models\PrescriptionItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,7 +14,7 @@ class PrescriptionItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'prescription_id' => Prescription::factory(),
             'medicine_name' => fake()->word(),
             'dosage_form' => fake()->randomElement(['tablet', 'capsule', 'liquid', 'injection', 'cream']),

@@ -16,7 +16,7 @@ class PharmacyMedicationService
     public function create(array $data, User $user): PharmacyMedication
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             $ingredients = $data['ingredients'] ?? [];
             unset($data['ingredients']);
@@ -39,7 +39,7 @@ class PharmacyMedicationService
     {
         return DB::transaction(function () use ($medication, $data, $user) {
             if (isset($data['code']) && $data['code'] !== $medication->code) {
-                $this->assertUniqueCode($medication->company_id, $medication->branch_id, $data['code'], $medication->id);
+                $this->assertUniqueCode($medication->organization_id, $medication->branch_id, $data['code'], $medication->id);
             }
 
             $ingredients = $data['ingredients'] ?? null;
@@ -69,7 +69,7 @@ class PharmacyMedicationService
      * CreatePharmacyOrderOnPrescriptionIssued. Never throws — returns null when unmatched so the
      * order item is preserved flagged rather than dropped.
      */
-    public function findByFreeTextName(int $companyId, ?int $branchId, string $medicineName): ?PharmacyMedication
+    public function findByFreeTextName(int $organizationId, ?int $branchId, string $medicineName): ?PharmacyMedication
     {
         $needle = trim($medicineName);
 
@@ -78,7 +78,7 @@ class PharmacyMedicationService
         }
 
         return PharmacyMedication::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_active', true)
             ->where(function ($q) use ($needle) {
                 $q->where('name', 'like', "%{$needle}%")
@@ -88,10 +88,10 @@ class PharmacyMedicationService
             ->first();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = PharmacyMedication::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

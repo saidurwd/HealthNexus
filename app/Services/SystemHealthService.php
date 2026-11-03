@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
@@ -62,7 +63,7 @@ class SystemHealthService
     private function checkRedis(): array
     {
         return $this->timed(function () {
-            $pong = \Illuminate\Support\Facades\Redis::connection()->ping();
+            $pong = Redis::connection()->ping();
 
             return 'Redis responded: '.(is_string($pong) ? $pong : 'PONG');
         });

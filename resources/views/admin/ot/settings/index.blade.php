@@ -7,7 +7,7 @@
     @csrf
     @method('PUT')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">OT Settings</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('OT Settings') }}</h3></div>
         <div class="card-body">
             @foreach($settings as $key => $value)
                 <div class="mb-3 row">
@@ -25,7 +25,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="card-footer"><button type="submit" class="btn btn-primary">Save Settings</button></div>
+        <div class="card-footer"><button type="submit" class="btn btn-primary">{{ __('Save Settings') }}</button></div>
     </div>
 </form>
 @stop

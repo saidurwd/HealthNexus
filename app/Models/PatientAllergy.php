@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PatientAllergy extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasPublicId, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'substance',
         'severity',
@@ -25,9 +26,9 @@ class PatientAllergy extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function patient(): BelongsTo

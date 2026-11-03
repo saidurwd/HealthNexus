@@ -18,11 +18,11 @@ class BillingCreatePageRoutingTest extends BillingTestCase
     public static function createPageProvider(): array
     {
         return [
-            'invoices' => ['/admin/billing/invoices/create'],
-            'items' => ['/admin/billing/items/create'],
-            'price-lists' => ['/admin/billing/price-lists/create'],
-            'payments' => ['/admin/billing/payments/create'],
-            'corporates' => ['/admin/billing/corporates/create'],
+            'invoices' => ['/billing/invoices/create'],
+            'items' => ['/billing/items/create'],
+            'price-lists' => ['/billing/price-lists/create'],
+            'payments' => ['/billing/payments/create'],
+            'corporates' => ['/billing/corporates/create'],
         ];
     }
 

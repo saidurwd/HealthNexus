@@ -42,7 +42,7 @@ class IpdTransferPolicy
 
     private function inScope(User $user, IpdBedMovement $movement): bool
     {
-        return $user->companies()->where('companies.id', $movement->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $movement->organization_id)->exists()
             && $user->branches()->where('branches.id', $movement->branch_id)->exists();
     }
 }

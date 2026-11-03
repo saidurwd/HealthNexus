@@ -46,7 +46,7 @@ class MedicationAdministrationConcurrencyTest extends NursingTestCase
         }
 
         $pdoA->exec('SET FOREIGN_KEY_CHECKS=0');
-        $pdoA->exec("INSERT INTO nursing_medication_administrations (company_id, episode_id, admission_id, encounter_id, patient_id, scheduled_at, dose, route, status, is_prn, created_at, updated_at)
+        $pdoA->exec("INSERT INTO nursing_medication_administrations (organization_id, episode_id, admission_id, encounter_id, patient_id, scheduled_at, dose, route, status, is_prn, created_at, updated_at)
             VALUES (1, 1, 1, 1, 1, NOW(), '500', 'oral', 'scheduled', 0, NOW(), NOW())");
         $marId = (int) $pdoA->lastInsertId();
 

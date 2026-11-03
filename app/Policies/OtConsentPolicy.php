@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 /**
  * No dedicated PatientConsent policy exists in the codebase — consent is gated via the
  * patients.consents.* permission directly. This thin wrapper checks the OT-specific
- * ot.consent.* permissions plus the surgery's own company/branch scope, since every surgical
+ * ot.consent.* permissions plus the surgery's own organization/branch scope, since every surgical
  * consent action in this module is reached through an OtSurgery.
  */
 class OtConsentPolicy
@@ -33,7 +33,7 @@ class OtConsentPolicy
 
     private function inScope(User $user, OtSurgery $surgery): bool
     {
-        return $user->companies()->where('companies.id', $surgery->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $surgery->organization_id)->exists()
             && (! $surgery->branch_id || $user->branches()->where('branches.id', $surgery->branch_id)->exists());
     }
 }

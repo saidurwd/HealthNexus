@@ -16,11 +16,11 @@ class IpdReportingController extends Controller
     {
         Gate::authorize('ipd.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $byWard = IpdBed::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('ipd_beds.is_active', true)
             ->join('ipd_rooms', 'ipd_rooms.id', '=', 'ipd_beds.room_id')
             ->join('ipd_wards', 'ipd_wards.id', '=', 'ipd_rooms.ward_id')
@@ -36,14 +36,14 @@ class IpdReportingController extends Controller
     {
         Gate::authorize('ipd.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
         $admissions = IpdAdmission::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'admissionType', 'department', 'attendingProvider'])
             ->whereDate('admitted_at', '>=', $from)
             ->whereDate('admitted_at', '<=', $to)
@@ -58,14 +58,14 @@ class IpdReportingController extends Controller
     {
         Gate::authorize('ipd.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
         $discharges = IpdAdmission::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'dischargeDisposition'])
             ->whereNotNull('actual_discharge_date')
             ->whereDate('actual_discharge_date', '>=', $from)
@@ -81,11 +81,11 @@ class IpdReportingController extends Controller
     {
         Gate::authorize('ipd.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $transfers = IpdBedMovement::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('movement_type', IpdBedMovement::TYPE_TRANSFER)
             ->with(['patient', 'fromBed.room.ward', 'toBed.room.ward'])
             ->latest()

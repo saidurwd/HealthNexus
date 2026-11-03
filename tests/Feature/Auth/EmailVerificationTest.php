@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -72,7 +73,7 @@ class EmailVerificationTest extends TestCase
 
         $this->actingAs($user)->post('/email/verification-notification')->assertRedirect();
 
-        Notification::assertSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+        Notification::assertSentTo($user, VerifyEmail::class);
     }
 
     public function test_resend_is_rate_limited(): void

@@ -27,6 +27,6 @@ class LabQcPolicy
 
     private function inScope(User $user, LabQcRun $run): bool
     {
-        return $user->companies()->where('companies.id', $run->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $run->organization_id)->exists();
     }
 }

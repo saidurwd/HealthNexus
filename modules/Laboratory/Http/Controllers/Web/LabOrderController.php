@@ -4,6 +4,7 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laboratory\LabOrder;
+use App\Models\Laboratory\LabOrderItem;
 use App\Models\Laboratory\LabTest;
 use App\Services\AuditLogger;
 use App\Services\Laboratory\LabOrderLifecycleService;
@@ -21,11 +22,11 @@ class LabOrderController extends Controller
     {
         $this->authorize('viewAny', LabOrder::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $orders = LabOrder::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'items'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('order_number', 'like', '%'.$request->input('search').'%'))
@@ -42,8 +43,8 @@ class LabOrderController extends Controller
 
         $order->load(['patient', 'encounter', 'items.test', 'items.results', 'specimens', 'reports']);
 
-        $companyId = $order->company_id;
-        $availableTests = LabTest::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = $order->organization_id;
+        $availableTests = LabTest::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.orders.show', compact('order', 'availableTests'));
     }
@@ -62,9 +63,9 @@ class LabOrderController extends Controller
 
         $item->update(['test_id' => $validated['test_id'], 'status' => 'pending']);
 
-        $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', \App\Models\Laboratory\LabOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
+        $this->auditLogger->log('RESOLVE_UNMATCHED_ITEM', LabOrderItem::class, $item->id, $oldValues, $item->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $order)->with('success', 'Order item matched to a test.');
+        return redirect()->route('admin.lab.orders.show', $order)->with('success', __('Order item matched to a test.'));
     }
 
     public function cancel(Request $request, LabOrder $order)
@@ -78,6 +79,6 @@ class LabOrderController extends Controller
 
         $this->auditLogger->log('CANCEL', LabOrder::class, $order->id, $oldValues, $order->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.orders.show', $order)->with('success', 'Lab order cancelled.');
+        return redirect()->route('admin.lab.orders.show', $order)->with('success', __('Lab order cancelled.'));
     }
 }

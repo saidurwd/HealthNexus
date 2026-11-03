@@ -42,7 +42,7 @@ class LabResultPolicy
 
     private function inScope(User $user, LabResult $result): bool
     {
-        return $user->companies()->where('companies.id', $result->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $result->organization_id)->exists()
             && $user->branches()->where('branches.id', $result->branch_id)->exists();
     }
 }

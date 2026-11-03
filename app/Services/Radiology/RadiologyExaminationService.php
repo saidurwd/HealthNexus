@@ -42,7 +42,7 @@ class RadiologyExaminationService
 
     public function start(RadiologyExamination $examination, User $user): RadiologyExamination
     {
-        return DB::transaction(function () use ($examination, $user) {
+        return DB::transaction(function () use ($examination) {
             if (! in_array($examination->status, ['checked_in', 'preparing'], true)) {
                 throw ValidationException::withMessages(['examination' => "Cannot start an examination in '{$examination->status}' status."]);
             }
@@ -63,7 +63,7 @@ class RadiologyExaminationService
 
     public function complete(RadiologyExamination $examination, User $user, array $data = []): RadiologyExamination
     {
-        return DB::transaction(function () use ($examination, $user, $data) {
+        return DB::transaction(function () use ($examination, $data) {
             if ($examination->status !== 'in_progress') {
                 throw ValidationException::withMessages(['examination' => "Cannot complete an examination in '{$examination->status}' status."]);
             }

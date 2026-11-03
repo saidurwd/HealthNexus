@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_dispensings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('order_id')->constrained('pharmacy_orders')->cascadeOnDelete();
             $table->foreignId('prescription_id')->constrained('prescriptions')->cascadeOnDelete();
@@ -25,8 +25,8 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'dispensing_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'dispensing_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('order_id');
             $table->index('patient_id');
         });

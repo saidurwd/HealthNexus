@@ -49,7 +49,7 @@ class MasterDataController extends Controller
 
         Country::create($validated);
 
-        return redirect()->route('admin.master-data.countries')->with('success', 'Country created successfully.');
+        return redirect()->route('admin.master-data.countries')->with('success', __('Country created successfully.'));
     }
 
     public function editCountry(Country $country)
@@ -73,14 +73,14 @@ class MasterDataController extends Controller
 
         $country->update($validated);
 
-        return redirect()->route('admin.master-data.countries')->with('success', 'Country updated successfully.');
+        return redirect()->route('admin.master-data.countries')->with('success', __('Country updated successfully.'));
     }
 
     public function destroyCountry(Country $country)
     {
         $country->delete();
 
-        return redirect()->route('admin.master-data.countries')->with('success', 'Country deleted successfully.');
+        return redirect()->route('admin.master-data.countries')->with('success', __('Country deleted successfully.'));
     }
 
     // States
@@ -117,7 +117,7 @@ class MasterDataController extends Controller
 
         State::create($validated);
 
-        return redirect()->route('admin.master-data.all-states')->with('success', 'State created successfully.');
+        return redirect()->route('admin.master-data.all-states')->with('success', __('State created successfully.'));
     }
 
     public function editState(State $state)
@@ -138,14 +138,14 @@ class MasterDataController extends Controller
 
         $state->update($validated);
 
-        return redirect()->route('admin.master-data.all-states')->with('success', 'State updated successfully.');
+        return redirect()->route('admin.master-data.all-states')->with('success', __('State updated successfully.'));
     }
 
     public function destroyState(State $state)
     {
         $state->delete();
 
-        return redirect()->route('admin.master-data.all-states')->with('success', 'State deleted successfully.');
+        return redirect()->route('admin.master-data.all-states')->with('success', __('State deleted successfully.'));
     }
 
     public function states(Request $request, Country $country)
@@ -189,7 +189,7 @@ class MasterDataController extends Controller
 
         Currency::create($validated);
 
-        return redirect()->route('admin.master-data.currencies')->with('success', 'Currency created successfully.');
+        return redirect()->route('admin.master-data.currencies')->with('success', __('Currency created successfully.'));
     }
 
     public function editCurrency(Currency $currency)
@@ -209,14 +209,14 @@ class MasterDataController extends Controller
 
         $currency->update($validated);
 
-        return redirect()->route('admin.master-data.currencies')->with('success', 'Currency updated successfully.');
+        return redirect()->route('admin.master-data.currencies')->with('success', __('Currency updated successfully.'));
     }
 
     public function destroyCurrency(Currency $currency)
     {
         $currency->delete();
 
-        return redirect()->route('admin.master-data.currencies')->with('success', 'Currency deleted successfully.');
+        return redirect()->route('admin.master-data.currencies')->with('success', __('Currency deleted successfully.'));
     }
 
     // Identification Types
@@ -249,7 +249,7 @@ class MasterDataController extends Controller
 
         IdentificationType::create($validated);
 
-        return redirect()->route('admin.master-data.identification-types')->with('success', 'Identification type created successfully.');
+        return redirect()->route('admin.master-data.identification-types')->with('success', __('Identification type created successfully.'));
     }
 
     public function editIdentificationType(IdentificationType $identificationType)
@@ -270,13 +270,13 @@ class MasterDataController extends Controller
 
         $identificationType->update($validated);
 
-        return redirect()->route('admin.master-data.identification-types')->with('success', 'Identification type updated successfully.');
+        return redirect()->route('admin.master-data.identification-types')->with('success', __('Identification type updated successfully.'));
     }
 
     public function destroyIdentificationType(IdentificationType $identificationType)
     {
         $identificationType->delete();
 
-        return redirect()->route('admin.master-data.identification-types')->with('success', 'Identification type deleted successfully.');
+        return redirect()->route('admin.master-data.identification-types')->with('success', __('Identification type deleted successfully.'));
     }
 }

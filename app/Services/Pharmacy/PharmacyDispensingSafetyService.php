@@ -46,7 +46,7 @@ class PharmacyDispensingSafetyService
                 }
 
                 $created->push(PharmacySafetyAlert::create([
-                    'company_id' => $medication->company_id,
+                    'organization_id' => $medication->organization_id,
                     'branch_id' => $medication->branch_id,
                     'order_item_id' => $orderItem->id,
                     'medication_id' => $medication->id,

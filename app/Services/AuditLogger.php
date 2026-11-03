@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AuditLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +14,11 @@ class AuditLogger
         $request ??= request();
 
         $user = Auth::user();
+        $user = $user instanceof User ? $user : null; // a patient's login (Phase 17) is not a staff user
 
         return AuditLog::create([
             'user_id' => $user?->id,
-            'company_id' => app(TenantContextResolver::class)->getCompanyId(),
+            'organization_id' => app(TenantContextResolver::class)->getOrganizationId(),
             'branch_id' => app(TenantContextResolver::class)->getBranchId(),
             'action' => $action,
             'module' => $this->moduleFor($modelType),

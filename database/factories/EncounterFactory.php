@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Department;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,7 +17,7 @@ class EncounterFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'branch_id' => Branch::factory(),
             'patient_id' => Patient::factory(),
             'appointment_id' => null,

@@ -2,14 +2,17 @@
 
 namespace Tests\Feature\Appointments;
 
+use App\Models\Appointment;
 use App\Models\AppointmentRoom;
 use App\Models\AppointmentType;
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\DoctorSchedule;
 use App\Models\HospitalHoliday;
+use App\Models\Organization;
+use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -27,7 +30,7 @@ class AppointmentAdminPagesSmokeTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -39,89 +42,89 @@ class AppointmentAdminPagesSmokeTest extends TestCase
 
         Role::create(['name' => 'super_admin', 'guard_name' => 'web']);
 
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
         $this->user = User::factory()->create();
         $this->user->assignRole('super_admin');
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
     }
 
     public function test_provider_pages_render(): void
     {
-        $provider = Provider::factory()->create(['company_id' => $this->company->id]);
+        $provider = Provider::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->get('/admin/providers')->assertOk();
-        $this->get('/admin/providers/create')->assertOk();
-        $this->get("/admin/providers/{$provider->id}")->assertOk();
-        $this->get("/admin/providers/{$provider->id}/edit")->assertOk();
+        $this->get('/providers')->assertOk();
+        $this->get('/providers/create')->assertOk();
+        $this->get("/providers/{$provider->id}")->assertOk();
+        $this->get("/providers/{$provider->id}/edit")->assertOk();
     }
 
     public function test_holiday_pages_render(): void
     {
-        HospitalHoliday::create(['company_id' => $this->company->id, 'name' => 'New Year', 'date' => '2026-01-01']);
+        HospitalHoliday::create(['organization_id' => $this->organization->id, 'name' => 'New Year', 'date' => '2026-01-01']);
 
-        $this->get('/admin/holidays')->assertOk();
-        $this->get('/admin/holidays/create')->assertOk();
+        $this->get('/holidays')->assertOk();
+        $this->get('/holidays/create')->assertOk();
     }
 
     public function test_provider_unavailability_page_renders(): void
     {
-        $this->get('/admin/provider-unavailability')->assertOk();
+        $this->get('/provider-unavailability')->assertOk();
     }
 
     public function test_appointment_room_pages_render(): void
     {
         $room = AppointmentRoom::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'Room 1', 'room_type' => 'consultation',
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'name' => 'Room 1', 'room_type' => 'consultation',
         ]);
 
-        $this->get('/admin/appointment-rooms')->assertOk();
-        $this->get('/admin/appointment-rooms/create')->assertOk();
-        $this->get("/admin/appointment-rooms/{$room->id}/edit")->assertOk();
+        $this->get('/appointment-rooms')->assertOk();
+        $this->get('/appointment-rooms/create')->assertOk();
+        $this->get("/appointment-rooms/{$room->id}/edit")->assertOk();
     }
 
     public function test_appointment_type_pages_render(): void
     {
         $type = AppointmentType::create(['code' => 'consult', 'name' => 'Consultation']);
 
-        $this->get('/admin/appointment-types')->assertOk();
-        $this->get('/admin/appointment-types/create')->assertOk();
-        $this->get("/admin/appointment-types/{$type->id}/edit")->assertOk();
+        $this->get('/appointment-types')->assertOk();
+        $this->get('/appointment-types/create')->assertOk();
+        $this->get("/appointment-types/{$type->id}/edit")->assertOk();
     }
 
     public function test_schedule_show_and_edit_pages_render(): void
     {
         $doctor = User::factory()->create();
         $schedule = DoctorSchedule::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'doctor_id' => $doctor->id,
         ]);
 
-        $this->get("/admin/schedules/{$schedule->id}")->assertOk();
-        $this->get("/admin/schedules/{$schedule->id}/edit")->assertOk();
+        $this->get("/schedules/{$schedule->id}")->assertOk();
+        $this->get("/schedules/{$schedule->id}/edit")->assertOk();
     }
 
     public function test_calendar_pages_render(): void
     {
-        $this->get('/admin/appointments-calendar')->assertOk();
-        $this->get('/admin/appointments-calendar/provider')->assertOk();
+        $this->get('/appointments-calendar')->assertOk();
+        $this->get('/appointments-calendar/provider')->assertOk();
     }
 
     public function test_appointment_print_page_renders(): void
     {
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $doctor = User::factory()->create();
 
-        $appointment = \App\Models\Appointment::create([
-            'company_id' => $this->company->id,
+        $appointment = Appointment::create([
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'doctor_id' => $doctor->id,
@@ -132,6 +135,6 @@ class AppointmentAdminPagesSmokeTest extends TestCase
             'source' => 'online',
         ]);
 
-        $this->get("/admin/appointments/{$appointment->id}/print")->assertOk();
+        $this->get("/appointments/{$appointment->public_id}/print")->assertOk();
     }
 }

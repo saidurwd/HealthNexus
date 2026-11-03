@@ -1,0 +1,25 @@
+@extends('layouts.adminlte')
+
+@section('page_title', $m->title)
+
+@section('page_content')
+    @include('admin.quality._flash')
+    <div class="mb-3"><x-ui.status-badge :status="$m->status" /> <span class="small text-muted">{{ $m->committee->name }} · {{ $m->scheduled_at->setTimezone('Asia/Dhaka')->format('d M Y H:i') }} @if($m->location)· {{ $m->location }}@endif</span></div>
+    @if($m->agenda)<p class="small" style="white-space: pre-line">{{ $m->agenda }}</p>@endif
+    <div class="card mb-3"><div class="card-header"><h3 class="card-title">{{ __('Cases and topics') }}</h3></div><ul class="list-group list-group-flush">
+        @forelse($m->items as $it)<li class="list-group-item"><div class="d-flex justify-content-between"><strong>{{ $it->title }}</strong><span class="badge text-bg-light border">{{ __(\Illuminate\Support\Str::headline($it->kind)) }}</span></div>
+            @if($it->outcome)<div class="small"><span class="text-muted">{{ __('Discussion') }}:</span> {{ $it->discussion }}<br><span class="text-muted">{{ __('Outcome') }}:</span> {{ $it->outcome }} @if($it->action)<br><span class="text-muted">{{ __('Action') }}:</span> {{ $it->action->number }} · {{ $it->action->owner?->name }}@endif</div>
+            @elseif($m->status === 'held' && $canManage)<form method="POST" action="{{ route('admin.quality.meetings.record', [$m->public_id, $it->id]) }}" class="row g-1 mt-1">@csrf<div class="col-12"><textarea name="discussion" class="form-control form-control-sm" rows="2" placeholder="{{ __('What was said') }}"></textarea></div><div class="col-md-6"><input name="outcome" class="form-control form-control-sm" placeholder="{{ __('Outcome') }}" required></div>
+                <div class="col-md-6"><input name="action" class="form-control form-control-sm" placeholder="{{ __('An action, if one is needed') }}"></div><div class="col-md-5"><select name="owner_id" class="form-select form-select-sm"><option value="">—</option>@foreach($staff as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach</select></div><div class="col-md-4"><input type="date" name="due_on" class="form-control form-control-sm" min="{{ today()->toDateString() }}"></div><div class="col-md-3"><button class="btn btn-sm btn-primary w-100">{{ __('Save') }}</button></div></form>@endif</li>
+        @empty<li class="list-group-item text-muted">{{ __('The agenda is empty.') }}</li>@endforelse</ul></div>
+    @if($m->status === 'planned' && $canManage)
+    <form method="POST" action="{{ route('admin.quality.meetings.items', $m->public_id) }}" class="card mb-3"><div class="card-header"><h3 class="card-title">{{ __('Add to the agenda') }}</h3></div><div class="card-body row g-2">@csrf
+        <div class="col-md-3"><select name="kind" class="form-select form-select-sm"><option value="incident">{{ __('An incident') }}</option><option value="mortality">{{ __('A death review') }}</option><option value="topic">{{ __('A topic') }}</option></select></div>
+        <div class="col-md-5"><select name="ref_id" class="form-select form-select-sm"><option value="">—</option><optgroup label="{{ __('Incidents') }}">@foreach($incidents as $i)<option value="{{ $i->id }}">{{ $i->number }}</option>@endforeach</optgroup><optgroup label="{{ __('Death reviews') }}">@foreach($deaths as $d)<option value="{{ $d->id }}">{{ $d->number }}</option>@endforeach</optgroup></select></div>
+        <div class="col-md-3"><input name="title" class="form-control form-control-sm" placeholder="{{ __('Topic title') }}"></div><div class="col-md-1"><button class="btn btn-sm btn-outline-primary w-100">{{ __('Add') }}</button></div></div></form>
+    <form method="POST" action="{{ route('admin.quality.meetings.hold', $m->public_id) }}" class="card"><div class="card-header"><h3 class="card-title">{{ __('The meeting was held') }}</h3></div><div class="card-body">@csrf<div class="small mb-1">{{ __('Who came') }}</div><div class="row">@foreach($staff as $u)<div class="col-md-4"><label class="small"><input type="checkbox" name="attendees[]" value="{{ $u->id }}"> {{ $u->name }}</label></div>@endforeach</div><button class="btn btn-sm btn-primary mt-2">{{ __('Mark as held') }}</button></div></form>
+    @endif
+    @if($m->status !== 'planned')<div class="small text-muted mb-2">{{ __('Present') }}: {{ $attendees->implode(', ') ?: '—' }}</div>@endif
+    @if($m->status === 'held' && $canManage)<form method="POST" action="{{ route('admin.quality.meetings.minute', $m->public_id) }}" class="card"><div class="card-header"><h3 class="card-title">{{ __('Minutes') }}</h3></div><div class="card-body">@csrf<textarea name="minutes" class="form-control form-control-sm mb-2" rows="6" required></textarea><button class="btn btn-sm btn-success">{{ __('Save the minutes') }}</button> <span class="small text-muted">{{ __('Every item needs an outcome first.') }}</span></div></form>
+    @elseif($m->status === 'minuted')<div class="card"><div class="card-header"><h3 class="card-title">{{ __('Minutes') }}</h3></div><div class="card-body small" style="white-space: pre-line">{{ $m->minutes }}</div></div>@endif
+@stop

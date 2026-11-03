@@ -20,5 +20,8 @@ class LabCriticalValue extends Model
         ];
     }
 
-    public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(LabTest::class, 'test_id');
+    }
 }

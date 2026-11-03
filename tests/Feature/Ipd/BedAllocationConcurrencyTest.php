@@ -2,6 +2,13 @@
 
 namespace Tests\Feature\Ipd;
 
+use App\Models\Encounter;
+use App\Models\Ipd\IpdAdmission;
+use App\Models\Ipd\IpdBed;
+use App\Models\Patient;
+use App\Services\Ipd\IpdBedAllocationService;
+use Illuminate\Validation\ValidationException;
+
 /**
  * The mandatory "two simultaneous admission requests, same bed, exactly one succeeds" test
  * (spec §54/§86). Mirrors PharmacyStockConcurrencyTest's raw two-PDO-connection technique,
@@ -37,23 +44,23 @@ class BedAllocationConcurrencyTest extends IpdTestCase
         $pdoA->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdoB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, slug, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', 'concurrency-test-co', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO ipd_wards (company_id, code, name, gender_policy, capacity, is_active, created_at, updated_at)
-            VALUES ({$companyId}, 'W-CONC', 'Concurrency Ward', 'any', 1, 1, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ipd_wards (organization_id, code, name, gender_policy, capacity, is_active, created_at, updated_at)
+            VALUES ({$organizationId}, 'W-CONC', 'Concurrency Ward', 'any', 1, 1, NOW(), NOW())");
         $wardId = (int) $pdoA->lastInsertId();
 
-        $pdoA->exec("INSERT INTO ipd_rooms (company_id, ward_id, room_number, room_type, capacity, gender_policy, is_active, created_at, updated_at)
-            VALUES ({$companyId}, {$wardId}, 'R-CONC', 'general', 1, 'any', 1, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ipd_rooms (organization_id, ward_id, room_number, room_type, capacity, gender_policy, is_active, created_at, updated_at)
+            VALUES ({$organizationId}, {$wardId}, 'R-CONC', 'general', 1, 'any', 1, NOW(), NOW())");
         $roomId = (int) $pdoA->lastInsertId();
 
-        $pdoA->exec("INSERT INTO ipd_beds (company_id, room_id, bed_code, gender_type, status, is_active, created_at, updated_at)
-            VALUES ({$companyId}, {$roomId}, 'BED-CONC', 'any', 'available', 1, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ipd_beds (organization_id, room_id, bed_code, gender_type, status, is_active, created_at, updated_at)
+            VALUES ({$organizationId}, {$roomId}, 'BED-CONC', 'any', 'available', 1, NOW(), NOW())");
         $bedId = (int) $pdoA->lastInsertId();
 
         try {
@@ -103,20 +110,20 @@ class BedAllocationConcurrencyTest extends IpdTestCase
     public function test_allocate_refuses_a_bed_that_is_no_longer_available(): void
     {
         $bed = $this->makeBed();
-        $bed->update(['status' => \App\Models\Ipd\IpdBed::STATUS_OCCUPIED]);
+        $bed->update(['status' => IpdBed::STATUS_OCCUPIED]);
 
-        $patient = \App\Models\Patient::factory()->create(['company_id' => $this->company->id]);
-        $encounter = \App\Models\Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $encounter = Encounter::factory()->create([
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
-        $admission = \App\Models\Ipd\IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+        $admission = IpdAdmission::create([
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        app(\App\Services\Ipd\IpdBedAllocationService::class)->allocate($admission, $bed, $this->user);
+        app(IpdBedAllocationService::class)->allocate($admission, $bed, $this->user);
     }
 }

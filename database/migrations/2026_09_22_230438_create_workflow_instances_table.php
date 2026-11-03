@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('workflow_instances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('workflow_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('subject_type');
             $table->unsignedBigInteger('subject_id');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['subject_type', 'subject_id']);
-            $table->index(['company_id', 'status']);
+            $table->index(['organization_id', 'status']);
             $table->index('status');
         });
     }

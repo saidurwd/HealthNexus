@@ -17,9 +17,9 @@ use Illuminate\Validation\ValidationException;
  */
 class QueueService
 {
-    public function todaysQueue(int $companyId, ?int $branchId = null): Collection
+    public function todaysQueue(int $organizationId, ?int $branchId = null): Collection
     {
-        return Appointment::where('company_id', $companyId)
+        return Appointment::where('organization_id', $organizationId)
             ->whereDate('appointment_date', today())
             ->whereIn('status', ['scheduled', 'confirmed', 'checked_in', 'in_progress'])
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
@@ -28,13 +28,13 @@ class QueueService
             ->get();
     }
 
-    public function callNext(int $companyId, ?int $branchId = null, ?int $providerId = null, ?int $tokenId = null): ?AppointmentToken
+    public function callNext(int $organizationId, ?int $branchId = null, ?int $providerId = null, ?int $tokenId = null): ?AppointmentToken
     {
         if ($tokenId) {
             return $this->call($tokenId);
         }
 
-        return DB::transaction(function () use ($companyId, $branchId, $providerId) {
+        return DB::transaction(function () use ($organizationId, $branchId, $providerId) {
             // FIELD() is MySQL-only; a CASE expression over PRIORITY_ORDER is portable (also
             // runs correctly against the sqlite connection this suite's tests use).
             $cases = collect(AppointmentToken::PRIORITY_ORDER)
@@ -42,7 +42,7 @@ class QueueService
                 ->implode(' ');
             $priorityRank = "CASE priority {$cases} ELSE ".count(AppointmentToken::PRIORITY_ORDER).' END';
 
-            $token = AppointmentToken::where('company_id', $companyId)
+            $token = AppointmentToken::where('organization_id', $organizationId)
                 ->where('status', 'waiting')
                 ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
                 ->when($providerId, fn ($q) => $q->whereHas('appointment', fn ($q2) => $q2->where('provider_id', $providerId)))

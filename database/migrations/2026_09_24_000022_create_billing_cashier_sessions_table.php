@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_cashier_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('counter_id')->nullable()->constrained('departments')->nullOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('closing_notes')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'user_id', 'status'], 'billing_cashier_sessions_scope_idx');
+            $table->index(['organization_id', 'branch_id', 'user_id', 'status'], 'billing_cashier_sessions_scope_idx');
             $table->index(['opened_at', 'closed_at']);
         });
     }

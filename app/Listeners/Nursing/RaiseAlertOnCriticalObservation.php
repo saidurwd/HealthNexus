@@ -26,7 +26,7 @@ class RaiseAlertOnCriticalObservation
         );
 
         $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['charge_nurse', 'nursing_supervisor']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $observation->company_id))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $observation->organization_id))
             ->get();
 
         if ($recipients->isEmpty()) {

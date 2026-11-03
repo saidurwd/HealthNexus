@@ -24,8 +24,8 @@ class GenerateIcuChargeEvents implements ShouldQueue
     {
         $today = now()->toDateString();
 
-        IcuEpisode::query()->whereNull('discharged_at')->with('company')->each(function (IcuEpisode $episode) use ($charges, $today) {
-            $user = User::whereHas('companies', fn ($q) => $q->where('companies.id', $episode->company_id))->first();
+        IcuEpisode::query()->whereNull('discharged_at')->with('organization')->each(function (IcuEpisode $episode) use ($charges, $today) {
+            $user = User::whereHas('organizations', fn ($q) => $q->where('organizations.id', $episode->organization_id))->first();
 
             if (! $user) {
                 return;

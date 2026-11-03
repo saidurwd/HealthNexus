@@ -3,11 +3,13 @@
 namespace Tests\Feature\Clinical;
 
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
+use App\Models\Prescription;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -18,7 +20,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -31,25 +33,25 @@ class EncounterClinicalControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['encounters.view', 'clinical.vitals.create', 'clinical.diagnosis.create', 'prescription.create'] as $permission) {
+        foreach (['encounters.view', 'clinical.vitals.create', 'clinical.diagnosis.create', 'prescription.create', 'prescription.view'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
         $this->encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'status' => 'in_progress',
@@ -58,7 +60,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_record_vital_signs(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/vitals", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -79,7 +81,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_add_diagnosis(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/diagnoses", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
             'coding_system' => 'ICD-10',
             'code' => 'I10',
@@ -97,7 +99,7 @@ class EncounterClinicalControllerTest extends TestCase
 
     public function test_user_can_create_prescription(): void
     {
-        $response = $this->post("/admin/encounters/{$this->encounter->id}/prescriptions", [
+        $response = $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
             'clinical_notes' => 'Take after meals',
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15],
@@ -117,14 +119,14 @@ class EncounterClinicalControllerTest extends TestCase
     public function test_clinical_workspace_renders_with_full_sub_record_set_and_allergy_alert(): void
     {
         PatientAllergy::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'substance' => 'Penicillin',
             'severity' => 'severe',
             'is_active' => true,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/vitals", [
+        $this->post("/encounters/{$this->encounter->public_id}/vitals", [
             'temperature' => 37.2,
             'systolic' => 120,
             'diastolic' => 80,
@@ -132,22 +134,38 @@ class EncounterClinicalControllerTest extends TestCase
             'oxygen_saturation' => 98,
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/diagnoses", [
+        $this->post("/encounters/{$this->encounter->public_id}/diagnoses", [
             'description' => 'Essential hypertension',
         ]);
 
-        $this->post("/admin/encounters/{$this->encounter->id}/prescriptions", [
+        $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
             'items' => [
                 ['medicine_name' => 'Paracetamol', 'frequency' => 'TDS', 'duration' => '5 days'],
             ],
         ]);
 
-        $response = $this->get("/admin/encounters/{$this->encounter->id}");
+        $response = $this->get("/encounters/{$this->encounter->public_id}");
 
         $response->assertStatus(200);
         $response->assertSee('Penicillin');
         $response->assertSee('Essential hypertension');
         $response->assertSee('Paracetamol');
         $response->assertSee('120');
+    }
+
+    public function test_prescription_prints_as_a_slip_marked_when_not_issued(): void
+    {
+        $this->post("/encounters/{$this->encounter->public_id}/prescriptions", [
+            'advice' => 'Plenty of fluids',
+            'items' => [['medicine_name' => 'Paracetamol', 'strength' => '500 mg', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15]],
+        ]);
+        $prescription = Prescription::query()->firstOrFail();
+
+        $this->get("/prescriptions/{$prescription->public_id}/print")
+            ->assertOk()
+            ->assertSee('Paracetamol')
+            ->assertSee('Plenty of fluids')
+            ->assertSee('rx-stamp', false)
+            ->assertSee('Signature and seal');
     }
 }

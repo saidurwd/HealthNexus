@@ -32,7 +32,7 @@ class OtSurgicalTeamController extends Controller
 
         $this->auditLogger->log('CREATE', OtSurgicalTeam::class, $assignment->id, null, $assignment->toArray(), $request);
 
-        return back()->with('success', 'Team member assigned.');
+        return back()->with('success', __('Team member assigned.'));
     }
 
     public function destroy(Request $request, OtSurgicalTeam $assignment)
@@ -43,6 +43,6 @@ class OtSurgicalTeamController extends Controller
 
         $this->auditLogger->log('UPDATE', OtSurgicalTeam::class, $assignment->id, null, ['removed_at' => now()], $request);
 
-        return back()->with('success', 'Team member removed.');
+        return back()->with('success', __('Team member removed.'));
     }
 }

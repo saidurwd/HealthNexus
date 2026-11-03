@@ -2,21 +2,22 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\PatientProblem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PatientProblemFactory extends Factory
 {
-    protected $model = \App\Models\PatientProblem::class;
+    protected $model = PatientProblem::class;
 
     public function definition(): array
     {
         return [
             'patient_id' => Patient::factory(),
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'problem_code' => fake()->optional()->bothify('??##'),
             'problem_name' => fake()->sentence(3),
             'coding_system' => fake()->optional()->randomElement(['ICD-10', 'ICD-11', 'SNOMED CT']),

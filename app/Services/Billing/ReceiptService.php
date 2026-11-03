@@ -7,7 +7,6 @@ use App\Models\Billing\BillingPayment;
 use App\Models\Billing\BillingReceipt;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class ReceiptService
 {
@@ -23,11 +22,11 @@ class ReceiptService
             }
 
             $receipt = BillingReceipt::create([
-                'company_id' => $payment->company_id,
+                'organization_id' => $payment->organization_id,
                 'branch_id' => $payment->branch_id,
                 'payment_id' => $payment->id,
                 'invoice_id' => $payment->invoice_id,
-                'receipt_number' => $this->numbers->generateReceiptNumber($payment->company_id, $payment->branch_id),
+                'receipt_number' => $this->numbers->generateReceiptNumber($payment->organization_id, $payment->branch_id),
                 'status' => 'issued',
                 'issued_at' => now(),
                 'issued_by' => $issuedBy->id,

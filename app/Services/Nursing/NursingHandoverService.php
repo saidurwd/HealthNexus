@@ -4,9 +4,11 @@ namespace App\Services\Nursing;
 
 use App\Events\Nursing\NursingHandoverAcknowledged;
 use App\Events\Nursing\NursingHandoverCreated;
+use App\Models\Nursing\NursingDevice;
 use App\Models\Nursing\NursingEpisode;
 use App\Models\Nursing\NursingHandover;
 use App\Models\Nursing\NursingHandoverItem;
+use App\Models\Nursing\NursingMedicationAdministration;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -21,7 +23,7 @@ class NursingHandoverService
     public function prepare(NursingEpisode $episode, User $outgoingNurse, ?int $shiftId = null): NursingHandover
     {
         $handover = NursingHandover::create([
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'admission_id' => $episode->admission_id,
@@ -39,17 +41,17 @@ class NursingHandoverService
 
         $latestVital = $episode->encounter?->vitals()->latest('recorded_at')->first();
         if ($latestVital) {
-            $this->addItem($handover, 'observations', "Last vitals recorded ".$latestVital->recorded_at->diffForHumans());
+            $this->addItem($handover, 'observations', 'Last vitals recorded '.$latestVital->recorded_at->diffForHumans());
         }
 
         $pendingMar = $episode->admission_id
-            ? \App\Models\Nursing\NursingMedicationAdministration::where('episode_id', $episode->id)
+            ? NursingMedicationAdministration::where('episode_id', $episode->id)
                 ->whereIn('status', ['scheduled', 'due'])
                 ->count()
             : 0;
         $this->addItem($handover, 'pending_orders', "{$pendingMar} medication administration(s) pending");
 
-        $activeDevices = \App\Models\Nursing\NursingDevice::where('episode_id', $episode->id)
+        $activeDevices = NursingDevice::where('episode_id', $episode->id)
             ->where('status', 'active')->pluck('device_type');
         if ($activeDevices->isNotEmpty()) {
             $this->addItem($handover, 'devices', $activeDevices->implode(', '));

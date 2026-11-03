@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Provider Unavailability / Blocking</h2>
+            <h2 class="mb-0">{{ __('Provider Unavailability / Blocking') }}</h2>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                <i class="bi bi-plus me-1"></i>Block Time
+                <i class="bi bi-plus me-1"></i>{{ __('Block Time') }}
             </button>
         </div>
 
@@ -17,11 +17,11 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Provider</th>
-                                <th>Reason</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Provider') }}</th>
+                                <th>{{ __('Reason') }}</th>
+                                <th>{{ __('From') }}</th>
+                                <th>{{ __('To') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,7 +40,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="text-center py-4 text-muted">No blocked/unavailable periods.</td></tr>
+                                <tr><td colspan="5" class="text-center py-4 text-muted">{{ __('No blocked/unavailable periods.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -58,12 +58,12 @@
                 <form method="POST" action="{{ route('admin.provider-unavailability.store') }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Block Provider Time</h5>
+                        <h5 class="modal-title">{{ __('Block Provider Time') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Provider *</label>
+                            <label class="form-label">{{ __('Provider *') }}</label>
                             <select name="provider_id" class="form-select" required>
                                 @foreach($providers as $provider)
                                     <option value="{{ $provider->id }}">{{ $provider->name }}</option>
@@ -71,7 +71,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Reason *</label>
+                            <label class="form-label">{{ __('Reason *') }}</label>
                             <select name="reason_type" class="form-select" required>
                                 @foreach(['leave', 'training', 'meeting', 'conference', 'personal', 'emergency', 'other'] as $reason)
                                     <option value="{{ $reason }}">{{ ucfirst($reason) }}</option>
@@ -80,22 +80,22 @@
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">From *</label>
+                                <label class="form-label">{{ __('From *') }}</label>
                                 <input type="datetime-local" name="start_at" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">To *</label>
+                                <label class="form-label">{{ __('To *') }}</label>
                                 <input type="datetime-local" name="end_at" class="form-control" required>
                             </div>
                         </div>
                         <div class="mb-0 mt-3">
-                            <label class="form-label">Notes</label>
+                            <label class="form-label">{{ __('Notes') }}</label>
                             <textarea name="notes" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
                     </div>
                 </form>
             </div>

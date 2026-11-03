@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OtComplex extends Model
 {
-    protected $fillable = ['company_id', 'branch_id', 'code', 'name', 'location', 'is_active'];
+    protected $fillable = ['organization_id', 'branch_id', 'code', 'name', 'location', 'is_active'];
 
     protected function casts(): array
     {
@@ -19,9 +19,9 @@ class OtComplex extends Model
         return $this->hasMany(OtTheatre::class, 'complex_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)
+        return $query->where('organization_id', $organizationId)
             ->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

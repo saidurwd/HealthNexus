@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ class ProviderUnavailability extends Model
     protected $table = 'provider_unavailability';
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'provider_id',
         'reason_type',
@@ -30,9 +31,9 @@ class ProviderUnavailability extends Model
         'end_at' => 'datetime',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function provider(): BelongsTo
@@ -45,7 +46,7 @@ class ProviderUnavailability extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function overlaps(\Carbon\Carbon $start, \Carbon\Carbon $end): bool
+    public function overlaps(Carbon $start, Carbon $end): bool
     {
         return $this->start_at < $end && $this->end_at > $start;
     }

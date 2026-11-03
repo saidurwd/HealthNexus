@@ -56,7 +56,7 @@ class ResultEntryService
             }
 
             $result = LabResult::create([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'lab_order_item_id' => $item->id,
                 'test_id' => $test->id,

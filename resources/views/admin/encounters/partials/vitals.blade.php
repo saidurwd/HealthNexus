@@ -1,7 +1,7 @@
 <div class="tab-pane fade" id="vitals" role="tabpanel">
     <div class="card card-warning card-outline">
         <div class="card-header">
-            <h3 class="card-title">Vital Signs</h3>
+            <h3 class="card-title">{{ __('Vital Signs') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->vitals->isNotEmpty())
@@ -9,15 +9,15 @@
                     <table class="table table-sm table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Date</th>
-                                <th>Temp</th>
-                                <th>BP</th>
-                                <th>Pulse</th>
-                                <th>RR</th>
-                                <th>SpO2</th>
-                                <th>Weight</th>
-                                <th>Height</th>
-                                <th>BMI</th>
+                                <th>{{ __('Date') }}</th>
+                                <th>{{ __('Temp') }}</th>
+                                <th>{{ __('BP') }}</th>
+                                <th>{{ __('Pulse') }}</th>
+                                <th>{{ __('RR') }}</th>
+                                <th>{{ __('SpO2') }}</th>
+                                <th>{{ __('Weight') }}</th>
+                                <th>{{ __('Height') }}</th>
+                                <th>{{ __('BMI') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,7 +38,7 @@
                     </table>
                 </div>
             @else
-                <p class="text-muted">No vitals recorded.</p>
+                <p class="text-muted">{{ __('No vitals recorded.') }}</p>
             @endif
         </div>
     </div>

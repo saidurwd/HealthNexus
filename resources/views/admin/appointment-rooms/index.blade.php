@@ -5,15 +5,15 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Rooms</h2>
-            <a href="{{ route('admin.appointment-rooms.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Add Room</a>
+            <h2 class="mb-0">{{ __('Rooms') }}</h2>
+            <a href="{{ route('admin.appointment-rooms.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>{{ __('Add Room') }}</a>
         </div>
 
         <div class="card">
             <div class="card-body p-0">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
-                        <tr><th>Name</th><th>Code</th><th>Type</th><th>Department</th><th class="text-center">Active</th><th class="text-center">Actions</th></tr>
+                        <tr><th>{{ __('Name') }}</th><th>{{ __('Code') }}</th><th>{{ __('Type') }}</th><th>{{ __('Department') }}</th><th class="text-center">{{ __('Active') }}</th><th class="text-center">{{ __('Actions') }}</th></tr>
                     </thead>
                     <tbody>
                         @forelse($rooms as $room)
@@ -33,7 +33,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="text-center py-4 text-muted">No rooms configured.</td></tr>
+                            <tr><td colspan="6" class="text-center py-4 text-muted">{{ __('No rooms configured.') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

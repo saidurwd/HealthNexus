@@ -43,6 +43,6 @@ class IpdSettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'ipd_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.ipd.settings.index')->with('success', 'IPD settings updated successfully.');
+        return redirect()->route('admin.ipd.settings.index')->with('success', __('IPD settings updated successfully.'));
     }
 }

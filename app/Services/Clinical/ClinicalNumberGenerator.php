@@ -3,7 +3,7 @@
 namespace App\Services\Clinical;
 
 use App\Models\ClinicalNumberCounter;
-use App\Models\Company;
+use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -14,27 +14,27 @@ use Illuminate\Support\Facades\DB;
  */
 class ClinicalNumberGenerator
 {
-    public function generateOrderNumber(Company $company, ?int $branchId = null): string
+    public function generateOrderNumber(Organization $organization, ?int $branchId = null): string
     {
-        $prefix = strtoupper(substr($company->code, 0, 3));
-        $sequence = $this->nextSequence($company->id, $branchId, 'clinical_order');
+        $prefix = strtoupper(substr($organization->code, 0, 3));
+        $sequence = $this->nextSequence($organization->id, $branchId, 'clinical_order');
 
         return sprintf('%s-ORD-%08d', $prefix, $sequence);
     }
 
-    public function generatePrescriptionNumber(Company $company, ?int $branchId = null): string
+    public function generatePrescriptionNumber(Organization $organization, ?int $branchId = null): string
     {
-        $prefix = strtoupper(substr($company->code, 0, 3));
-        $sequence = $this->nextSequence($company->id, $branchId, 'prescription');
+        $prefix = strtoupper(substr($organization->code, 0, 3));
+        $sequence = $this->nextSequence($organization->id, $branchId, 'prescription');
 
         return sprintf('%s-PRX-%08d', $prefix, $sequence);
     }
 
-    private function nextSequence(int $companyId, ?int $branchId, string $type): int
+    private function nextSequence(int $organizationId, ?int $branchId, string $type): int
     {
-        return DB::transaction(function () use ($companyId, $branchId, $type): int {
+        return DB::transaction(function () use ($organizationId, $branchId, $type): int {
             $counter = ClinicalNumberCounter::query()
-                ->where('company_id', $companyId)
+                ->where('organization_id', $organizationId)
                 ->where('branch_id', $branchId)
                 ->where('counter_type', $type)
                 ->lockForUpdate()
@@ -42,7 +42,7 @@ class ClinicalNumberGenerator
 
             if (! $counter) {
                 $counter = ClinicalNumberCounter::create([
-                    'company_id' => $companyId,
+                    'organization_id' => $organizationId,
                     'branch_id' => $branchId,
                     'counter_type' => $type,
                     'last_number' => 0,

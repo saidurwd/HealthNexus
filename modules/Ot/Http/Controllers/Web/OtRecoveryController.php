@@ -45,7 +45,7 @@ class OtRecoveryController extends Controller
 
         $this->auditLogger->log('CREATE', VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
-        return back()->with('success', 'Recovery vitals recorded.');
+        return back()->with('success', __('Recovery vitals recorded.'));
     }
 
     public function updateAssessment(Request $request, OtRecoveryRecord $recovery)
@@ -63,7 +63,7 @@ class OtRecoveryController extends Controller
 
         $this->recovery->updateAssessment($recovery, $validated);
 
-        return back()->with('success', 'Recovery assessment updated.');
+        return back()->with('success', __('Recovery assessment updated.'));
     }
 
     public function markReadyForTransfer(Request $request, OtRecoveryRecord $recovery)
@@ -76,7 +76,7 @@ class OtRecoveryController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Patient marked ready for transfer.');
+        return back()->with('success', __('Patient marked ready for transfer.'));
     }
 
     public function completeTransfer(Request $request, OtRecoveryRecord $recovery)
@@ -89,6 +89,6 @@ class OtRecoveryController extends Controller
 
         $this->auditLogger->log('TRANSFER', OtRecoveryRecord::class, $recovery->id, null, $validated, $request);
 
-        return back()->with('success', 'Patient transferred.');
+        return back()->with('success', __('Patient transferred.'));
     }
 }

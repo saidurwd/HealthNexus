@@ -8,6 +8,7 @@ use App\Models\Radiology\RadiologyPacsServer;
 use App\Models\Radiology\RadiologySeries;
 use App\Models\Radiology\RadiologyStudy;
 use App\Services\Radiology\Pacs\PacsClientFactory;
+use App\Services\Radiology\RadiologyOrderLifecycleService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -37,7 +38,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
 
         $order = $examination->orderItem->radiologyOrder;
         $server = RadiologyPacsServer::query()
-            ->forTenant($examination->company_id, $examination->branch_id)
+            ->forTenant($examination->organization_id, $examination->branch_id)
             ->where('is_active', true)
             ->where('is_default', true)
             ->first();
@@ -71,7 +72,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
             $study = RadiologyStudy::query()->updateOrCreate(
                 ['radiology_examination_id' => $examination->id],
                 [
-                    'company_id' => $examination->company_id,
+                    'organization_id' => $examination->organization_id,
                     'branch_id' => $examination->branch_id,
                     'patient_id' => $examination->patient_id,
                     'pacs_server_id' => $server->id,
@@ -103,7 +104,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
             }
 
             if (in_array($examination->status, ['completed'], true)) {
-                app(\App\Services\Radiology\RadiologyOrderLifecycleService::class)->transitionTo($order->fresh(), 'images_available');
+                app(RadiologyOrderLifecycleService::class)->transitionTo($order->fresh(), 'images_available');
             }
 
             $this->logEvent($examination, $server, 'success', "Reconciled study {$found['study_instance_uid']}.");
@@ -113,7 +114,7 @@ class SyncPacsStudyMetadata implements ShouldQueue
     private function logEvent(RadiologyExamination $examination, ?RadiologyPacsServer $server, string $status, string $summary): void
     {
         RadiologyDicomEvent::create([
-            'company_id' => $examination->company_id,
+            'organization_id' => $examination->organization_id,
             'branch_id' => $examination->branch_id,
             'radiology_examination_id' => $examination->id,
             'pacs_server_id' => $server?->id,

@@ -2,8 +2,11 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientConsent;
 use App\Models\Provider;
@@ -16,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OtSurgery extends Model
 {
+    use HasPublicId;
+
     public const STATUS_REQUESTED = 'requested';
 
     public const STATUS_UNDER_REVIEW = 'under_review';
@@ -51,7 +56,7 @@ class OtSurgery extends Model
     public const STATUS_ABORTED = 'aborted';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'surgery_number', 'patient_id', 'admission_id', 'encounter_id',
+        'organization_id', 'branch_id', 'surgery_number', 'patient_id', 'admission_id', 'encounter_id',
         'surgery_request_id', 'primary_procedure_id', 'specialty_id', 'priority', 'surgery_type',
         'site', 'laterality', 'theatre_id', 'scheduled_date', 'scheduled_start_at', 'scheduled_end_at', 'actual_start_at',
         'actual_end_at', 'status', 'primary_surgeon_id', 'assistant_surgeon_id', 'anesthetist_id',
@@ -71,14 +76,14 @@ class OtSurgery extends Model
         ];
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function patient(): BelongsTo
@@ -206,8 +211,8 @@ class OtSurgery extends Model
         return $this->hasOne(OtRecoveryRecord::class, 'surgery_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

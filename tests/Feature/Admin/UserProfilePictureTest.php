@@ -22,9 +22,9 @@ class UserProfilePictureTest extends TestCase
 
         $this->user = User::factory()->create();
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'manage users', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('manage users');
 
         $this->actingAs($this->user);
@@ -40,7 +40,7 @@ class UserProfilePictureTest extends TestCase
             $mock->shouldReceive('scanForMalware')->andReturn(false);
         });
 
-        $response = $this->post('/admin/users', [
+        $response = $this->post('/users', [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
@@ -49,7 +49,7 @@ class UserProfilePictureTest extends TestCase
             'profile_picture' => UploadedFile::fake()->image('profile.jpg', 200, 200),
         ]);
 
-        $response->assertRedirect('/admin/users');
+        $response->assertRedirect('/users');
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
         ]);
@@ -68,14 +68,14 @@ class UserProfilePictureTest extends TestCase
             $mock->shouldReceive('scanForMalware')->andReturn(false);
         });
 
-        $response = $this->put('/admin/users/'.$this->user->id, [
+        $response = $this->put('/users/'.$this->user->id, [
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone' => '9876543210',
             'profile_picture' => UploadedFile::fake()->image('new-profile.jpg', 200, 200),
         ]);
 
-        $response->assertRedirect('/admin/users');
+        $response->assertRedirect('/users');
 
         $this->user->refresh();
         $this->assertEquals('profile-pictures/new-profile.jpg', $this->user->profile_picture);

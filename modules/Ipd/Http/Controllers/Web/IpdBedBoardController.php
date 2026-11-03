@@ -17,17 +17,17 @@ class IpdBedBoardController extends Controller
     {
         Gate::authorize('ipd.bed.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $filters = $request->only(['ward_id', 'building_id', 'floor_id', 'bed_type_id', 'gender', 'status', 'isolation']);
-        $beds = $this->availability->search($companyId, $branchId, array_filter($filters, fn ($v) => $v !== null && $v !== ''), 200);
+        $beds = $this->availability->search($organizationId, $branchId, array_filter($filters, fn ($v) => $v !== null && $v !== ''), 200);
 
         $wardsGrouped = $beds->getCollection()
             ->groupBy(fn ($bed) => $bed->room->ward->name ?? 'Unassigned')
             ->map(fn ($bedsInWard) => $bedsInWard->groupBy(fn ($bed) => $bed->room->room_number ?? '—'));
 
-        $wards = IpdWard::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $wards = IpdWard::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.bed-board.index', compact('wardsGrouped', 'wards'));
     }
@@ -36,11 +36,11 @@ class IpdBedBoardController extends Controller
     {
         Gate::authorize('ipd.bed.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $filters = $request->only(['ward_id', 'building_id', 'floor_id', 'room_id', 'bed_type_id', 'gender', 'status', 'isolation', 'search']);
-        $beds = $this->availability->search($companyId, $branchId, array_filter($filters, fn ($v) => $v !== null && $v !== ''));
+        $beds = $this->availability->search($organizationId, $branchId, array_filter($filters, fn ($v) => $v !== null && $v !== ''));
 
         return view('admin.ipd.bed-availability.index', compact('beds'));
     }

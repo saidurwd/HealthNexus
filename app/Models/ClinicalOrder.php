@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ClinicalOrder extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'order_number',
         'patient_id',
@@ -30,9 +30,9 @@ class ClinicalOrder extends Model
         'cancelled_at' => 'datetime',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

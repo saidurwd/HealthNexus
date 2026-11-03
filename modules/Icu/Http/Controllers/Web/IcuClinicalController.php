@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Icu\IcuAssessment;
 use App\Models\Icu\IcuDevice;
 use App\Models\Icu\IcuEpisode;
+use App\Models\Icu\IcuHandoverRecord;
 use App\Models\Icu\IcuInfusion;
 use App\Models\Icu\IcuProgressNote;
 use App\Services\Icu\IcuAssessmentService;
@@ -60,7 +61,7 @@ class IcuClinicalController extends Controller
         $validated = $request->validate(['sections' => ['nullable', 'array']]);
         $assessment = $this->assessments->create($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Assessment recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Assessment recorded.'));
     }
 
     public function finalizeAssessment(Request $request, IcuAssessment $assessment)
@@ -73,7 +74,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $assessment->episode_id)->with('success', 'Assessment finalized.');
+        return redirect()->route('admin.icu.episodes.show', $assessment->episode)->with('success', __('Assessment finalized.'));
     }
 
     public function flowsheet(Request $request, IcuEpisode $episode)
@@ -104,7 +105,7 @@ class IcuClinicalController extends Controller
 
         $this->observations->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Observation recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Observation recorded.'));
     }
 
     public function storeProgressNote(Request $request, IcuEpisode $episode)
@@ -122,7 +123,7 @@ class IcuClinicalController extends Controller
 
         $note = $this->notes->create($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Progress note saved.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Progress note saved.'));
     }
 
     public function finalizeProgressNote(Request $request, IcuProgressNote $note)
@@ -135,7 +136,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $note->episode_id)->with('success', 'Progress note finalized.');
+        return redirect()->route('admin.icu.episodes.show', $note->episode)->with('success', __('Progress note finalized.'));
     }
 
     public function prepareHandover(Request $request, IcuEpisode $episode)
@@ -146,12 +147,12 @@ class IcuClinicalController extends Controller
         $handover = $this->handovers->prepare($episode, $request->user(), $validated['handover_type'] ?? 'shift');
         $this->handovers->finalize($handover);
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Handover prepared.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Handover prepared.'));
     }
 
     public function acknowledgeHandover(Request $request, int $handover)
     {
-        $record = \App\Models\Icu\IcuHandoverRecord::findOrFail($handover);
+        $record = IcuHandoverRecord::findOrFail($handover);
         $this->authorize('view', $record->episode);
 
         try {
@@ -160,7 +161,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $record->episode_id)->with('success', 'Handover acknowledged.');
+        return redirect()->route('admin.icu.episodes.show', $record->episode)->with('success', __('Handover acknowledged.'));
     }
 
     public function storeVentilatorEvent(Request $request, IcuEpisode $episode)
@@ -178,7 +179,7 @@ class IcuClinicalController extends Controller
 
         $this->ventilator->recordEvent($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Ventilator event recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Ventilator event recorded.'));
     }
 
     public function storeRespiratorySupport(Request $request, IcuEpisode $episode)
@@ -194,7 +195,7 @@ class IcuClinicalController extends Controller
 
         $this->respiratory->start($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Respiratory support recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Respiratory support recorded.'));
     }
 
     public function storeInfusion(Request $request, IcuEpisode $episode)
@@ -212,7 +213,7 @@ class IcuClinicalController extends Controller
 
         $this->infusions->start($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Infusion started.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Infusion started.'));
     }
 
     public function titrateInfusion(Request $request, IcuInfusion $infusion)
@@ -227,7 +228,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $infusion->episode_id)->with('success', 'Infusion titrated.');
+        return redirect()->route('admin.icu.episodes.show', $infusion->episode)->with('success', __('Infusion titrated.'));
     }
 
     public function stopInfusion(Request $request, IcuInfusion $infusion)
@@ -240,7 +241,7 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $infusion->episode_id)->with('success', 'Infusion stopped.');
+        return redirect()->route('admin.icu.episodes.show', $infusion->episode)->with('success', __('Infusion stopped.'));
     }
 
     public function storeDevice(Request $request, IcuEpisode $episode)
@@ -257,7 +258,7 @@ class IcuClinicalController extends Controller
 
         $this->devices->insert($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Device recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Device recorded.'));
     }
 
     public function removeDevice(Request $request, IcuDevice $device)
@@ -266,7 +267,7 @@ class IcuClinicalController extends Controller
 
         $this->devices->remove($device, $request->user(), $request->input('complication'));
 
-        return redirect()->route('admin.icu.episodes.show', $device->episode_id)->with('success', 'Device removed.');
+        return redirect()->route('admin.icu.episodes.show', $device->episode)->with('success', __('Device removed.'));
     }
 
     public function storeFluidBalance(Request $request, IcuEpisode $episode)
@@ -281,7 +282,7 @@ class IcuClinicalController extends Controller
 
         $this->fluidBalance->recordEntry($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Fluid balance entry recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Fluid balance entry recorded.'));
     }
 
     public function storeNutrition(Request $request, IcuEpisode $episode)
@@ -297,7 +298,7 @@ class IcuClinicalController extends Controller
 
         $this->nutrition->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Nutrition plan recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Nutrition plan recorded.'));
     }
 
     public function calculateScore(Request $request, IcuEpisode $episode)
@@ -315,6 +316,6 @@ class IcuClinicalController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Clinical score calculated.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Clinical score calculated.'));
     }
 }

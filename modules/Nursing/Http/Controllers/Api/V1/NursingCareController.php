@@ -9,6 +9,7 @@ use App\Models\Nursing\NursingEscalation;
 use App\Models\Nursing\NursingHandover;
 use App\Models\Nursing\NursingNote;
 use App\Models\Nursing\NursingTask;
+use App\Models\VitalSign;
 use App\Services\AuditLogger;
 use App\Services\Nursing\NursingEscalationService;
 use App\Services\Nursing\NursingHandoverService;
@@ -39,13 +40,13 @@ class NursingCareController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::success([
-            'active_episodes' => NursingEpisode::forTenant($companyId, $branchId)->where('status', 'active')->count(),
-            'pending_tasks' => NursingTask::forTenant($companyId, $branchId)->where('status', 'pending')->count(),
-            'open_escalations' => NursingEscalation::forTenant($companyId, $branchId)->whereNull('resolved_at')->count(),
+            'active_episodes' => NursingEpisode::forTenant($organizationId, $branchId)->where('status', 'active')->count(),
+            'pending_tasks' => NursingTask::forTenant($organizationId, $branchId)->where('status', 'pending')->count(),
+            'open_escalations' => NursingEscalation::forTenant($organizationId, $branchId)->whereNull('resolved_at')->count(),
         ]);
     }
 
@@ -53,10 +54,10 @@ class NursingCareController extends Controller
     {
         $this->authorize('viewAny', NursingEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        return ApiResponse::paginated(NursingEpisode::forTenant($companyId, $branchId)->with('patient')->latest('start_at')->paginate(20));
+        return ApiResponse::paginated(NursingEpisode::forTenant($organizationId, $branchId)->with('patient')->latest('start_at')->paginate(20));
     }
 
     public function episode(NursingEpisode $episode)
@@ -80,7 +81,7 @@ class NursingCareController extends Controller
 
         $vital = $this->vitals->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\VitalSign::class, $vital->id, null, $vital->toArray(), $request);
+        $this->auditLogger->log('CREATE', VitalSign::class, $vital->id, null, $vital->toArray(), $request);
 
         return ApiResponse::success($vital, 'Vitals recorded.', 201);
     }

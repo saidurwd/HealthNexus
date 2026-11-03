@@ -2,6 +2,10 @@
 
 namespace App\Models\Billing;
 
+use App\Models\Branch;
+use App\Models\Concerns\HasPublicId;
+use App\Models\Organization;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,23 +13,42 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillingInsurancePolicy extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPublicId;
 
-    protected $fillable = ['company_id', 'branch_id', 'insurance_provider_id', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
+    protected $fillable = ['organization_id', 'branch_id', 'insurance_provider_id', 'payer_id', 'plan_id', 'subscriber_patient_id', 'relationship_to_subscriber', 'coverage_order', 'annual_used', 'deductible_met', 'benefit_year_start', 'patient_id', 'policy_number', 'member_number', 'group_number', 'authorization_reference', 'coverage_limit', 'copay_percentage', 'effective_from', 'effective_to', 'status'];
 
     protected function casts(): array
     {
-        return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date'];
+        return ['coverage_limit' => 'decimal:2', 'copay_percentage' => 'decimal:4', 'effective_from' => 'date', 'effective_to' => 'date', 'annual_used' => 'decimal:2', 'deductible_met' => 'decimal:2', 'benefit_year_start' => 'date'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function provider(): BelongsTo { return $this->belongsTo(BillingInsuranceProvider::class, 'insurance_provider_id'); }
-    public function patient(): BelongsTo { return $this->belongsTo(\App\Models\Patient::class); }
-    public function invoices(): HasMany { return $this->hasMany(BillingInvoice::class, 'insurance_policy_id'); }
-
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function organization(): BelongsTo
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(BillingInsuranceProvider::class, 'insurance_provider_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(BillingInvoice::class, 'insurance_policy_id');
+    }
+
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
+    {
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

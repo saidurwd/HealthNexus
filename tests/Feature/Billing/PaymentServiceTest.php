@@ -30,27 +30,27 @@ class PaymentServiceTest extends BillingTestCase
         $invoices = app(InvoiceService::class);
         $lifecycle = app(InvoiceLifecycleService::class);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '1000.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
         ]);
 
         $this->cashMethod = BillingPaymentMethod::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'billing_item_id' => $item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '1000.00', 'gross_amount' => '1000.00',
@@ -59,7 +59,7 @@ class PaymentServiceTest extends BillingTestCase
         ]);
 
         $this->invoice = $invoices->createDraft($patient, [
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
         ], $this->user);
 
         $invoices->addCharges($this->invoice, new Collection([$charge]));

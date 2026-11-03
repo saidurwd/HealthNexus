@@ -19,16 +19,27 @@ class BillingInvoiceItem extends Model
         return ['quantity' => 'integer', 'unit_price' => 'decimal:2', 'gross_amount' => 'decimal:2', 'discount_amount' => 'decimal:2', 'tax_rate' => 'decimal:4', 'tax_amount' => 'decimal:2', 'net_amount' => 'decimal:2'];
     }
 
-    public function invoice(): BelongsTo { return $this->belongsTo(BillingInvoice::class); }
-    public function charge(): BelongsTo { return $this->belongsTo(BillingCharge::class); }
-    public function billingItem(): BelongsTo { return $this->belongsTo(BillingItem::class); }
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(BillingInvoice::class);
+    }
+
+    public function charge(): BelongsTo
+    {
+        return $this->belongsTo(BillingCharge::class);
+    }
+
+    public function billingItem(): BelongsTo
+    {
+        return $this->belongsTo(BillingItem::class);
+    }
 
     /**
-     * This table carries no company_id/branch_id columns of its own — tenant scope is inherited
+     * This table carries no organization_id/branch_id columns of its own — tenant scope is inherited
      * from the parent invoice, so this filters via that relation instead of a literal column.
      */
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->whereHas('invoice', fn ($q) => $q->forTenant($companyId, $branchId));
+        return $query->whereHas('invoice', fn ($q) => $q->forTenant($organizationId, $branchId));
     }
 }

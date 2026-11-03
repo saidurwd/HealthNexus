@@ -44,7 +44,7 @@ abstract class IcuTestCase extends IpdTestCase
     protected function makeIcuWard(): IpdWard
     {
         return IpdWard::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'ICU-'.uniqid(), 'name' => 'Test ICU', 'ward_type' => IpdWard::WARD_TYPE_ICU,
             'capacity' => 4, 'isolation_capable' => true, 'is_active' => true,
         ]);
@@ -55,13 +55,13 @@ abstract class IcuTestCase extends IpdTestCase
         $ward ??= $this->makeIcuWard();
 
         $room = IpdRoom::create([
-            'company_id' => $this->company->id, 'branch_id' => null, 'ward_id' => $ward->id,
+            'organization_id' => $this->organization->id, 'branch_id' => null, 'ward_id' => $ward->id,
             'room_number' => (string) random_int(100, 999), 'room_type' => 'icu',
             'capacity' => 1, 'gender_policy' => 'any', 'isolation_capable' => true, 'is_active' => true,
         ]);
 
         return IpdBed::create([
-            'company_id' => $this->company->id, 'branch_id' => null, 'room_id' => $room->id,
+            'organization_id' => $this->organization->id, 'branch_id' => null, 'room_id' => $room->id,
             'bed_code' => 'ICU-BED-'.uniqid(), 'gender_type' => 'any', 'status' => IpdBed::STATUS_AVAILABLE,
             'icu_capable' => true, 'ventilator_capable' => true, 'oxygen_available' => true,
             'monitor_available' => true, 'is_active' => true,
@@ -70,13 +70,13 @@ abstract class IcuTestCase extends IpdTestCase
 
     protected function makeAdmissionRequest(?Patient $patient = null, bool $isEmergency = false): IcuAdmissionRequest
     {
-        $patient ??= Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient ??= Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
 
         return app(IcuAdmissionRequestService::class)->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id,
             'admission_reason' => 'Respiratory failure', 'priority' => 'urgent',
             'is_emergency' => $isEmergency, 'override_reason' => $isEmergency ? 'Cardiac arrest, immediate ICU need' : null,

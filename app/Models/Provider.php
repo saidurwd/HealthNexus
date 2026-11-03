@@ -18,9 +18,10 @@ class Provider extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'branch_id',
         'user_id',
+        'employee_id',
         'provider_code',
         'name',
         'provider_type',
@@ -30,9 +31,9 @@ class Provider extends Model
         'status',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function branch(): BelongsTo

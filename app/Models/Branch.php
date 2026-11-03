@@ -14,7 +14,8 @@ class Branch extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
+        'hospital_id',
         'name',
         'code',
         'slug',
@@ -30,9 +31,22 @@ class Branch extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    protected static function booted(): void
     {
-        return $this->belongsTo(Company::class);
+        // Organization → Hospital → Branch: a branch always belongs to a hospital.
+        static::creating(function (Branch $branch) {
+            $branch->hospital_id ??= Hospital::defaultFor($branch->organization_id)->id;
+        });
+    }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class);
     }
 
     public function departments(): HasMany

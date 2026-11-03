@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Patient Timeline</h2>
+            <h2 class="mb-0">{{ __('Patient Timeline') }}</h2>
             <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Profile
+                <i class="bi bi-arrow-left me-1"></i>{{ __('Back to Profile') }}
             </a>
         </div>
 
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-muted">No timeline events found.</p>
+                        <p class="text-muted">{{ __('No timeline events found.') }}</p>
                     @endforelse
                 </div>
             </div>

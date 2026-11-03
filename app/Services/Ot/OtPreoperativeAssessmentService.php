@@ -17,7 +17,7 @@ class OtPreoperativeAssessmentService
     {
         return OtPreoperativeAssessment::create([
             ...$data,
-            'company_id' => $surgery->company_id,
+            'organization_id' => $surgery->organization_id,
             'branch_id' => $surgery->branch_id,
             'surgery_id' => $surgery->id,
             'patient_id' => $surgery->patient_id,

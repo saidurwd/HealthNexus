@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('radiology_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('examination_id')->constrained('radiology_examinations')->cascadeOnDelete();
             $table->foreignId('template_id')->nullable()->constrained('radiology_report_templates')->nullOnDelete();
@@ -40,11 +40,11 @@ return new class extends Migration
             $table->timestamps();
 
             // An amendment intentionally reuses the same report_number across versions (it's the
-            // same report, "v2" of it) — the report's identity is (company_id, report_number,
+            // same report, "v2" of it) — the report's identity is (organization_id, report_number,
             // version), never report_number alone.
-            $table->unique(['company_id', 'report_number', 'version']);
+            $table->unique(['organization_id', 'report_number', 'version']);
             $table->index(['examination_id', 'is_current']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
         });
     }
 

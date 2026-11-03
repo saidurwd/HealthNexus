@@ -15,10 +15,10 @@ class PharmacyControlledDrugController extends Controller
     {
         Gate::authorize('pharmacy.controlled_drug.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $stores = PharmacyStore::query()->forTenant($companyId, $branchId)->where('is_active', true)->orderBy('name')->get();
+        $stores = PharmacyStore::query()->forTenant($organizationId, $branchId)->where('is_active', true)->orderBy('name')->get();
         $storeId = $request->integer('store_id') ?: $stores->first()?->id;
 
         $transactions = PharmacyControlledDrugTransaction::query()

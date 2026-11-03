@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdDischargeDisposition;
 use App\Models\Ipd\IpdDischargeRequest;
+use App\Models\PrescriptionItem;
 use App\Services\AuditLogger;
 use App\Services\Ipd\IpdDischargeService;
 use App\Services\TenantContextResolver;
@@ -23,11 +24,11 @@ class IpdDischargeController extends Controller
     {
         $this->authorize('viewAny', IpdDischargeRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $dischargeRequests = IpdDischargeRequest::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'admission'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()
@@ -41,8 +42,8 @@ class IpdDischargeController extends Controller
     {
         $this->authorize('create', IpdDischargeRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $dispositions = IpdDischargeDisposition::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $dispositions = IpdDischargeDisposition::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.ipd.discharge.create', compact('admission', 'dispositions'));
     }
@@ -67,7 +68,7 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('CREATE', IpdDischargeRequest::class, $dischargeRequest->id, null, $dischargeRequest->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Discharge requested.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Discharge requested.'));
     }
 
     public function show(IpdDischargeRequest $dischargeRequest)
@@ -77,6 +78,20 @@ class IpdDischargeController extends Controller
         $dischargeRequest->load(['patient', 'admission.currentAllocation.bed.room.ward', 'disposition', 'followUpProvider']);
 
         return view('admin.ipd.discharge.show', compact('dischargeRequest'));
+    }
+
+    /** The discharge summary the patient takes home: stay, diagnosis, medicines, advice and follow-up. */
+    public function print(IpdDischargeRequest $dischargeRequest)
+    {
+        $this->authorize('view', $dischargeRequest);
+
+        $dischargeRequest->load(['patient', 'disposition', 'followUpProvider', 'approvedBy', 'admission.attendingProvider', 'admission.department', 'admission.allocations.bed.room.ward']);
+        $encounterId = IpdAdmission::query()->whereKey($dischargeRequest->admission_id)->value('encounter_id');
+        $medicines = $encounterId
+            ? PrescriptionItem::query()->where('is_active', true)->whereHas('prescription', fn ($q) => $q->where('encounter_id', $encounterId)->where('status', 'issued'))->get()
+            : collect();
+
+        return view('admin.ipd.discharge.print', compact('dischargeRequest', 'medicines'));
     }
 
     public function recordClearance(Request $request, IpdDischargeRequest $dischargeRequest)
@@ -94,7 +109,7 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('RECORD_CLEARANCE', IpdDischargeRequest::class, $dischargeRequest->id, $oldValues, $dischargeRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Clearance recorded.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Clearance recorded.'));
     }
 
     public function complete(Request $request, IpdDischargeRequest $dischargeRequest)
@@ -111,6 +126,6 @@ class IpdDischargeController extends Controller
 
         $this->auditLogger->log('COMPLETE', IpdDischargeRequest::class, $dischargeRequest->id, $oldValues, $dischargeRequest->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', 'Discharge completed.');
+        return redirect()->route('admin.ipd.discharge.show', $dischargeRequest)->with('success', __('Discharge completed.'));
     }
 }

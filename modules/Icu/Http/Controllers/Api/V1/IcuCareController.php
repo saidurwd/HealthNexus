@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Every action route-model-binds the episode/request and re-authorizes through its policy
- * (company/branch scope) — a client-supplied ID is never trusted (spec §49).
+ * (organization/branch scope) — a client-supplied ID is never trusted (spec §49).
  */
 class IcuCareController extends Controller
 {
@@ -32,13 +32,13 @@ class IcuCareController extends Controller
     {
         $this->authorize('viewAny', IcuEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::success([
-            'current_patients' => IcuEpisode::forTenant($companyId, $branchId)->whereNull('discharged_at')->count(),
-            'pending_requests' => IcuAdmissionRequest::forTenant($companyId, $branchId)->whereIn('status', [IcuAdmissionRequest::STATUS_REQUESTED, IcuAdmissionRequest::STATUS_PENDING_APPROVAL])->count(),
-            'beds_available' => IpdBed::forTenant($companyId, $branchId)->where('icu_capable', true)->where('status', IpdBed::STATUS_AVAILABLE)->count(),
+            'current_patients' => IcuEpisode::forTenant($organizationId, $branchId)->whereNull('discharged_at')->count(),
+            'pending_requests' => IcuAdmissionRequest::forTenant($organizationId, $branchId)->whereIn('status', [IcuAdmissionRequest::STATUS_REQUESTED, IcuAdmissionRequest::STATUS_PENDING_APPROVAL])->count(),
+            'beds_available' => IpdBed::forTenant($organizationId, $branchId)->where('icu_capable', true)->where('status', IpdBed::STATUS_AVAILABLE)->count(),
         ]);
     }
 
@@ -46,21 +46,21 @@ class IcuCareController extends Controller
     {
         $this->authorize('viewAny', IcuEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        return ApiResponse::success($this->bedBoard->board($companyId, $branchId)->values());
+        return ApiResponse::success($this->bedBoard->board($organizationId, $branchId)->values());
     }
 
     public function episodes(Request $request)
     {
         $this->authorize('viewAny', IcuEpisode::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::paginated(
-            IcuEpisode::forTenant($companyId, $branchId)->with('patient')->latest('admitted_at')->paginate(20)
+            IcuEpisode::forTenant($organizationId, $branchId)->with('patient')->latest('admitted_at')->paginate(20)
         );
     }
 
@@ -75,11 +75,11 @@ class IcuCareController extends Controller
     {
         $this->authorize('viewAny', IcuAdmissionRequest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         return ApiResponse::paginated(
-            IcuAdmissionRequest::forTenant($companyId, $branchId)->with('patient')->latest()->paginate(20)
+            IcuAdmissionRequest::forTenant($organizationId, $branchId)->with('patient')->latest()->paginate(20)
         );
     }
 
@@ -96,11 +96,11 @@ class IcuCareController extends Controller
             'override_reason' => ['nullable', 'string'],
         ]);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         try {
-            $icuRequest = $this->requests->create([...$validated, 'company_id' => $companyId, 'branch_id' => $branchId], $request->user());
+            $icuRequest = $this->requests->create([...$validated, 'organization_id' => $organizationId, 'branch_id' => $branchId], $request->user());
         } catch (ValidationException $e) {
             return ApiResponse::validationError($e->errors());
         }

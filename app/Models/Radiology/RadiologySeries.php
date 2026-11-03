@@ -15,6 +15,13 @@ class RadiologySeries extends Model
         return ['number_of_instances' => 'integer'];
     }
 
-    public function study(): BelongsTo { return $this->belongsTo(RadiologyStudy::class, 'study_id'); }
-    public function instances(): HasMany { return $this->hasMany(RadiologyInstance::class, 'series_id'); }
+    public function study(): BelongsTo
+    {
+        return $this->belongsTo(RadiologyStudy::class, 'study_id');
+    }
+
+    public function instances(): HasMany
+    {
+        return $this->hasMany(RadiologyInstance::class, 'series_id');
+    }
 }

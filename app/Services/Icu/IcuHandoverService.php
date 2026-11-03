@@ -35,7 +35,7 @@ class IcuHandoverService
         ];
 
         return IcuHandoverRecord::create([
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'outgoing_user_id' => $outgoingUser->id,

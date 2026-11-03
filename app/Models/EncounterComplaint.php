@@ -10,7 +10,7 @@ class EncounterComplaint extends Model
     protected $fillable = [
         'encounter_id',
         'patient_id',
-        'company_id',
+        'organization_id',
         'complaint',
         'duration',
         'duration_unit',
@@ -31,8 +31,8 @@ class EncounterComplaint extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 }

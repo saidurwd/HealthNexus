@@ -19,7 +19,7 @@ class OtTheatre extends Model
     public const STATUS_BLOCKED = 'blocked';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'complex_id', 'theatre_code', 'name', 'location',
+        'organization_id', 'branch_id', 'complex_id', 'theatre_code', 'name', 'location',
         'capacity', 'emergency_capable', 'status', 'is_active',
     ];
 
@@ -38,9 +38,9 @@ class OtTheatre extends Model
         return $this->hasMany(OtTheatreCapability::class, 'theatre_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)
+        return $query->where('organization_id', $organizationId)
             ->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

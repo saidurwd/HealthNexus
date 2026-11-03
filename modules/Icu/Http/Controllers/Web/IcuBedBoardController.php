@@ -15,10 +15,10 @@ class IcuBedBoardController extends Controller
     {
         Gate::authorize('icu.bed.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $board = $this->bedBoard->board($companyId, $branchId);
+        $board = $this->bedBoard->board($organizationId, $branchId);
 
         return view('admin.icu.bed-board.index', compact('board'));
     }

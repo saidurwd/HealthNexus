@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->cascadeOnDelete();
             // Nullable: a provider need not be a system login (spec: "do not assume every
             // provider is a normal system user"). When present, this is the source of truth for
@@ -30,8 +30,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'provider_code'], 'provider_company_code_unique');
-            $table->index(['company_id', 'branch_id', 'status'], 'provider_company_branch_status_idx');
+            $table->unique(['organization_id', 'provider_code'], 'provider_organization_code_unique');
+            $table->index(['organization_id', 'branch_id', 'status'], 'provider_organization_branch_status_idx');
         });
     }
 

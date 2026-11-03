@@ -28,7 +28,7 @@ class StoreInvestigationOrderRequest extends FormRequest
     public function validated($key = null, $default = null): array
     {
         $data = parent::validated($key, $default);
-        $data['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $data['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $data['branch_id'] = app(TenantContextResolver::class)->getBranchId();
         $data['order_no'] = 'LAB-'.strtoupper(Str::random(8));
 

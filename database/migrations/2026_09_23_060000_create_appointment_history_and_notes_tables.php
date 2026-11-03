@@ -24,12 +24,12 @@ return new class extends Migration
         Schema::create('appointment_notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('appointment_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->text('note');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['company_id', 'appointment_id']);
+            $table->index(['organization_id', 'appointment_id']);
         });
     }
 

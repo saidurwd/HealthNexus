@@ -5,9 +5,9 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Doctor Schedules</h2>
+            <h2 class="mb-0">{{ __('Doctor Schedules') }}</h2>
             <a href="{{ route('admin.schedules.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus me-1"></i>Add Schedule
+                <i class="bi bi-plus me-1"></i>{{ __('Add Schedule') }}
             </a>
         </div>
 
@@ -17,15 +17,15 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Doctor</th>
-                                <th>Name</th>
-                                <th>Day</th>
-                                <th>Time</th>
-                                <th>Slot (min)</th>
-                                <th>Department</th>
-                                <th class="text-center">Active</th>
-                                <th class="text-end">Created</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Doctor') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Day') }}</th>
+                                <th>{{ __('Time') }}</th>
+                                <th>{{ __('Slot (min)') }}</th>
+                                <th>{{ __('Department') }}</th>
+                                <th class="text-center">{{ __('Active') }}</th>
+                                <th class="text-end">{{ __('Created') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,7 +49,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4 text-muted">No schedules found.</td>
+                                    <td colspan="9" class="text-center py-4 text-muted">{{ __('No schedules found.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

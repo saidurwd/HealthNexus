@@ -20,11 +20,11 @@ class LabCriticalResultController extends Controller
     {
         $this->authorize('viewAny', LabCriticalResultAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $alerts = LabCriticalResultAlert::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['result.test', 'result.orderItem.labOrder.patient', 'notifiedTo'])
             ->when($request->filled('status') && $request->input('status') === 'unacknowledged', fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('detected_at')
@@ -44,6 +44,6 @@ class LabCriticalResultController extends Controller
 
         $this->auditLogger->log('ACKNOWLEDGE', LabCriticalResultAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.critical-results.index')->with('success', 'Critical result acknowledged.');
+        return redirect()->route('admin.lab.critical-results.index')->with('success', __('Critical result acknowledged.'));
     }
 }

@@ -1,10 +1,10 @@
 <div class="tab-pane fade" id="summary" role="tabpanel">
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Encounter Summary</h3>
+            <h3 class="card-title">{{ __('Encounter Summary') }}</h3>
         </div>
         <div class="card-body">
-            <h5>Chief Complaint</h5>
+            <h5>{{ __('Chief Complaint') }}</h5>
             @if($encounter->complaints->isNotEmpty())
                 <ul>
                     @foreach($encounter->complaints as $complaint)
@@ -12,10 +12,10 @@
                     @endforeach
                 </ul>
             @else
-                <p class="text-muted">None</p>
+                <p class="text-muted">{{ __('None') }}</p>
             @endif
 
-            <h5 class="mt-3">Diagnoses</h5>
+            <h5 class="mt-3">{{ __('Diagnoses') }}</h5>
             @if($encounter->diagnoses->isNotEmpty())
                 <ul>
                     @foreach($encounter->diagnoses as $diagnosis)
@@ -23,10 +23,10 @@
                     @endforeach
                 </ul>
             @else
-                <p class="text-muted">None</p>
+                <p class="text-muted">{{ __('None') }}</p>
             @endif
 
-            <h5 class="mt-3">Prescriptions</h5>
+            <h5 class="mt-3">{{ __('Prescriptions') }}</h5>
             @if($encounter->prescriptions->isNotEmpty())
                 <ul>
                     @foreach($encounter->prescriptions as $prescription)
@@ -34,10 +34,10 @@
                     @endforeach
                 </ul>
             @else
-                <p class="text-muted">None</p>
+                <p class="text-muted">{{ __('None') }}</p>
             @endif
 
-            <h5 class="mt-3">Referrals</h5>
+            <h5 class="mt-3">{{ __('Referrals') }}</h5>
             @if($encounter->referrals->isNotEmpty())
                 <ul>
                     @foreach($encounter->referrals as $referral)
@@ -45,10 +45,10 @@
                     @endforeach
                 </ul>
             @else
-                <p class="text-muted">None</p>
+                <p class="text-muted">{{ __('None') }}</p>
             @endif
 
-            <h5 class="mt-3">Instructions</h5>
+            <h5 class="mt-3">{{ __('Instructions') }}</h5>
             @if($encounter->instructions->isNotEmpty())
                 <ul>
                     @foreach($encounter->instructions as $instruction)
@@ -56,7 +56,7 @@
                     @endforeach
                 </ul>
             @else
-                <p class="text-muted">None</p>
+                <p class="text-muted">{{ __('None') }}</p>
             @endif
         </div>
     </div>

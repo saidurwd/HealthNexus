@@ -11,7 +11,7 @@ class PatientTimelineEvent extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'event_type',
         'description',

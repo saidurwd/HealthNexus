@@ -66,7 +66,7 @@ class ScheduleGenerationService
 
                 if (! $withinBreak && ! $this->isProviderUnavailable($schedule, $current, $schedule->slot_duration_minutes)) {
                     $slots->push(AppointmentSlot::create([
-                        'company_id' => $schedule->company_id,
+                        'organization_id' => $schedule->organization_id,
                         'branch_id' => $schedule->branch_id,
                         'doctor_id' => $schedule->doctor_id,
                         'schedule_id' => $schedule->id,
@@ -86,7 +86,7 @@ class ScheduleGenerationService
 
     private function isHoliday(DoctorSchedule $schedule, Carbon $date): bool
     {
-        return HospitalHoliday::where('company_id', $schedule->company_id)
+        return HospitalHoliday::where('organization_id', $schedule->organization_id)
             ->where(fn ($q) => $q->whereNull('branch_id')->orWhere('branch_id', $schedule->branch_id))
             ->where(fn ($q) => $q->whereNull('department_id')->orWhere('department_id', $schedule->department_id))
             ->get()

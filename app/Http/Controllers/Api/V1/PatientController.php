@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StorePatientRequest;
 use App\Http\Requests\Api\UpdatePatientRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Branch;
 use App\Models\Patient;
+use App\Models\PatientDocument;
 use App\Models\PatientDuplicateCandidate;
 use App\Services\AuditLogger;
 use App\Services\FileUploadService;
@@ -29,10 +31,12 @@ class PatientController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Patient::class);
+
         $user = $request->user();
 
         $patients = Patient::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->when($request->filled('search'), fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
@@ -46,11 +50,13 @@ class PatientController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $this->authorize('viewAny', Patient::class);
+
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $search = $request->input('q', '');
 
         $patients = Patient::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($search, fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
@@ -75,12 +81,12 @@ class PatientController extends Controller
         $user = $request->user();
 
         abort_if(
-            ! $user->hasRole('super_admin') && ! $user->companies()->where('companies.id', $validated['company_id'])->exists(),
+            ! $user->hasRole('super_admin') && ! $user->organizations()->where('organizations.id', $validated['organization_id'])->exists(),
             403,
-            'You do not have access to this company.'
+            'You do not have access to this organization.'
         );
 
-        $branch = ! empty($validated['branch_id']) ? \App\Models\Branch::findOrFail($validated['branch_id']) : null;
+        $branch = ! empty($validated['branch_id']) ? Branch::findOrFail($validated['branch_id']) : null;
 
         $patient = $this->patientService->createPatient($validated, $user, $branch);
 
@@ -142,7 +148,7 @@ class PatientController extends Controller
             'is_primary' => ['boolean'],
         ]);
 
-        $this->patientService->addIdentifier($patient, array_merge($validated, ['company_id' => $patient->company_id]));
+        $this->patientService->addIdentifier($patient, array_merge($validated, ['organization_id' => $patient->organization_id]));
 
         return ApiResponse::success($patient->identifiers()->latest()->first(), 'Identifier added successfully', 201);
     }
@@ -231,8 +237,8 @@ class PatientController extends Controller
 
         $path = $file->store('patient-documents');
 
-        $document = \App\Models\PatientDocument::create([
-            'company_id' => $patient->company_id,
+        $document = PatientDocument::create([
+            'organization_id' => $patient->organization_id,
             'patient_id' => $patient->id,
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
@@ -255,10 +261,12 @@ class PatientController extends Controller
 
     public function duplicateCheck(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $this->authorize('viewAny', Patient::class);
+
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $duplicates = $this->patientService->detectDuplicates(
-            $companyId,
+            $organizationId,
             $request->input('first_name', ''),
             $request->input('last_name', ''),
             $request->input('phone'),
@@ -271,10 +279,12 @@ class PatientController extends Controller
 
     public function duplicates(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $this->authorize('viewAny', Patient::class);
+
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $candidates = PatientDuplicateCandidate::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')), fn ($q) => $q->where('status', 'pending'))
             ->with(['patientA', 'patientB'])
             ->paginate(20);

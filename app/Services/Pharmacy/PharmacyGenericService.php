@@ -16,7 +16,7 @@ class PharmacyGenericService
     public function create(array $data, User $user): PharmacyGeneric
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return PharmacyGeneric::create([
                 ...$data,
@@ -30,7 +30,7 @@ class PharmacyGenericService
     {
         return DB::transaction(function () use ($generic, $data, $user) {
             if (isset($data['code']) && $data['code'] !== $generic->code) {
-                $this->assertUniqueCode($generic->company_id, $generic->branch_id, $data['code'], $generic->id);
+                $this->assertUniqueCode($generic->organization_id, $generic->branch_id, $data['code'], $generic->id);
             }
 
             $generic->update([...$data, 'updated_by' => $user->id]);
@@ -45,10 +45,10 @@ class PharmacyGenericService
         $generic->delete();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = PharmacyGeneric::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

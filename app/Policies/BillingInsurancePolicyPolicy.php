@@ -36,6 +36,6 @@ class BillingInsurancePolicyPolicy
 
     private function inScope(User $user, BillingInsurancePolicy $policy): bool
     {
-        return $user->companies()->where('companies.id', $policy->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $policy->organization_id)->exists();
     }
 }

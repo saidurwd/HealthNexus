@@ -48,7 +48,7 @@ class WorkflowInstanceController extends Controller
 
         $this->activityLogger->log('WORKFLOW_APPROVED', 'Approved a workflow step', $instance, [], $request);
 
-        return redirect()->route('admin.workflow.index')->with('success', 'Approved.');
+        return redirect()->route('admin.workflow.index')->with('success', __('Approved.'));
     }
 
     public function reject(Request $request, WorkflowInstance $instance)
@@ -59,7 +59,7 @@ class WorkflowInstanceController extends Controller
 
         $this->activityLogger->log('WORKFLOW_REJECTED', 'Rejected a workflow instance', $instance, [], $request);
 
-        return redirect()->route('admin.workflow.index')->with('success', 'Rejected.');
+        return redirect()->route('admin.workflow.index')->with('success', __('Rejected.'));
     }
 
     public function returnForRevision(Request $request, WorkflowInstance $instance)
@@ -70,6 +70,6 @@ class WorkflowInstanceController extends Controller
 
         $this->activityLogger->log('WORKFLOW_RETURNED', 'Returned a workflow instance for revision', $instance, [], $request);
 
-        return redirect()->route('admin.workflow.index')->with('success', 'Returned for revision.');
+        return redirect()->route('admin.workflow.index')->with('success', __('Returned for revision.'));
     }
 }

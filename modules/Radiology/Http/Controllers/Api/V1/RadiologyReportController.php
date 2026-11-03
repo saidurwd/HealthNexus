@@ -24,11 +24,11 @@ class RadiologyReportController extends Controller
     {
         $this->authorize('viewAny', RadiologyReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $reports = RadiologyReport::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_current', true)
             ->with('examination.orderItem.radiologyOrder.patient')
             ->latest('created_at')

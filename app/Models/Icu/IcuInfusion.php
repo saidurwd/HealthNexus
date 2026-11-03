@@ -2,6 +2,7 @@
 
 namespace App\Models\Icu;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class IcuInfusion extends Model
 {
+    use HasPublicId;
+
     public const STATUS_RUNNING = 'running';
 
     public const STATUS_COMPLETED = 'completed';
@@ -17,7 +20,7 @@ class IcuInfusion extends Model
     public const STATUS_STOPPED = 'stopped';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'medication', 'concentration', 'initial_rate',
+        'organization_id', 'branch_id', 'episode_id', 'medication', 'concentration', 'initial_rate',
         'rate_unit', 'route', 'target', 'prescriber_id', 'device_id', 'started_at', 'stopped_at',
         'status', 'started_by', 'stopped_by',
     ];
@@ -30,20 +33,43 @@ class IcuInfusion extends Model
         ];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function prescriber(): BelongsTo { return $this->belongsTo(Provider::class, 'prescriber_id'); }
-    public function device(): BelongsTo { return $this->belongsTo(IcuDevice::class, 'device_id'); }
-    public function startedBy(): BelongsTo { return $this->belongsTo(User::class, 'started_by'); }
-    public function stoppedBy(): BelongsTo { return $this->belongsTo(User::class, 'stopped_by'); }
-    public function titrations(): HasMany { return $this->hasMany(IcuInfusionTitration::class, 'infusion_id'); }
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function prescriber(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class, 'prescriber_id');
+    }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(IcuDevice::class, 'device_id');
+    }
+
+    public function startedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
+    public function stoppedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'stopped_by');
+    }
+
+    public function titrations(): HasMany
+    {
+        return $this->hasMany(IcuInfusionTitration::class, 'infusion_id');
+    }
 
     public function currentRate(): ?float
     {
         return $this->titrations()->latest('changed_at')->first()?->new_rate ?? $this->initial_rate;
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

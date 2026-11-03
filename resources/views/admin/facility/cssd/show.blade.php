@@ -1,0 +1,20 @@
+@extends('layouts.adminlte')
+
+@section('page_title', $b->number)
+
+@section('page_content')
+    @include('admin.facility._flash')
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3"><x-ui.status-badge :status="$b->status" /><span class="badge text-bg-secondary">{{ strtoupper($b->method) }}</span> @if($b->asset)<span class="small">{{ $b->asset->tag }} · {{ $b->asset->name }}</span>@endif
+        @if($b->temperature_c)<span class="small text-muted">{{ (float) $b->temperature_c }}°C · {{ (float) $b->pressure_kpa }} kPa · {{ $b->minutes }} {{ __('min') }}</span>@endif</div>
+    @if($b->status === 'recalled')<div class="alert alert-danger small">{{ __('Recalled') }}: {{ $b->recall_reason }}</div>@endif
+    <div class="row g-3"><div class="col-lg-7"><div class="card"><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>{{ __('Pack') }}</th><th>{{ __('Set') }}</th><th>{{ __('Use by') }}</th><th>{{ __('State') }}</th><th></th></tr></thead><tbody>
+        @foreach($b->items as $i)<tr><td>{{ $i->label }}</td><td>{{ $i->set->name }}</td><td>{{ $i->use_by?->format('d M Y') ?? '—' }}</td><td><x-ui.status-badge :status="$i->status" /> @if($i->surgery_id)<span class="small text-muted">#{{ $i->surgery_id }}</span>@endif</td>
+            <td style="min-width:200px">@if($can['manage'] && $b->status === 'released' && $i->status === 'packed')<form method="POST" action="{{ route('admin.facility.cssd.issue', $i->id) }}" class="d-flex gap-1">@csrf<select name="surgery_id" class="form-select form-select-sm">@foreach($surgeries as $s)<option value="{{ $s->id }}">{{ $s->surgery_number }}</option>@endforeach</select><button class="btn btn-sm btn-outline-primary">{{ __('To theatre') }}</button></form>@endif</td></tr>@endforeach</tbody></table></div></div></div>
+    <div class="col-lg-5">
+        @if($can['manage'] && $b->status === 'loading')<form method="POST" action="{{ route('admin.facility.cssd.start', $b->public_id) }}" class="mb-3">@csrf<button class="btn btn-sm btn-primary">{{ __('Start the cycle') }}</button></form>@endif
+        @if($can['manage'] && $b->status === 'running')<form method="POST" action="{{ route('admin.facility.cssd.finish', $b->public_id) }}" class="card card-body mb-3 row g-1">@csrf<div class="col-6"><input type="number" step="0.1" name="temperature" class="form-control form-control-sm" placeholder="{{ __('°C') }}"></div><div class="col-6"><input type="number" step="0.1" name="pressure" class="form-control form-control-sm" placeholder="{{ __('kPa') }}"></div><div class="col-6"><input type="number" name="minutes" class="form-control form-control-sm" placeholder="{{ __('Minutes') }}"></div>
+            <div class="col-12 d-flex gap-1"><button name="indicator" value="pass" class="btn btn-sm btn-success">{{ __('Indicator passed') }}</button><button name="indicator" value="fail" class="btn btn-sm btn-outline-danger">{{ __('Indicator failed') }}</button></div></form>@endif
+        @if($b->status === 'passed' && $can['release'])@if($b->operator_id === $me)<div class="alert alert-light border small">{{ __('A second person must release the batch.') }}</div>@else<form method="POST" action="{{ route('admin.facility.cssd.release', $b->public_id) }}" class="mb-3">@csrf<button class="btn btn-sm btn-success">{{ __('Release the batch for use') }}</button></form>@endif @endif
+        @if(in_array($b->status, ['released']) && $can['release'])<form method="POST" action="{{ route('admin.facility.cssd.recall', $b->public_id) }}" class="card card-body border-danger row g-1">@csrf<input name="reason" class="form-control form-control-sm" placeholder="{{ __('Why recall this batch?') }}" required><button class="btn btn-sm btn-outline-danger">{{ __('Recall the batch') }}</button></form>@endif
+        @if($trace)<div class="card mt-3"><div class="card-header"><h3 class="card-title">{{ __('Used in') }}</h3></div><ul class="list-group list-group-flush small">@foreach($trace as $t)<li class="list-group-item">{{ $t['label'] }} → {{ __('operation') }} #{{ $t['surgery_id'] }}</li>@endforeach</ul></div>@endif</div></div>
+@stop

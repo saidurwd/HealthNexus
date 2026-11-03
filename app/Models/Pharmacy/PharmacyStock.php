@@ -16,7 +16,18 @@ class PharmacyStock extends Model
         return ['quantity_available' => 'integer'];
     }
 
-    public function store(): BelongsTo { return $this->belongsTo(PharmacyStore::class, 'store_id'); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function batch(): BelongsTo { return $this->belongsTo(PharmacyBatch::class, 'batch_id'); }
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStore::class, 'store_id');
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyBatch::class, 'batch_id');
+    }
 }

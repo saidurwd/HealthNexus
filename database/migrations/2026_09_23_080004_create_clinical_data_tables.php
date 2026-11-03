@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('complaint');
             $table->string('duration')->nullable();
             $table->string('duration_unit')->nullable();
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('history_type');
             $table->string('onset')->nullable();
             $table->string('duration')->nullable();
@@ -49,7 +49,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('section_name');
             $table->text('findings')->nullable();
             $table->text('notes')->nullable();
@@ -62,7 +62,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('system_name');
             $table->string('status');
             $table->text('notes')->nullable();
@@ -74,7 +74,7 @@ return new class extends Migration
         Schema::create('patient_problems', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('problem_code')->nullable();
             $table->string('problem_name');
             $table->string('coding_system')->nullable();
@@ -94,7 +94,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('procedure_code')->nullable();
             $table->string('procedure_name');
             $table->date('procedure_date')->nullable();
@@ -110,7 +110,7 @@ return new class extends Migration
 
         Schema::create('clinical_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->string('order_number')->unique();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -132,7 +132,7 @@ return new class extends Migration
         Schema::create('clinical_order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clinical_order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('item_name');
             $table->string('item_code')->nullable();
             $table->unsignedInteger('quantity')->nullable();
@@ -145,7 +145,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('referral_type');
             $table->string('referred_to')->nullable();
             $table->string('referred_by')->nullable();
@@ -162,7 +162,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('instruction_type');
             $table->text('content');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
@@ -175,7 +175,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('section')->nullable();
             $table->text('content');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
@@ -188,7 +188,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('document_type');
             $table->string('file_name');
             $table->string('file_path');
@@ -204,7 +204,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('encounter_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('amendment_type');
             $table->text('reason');
             $table->text('content');
@@ -218,14 +218,14 @@ return new class extends Migration
 
         Schema::create('encounter_templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('specialty')->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index(['company_id', 'specialty']);
+            $table->index(['organization_id', 'specialty']);
         });
 
         Schema::create('encounter_template_sections', function (Blueprint $table) {

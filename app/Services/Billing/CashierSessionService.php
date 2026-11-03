@@ -19,9 +19,9 @@ use Illuminate\Validation\ValidationException;
  */
 class CashierSessionService
 {
-    public function open(User $user, int $companyId, int $branchId, string $openingBalance, ?Department $counter = null): BillingCashierSession
+    public function open(User $user, int $organizationId, int $branchId, string $openingBalance, ?Department $counter = null): BillingCashierSession
     {
-        return DB::transaction(function () use ($user, $companyId, $branchId, $openingBalance, $counter) {
+        return DB::transaction(function () use ($user, $organizationId, $branchId, $openingBalance, $counter) {
             $hasOpenSession = BillingCashierSession::query()
                 ->where('user_id', $user->id)
                 ->where('status', 'open')
@@ -32,7 +32,7 @@ class CashierSessionService
             }
 
             $session = BillingCashierSession::create([
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'counter_id' => $counter?->id,
                 'user_id' => $user->id,

@@ -12,7 +12,7 @@ class PatientGuardian extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'guardian_patient_id',
         'name',

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Search/filter surface backing both the bed board (spec §41) and bed availability search
- * (spec §40). Always server-side scoped by company/branch — never trusts a client-supplied
+ * (spec §40). Always server-side scoped by organization/branch — never trusts a client-supplied
  * hospital/branch id beyond what TenantContextResolver already resolved for the request.
  */
 class IpdBedAvailabilityService
@@ -15,10 +15,10 @@ class IpdBedAvailabilityService
     /**
      * @param  array{building_id?:int,floor_id?:int,ward_id?:int,room_id?:int,bed_type_id?:int,gender?:string,isolation?:bool,status?:string,search?:string}  $filters
      */
-    public function search(int $companyId, ?int $branchId, array $filters = [], int $perPage = 30): LengthAwarePaginator
+    public function search(int $organizationId, ?int $branchId, array $filters = [], int $perPage = 30): LengthAwarePaginator
     {
         return IpdBed::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('ipd_beds.is_active', true)
             ->with(['room.ward.floor', 'room.ward.building', 'bedType', 'currentAllocation.admission.patient'])
             ->whereHas('room', function ($q) use ($filters) {
@@ -44,8 +44,8 @@ class IpdBedAvailabilityService
             ->paginate($perPage);
     }
 
-    public function availableCount(int $companyId, ?int $branchId, array $filters = []): int
+    public function availableCount(int $organizationId, ?int $branchId, array $filters = []): int
     {
-        return $this->search($companyId, $branchId, [...$filters, 'status' => IpdBed::STATUS_AVAILABLE], 1)->total();
+        return $this->search($organizationId, $branchId, [...$filters, 'status' => IpdBed::STATUS_AVAILABLE], 1)->total();
     }
 }

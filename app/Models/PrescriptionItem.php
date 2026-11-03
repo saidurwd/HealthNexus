@@ -12,7 +12,7 @@ class PrescriptionItem extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'prescription_id',
         'medicine_name',
         'dosage_form',
@@ -30,9 +30,9 @@ class PrescriptionItem extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function prescription(): BelongsTo

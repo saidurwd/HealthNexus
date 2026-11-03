@@ -14,10 +14,10 @@ class RadiologyWorklistService
     /**
      * @param  array{modality_id?:int,priority?:string,status?:string,date?:string,assigned_radiologist_id?:int,unassigned?:bool,accession_number?:string}  $filters
      */
-    public function query(int $companyId, ?int $branchId, array $filters = []): LengthAwarePaginator
+    public function query(int $organizationId, ?int $branchId, array $filters = []): LengthAwarePaginator
     {
         return RadiologyExamination::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->whereIn('radiology_examinations.status', ['completed', 'images_available'])
             ->join('radiology_order_items', 'radiology_order_items.id', '=', 'radiology_examinations.order_item_id')
             ->select('radiology_examinations.*')

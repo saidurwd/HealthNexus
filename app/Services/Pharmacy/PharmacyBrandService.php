@@ -16,7 +16,7 @@ class PharmacyBrandService
     public function create(array $data, User $user): PharmacyBrand
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return PharmacyBrand::create([
                 ...$data,
@@ -30,7 +30,7 @@ class PharmacyBrandService
     {
         return DB::transaction(function () use ($brand, $data, $user) {
             if (isset($data['code']) && $data['code'] !== $brand->code) {
-                $this->assertUniqueCode($brand->company_id, $brand->branch_id, $data['code'], $brand->id);
+                $this->assertUniqueCode($brand->organization_id, $brand->branch_id, $data['code'], $brand->id);
             }
 
             $brand->update([...$data, 'updated_by' => $user->id]);
@@ -45,10 +45,10 @@ class PharmacyBrandService
         $brand->delete();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = PharmacyBrand::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

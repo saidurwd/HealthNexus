@@ -4,14 +4,13 @@ namespace Modules\Radiology\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
+use App\Models\Radiology\RadiologyExamination;
 use App\Models\Radiology\RadiologyModality;
-use App\Models\Radiology\RadiologyOrder;
 use App\Models\Radiology\RadiologyOrderItem;
 use App\Services\AuditLogger;
 use App\Services\Radiology\RadiologySchedulingService;
 use App\Services\TenantContextResolver;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Modules\Radiology\Http\Requests\Web\ScheduleExaminationRequest;
 
 class RadiologySchedulingController extends Controller
@@ -25,12 +24,12 @@ class RadiologySchedulingController extends Controller
     {
         $this->authorize('view', $item->radiologyOrder);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $modalities = RadiologyModality::query()->forTenant($companyId, $branchId)->where('is_active', true)->get();
+        $modalities = RadiologyModality::query()->forTenant($organizationId, $branchId)->where('is_active', true)->get();
         $technologists = Provider::query()
-            ->where('company_id', $companyId)
+            ->where('organization_id', $organizationId)
             ->whereIn('provider_type', ['radiologist', 'radiology_technician'])
             ->where('status', 'active')
             ->get();
@@ -54,8 +53,8 @@ class RadiologySchedulingController extends Controller
             (int) ($request->validated('duration_minutes') ?? $item->procedure?->duration_minutes ?? 30),
         );
 
-        $this->auditLogger->log('SCHEDULE', \App\Models\Radiology\RadiologyExamination::class, $examination->id, null, $examination->toArray(), $request);
+        $this->auditLogger->log('SCHEDULE', RadiologyExamination::class, $examination->id, null, $examination->toArray(), $request);
 
-        return redirect()->route('admin.radiology.orders.show', $item->radiologyOrder)->with('success', 'Examination scheduled.');
+        return redirect()->route('admin.radiology.orders.show', $item->radiologyOrder)->with('success', __('Examination scheduled.'));
     }
 }

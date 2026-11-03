@@ -17,8 +17,8 @@ class AppointmentTypeController extends Controller
     {
         $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $types = AppointmentType::forCompany($companyId)->orderBy('sort_order')->paginate(20);
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $types = AppointmentType::forOrganization($organizationId)->orderBy('sort_order')->paginate(20);
 
         return view('admin.appointment-types.index', compact('types'));
     }
@@ -35,13 +35,13 @@ class AppointmentTypeController extends Controller
         $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $this->validated($request);
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
 
         $type = AppointmentType::create($validated);
 
         $this->auditLogger->log('CREATE', AppointmentType::class, $type->id, null, $type->toArray(), $request);
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type added successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type added successfully.'));
     }
 
     public function edit(AppointmentType $appointmentType)
@@ -61,7 +61,7 @@ class AppointmentTypeController extends Controller
 
         $this->auditLogger->log('UPDATE', AppointmentType::class, $appointmentType->id, $oldValues, $appointmentType->toArray(), $request);
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type updated successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type updated successfully.'));
     }
 
     public function destroy(AppointmentType $appointmentType)
@@ -73,7 +73,7 @@ class AppointmentTypeController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentType::class, $appointmentType->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointment-types.index')->with('success', 'Appointment type removed successfully.');
+        return redirect()->route('admin.appointment-types.index')->with('success', __('Appointment type removed successfully.'));
     }
 
     private function validated(Request $request): array

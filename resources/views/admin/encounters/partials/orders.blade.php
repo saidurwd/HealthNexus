@@ -1,18 +1,18 @@
 <div class="tab-pane fade" id="orders" role="tabpanel">
     <div class="card card-secondary card-outline">
         <div class="card-header">
-            <h3 class="card-title">Clinical Orders</h3>
+            <h3 class="card-title">{{ __('Clinical Orders') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->orders->isNotEmpty())
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Order #</th>
-                            <th>Type</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th>Ordered At</th>
+                            <th>{{ __('Order #') }}</th>
+                            <th>{{ __('Type') }}</th>
+                            <th>{{ __('Priority') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Ordered At') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +28,7 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-muted">No clinical orders.</p>
+                <p class="text-muted">{{ __('No clinical orders.') }}</p>
             @endif
 
             @if(!$encounter->locked_at)
@@ -37,33 +37,33 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Order Type</label>
+                                <label>{{ __('Order Type') }}</label>
                                 <select name="order_type" class="form-control" required>
-                                    <option value="laboratory">Laboratory</option>
-                                    <option value="radiology">Radiology</option>
-                                    <option value="procedure">Procedure</option>
-                                    <option value="other">Other</option>
+                                    <option value="laboratory">{{ __('Laboratory') }}</option>
+                                    <option value="radiology">{{ __('Radiology') }}</option>
+                                    <option value="procedure">{{ __('Procedure') }}</option>
+                                    <option value="other">{{ __('Other') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Priority</label>
+                                <label>{{ __('Priority') }}</label>
                                 <select name="priority" class="form-control">
-                                    <option value="routine">Routine</option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="stat">STAT</option>
+                                    <option value="routine">{{ __('Routine') }}</option>
+                                    <option value="urgent">{{ __('Urgent') }}</option>
+                                    <option value="stat">{{ __('STAT') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Notes</label>
+                                <label>{{ __('Notes') }}</label>
                                 <textarea name="notes" class="form-control" rows="1"></textarea>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Create Order</button>
+                    <button type="submit" class="btn btn-primary mt-2">{{ __('Create Order') }}</button>
                 </form>
             @endif
         </div>

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Icu;
 
+use App\Models\Encounter;
 use App\Models\Icu\IcuAdmissionRequest;
+use App\Models\Patient;
 use App\Models\Workflow;
 use App\Models\WorkflowApprover;
 use App\Models\WorkflowStep;
@@ -26,14 +28,19 @@ class IcuAdmissionWorkflowTest extends IcuTestCase
     {
         app(SettingsService::class)->set('icu.admission_requires_approval', true);
 
-        $workflow = Workflow::create(['company_id' => $this->company->id, 'code' => 'icu_admission', 'name' => 'ICU Admission Approval', 'is_active' => true]);
+        $workflow = Workflow::create(['organization_id' => $this->organization->id, 'code' => 'icu_admission', 'name' => 'ICU Admission Approval', 'is_active' => true]);
         $step = WorkflowStep::create(['workflow_id' => $workflow->id, 'step_order' => 1, 'name' => 'Approval', 'is_final' => true]);
         WorkflowApprover::create(['workflow_step_id' => $step->id, 'approver_type' => WorkflowApprover::TYPE_ROLE, 'role_name' => 'super_admin']);
 
         $request = $this->makeAdmissionRequest();
 
+        // A configured workflow with an approval step holds the request until the approver acts.
         $this->assertNotNull($request->workflow_instance_id);
-        $this->assertSame(IcuAdmissionRequest::STATUS_ACCEPTED, $request->status);
+        $this->assertSame(IcuAdmissionRequest::STATUS_PENDING_APPROVAL, $request->status);
+
+        $accepted = app(IcuAdmissionRequestService::class)->accept($request, $this->user);
+
+        $this->assertSame(IcuAdmissionRequest::STATUS_ACCEPTED, $accepted->status);
     }
 
     public function test_pending_approval_fallback_when_approval_required_but_no_workflow_configured(): void
@@ -54,9 +61,9 @@ class IcuAdmissionWorkflowTest extends IcuTestCase
         $this->expectException(ValidationException::class);
 
         app(IcuAdmissionRequestService::class)->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
-            'patient_id' => \App\Models\Patient::factory()->create(['company_id' => $this->company->id])->id,
-            'encounter_id' => \App\Models\Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id])->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
+            'patient_id' => Patient::factory()->create(['organization_id' => $this->organization->id])->id,
+            'encounter_id' => Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id])->id,
             'is_emergency' => true,
         ], $this->user);
     }

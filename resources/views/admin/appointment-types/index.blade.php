@@ -5,15 +5,15 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Appointment Types</h2>
-            <a href="{{ route('admin.appointment-types.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Add Type</a>
+            <h2 class="mb-0">{{ __('Appointment Types') }}</h2>
+            <a href="{{ route('admin.appointment-types.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>{{ __('Add Type') }}</a>
         </div>
 
         <div class="card">
             <div class="card-body p-0">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
-                        <tr><th>Name</th><th>Code</th><th class="text-center">Follow-up</th><th class="text-center">Telemedicine</th><th class="text-center">Active</th><th class="text-center">Actions</th></tr>
+                        <tr><th>{{ __('Name') }}</th><th>{{ __('Code') }}</th><th class="text-center">{{ __('Follow-up') }}</th><th class="text-center">{{ __('Telemedicine') }}</th><th class="text-center">{{ __('Active') }}</th><th class="text-center">{{ __('Actions') }}</th></tr>
                     </thead>
                     <tbody>
                         @forelse($types as $type)
@@ -36,7 +36,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="text-center py-4 text-muted">No appointment types configured.</td></tr>
+                            <tr><td colspan="6" class="text-center py-4 text-muted">{{ __('No appointment types configured.') }}</td></tr>
                         @endforelse
                     </tbody>
                 </table>

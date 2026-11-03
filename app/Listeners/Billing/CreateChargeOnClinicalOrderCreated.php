@@ -15,7 +15,7 @@ class CreateChargeOnClinicalOrderCreated
         $order = $event->order;
 
         $this->charges->createFromClinicalEvent($order, 'clinical_order', $order->order_type, [
-            'company_id' => $order->company_id,
+            'organization_id' => $order->organization_id,
             'branch_id' => $order->branch_id,
             'patient_id' => $order->patient_id,
             'encounter_id' => $encounter->id,

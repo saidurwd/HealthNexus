@@ -20,11 +20,11 @@ class BillingChargeController extends Controller
     {
         $this->authorize('viewAny', BillingCharge::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $charges = BillingCharge::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'billingItem'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('charged_at')
@@ -55,6 +55,6 @@ class BillingChargeController extends Controller
 
         $this->auditLogger->log('CANCEL', BillingCharge::class, $charge->id, $oldValues, $charge->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.charges.show', $charge)->with('success', 'Charge cancelled successfully.');
+        return redirect()->route('admin.billing.charges.show', $charge)->with('success', __('Charge cancelled successfully.'));
     }
 }

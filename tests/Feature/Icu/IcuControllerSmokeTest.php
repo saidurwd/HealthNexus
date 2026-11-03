@@ -17,25 +17,25 @@ class IcuControllerSmokeTest extends IcuTestCase
         $request = $this->makeAdmissionRequest();
 
         foreach ([
-            '/admin/icu',
-            '/admin/icu/bed-board',
-            '/admin/icu/admission-requests',
-            '/admin/icu/admission-requests/create',
-            '/admin/icu/admission-requests/'.$request->id,
-            '/admin/icu/episodes',
-            '/admin/icu/episodes/create',
-            '/admin/icu/episodes/'.$episode->id,
-            '/admin/icu/episodes/'.$episode->id.'/assessment',
-            '/admin/icu/episodes/'.$episode->id.'/flowsheet',
-            '/admin/icu/episodes/'.$episode->id.'/discharge/create',
-            '/admin/icu/procedures',
-            '/admin/icu/procedures/create',
-            '/admin/icu/alerts',
-            '/admin/icu/critical-events',
-            '/admin/icu/reports/occupancy',
-            '/admin/icu/reports/utilization',
-            '/admin/icu/reports/outcomes',
-            '/admin/icu/settings',
+            '/icu',
+            '/icu/bed-board',
+            '/icu/admission-requests',
+            '/icu/admission-requests/create',
+            '/icu/admission-requests/'.$request->public_id,
+            '/icu/episodes',
+            '/icu/episodes/create',
+            '/icu/episodes/'.$episode->public_id,
+            '/icu/episodes/'.$episode->public_id.'/assessment',
+            '/icu/episodes/'.$episode->public_id.'/flowsheet',
+            '/icu/episodes/'.$episode->public_id.'/discharge/create',
+            '/icu/procedures',
+            '/icu/procedures/create',
+            '/icu/alerts',
+            '/icu/critical-events',
+            '/icu/reports/occupancy',
+            '/icu/reports/utilization',
+            '/icu/reports/outcomes',
+            '/icu/settings',
         ] as $url) {
             $this->get($url)->assertOk();
         }
@@ -51,10 +51,10 @@ class IcuControllerSmokeTest extends IcuTestCase
             '/api/v1/icu/dashboard',
             '/api/v1/icu/bed-board',
             '/api/v1/icu/episodes',
-            '/api/v1/icu/episodes/'.$episode->id,
+            '/api/v1/icu/episodes/'.$episode->public_id,
             '/api/v1/icu/admission-requests',
         ] as $url) {
-            app(TenantContextResolver::class)->setCompanyId($this->company->id);
+            app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
             app(TenantContextResolver::class)->setBranchId($this->branch->id);
             $this->getJson($url)->assertOk();
         }

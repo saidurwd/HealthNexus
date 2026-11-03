@@ -3,11 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Diagnosis;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -18,7 +19,7 @@ class ClinicalReportControllerTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -27,30 +28,30 @@ class ClinicalReportControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
         Permission::create(['name' => 'encounter.export', 'guard_name' => 'web']);
         $this->user->givePermissionTo('encounter.export');
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
     }
 
     public function test_clinical_report_index_renders(): void
     {
         Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical');
+        $response = $this->get('/reports/clinical');
 
         $response->assertStatus(200);
         $response->assertViewHas('stats');
@@ -58,16 +59,16 @@ class ClinicalReportControllerTest extends TestCase
 
     public function test_daily_opd_report_renders(): void
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/daily-opd');
+        $response = $this->get('/reports/clinical/daily-opd');
 
         $response->assertStatus(200);
         $response->assertViewHas('encounters');
@@ -76,12 +77,12 @@ class ClinicalReportControllerTest extends TestCase
     public function test_provider_workload_report_renders(): void
     {
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'encounter_date' => now()->toDateString(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/provider-workload');
+        $response = $this->get('/reports/clinical/provider-workload');
 
         $response->assertStatus(200);
         $response->assertViewHas('workload');
@@ -91,20 +92,20 @@ class ClinicalReportControllerTest extends TestCase
     public function test_diagnosis_statistics_report_renders(): void
     {
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'encounter_date' => now()->toDateString(),
         ]);
 
         Diagnosis::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'encounter_id' => $encounter->id,
             'patient_id' => $encounter->patient_id,
             'recorded_at' => now(),
         ]);
 
-        $response = $this->get('/admin/reports/clinical/diagnosis-statistics');
+        $response = $this->get('/reports/clinical/diagnosis-statistics');
 
         $response->assertStatus(200);
         $response->assertViewHas('diagnoses');

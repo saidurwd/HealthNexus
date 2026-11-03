@@ -15,7 +15,7 @@ class NursingIntakeOutputRecord extends Model
     public const TYPE_OUTPUT = 'output';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id',
         'type', 'category', 'amount', 'unit', 'route', 'recorded_at', 'recorded_by', 'source', 'notes',
     ];
 
@@ -44,8 +44,8 @@ class NursingIntakeOutputRecord extends Model
         return $this->belongsTo(User::class, 'recorded_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('encounters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->string('encounter_no')->unique();
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'branch_id', 'patient_id']);
-            $table->index(['company_id', 'encounter_no']);
+            $table->index(['organization_id', 'branch_id', 'patient_id']);
+            $table->index(['organization_id', 'encounter_no']);
         });
     }
 

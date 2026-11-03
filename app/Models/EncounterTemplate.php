@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class EncounterTemplate extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'name',
         'specialty',
         'is_active',
@@ -20,9 +20,9 @@ class EncounterTemplate extends Model
         'is_active' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function createdBy(): BelongsTo

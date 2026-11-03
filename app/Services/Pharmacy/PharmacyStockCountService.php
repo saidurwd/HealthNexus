@@ -23,10 +23,10 @@ class PharmacyStockCountService
     {
         return DB::transaction(function () use ($store, $user) {
             $count = PharmacyStockCount::create([
-                'company_id' => $store->company_id,
+                'organization_id' => $store->organization_id,
                 'branch_id' => $store->branch_id,
                 'store_id' => $store->id,
-                'count_number' => $this->numbers->generate($store->company_id, $store->branch_id, 'CNT', 'CNT'),
+                'count_number' => $this->numbers->generate($store->organization_id, $store->branch_id, 'CNT', 'CNT'),
                 'status' => 'in_progress',
                 'started_by' => $user->id,
                 'started_at' => now(),

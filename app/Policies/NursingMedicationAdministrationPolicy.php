@@ -52,7 +52,7 @@ class NursingMedicationAdministrationPolicy
 
     private function inScope(User $user, NursingMedicationAdministration $mar): bool
     {
-        return $user->companies()->where('companies.id', $mar->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $mar->organization_id)->exists()
             && (! $mar->branch_id || $user->branches()->where('branches.id', $mar->branch_id)->exists());
     }
 }

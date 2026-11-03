@@ -6,7 +6,6 @@ use App\Events\Nursing\MedicationAdministrationRecorded;
 use App\Events\Nursing\MedicationHeld;
 use App\Events\Nursing\MedicationOmitted;
 use App\Events\Nursing\MedicationRefused;
-use App\Models\Ipd\IpdAdmission;
 use App\Models\Nursing\NursingEpisode;
 use App\Models\Nursing\NursingMedicationAdministration;
 use App\Models\Nursing\NursingMedicationAdministrationCorrection;
@@ -33,7 +32,7 @@ class MedicationAdministrationService
 
         return NursingMedicationAdministration::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'admission_id' => $episode->admission_id,
@@ -60,7 +59,7 @@ class MedicationAdministrationService
     {
         return NursingMedicationAdministration::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'admission_id' => $episode->admission_id,

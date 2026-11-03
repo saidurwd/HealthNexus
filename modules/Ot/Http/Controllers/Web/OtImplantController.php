@@ -36,6 +36,6 @@ class OtImplantController extends Controller
 
         $this->auditLogger->log('CREATE', OtImplant::class, $implant->id, null, $implant->toArray(), $request);
 
-        return back()->with('success', 'Implant recorded.');
+        return back()->with('success', __('Implant recorded.'));
     }
 }

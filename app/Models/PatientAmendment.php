@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PatientAmendment extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'workflow_instance_id',
         'proposed_changes',

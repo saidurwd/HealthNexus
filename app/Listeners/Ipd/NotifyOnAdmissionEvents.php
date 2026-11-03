@@ -14,7 +14,7 @@ class NotifyOnAdmissionEvents
     public function handleApproved(AdmissionApproved $event): void
     {
         $request = $event->request;
-        $recipients = $this->coordinatorsFor($request->company_id);
+        $recipients = $this->coordinatorsFor($request->organization_id);
 
         if ($recipients->isEmpty()) {
             return;
@@ -29,7 +29,7 @@ class NotifyOnAdmissionEvents
     {
         $allocation = $event->allocation;
         $admission = $allocation->admission;
-        $recipients = $this->coordinatorsFor($allocation->company_id);
+        $recipients = $this->coordinatorsFor($allocation->organization_id);
 
         if (! $admission || $recipients->isEmpty()) {
             return;
@@ -44,15 +44,15 @@ class NotifyOnAdmissionEvents
 
     /**
      * Deliberately not Spatie's User::role() scope — it throws RoleDoesNotExist if any listed
-     * role name isn't defined yet (e.g. before IpdSeeder/PermissionSeeder has run for a company),
+     * role name isn't defined yet (e.g. before IpdSeeder/PermissionSeeder has run for an organization),
      * which would crash this listener during ordinary admission/allocation requests. whereHas
      * against the pivot is the same query with none of that fragility — zero matching roles is
      * just zero recipients, never an exception.
      */
-    private function coordinatorsFor(int $companyId)
+    private function coordinatorsFor(int $organizationId)
     {
         return User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ipd_coordinator', 'admission_officer']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
     }
 }

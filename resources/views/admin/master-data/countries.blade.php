@@ -6,23 +6,23 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Countries</h3>
+                    <h3 class="card-title">{{ __('Countries') }}</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.master-data.countries.create') }}" class="btn btn-primary btn-sm">Add Country</a>
+                        <a href="{{ route('admin.master-data.countries.create') }}" class="btn btn-primary btn-sm">{{ __('Add Country') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Code</th>
-                                <th>Currency</th>
-                                <th>Phone Code</th>
-                                <th>Timezone</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{{ __('ID') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Code') }}</th>
+                                <th>{{ __('Currency') }}</th>
+                                <th>{{ __('Phone Code') }}</th>
+                                <th>{{ __('Timezone') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,16 +40,16 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.master-data.countries.edit', $country) }}" class="btn btn-sm btn-warning">Edit</a>
+                                        <a href="{{ route('admin.master-data.countries.edit', $country) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
                                         <form action="{{ route('admin.master-data.countries.destroy', $country) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">{{ __('Delete') }}</button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="8" class="text-center">No countries found.</td></tr>
+                                <tr><td colspan="8" class="text-center">{{ __('No countries found.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>

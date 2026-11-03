@@ -18,18 +18,18 @@ class NursingReportingController extends Controller
     {
         Gate::authorize('nursing.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $rows = NursingAssignment::query()
             ->join('nursing_episodes', 'nursing_episodes.id', '=', 'nursing_assignments.episode_id')
-            ->where('nursing_episodes.company_id', $companyId)
+            ->where('nursing_episodes.organization_id', $organizationId)
             ->whereNull('nursing_assignments.ended_at')
             ->select('nursing_assignments.nurse_id', DB::raw('count(*) as patients'))
             ->groupBy('nursing_assignments.nurse_id')
             ->with('nurse')
             ->get();
 
-        $taskStats = NursingTask::where('company_id', $companyId)
+        $taskStats = NursingTask::where('organization_id', $organizationId)
             ->select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total', 'status');
 
         return view('admin.nursing.reports.workload', compact('rows', 'taskStats'));
@@ -39,9 +39,9 @@ class NursingReportingController extends Controller
     {
         Gate::authorize('nursing.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $stats = NursingMedicationAdministration::where('company_id', $companyId)
+        $stats = NursingMedicationAdministration::where('organization_id', $organizationId)
             ->select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total', 'status');
 
         return view('admin.nursing.reports.medication', compact('stats'));
@@ -51,11 +51,11 @@ class NursingReportingController extends Controller
     {
         Gate::authorize('nursing.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $riskCounts = NursingRiskAssessment::where('company_id', $companyId)
+        $riskCounts = NursingRiskAssessment::where('organization_id', $organizationId)
             ->select('risk_type', 'risk_level', DB::raw('count(*) as total'))->groupBy('risk_type', 'risk_level')->get();
-        $escalations = NursingEscalation::where('company_id', $companyId)
+        $escalations = NursingEscalation::where('organization_id', $organizationId)
             ->selectRaw('count(*) as total, sum(case when resolved_at is null then 1 else 0 end) as open_count')->first();
 
         return view('admin.nursing.reports.quality', compact('riskCounts', 'escalations'));

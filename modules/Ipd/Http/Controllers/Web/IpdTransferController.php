@@ -25,11 +25,11 @@ class IpdTransferController extends Controller
     {
         $this->authorize('viewAny', IpdBedMovement::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $transfers = IpdBedMovement::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('movement_type', IpdBedMovement::TYPE_TRANSFER)
             ->with(['patient', 'admission', 'fromBed', 'toBed'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
@@ -45,7 +45,7 @@ class IpdTransferController extends Controller
         $this->authorize('create', IpdBedMovement::class);
 
         $admission->load(['patient', 'currentAllocation.bed.room.ward']);
-        $availableBeds = $this->availability->search($admission->company_id, $admission->branch_id, ['status' => IpdBed::STATUS_AVAILABLE], 100);
+        $availableBeds = $this->availability->search($admission->organization_id, $admission->branch_id, ['status' => IpdBed::STATUS_AVAILABLE], 100);
 
         return view('admin.ipd.transfers.create', compact('admission', 'availableBeds'));
     }
@@ -69,7 +69,7 @@ class IpdTransferController extends Controller
 
         $this->auditLogger->log('REQUEST', IpdBedMovement::class, $movement->id, null, $movement->toArray(), $request);
 
-        return redirect()->route('admin.ipd.transfers.show', $movement)->with('success', 'Transfer requested.');
+        return redirect()->route('admin.ipd.transfers.show', $movement)->with('success', __('Transfer requested.'));
     }
 
     public function show(IpdBedMovement $transfer)
@@ -95,7 +95,7 @@ class IpdTransferController extends Controller
 
         $this->auditLogger->log('APPROVE', IpdBedMovement::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.transfers.show', $transfer)->with('success', 'Transfer approved.');
+        return redirect()->route('admin.ipd.transfers.show', $transfer)->with('success', __('Transfer approved.'));
     }
 
     public function complete(Request $request, IpdBedMovement $transfer)
@@ -112,7 +112,7 @@ class IpdTransferController extends Controller
 
         $this->auditLogger->log('COMPLETE', IpdBedMovement::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.transfers.show', $transfer)->with('success', 'Transfer completed.');
+        return redirect()->route('admin.ipd.transfers.show', $transfer)->with('success', __('Transfer completed.'));
     }
 
     public function cancel(Request $request, IpdBedMovement $transfer)
@@ -130,6 +130,6 @@ class IpdTransferController extends Controller
 
         $this->auditLogger->log('CANCEL', IpdBedMovement::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.ipd.transfers.index')->with('success', 'Transfer cancelled.');
+        return redirect()->route('admin.ipd.transfers.index')->with('success', __('Transfer cancelled.'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Ot;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OtSurgicalSafetyChecklist extends Model
 {
+    use HasPublicId;
+
     public const PHASE_SIGN_IN = 'sign_in';
 
     public const PHASE_TIME_OUT = 'time_out';

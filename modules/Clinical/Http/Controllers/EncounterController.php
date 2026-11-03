@@ -24,11 +24,11 @@ class EncounterController extends Controller
     {
         $this->authorize('viewAny', Encounter::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $encounters = Encounter::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($branchId, fn ($q, $branchId) => $q->where('branch_id', $branchId))
             ->when($request->filled('patient_id'), fn ($q, $patientId) => $q->where('patient_id', $request->input('patient_id')))
             ->when($request->filled('type'), fn ($q, $type) => $q->where('encounter_type', $request->input('type')))
@@ -46,12 +46,13 @@ class EncounterController extends Controller
     {
         $this->authorize('create', Encounter::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $branches = Branch::where('company_id', $companyId)->get();
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+        $branches = Branch::where('organization_id', $organizationId)->get();
+        // The patient dropdown asks the server as the user types (admin.lookup.patients); only a patient already chosen (a validation error sends the form back) is loaded here.
+        $selectedPatient = old('patient_id') ? Patient::where('organization_id', $organizationId)->find(old('patient_id')) : null;
 
-        return view('admin.encounters.create', compact('branches', 'patients'));
+        return view('admin.encounters.create', compact('branches', 'selectedPatient'));
     }
 
     public function store(StoreEncounterRequest $request)
@@ -62,7 +63,7 @@ class EncounterController extends Controller
 
         $encounter = $this->encounterService->createEncounter($validated, $request->user());
 
-        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter created successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', __('Encounter created successfully.'));
     }
 
     public function show(Encounter $encounter)
@@ -103,10 +104,10 @@ class EncounterController extends Controller
     {
         $this->authorize('update', $encounter);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $branches = Branch::where('company_id', $companyId)->get();
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+        $branches = Branch::where('organization_id', $organizationId)->get();
+        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
 
         return view('admin.encounters.edit', compact('encounter', 'branches', 'patients'));
     }
@@ -127,7 +128,7 @@ class EncounterController extends Controller
             $this->encounterService->updateEncounter($encounter, $validated);
         }
 
-        return redirect()->route('admin.encounters.show', $encounter)->with('success', 'Encounter updated successfully.');
+        return redirect()->route('admin.encounters.show', $encounter)->with('success', __('Encounter updated successfully.'));
     }
 
     public function destroy(Encounter $encounter)
@@ -136,6 +137,6 @@ class EncounterController extends Controller
 
         $encounter->delete();
 
-        return redirect()->route('admin.encounters.index')->with('success', 'Encounter deleted successfully.');
+        return redirect()->route('admin.encounters.index')->with('success', __('Encounter deleted successfully.'));
     }
 }

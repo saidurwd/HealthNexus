@@ -13,7 +13,7 @@ class EncounterPolicy
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('encounters.view') || $user->hasRole('super_admin');
     }
 
     public function view(User $user, Encounter $encounter): bool
@@ -185,7 +185,7 @@ class EncounterPolicy
 
     private function inScope(User $user, Encounter $encounter): bool
     {
-        if (! $user->companies()->where('companies.id', $encounter->company_id)->exists()) {
+        if (! $user->organizations()->where('organizations.id', $encounter->organization_id)->exists()) {
             return false;
         }
 

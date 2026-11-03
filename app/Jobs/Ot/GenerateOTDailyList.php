@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Ot;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Ot\OtSurgery;
 use App\Models\User;
 use App\Services\NotificationService;
@@ -25,8 +25,8 @@ class GenerateOTDailyList implements ShouldQueue
     {
         $tomorrow = now()->addDay()->toDateString();
 
-        Company::all()->each(function (Company $company) use ($tomorrow, $notifications) {
-            $count = OtSurgery::where('company_id', $company->id)
+        Organization::all()->each(function (Organization $organization) use ($tomorrow, $notifications) {
+            $count = OtSurgery::where('organization_id', $organization->id)
                 ->whereDate('scheduled_date', $tomorrow)
                 ->whereNotIn('status', [OtSurgery::STATUS_CANCELLED, OtSurgery::STATUS_POSTPONED, OtSurgery::STATUS_REJECTED])
                 ->count();
@@ -36,7 +36,7 @@ class GenerateOTDailyList implements ShouldQueue
             }
 
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ot_coordinator', 'ot_manager']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $company->id))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organization->id))
                 ->get();
 
             if ($recipients->isEmpty()) {

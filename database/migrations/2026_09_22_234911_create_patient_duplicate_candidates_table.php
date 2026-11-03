@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_duplicate_candidates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             // patient_id_a is always the lower id of the pair, patient_id_b the higher — enforced
             // in code so the same pair can never be inserted twice in reversed order.
             $table->foreignId('patient_id_a')->constrained('patients')->cascadeOnDelete();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['patient_id_a', 'patient_id_b'], 'patient_duplicate_pair_unique');
-            $table->index(['company_id', 'status'], 'patient_duplicate_status_idx');
+            $table->index(['organization_id', 'status'], 'patient_duplicate_status_idx');
         });
     }
 

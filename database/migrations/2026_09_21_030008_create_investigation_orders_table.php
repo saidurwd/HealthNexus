@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('investigation_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('appointment_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -26,9 +26,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'patient_id']);
-            $table->index(['company_id', 'appointment_id']);
-            $table->index(['company_id', 'status']);
+            $table->index(['organization_id', 'patient_id']);
+            $table->index(['organization_id', 'appointment_id']);
+            $table->index(['organization_id', 'status']);
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NursingMedicationAdministration extends Model
 {
+    use HasPublicId;
+
     public const STATUS_SCHEDULED = 'scheduled';
 
     public const STATUS_DUE = 'due';
@@ -47,7 +50,7 @@ class NursingMedicationAdministration extends Model
     ];
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'encounter_id', 'patient_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'encounter_id', 'patient_id',
         'prescription_id', 'prescription_item_id', 'dispensing_item_id', 'medication_id', 'batch_id',
         'scheduled_at', 'administered_at', 'dose', 'dose_unit', 'route', 'site', 'status',
         'reason_if_not_administered', 'is_prn', 'prn_reason', 'administered_by', 'witnessed_by',
@@ -124,8 +127,8 @@ class NursingMedicationAdministration extends Model
         return $this->hasMany(NursingMedicationAdministrationCorrection::class, 'administration_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

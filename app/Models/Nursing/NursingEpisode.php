@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Encounter;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Patient;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class NursingEpisode extends Model
 {
+    use HasPublicId;
+
     public const STATUS_PLANNED = 'planned';
 
     public const STATUS_ACTIVE = 'active';
@@ -24,7 +27,7 @@ class NursingEpisode extends Model
     public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'admission_id', 'patient_id', 'encounter_id',
+        'organization_id', 'branch_id', 'admission_id', 'patient_id', 'encounter_id',
         'primary_nurse_id', 'status', 'start_at', 'end_at', 'created_by',
     ];
 
@@ -151,8 +154,8 @@ class NursingEpisode extends Model
         return $this->hasOne(NursingDischargeChecklist::class, 'episode_id');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -10,8 +10,8 @@
             @method('PUT')
             @include('admin.radiology.procedures._form', ['procedure' => $procedure])
             <div class="card-footer">
-                <a href="{{ route('admin.radiology.procedures.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Procedure</button>
+                <a href="{{ route('admin.radiology.procedures.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Update Procedure') }}</button>
             </div>
         </form>
     </div>

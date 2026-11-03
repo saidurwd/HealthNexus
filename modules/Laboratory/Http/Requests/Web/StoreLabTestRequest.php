@@ -14,7 +14,7 @@ class StoreLabTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'category_id' => ['nullable', 'integer', 'exists:lab_test_categories,id'],
             'section_id' => ['nullable', 'integer', 'exists:lab_sections,id'],

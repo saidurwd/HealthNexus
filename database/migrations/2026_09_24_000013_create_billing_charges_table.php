@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_charges', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('encounter_id')->nullable()->constrained()->nullOnDelete();
@@ -36,8 +36,8 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->unique(['company_id', 'idempotency_key']);
-            $table->index(['company_id', 'branch_id', 'patient_id', 'status'], 'billing_charges_scope_idx');
+            $table->unique(['organization_id', 'idempotency_key']);
+            $table->index(['organization_id', 'branch_id', 'patient_id', 'status'], 'billing_charges_scope_idx');
             $table->index(['billing_item_id', 'charged_at']);
         });
     }

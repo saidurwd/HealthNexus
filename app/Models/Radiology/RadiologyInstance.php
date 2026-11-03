@@ -9,5 +9,8 @@ class RadiologyInstance extends Model
 {
     protected $fillable = ['series_id', 'sop_instance_uid', 'sop_class_uid', 'instance_number', 'file_reference'];
 
-    public function series(): BelongsTo { return $this->belongsTo(RadiologySeries::class, 'series_id'); }
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(RadiologySeries::class, 'series_id');
+    }
 }

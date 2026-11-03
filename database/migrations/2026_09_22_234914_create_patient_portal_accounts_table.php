@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_portal_accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->unique()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('email')->nullable();

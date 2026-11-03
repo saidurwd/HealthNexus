@@ -8,17 +8,17 @@
                 <div class="card-header">
                     <h3 class="card-title">States - {{ $country->name }}</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.master-data.states.create') }}" class="btn btn-primary btn-sm">Add State</a>
+                        <a href="{{ route('admin.master-data.states.create') }}" class="btn btn-primary btn-sm">{{ __('Add State') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Code</th>
-                                <th>Status</th>
+                                <th>{{ __('ID') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Code') }}</th>
+                                <th>{{ __('Status') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,7 +34,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="4" class="text-center">No states found.</td></tr>
+                                <tr><td colspan="4" class="text-center">{{ __('No states found.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>

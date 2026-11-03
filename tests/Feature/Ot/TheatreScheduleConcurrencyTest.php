@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Ot;
 
+use App\Services\Ot\OtSchedulingService;
+use Illuminate\Validation\ValidationException;
+
 /**
  * The mandatory "two users, same theatre, same time, only one succeeds" proof (spec §73/§77).
  * Mirrors BedAllocationConcurrencyTest's raw two-PDO-connection technique exactly, applied to
@@ -46,15 +49,15 @@ class TheatreScheduleConcurrencyTest extends OtTestCase
             return;
         }
 
-        $companyId = (int) $pdoA->query('SELECT id FROM companies LIMIT 1')->fetchColumn();
+        $organizationId = (int) $pdoA->query('SELECT id FROM organizations LIMIT 1')->fetchColumn();
 
-        if (! $companyId) {
-            $pdoA->exec("INSERT INTO companies (name, code, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', NOW(), NOW())");
-            $companyId = (int) $pdoA->lastInsertId();
+        if (! $organizationId) {
+            $pdoA->exec("INSERT INTO organizations (name, code, slug, created_at, updated_at) VALUES ('Concurrency Test Co', 'CTC', 'concurrency-test-co', NOW(), NOW())");
+            $organizationId = (int) $pdoA->lastInsertId();
         }
 
-        $pdoA->exec("INSERT INTO ot_theatres (company_id, theatre_code, name, capacity, status, is_active, created_at, updated_at)
-            VALUES ({$companyId}, 'OT-CONC', 'Concurrency Theatre', 1, 'available', 1, NOW(), NOW())");
+        $pdoA->exec("INSERT INTO ot_theatres (organization_id, theatre_code, name, capacity, status, is_active, created_at, updated_at)
+            VALUES ({$organizationId}, 'OT-CONC', 'Concurrency Theatre', 1, 'available', 1, NOW(), NOW())");
         $theatreId = (int) $pdoA->lastInsertId();
 
         try {
@@ -104,13 +107,13 @@ class TheatreScheduleConcurrencyTest extends OtTestCase
         $start = now()->addDay()->setTime(9, 0);
         $end = now()->addDay()->setTime(11, 0);
 
-        app(\App\Services\Ot\OtSchedulingService::class)->schedule($surgeryA, [
+        app(OtSchedulingService::class)->schedule($surgeryA, [
             'theatre_id' => $theatre->id, 'scheduled_start_at' => $start, 'scheduled_end_at' => $end,
         ], $this->user);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        app(\App\Services\Ot\OtSchedulingService::class)->schedule($surgeryB, [
+        app(OtSchedulingService::class)->schedule($surgeryB, [
             'theatre_id' => $theatre->id,
             'scheduled_start_at' => $start->copy()->addMinutes(30),
             'scheduled_end_at' => $end->copy()->addMinutes(30),

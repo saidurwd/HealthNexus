@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ipd_admissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('admission_number');
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
@@ -34,8 +34,8 @@ return new class extends Migration
             $table->foreignId('discharged_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->unique(['company_id', 'admission_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'admission_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('patient_id');
             $table->index('expected_discharge_date');
         });

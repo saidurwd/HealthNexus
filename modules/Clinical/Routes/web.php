@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Clinical\Http\Controllers\EncounterController;
-use Modules\Clinical\Http\Controllers\EncounterClinicalController;
 use Modules\Clinical\Http\Controllers\BreakGlassController;
 use Modules\Clinical\Http\Controllers\ClinicalReportController;
+use Modules\Clinical\Http\Controllers\EncounterClinicalController;
+use Modules\Clinical\Http\Controllers\EncounterController;
 
 Route::middleware(['can:encounters.view'])->group(function () {
     Route::get('encounters', [EncounterController::class, 'index'])->name('encounters.index');
@@ -54,6 +54,10 @@ Route::middleware(['can:clinical.vitals.create'])->group(function () {
 Route::middleware(['can:clinical.diagnosis.create'])->group(function () {
     Route::post('encounters/{encounter}/diagnoses', [EncounterClinicalController::class, 'storeDiagnosis'])->name('encounters.diagnoses.store');
     Route::post('encounters/{encounter}/problems', [EncounterClinicalController::class, 'storeProblem'])->name('encounters.problems.store');
+});
+
+Route::middleware(['can:prescription.view'])->group(function () {
+    Route::get('prescriptions/{prescription}/print', [EncounterClinicalController::class, 'printPrescription'])->name('prescriptions.print');
 });
 
 Route::middleware(['can:prescription.create'])->group(function () {

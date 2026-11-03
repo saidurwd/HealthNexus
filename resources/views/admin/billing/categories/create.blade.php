@@ -4,32 +4,32 @@
 
 @section('page_content')
     <div class="card">
-        <div class="card-header"><h3 class="card-title">New Billing Category</h3></div>
+        <div class="card-header"><h3 class="card-title">{{ __('New Billing Category') }}</h3></div>
         <form action="{{ route('admin.billing.categories.store') }}" method="post">
             @csrf
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">{{ __('Name') }}</label>
                     <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" required>
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Code</label>
+                    <label class="form-label">{{ __('Code') }}</label>
                     <input type="text" name="code" value="{{ old('code') }}" class="form-control @error('code') is-invalid @enderror" required>
                     @error('code') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Description</label>
+                    <label class="form-label">{{ __('Description') }}</label>
                     <textarea name="description" class="form-control">{{ old('description') }}</textarea>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" name="is_active" value="1" class="form-check-input" id="is_active" {{ old('is_active', true) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_active">Active</label>
+                    <label class="form-check-label" for="is_active">{{ __('Active') }}</label>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.billing.categories.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Category</button>
+                <a href="{{ route('admin.billing.categories.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Save Category') }}</button>
             </div>
         </form>
     </div>

@@ -37,13 +37,13 @@ class SettingsTest extends TestCase
 
     public function test_guest_is_redirected_from_settings(): void
     {
-        $this->get('/admin/settings')->assertRedirect('/login');
+        $this->get('/settings')->assertRedirect('/login');
     }
 
     public function test_viewer_can_see_settings(): void
     {
         $this->actingAs($this->viewer)
-            ->get('/admin/settings')
+            ->get('/settings')
             ->assertViewIs('admin.settings.index')
             ->assertViewHas('settings');
     }
@@ -51,7 +51,7 @@ class SettingsTest extends TestCase
     public function test_user_without_permission_cannot_update_settings(): void
     {
         $this->actingAs($this->viewer)
-            ->put('/admin/settings', ['settings' => ['hospital.name' => 'Hacked']])
+            ->put('/settings', ['settings' => ['hospital.name' => 'Hacked']])
             ->assertForbidden();
     }
 
@@ -64,8 +64,8 @@ class SettingsTest extends TestCase
         $old = $service->get('hospital.name');
 
         $this->actingAs($this->admin)
-            ->put('/admin/settings', ['settings' => ['hospital.name' => 'New Hospital Name']])
-            ->assertRedirect('/admin/settings');
+            ->put('/settings', ['settings' => ['hospital.name' => 'New Hospital Name']])
+            ->assertRedirect('/settings');
 
         $this->assertDatabaseHas('settings', [
             'key' => 'hospital.name',

@@ -11,7 +11,7 @@
             <div class="card-body row">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Section</label>
+                        <label class="form-label">{{ __('Section') }}</label>
                         <select name="section_id" class="form-control">
                             <option value="">-</option>
                             @foreach($sections as $section)
@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Room / Bay</label>
+                        <label class="form-label">{{ __('Room / Bay') }}</label>
                         <select name="room_id" class="form-control">
                             <option value="">-</option>
                             @foreach($rooms as $room)
@@ -29,19 +29,19 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Code</label>
+                        <label class="form-label">{{ __('Code') }}</label>
                         <input type="text" name="code" value="{{ old('code', $modality->code) }}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{ __('Name') }}</label>
                         <input type="text" name="name" value="{{ old('name', $modality->name) }}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Modality Type</label>
+                        <label class="form-label">{{ __('Modality Type') }}</label>
                         <input type="text" name="modality_type" value="{{ old('modality_type', $modality->modality_type) }}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">{{ __('Status') }}</label>
                         <select name="status" class="form-control" required>
                             @foreach(['online','offline','maintenance','disabled'] as $status)
                                 <option value="{{ $status }}" {{ old('status', $modality->status) == $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
@@ -50,51 +50,51 @@
                     </div>
                     <div class="form-check mb-2">
                         <input type="checkbox" name="is_active" value="1" class="form-check-input" id="is_active" {{ old('is_active', $modality->is_active) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="is_active">Active</label>
+                        <label class="form-check-label" for="is_active">{{ __('Active') }}</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">Manufacturer</label>
+                        <label class="form-label">{{ __('Manufacturer') }}</label>
                         <input type="text" name="manufacturer" value="{{ old('manufacturer', $modality->manufacturer) }}" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Model</label>
+                        <label class="form-label">{{ __('Model') }}</label>
                         <input type="text" name="model" value="{{ old('model', $modality->model) }}" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Serial Number</label>
+                        <label class="form-label">{{ __('Serial Number') }}</label>
                         <input type="text" name="serial_number" value="{{ old('serial_number', $modality->serial_number) }}" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Location</label>
+                        <label class="form-label">{{ __('Location') }}</label>
                         <input type="text" name="location" value="{{ old('location', $modality->location) }}" class="form-control">
                     </div>
                     <hr>
-                    <h5>DICOM / PACS</h5>
+                    <h5>{{ __('DICOM / PACS') }}</h5>
                     <div class="mb-3">
-                        <label class="form-label">AE Title</label>
+                        <label class="form-label">{{ __('AE Title') }}</label>
                         <input type="text" name="ae_title" value="{{ old('ae_title', $modality->ae_title) }}" class="form-control">
                     </div>
                     <div class="row">
                         <div class="col-md-8 mb-3">
-                            <label class="form-label">IP Address</label>
+                            <label class="form-label">{{ __('IP Address') }}</label>
                             <input type="text" name="ip_address" value="{{ old('ip_address', $modality->ip_address) }}" class="form-control">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Port</label>
+                            <label class="form-label">{{ __('Port') }}</label>
                             <input type="number" name="port" value="{{ old('port', $modality->port) }}" class="form-control">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">PACS Endpoint</label>
+                        <label class="form-label">{{ __('PACS Endpoint') }}</label>
                         <input type="text" name="pacs_endpoint" value="{{ old('pacs_endpoint', $modality->pacs_endpoint) }}" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.radiology.modalities.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Modality</button>
+                <a href="{{ route('admin.radiology.modalities.index') }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Update Modality') }}</button>
             </div>
         </form>
     </div>

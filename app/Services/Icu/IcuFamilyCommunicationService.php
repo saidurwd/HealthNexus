@@ -12,7 +12,7 @@ class IcuFamilyCommunicationService
     {
         return IcuFamilyCommunication::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'communicated_at' => $data['communicated_at'] ?? now(),

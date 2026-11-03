@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_safety_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('order_item_id')->nullable()->constrained('pharmacy_order_items')->cascadeOnDelete();
             $table->foreignId('dispensing_item_id')->nullable()->constrained('pharmacy_dispensing_items')->cascadeOnDelete();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamp('overridden_at')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'is_overridden']);
+            $table->index(['organization_id', 'branch_id', 'is_overridden'], 'pharmacy_safety_alerts_5e636f63_idx');
             $table->index('order_item_id');
             $table->index('dispensing_item_id');
             $table->index('medication_id');

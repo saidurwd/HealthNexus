@@ -3,40 +3,25 @@
 namespace Modules\Pharmacy\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pharmacy\PharmacyBatch;
-use App\Models\Pharmacy\PharmacyDispensing;
-use App\Models\Pharmacy\PharmacyOrder;
-use App\Models\Pharmacy\PharmacySafetyAlert;
-use App\Services\SettingsService;
+use App\Services\Dashboard\DashboardCache;
+use App\Services\Pharmacy\PharmacyOverview;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class PharmacyDashboardController extends Controller
 {
-    public function index(Request $request, SettingsService $settings)
+    public function __construct(private readonly PharmacyOverview $overview, private readonly DashboardCache $cache, private readonly TenantContextResolver $tenant) {}
+
+    public function index(Request $request)
     {
         Gate::authorize('pharmacy.dashboard.view');
+        $org = (int) $this->tenant->getOrganizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        $period = DashboardPeriod::fromRequest($request, '7d', ['today', '7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $r = $this->cache->remember($request->user(), 'pharmacy', $org, $branch, $period, fn () => $this->overview->summary($org, $branch, $period), fresh: $request->boolean('fresh'));
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $branchId = app(TenantContextResolver::class)->getBranchId();
-        $today = now()->toDateString();
-        $thresholdDays = (int) $settings->get('pharmacy.near_expiry_threshold_days', 90);
-
-        $summary = [
-            'orders_pending' => PharmacyOrder::query()->forTenant($companyId, $branchId)->where('status', 'pending')->count(),
-            'orders_under_review' => PharmacyOrder::query()->forTenant($companyId, $branchId)->where('status', 'under_review')->count(),
-            'dispensed_today' => PharmacyDispensing::query()->forTenant($companyId, $branchId)->whereDate('dispensed_at', $today)->count(),
-            'unresolved_safety_alerts' => PharmacySafetyAlert::query()->forTenant($companyId, $branchId)->where('is_overridden', false)->count(),
-            'near_expiry_batches' => PharmacyBatch::query()
-                ->where('company_id', $companyId)
-                ->where('is_quarantined', false)
-                ->where('expiry_date', '<=', now()->addDays($thresholdDays)->toDateString())
-                ->where('expiry_date', '>', $today)
-                ->count(),
-            'quarantined_batches' => PharmacyBatch::query()->where('company_id', $companyId)->where('is_quarantined', true)->count(),
-        ];
-
-        return view('admin.pharmacy.dashboard.index', compact('summary'));
+        return view('admin.pharmacy.dashboard.index', ['metrics' => $r['data'], 'asOf' => $r['as_of'], 'period' => $period]);
     }
 }

@@ -4,12 +4,12 @@ namespace Modules\Laboratory\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Laboratory\LabContainerType;
 use App\Models\Laboratory\LabSection;
 use App\Models\Laboratory\LabSpecimenType;
 use App\Models\Laboratory\LabTest;
 use App\Models\Laboratory\LabTestCategory;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Laboratory\LabTestService;
 use App\Services\TenantContextResolver;
@@ -28,11 +28,11 @@ class LabTestController extends Controller
     {
         $this->authorize('viewAny', LabTest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $tests = LabTest::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['category', 'section'])
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($sub) => $sub
                 ->where('name', 'like', '%'.$request->input('search').'%')
@@ -49,15 +49,15 @@ class LabTestController extends Controller
     {
         $this->authorize('create', LabTest::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $categories = LabTestCategory::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $sections = LabSection::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $specimenTypes = LabSpecimenType::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $containerTypes = LabContainerType::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $categories = LabTestCategory::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $sections = LabSection::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $specimenTypes = LabSpecimenType::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $containerTypes = LabContainerType::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.lab.tests.create', compact('categories', 'sections', 'specimenTypes', 'containerTypes', 'companies', 'branches'));
+        return view('admin.lab.tests.create', compact('categories', 'sections', 'specimenTypes', 'containerTypes', 'organizations', 'branches'));
     }
 
     public function store(StoreLabTestRequest $request)
@@ -68,17 +68,17 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('CREATE', LabTest::class, $test->id, null, $test->toArray(), $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test created.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test created.'));
     }
 
     public function edit(LabTest $test)
     {
         $this->authorize('update', $test);
 
-        $categories = LabTestCategory::query()->forTenant($test->company_id)->where('is_active', true)->orderBy('name')->get();
-        $sections = LabSection::query()->forTenant($test->company_id)->where('is_active', true)->orderBy('name')->get();
-        $specimenTypes = LabSpecimenType::query()->forTenant($test->company_id)->where('is_active', true)->orderBy('name')->get();
-        $containerTypes = LabContainerType::query()->forTenant($test->company_id)->where('is_active', true)->orderBy('name')->get();
+        $categories = LabTestCategory::query()->forTenant($test->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $sections = LabSection::query()->forTenant($test->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $specimenTypes = LabSpecimenType::query()->forTenant($test->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $containerTypes = LabContainerType::query()->forTenant($test->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.lab.tests.edit', compact('test', 'categories', 'sections', 'specimenTypes', 'containerTypes'));
     }
@@ -92,7 +92,7 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('UPDATE', LabTest::class, $test->id, $oldValues, $test->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test updated.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test updated.'));
     }
 
     public function destroy(Request $request, LabTest $test)
@@ -104,6 +104,6 @@ class LabTestController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', LabTest::class, $test->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.lab.tests.index')->with('success', 'Lab test deactivated.');
+        return redirect()->route('admin.lab.tests.index')->with('success', __('Lab test deactivated.'));
     }
 }

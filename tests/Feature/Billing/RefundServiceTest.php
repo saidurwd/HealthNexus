@@ -35,27 +35,27 @@ class RefundServiceTest extends BillingTestCase
         $lifecycle = app(InvoiceLifecycleService::class);
         $payments = app(PaymentService::class);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Consultation', 'code' => 'CONSULT', 'is_active' => true,
         ]);
 
         $item = BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'OPD-1', 'item_type' => 'consultation',
             'name' => 'OPD Consultation', 'base_price' => '1000.00', 'is_taxable' => false,
             'is_clinically_chargeable' => false, 'is_active' => true,
         ]);
 
         $method = BillingPaymentMethod::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Cash', 'code' => 'CASH', 'type' => 'cash', 'is_active' => true,
         ]);
 
         $charge = BillingCharge::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'patient_id' => $patient->id, 'billing_item_id' => $item->id,
             'idempotency_key' => uniqid('chg-', true), 'status' => 'pending', 'quantity' => 1,
             'currency' => 'BDT', 'unit_price' => '1000.00', 'gross_amount' => '1000.00',
@@ -63,7 +63,7 @@ class RefundServiceTest extends BillingTestCase
             'net_amount' => '1000.00', 'charged_at' => now(),
         ]);
 
-        $this->invoice = $invoices->createDraft($patient, ['company_id' => $this->company->id, 'branch_id' => $this->branch->id], $this->user);
+        $this->invoice = $invoices->createDraft($patient, ['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id], $this->user);
         $invoices->addCharges($this->invoice, new Collection([$charge]));
         $this->invoice = $lifecycle->finalize($this->invoice, $this->user);
 
@@ -75,7 +75,7 @@ class RefundServiceTest extends BillingTestCase
     public function test_full_refund_workflow_moves_through_requested_approved_processed(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $refund = $this->refunds->request($this->payment, '1000.00', 'Patient overcharged', $this->user);
         $this->assertSame('requested', $refund->status);
@@ -98,7 +98,7 @@ class RefundServiceTest extends BillingTestCase
     public function test_partial_refund_leaves_the_receipt_issued(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $refund = $this->refunds->request($this->payment, '400.00', 'Partial refund', $this->user);
         $refund = $this->refunds->approve($refund, $approver);
@@ -126,7 +126,7 @@ class RefundServiceTest extends BillingTestCase
     public function test_original_payment_amount_is_never_mutated_by_a_refund(): void
     {
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         $refund = $this->refunds->request($this->payment, '400.00', 'Partial refund', $this->user);
         $refund = $this->refunds->approve($refund, $approver);

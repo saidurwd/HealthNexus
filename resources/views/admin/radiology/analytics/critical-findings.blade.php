@@ -9,10 +9,10 @@
             <form method="GET" class="p-3 row g-2">
                 <div class="col-md-3"><input type="date" name="from" value="{{ $from }}" class="form-control"></div>
                 <div class="col-md-3"><input type="date" name="to" value="{{ $to }}" class="form-control"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">Filter</button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary">{{ __('Filter') }}</button></div>
             </form>
             <table class="table table-striped">
-                <thead><tr><th>Finding</th><th>Patient</th><th>Detected At</th><th>Status</th></tr></thead>
+                <thead><tr><th>{{ __('Finding') }}</th><th>{{ __('Patient') }}</th><th>{{ __('Detected At') }}</th><th>{{ __('Status') }}</th></tr></thead>
                 <tbody>
                     @forelse($findings as $finding)
                         <tr>
@@ -22,7 +22,7 @@
                             <td>{{ ucfirst($finding->status) }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="text-center">No critical findings in this period.</td></tr>
+                        <tr><td colspan="4" class="text-center">{{ __('No critical findings in this period.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

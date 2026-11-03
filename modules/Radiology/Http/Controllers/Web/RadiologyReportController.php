@@ -25,11 +25,11 @@ class RadiologyReportController extends Controller
     {
         $this->authorize('viewAny', RadiologyReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $reports = RadiologyReport::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('is_current', true)
             ->with('examination.orderItem.radiologyOrder.patient')
             ->when($request->filled('search'), fn ($q) => $q->where('report_number', 'like', '%'.$request->input('search').'%'))
@@ -43,8 +43,8 @@ class RadiologyReportController extends Controller
     {
         $this->authorize('create', RadiologyReport::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $templates = RadiologyReportTemplate::query()->forTenant($companyId)->where('is_active', true)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $templates = RadiologyReportTemplate::query()->forTenant($organizationId)->where('is_active', true)->get();
 
         return view('admin.radiology.reports.create', compact('examination', 'templates'));
     }
@@ -58,7 +58,7 @@ class RadiologyReportController extends Controller
 
         $this->auditLogger->log('CREATE', RadiologyReport::class, $report->id, null, $report->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Report draft created.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Report draft created.'));
     }
 
     public function show(RadiologyReport $report)
@@ -87,7 +87,7 @@ class RadiologyReportController extends Controller
 
         $this->auditLogger->log('UPDATE', RadiologyReport::class, $report->id, $oldValues, $report->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Report updated.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Report updated.'));
     }
 
     public function submit(Request $request, RadiologyReport $report)
@@ -99,7 +99,7 @@ class RadiologyReportController extends Controller
 
         $this->auditLogger->log('SUBMIT', RadiologyReport::class, $report->id, $oldValues, $report->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Report submitted for approval.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Report submitted for approval.'));
     }
 
     public function approve(Request $request, RadiologyReport $report)
@@ -113,7 +113,7 @@ class RadiologyReportController extends Controller
 
         $this->auditLogger->log('APPROVE', RadiologyReport::class, $report->id, $oldValues, $report->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $report)->with('success', 'Report approved and finalized.');
+        return redirect()->route('admin.radiology.reports.show', $report)->with('success', __('Report approved and finalized.'));
     }
 
     public function amend(AmendRadiologyReportRequest $request, RadiologyReport $report)
@@ -124,6 +124,6 @@ class RadiologyReportController extends Controller
 
         $this->auditLogger->log('AMEND', RadiologyReport::class, $amended->id, $report->toArray(), $amended->toArray(), $request);
 
-        return redirect()->route('admin.radiology.reports.show', $amended)->with('success', 'Report amended — a new version has been recorded.');
+        return redirect()->route('admin.radiology.reports.show', $amended)->with('success', __('Report amended — a new version has been recorded.'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdDischargeRequest;
 use App\Models\Patient;
@@ -11,12 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NursingDischargeChecklist extends Model
 {
+    use HasPublicId;
+
     public const STATUS_PENDING = 'pending';
 
     public const STATUS_COMPLETED = 'completed';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'discharge_request_id',
+        'organization_id', 'branch_id', 'episode_id', 'admission_id', 'patient_id', 'discharge_request_id',
         'education_completed', 'medication_education_completed', 'devices_removed',
         'belongings_confirmed', 'follow_up_instructions_given', 'status', 'completed_by',
         'completed_at', 'notes',
@@ -59,8 +62,8 @@ class NursingDischargeChecklist extends Model
         return $this->belongsTo(User::class, 'completed_by');
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

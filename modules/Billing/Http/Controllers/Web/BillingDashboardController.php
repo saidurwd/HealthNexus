@@ -3,22 +3,23 @@
 namespace Modules\Billing\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Services\Billing\RevenueService;
+use App\Services\Billing\BillingOverview;
+use App\Services\Dashboard\DashboardCache;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\DashboardPeriod;
 use Illuminate\Http\Request;
 
 class BillingDashboardController extends Controller
 {
-    public function __construct(private readonly RevenueService $revenue) {}
+    public function __construct(private readonly BillingOverview $overview, private readonly DashboardCache $cache, private readonly TenantContextResolver $tenant) {}
 
     public function index(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $branchId = app(TenantContextResolver::class)->getBranchId();
+        $org = (int) $this->tenant->getOrganizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        $period = DashboardPeriod::fromRequest($request, '7d', ['today', '7d', '30d', '90d', 'month', 'last_month', 'custom']);
+        $r = $this->cache->remember($request->user(), 'billing', $org, $branch, $period, fn () => $this->overview->summary($org, $branch, $period), fresh: $request->boolean('fresh'));
 
-        $todaySummary = $this->revenue->todaysSummary($companyId, $branchId);
-        $cashierSummary = $this->revenue->cashierSummary($companyId, $branchId);
-
-        return view('admin.billing.dashboard.index', compact('todaySummary', 'cashierSummary'));
+        return view('admin.billing.dashboard.index', ['metrics' => $r['data'], 'asOf' => $r['as_of'], 'period' => $period]);
     }
 }

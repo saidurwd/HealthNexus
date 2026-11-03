@@ -23,7 +23,7 @@ class IcuHandoverRecord extends Model
     public const TYPE_TRANSFER = 'transfer';
 
     protected $fillable = [
-        'company_id', 'branch_id', 'episode_id', 'outgoing_user_id', 'incoming_user_id',
+        'organization_id', 'branch_id', 'episode_id', 'outgoing_user_id', 'incoming_user_id',
         'handover_type', 'sections', 'status', 'prepared_at', 'acknowledged_at',
     ];
 
@@ -32,12 +32,23 @@ class IcuHandoverRecord extends Model
         return ['sections' => 'array', 'prepared_at' => 'datetime', 'acknowledged_at' => 'datetime'];
     }
 
-    public function episode(): BelongsTo { return $this->belongsTo(IcuEpisode::class, 'episode_id'); }
-    public function outgoingUser(): BelongsTo { return $this->belongsTo(User::class, 'outgoing_user_id'); }
-    public function incomingUser(): BelongsTo { return $this->belongsTo(User::class, 'incoming_user_id'); }
-
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function episode(): BelongsTo
     {
-        return $query->where('company_id', $companyId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
+        return $this->belongsTo(IcuEpisode::class, 'episode_id');
+    }
+
+    public function outgoingUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'outgoing_user_id');
+    }
+
+    public function incomingUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'incoming_user_id');
+    }
+
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
+    {
+        return $query->where('organization_id', $organizationId)->when($branchId, fn ($q) => $q->where('branch_id', $branchId));
     }
 }

@@ -23,12 +23,12 @@ class OtProcedureController extends Controller
     {
         Gate::authorize('ot.procedure.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $procedures = OtProcedure::forTenant($companyId, $branchId)->with(['category', 'specialty'])->orderBy('name')->get();
-        $categories = OtProcedureCategory::forTenant($companyId, $branchId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->get();
+        $procedures = OtProcedure::forTenant($organizationId, $branchId)->with(['category', 'specialty'])->orderBy('name')->get();
+        $categories = OtProcedureCategory::forTenant($organizationId, $branchId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->get();
 
         return view('admin.ot.procedures.index', compact('procedures', 'categories', 'specialties'));
     }
@@ -37,9 +37,9 @@ class OtProcedureController extends Controller
     {
         Gate::authorize('ot.procedure.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $categories = OtProcedureCategory::forTenant($companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $categories = OtProcedureCategory::forTenant($organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->get();
 
         return view('admin.ot.procedures.create', compact('categories', 'specialties'));
     }
@@ -49,7 +49,7 @@ class OtProcedureController extends Controller
         Gate::authorize('ot.procedure.view');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'category_id' => ['nullable', 'integer', 'exists:ot_procedure_categories,id'],
             'specialty_id' => ['nullable', 'integer', 'exists:specialties,id'],
@@ -71,7 +71,7 @@ class OtProcedureController extends Controller
 
         $this->auditLogger->log('CREATE', OtProcedure::class, $procedure->id, null, $procedure->toArray(), $request);
 
-        return redirect()->route('admin.ot.procedures.index')->with('success', 'Procedure created.');
+        return redirect()->route('admin.ot.procedures.index')->with('success', __('Procedure created.'));
     }
 
     public function storeCategory(Request $request)
@@ -79,7 +79,7 @@ class OtProcedureController extends Controller
         Gate::authorize('ot.procedure.view');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'code' => ['required', 'string', 'max:50'],
             'name' => ['required', 'string', 'max:255'],
@@ -87,7 +87,7 @@ class OtProcedureController extends Controller
 
         $this->procedures->createCategory($validated);
 
-        return back()->with('success', 'Procedure category created.');
+        return back()->with('success', __('Procedure category created.'));
     }
 
     public function update(Request $request, OtProcedure $procedure)
@@ -105,6 +105,6 @@ class OtProcedureController extends Controller
 
         $this->auditLogger->log('UPDATE', OtProcedure::class, $procedure->id, null, $validated, $request);
 
-        return back()->with('success', 'Procedure updated.');
+        return back()->with('success', __('Procedure updated.'));
     }
 }

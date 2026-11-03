@@ -9,6 +9,7 @@ use App\Models\Ipd\IpdPatientLeave;
 use App\Models\Patient;
 use App\Services\Ipd\IpdBedAllocationService;
 use App\Services\Ipd\IpdLeaveService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves configurable bed handling during leave (spec §37): 'retain' keeps the allocation active
@@ -55,18 +56,18 @@ class LeaveWorkflowTest extends IpdTestCase
         $bed->refresh();
         $this->assertSame(IpdBed::STATUS_AVAILABLE, $bed->status, 'release bed_handling must free the bed directly to Available, never Cleaning, since the patient is expected back.');
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
         app(IpdLeaveService::class)->markReturned($leave->fresh(), $this->user, null);
     }
 
     private function makeAdmittedPatient(IpdBed $bed): IpdAdmission
     {
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
         ]);
         $admission = IpdAdmission::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id,
             'admission_number' => 'ADM-TEST-'.uniqid(), 'patient_id' => $patient->id,
             'encounter_id' => $encounter->id, 'admitted_at' => now(), 'status' => 'admitted',
         ]);

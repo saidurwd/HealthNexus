@@ -2,6 +2,7 @@
 
 namespace App\Models\Nursing;
 
+use App\Models\Concerns\HasPublicId;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdBed;
 use App\Models\Ipd\IpdWard;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NursingAssignment extends Model
 {
+    use HasPublicId;
+
     public const TYPE_PATIENT = 'patient';
 
     public const TYPE_BED = 'bed';

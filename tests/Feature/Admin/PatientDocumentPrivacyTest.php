@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientDocument;
 use App\Models\User;
@@ -19,7 +19,7 @@ use Tests\TestCase;
  * Regression coverage for a confirmed privacy bug: patient documents were being uploaded to the
  * PUBLIC disk (`$file->store('patient-documents', 'public')`) and the model's url() accessor
  * built a raw, unauthenticated `asset('storage/...')` URL — meaning anyone with the link could
- * view a private patient document with no login or company check at all. Both are now fixed:
+ * view a private patient document with no login or organization check at all. Both are now fixed:
  * uploads go to the private "local" disk, and the url() accessor routes through an authorized
  * download action instead.
  */
@@ -29,7 +29,7 @@ class PatientDocumentPrivacyTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Patient $patient;
 
@@ -41,30 +41,30 @@ class PatientDocumentPrivacyTest extends TestCase
         Storage::fake('local');
         Storage::fake('public');
 
-        $this->company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['manage companies', 'patients.update', 'patients.view', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
+        foreach (['manage organizations', 'patients.update', 'patients.view', 'patients.documents.view', 'patients.documents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
     }
 
     public function test_uploaded_document_is_stored_on_the_private_disk_not_public(): void
     {
         $file = UploadedFile::fake()->create('report.pdf', 100, 'application/pdf');
 
-        $this->post("/admin/patients/{$this->patient->id}/documents", [
+        $this->post("/patients/{$this->patient->public_id}/documents", [
             'document' => $file,
             'document_type' => 'lab_report',
         ])->assertRedirect();
@@ -78,12 +78,12 @@ class PatientDocumentPrivacyTest extends TestCase
     public function test_document_url_accessor_points_at_the_authorized_download_route_not_a_raw_storage_path(): void
     {
         $document = PatientDocument::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
         ]);
 
         $this->assertStringContainsString(
-            "/admin/patients/{$this->patient->id}/documents/{$document->id}/download",
+            "/patients/{$this->patient->public_id}/documents/{$document->public_id}/download",
             $document->url
         );
         $this->assertStringNotContainsString('/storage/', $document->url);
@@ -91,19 +91,19 @@ class PatientDocumentPrivacyTest extends TestCase
 
     public function test_download_requires_view_access_to_the_patient(): void
     {
-        $otherCompany = Company::factory()->create();
+        $otherOrganization = Organization::factory()->create();
         $otherUser = User::factory()->create();
-        $otherUser->companies()->attach($otherCompany->id, ['access_level' => 'admin']);
+        $otherUser->organizations()->attach($otherOrganization->id, ['access_level' => 'admin']);
         $this->actingAs($otherUser);
 
         Storage::disk('local')->put('patient-documents/secret.pdf', 'contents');
         $document = PatientDocument::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'file_path' => 'patient-documents/secret.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->id}/documents/{$document->id}/download")
+        $this->get("/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertForbidden();
     }
 
@@ -111,12 +111,12 @@ class PatientDocumentPrivacyTest extends TestCase
     {
         Storage::disk('local')->put('patient-documents/report.pdf', 'the contents');
         $document = PatientDocument::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'file_path' => 'patient-documents/report.pdf',
         ]);
 
-        $this->get("/admin/patients/{$this->patient->id}/documents/{$document->id}/download")
+        $this->get("/patients/{$this->patient->public_id}/documents/{$document->public_id}/download")
             ->assertOk();
     }
 
@@ -124,12 +124,12 @@ class PatientDocumentPrivacyTest extends TestCase
     {
         Storage::disk('local')->put('patient-documents/to-delete.pdf', 'contents');
         $document = PatientDocument::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'patient_id' => $this->patient->id,
             'file_path' => 'patient-documents/to-delete.pdf',
         ]);
 
-        $this->delete("/admin/patients/{$this->patient->id}/documents/{$document->id}")
+        $this->delete("/patients/{$this->patient->public_id}/documents/{$document->public_id}")
             ->assertRedirect();
 
         Storage::disk('local')->assertMissing('patient-documents/to-delete.pdf');
@@ -139,7 +139,7 @@ class PatientDocumentPrivacyTest extends TestCase
     {
         $file = UploadedFile::fake()->create('script.php', 10, 'application/x-php');
 
-        $response = $this->post("/admin/patients/{$this->patient->id}/documents", [
+        $response = $this->post("/patients/{$this->patient->public_id}/documents", [
             'document' => $file,
             'document_type' => 'lab_report',
         ]);

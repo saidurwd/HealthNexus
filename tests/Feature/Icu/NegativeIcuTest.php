@@ -5,6 +5,8 @@ namespace Tests\Feature\Icu;
 use App\Models\Ipd\IpdBed;
 use App\Services\Icu\IcuBedAllocationService;
 use App\Services\Icu\IcuEpisodeService;
+use App\Services\Icu\IcuInfusionService;
+use App\Services\Icu\IcuProgressNoteService;
 use Illuminate\Validation\ValidationException;
 
 class NegativeIcuTest extends IcuTestCase
@@ -48,22 +50,22 @@ class NegativeIcuTest extends IcuTestCase
     public function test_finalized_progress_note_cannot_be_edited(): void
     {
         $episode = $this->makeEpisode();
-        $note = app(\App\Services\Icu\IcuProgressNoteService::class)->create($episode, ['subjective' => 'x'], $this->user);
-        app(\App\Services\Icu\IcuProgressNoteService::class)->finalize($note, $this->user);
+        $note = app(IcuProgressNoteService::class)->create($episode, ['subjective' => 'x'], $this->user);
+        app(IcuProgressNoteService::class)->finalize($note, $this->user);
 
         $this->expectException(ValidationException::class);
 
-        app(\App\Services\Icu\IcuProgressNoteService::class)->update($note->fresh(), ['subjective' => 'edited']);
+        app(IcuProgressNoteService::class)->update($note->fresh(), ['subjective' => 'edited']);
     }
 
     public function test_titrating_a_stopped_infusion_is_rejected(): void
     {
         $episode = $this->makeEpisode();
-        $infusion = app(\App\Services\Icu\IcuInfusionService::class)->start($episode, ['medication' => 'Norepinephrine', 'initial_rate' => 5], $this->user);
-        app(\App\Services\Icu\IcuInfusionService::class)->stop($infusion, $this->user);
+        $infusion = app(IcuInfusionService::class)->start($episode, ['medication' => 'Norepinephrine', 'initial_rate' => 5], $this->user);
+        app(IcuInfusionService::class)->stop($infusion, $this->user);
 
         $this->expectException(ValidationException::class);
 
-        app(\App\Services\Icu\IcuInfusionService::class)->titrate($infusion->fresh(), 10, $this->user);
+        app(IcuInfusionService::class)->titrate($infusion->fresh(), 10, $this->user);
     }
 }

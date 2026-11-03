@@ -16,7 +16,8 @@ class SettingsController extends Controller
 
     public function index(Request $request)
     {
-        $settings = $this->settings->all(true);
+        // Name, logo, contact lines and e-mail have their own page (Branding, e-mail and contact).
+        $settings = collect($this->settings->all(true))->except(['brand', 'mail'])->all();
 
         return view('admin.settings.index', compact('settings'));
     }
@@ -40,6 +41,6 @@ class SettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
+        return redirect()->route('admin.settings.index')->with('success', __('Settings updated successfully.'));
     }
 }

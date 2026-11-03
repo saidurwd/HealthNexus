@@ -19,10 +19,10 @@ use Illuminate\Validation\ValidationException;
  */
 class AdvanceService
 {
-    public function getOrCreateAccount(int $companyId, int $branchId, Patient $patient): BillingAdvanceAccount
+    public function getOrCreateAccount(int $organizationId, int $branchId, Patient $patient): BillingAdvanceAccount
     {
         return BillingAdvanceAccount::query()->firstOrCreate(
-            ['company_id' => $companyId, 'patient_id' => $patient->id],
+            ['organization_id' => $organizationId, 'patient_id' => $patient->id],
             ['branch_id' => $branchId, 'currency' => 'BDT', 'balance' => '0.00', 'status' => 'active'],
         );
     }

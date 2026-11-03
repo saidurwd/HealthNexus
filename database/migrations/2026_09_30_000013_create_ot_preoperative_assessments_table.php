@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ot_preoperative_assessments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('surgery_id')->constrained('ot_surgeries')->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();

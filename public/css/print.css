@@ -1,0 +1,49 @@
+/* Print sheet for every screen: letterhead on top, clean tables, no buttons or menus, footer on each page. */
+.print-only { display: none; }
+
+@media print {
+    @page { size: A4; margin: 14mm 12mm 16mm; }
+
+    html, body { background: #fff !important; color: #000 !important; font-size: 11pt; }
+    .print-only { display: block !important; }
+
+    /* Chrome that means nothing on paper */
+    .app-header, .app-sidebar, .app-footer, .sidebar-overlay, .breadcrumb, .btn, .pagination,
+    .d-print-none, .dropdown-menu, .modal, .toast-container, .nav-tabs, .tom-select-hidden,
+    .alert-dismissible .btn-close, #auto-print, #auto-export, #page-actions, [data-training-banner] { display: none !important; }
+
+    .app-wrapper, .app-main, .app-content, .app-content-header, .container-fluid { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+    .app-main { min-height: 0 !important; }
+
+    /* Cards become plain ruled blocks */
+    .card { border: 1px solid #bbb !important; box-shadow: none !important; background: #fff !important; break-inside: avoid; margin-bottom: 8mm; }
+    .card-header { background: #f1f1f1 !important; border-bottom: 1px solid #bbb !important; color: #000 !important; font-weight: 600; }
+    .text-muted, .text-secondary { color: #444 !important; }
+
+    /* Tables: full width, repeat headings, never split a row */
+    table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt; }
+    thead { display: table-header-group; }
+    tfoot { display: table-footer-group; }
+    tr, img, .kpi-tile { break-inside: avoid; }
+    th, td { border: 1px solid #999 !important; padding: 3px 6px !important; color: #000 !important; background: transparent !important; }
+    th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .table-responsive { overflow: visible !important; }
+
+    /* Keep the meaning of colour when it is printed in black and white */
+    .badge { border: 1px solid #000; color: #000 !important; background: #fff !important; padding: 1px 5px; }
+    .alert { border: 1px solid #999 !important; background: #fff !important; color: #000 !important; }
+    a { color: #000 !important; text-decoration: none !important; }
+    canvas, svg { max-width: 100% !important; }
+    h1, h2, h3, h4, h5 { break-after: avoid; }
+
+    /* Letterhead (top of first page) */
+    .print-letterhead { border-bottom: 2px solid #000; padding-bottom: 4mm; margin-bottom: 6mm; }
+    .print-letterhead .org { font-size: 17pt; font-weight: 700; line-height: 1.1; }
+    .print-letterhead .meta { font-size: 9pt; color: #333; }
+    .print-letterhead .title { font-size: 14pt; font-weight: 600; margin-top: 3mm; }
+    .print-letterhead .logo { height: 16mm; float: right; margin-left: 6mm; }
+
+    /* Footer on every page */
+    .print-footer { position: fixed; left: 0; right: 0; bottom: 0; border-top: 1px solid #888; padding-top: 1.5mm; font-size: 8pt; color: #333; display: flex !important; justify-content: space-between; }
+    .app-content { padding-bottom: 12mm !important; }
+}

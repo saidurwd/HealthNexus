@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->enum('address_type', ['permanent', 'present', 'work', 'mailing']);
             $table->string('line1')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['company_id', 'patient_id', 'address_type'], 'patient_address_type_idx');
+            $table->index(['organization_id', 'patient_id', 'address_type'], 'patient_address_type_idx');
         });
     }
 

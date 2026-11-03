@@ -13,7 +13,7 @@ class PatientDocumentFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Patient::factory(),
+            'organization_id' => Patient::factory(),
             'patient_id' => Patient::factory(),
             'file_name' => fake()->word().'.pdf',
             'file_path' => 'patient-documents/'.fake()->uuid().'.pdf',

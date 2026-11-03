@@ -7,7 +7,7 @@ use App\Models\Billing\BillingCorporate;
 use App\Models\Billing\BillingCorporateContract;
 use App\Models\Billing\BillingCorporateMember;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\Billing\RevenueService;
 use App\Services\TenantContextResolver;
@@ -28,10 +28,10 @@ class BillingCorporateController extends Controller
     {
         $this->authorize('viewAny', BillingCorporate::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $corporates = BillingCorporate::query()->forTenant($companyId, $branchId)->orderBy('name')->paginate(20);
+        $corporates = BillingCorporate::query()->forTenant($organizationId, $branchId)->orderBy('name')->paginate(20);
 
         return view('admin.billing.corporates.index', compact('corporates'));
     }
@@ -40,10 +40,10 @@ class BillingCorporateController extends Controller
     {
         $this->authorize('create', BillingCorporate::class);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.corporates.create', compact('companies', 'branches'));
+        return view('admin.billing.corporates.create', compact('organizations', 'branches'));
     }
 
     public function store(StoreBillingCorporateRequest $request)
@@ -54,7 +54,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('CREATE', BillingCorporate::class, $corporate->id, null, $corporate->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.index')->with('success', 'Corporate created successfully.');
+        return redirect()->route('admin.billing.corporates.index')->with('success', __('Corporate created successfully.'));
     }
 
     public function show(BillingCorporate $corporate)
@@ -83,7 +83,7 @@ class BillingCorporateController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingCorporate::class, $corporate->id, $oldValues, $corporate->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.index')->with('success', 'Corporate updated successfully.');
+        return redirect()->route('admin.billing.corporates.index')->with('success', __('Corporate updated successfully.'));
     }
 
     public function storeContract(StoreBillingCorporateContractRequest $request, BillingCorporate $corporate)
@@ -92,13 +92,13 @@ class BillingCorporateController extends Controller
 
         $contract = $corporate->contracts()->create([
             ...$request->validated(),
-            'company_id' => $corporate->company_id,
+            'organization_id' => $corporate->organization_id,
             'branch_id' => $corporate->branch_id,
         ]);
 
         $this->auditLogger->log('CREATE', BillingCorporateContract::class, $contract->id, null, $contract->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', 'Contract added successfully.');
+        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', __('Contract added successfully.'));
     }
 
     public function storeMember(StoreBillingCorporateMemberRequest $request, BillingCorporate $corporate)
@@ -107,23 +107,23 @@ class BillingCorporateController extends Controller
 
         $member = $corporate->members()->create([
             ...$request->validated(),
-            'company_id' => $corporate->company_id,
+            'organization_id' => $corporate->organization_id,
             'branch_id' => $corporate->branch_id,
         ]);
 
         $this->auditLogger->log('CREATE', BillingCorporateMember::class, $member->id, null, $member->toArray(), $request);
 
-        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', 'Member added successfully.');
+        return redirect()->route('admin.billing.corporates.show', $corporate)->with('success', __('Member added successfully.'));
     }
 
     public function receivables(Request $request)
     {
         $this->authorize('viewAny', BillingCorporate::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $receivables = $this->revenue->outstandingByCorporate($companyId, $branchId);
+        $receivables = $this->revenue->outstandingByCorporate($organizationId, $branchId);
 
         return view('admin.billing.corporates.receivables', compact('receivables'));
     }

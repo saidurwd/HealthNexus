@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Localization;
 
+use App\Models\Organization;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class LocalizationTest extends TestCase
@@ -27,18 +30,18 @@ class LocalizationTest extends TestCase
     public function test_lang_files_load_and_resolve_keys(): void
     {
         App::setLocale('en');
-        $this->assertSame('Save', __('core.save'));
+        $this->assertSame('Save', __('ui_core.save'));
 
         App::setLocale('bn');
-        $this->assertSame('সংরক্ষণ করুন', __('core.save'));
+        $this->assertSame('সংরক্ষণ করুন', __('ui_core.save'));
     }
 
     public function test_missing_key_in_partial_locale_falls_back_to_default_locale(): void
     {
         App::setLocale('ar');
 
-        // 'update' is intentionally not translated in lang/ar/core.php yet.
-        $this->assertSame('Update', __('core.update'));
+        // 'update' is intentionally not translated in lang/ar/ui_core.php yet.
+        $this->assertSame('Update', __('ui_core.update'));
     }
 
     public function test_middleware_defaults_to_app_locale_when_nothing_else_is_set(): void
@@ -84,20 +87,20 @@ class LocalizationTest extends TestCase
 
     public function test_patients_index_renders_translated_strings_in_bangla(): void
     {
-        $company = \App\Models\Company::factory()->create();
+        $organization = Organization::factory()->create();
         $user = User::factory()->create(['locale' => 'bn']);
-        $user->companies()->attach($company->id, ['access_level' => 'admin']);
+        $user->organizations()->attach($organization->id, ['access_level' => 'admin']);
 
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'manage companies', 'guard_name' => 'web']);
-        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
-        $user->givePermissionTo('manage companies');
+        Permission::firstOrCreate(['name' => 'manage organizations', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'patients.view', 'guard_name' => 'web']);
+        $user->givePermissionTo('manage organizations');
         $user->givePermissionTo('patients.view');
 
         $this->actingAs($user);
-        session()->put('tenant_company_id', $company->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($company->id);
+        session()->put('tenant_organization_id', $organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($organization->id);
 
-        $response = $this->get('/admin/patients');
+        $response = $this->get('/patients');
 
         $response->assertOk();
         $response->assertSee('রোগীরা'); // "Patients" in Bangla

@@ -23,11 +23,11 @@ class PharmacyTransferController extends Controller
     {
         $this->authorize('viewAny', PharmacyTransfer::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $transfers = PharmacyTransfer::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['sourceStore', 'destinationStore'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()

@@ -19,25 +19,25 @@ class SpecimenWorkflowTest extends LabTestCase
     {
         parent::setUp();
 
-        $specimenType = LabSpecimenType::create(['company_id' => $this->company->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
+        $specimenType = LabSpecimenType::create(['organization_id' => $this->organization->id, 'branch_id' => null, 'code' => 'BLOOD', 'name' => 'Blood', 'is_active' => true]);
 
         $test = LabTest::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'code' => 'HGB', 'name' => 'Hemoglobin', 'test_type' => 'quantitative', 'unit' => 'g/dL',
             'specimen_type_id' => $specimenType->id, 'is_active' => true,
         ]);
 
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
-        $department = Department::create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
+        $department = Department::create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'name' => 'OPD', 'code' => 'OPD-'.uniqid(), 'is_active' => true]);
         $encounter = Encounter::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'patient_id' => $patient->id,
             'encounter_no' => 'ENC-'.uniqid(), 'encounter_type' => 'opd', 'provider_id' => $this->user->id,
             'department_id' => $department->id, 'encounter_date' => now()->toDateString(),
             'status' => 'in_progress', 'source' => 'walk_in', 'created_by' => $this->user->id,
         ]);
 
         $this->order = LabOrder::create([
-            'company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
+            'organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'department_id' => $department->id,
             'patient_id' => $patient->id, 'encounter_id' => $encounter->id, 'order_number' => 'LAB-'.uniqid(),
             'priority' => 'routine', 'status' => 'registered', 'ordered_by' => $this->user->id, 'ordered_at' => now(),
         ]);

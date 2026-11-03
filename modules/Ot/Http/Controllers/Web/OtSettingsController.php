@@ -54,6 +54,6 @@ class OtSettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'ot_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.ot.settings.index')->with('success', 'OT settings updated successfully.');
+        return redirect()->route('admin.ot.settings.index')->with('success', __('OT settings updated successfully.'));
     }
 }

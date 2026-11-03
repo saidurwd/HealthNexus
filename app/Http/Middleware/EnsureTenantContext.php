@@ -14,12 +14,12 @@ class EnsureTenantContext
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
-            $companyId = $this->resolver->getCompanyId();
+            $organizationId = $this->resolver->getOrganizationId();
             $branchId = $this->resolver->getBranchId();
 
-            if (! $companyId || ! $branchId) {
+            if (! $organizationId || ! $branchId) {
                 return redirect()->route('login')->withErrors([
-                    'email' => 'Please select a company and branch to continue.',
+                    'email' => 'Please select an organization and branch to continue.',
                 ]);
             }
         }

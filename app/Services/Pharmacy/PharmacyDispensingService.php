@@ -61,13 +61,13 @@ class PharmacyDispensingService
 
         return DB::transaction(function () use ($order, $store, $prepared, $pharmacist) {
             $dispensing = PharmacyDispensing::create([
-                'company_id' => $order->company_id,
+                'organization_id' => $order->organization_id,
                 'branch_id' => $order->branch_id,
                 'order_id' => $order->id,
                 'prescription_id' => $order->prescription_id,
                 'patient_id' => $order->patient_id,
                 'store_id' => $store->id,
-                'dispensing_number' => $this->numbers->generateDispensingNumber($order->company_id, $order->branch_id),
+                'dispensing_number' => $this->numbers->generateDispensingNumber($order->organization_id, $order->branch_id),
                 'dispensed_by' => $pharmacist->id,
                 'dispensed_at' => now(),
                 'status' => PharmacyDispensing::STATUS_APPROVED,
@@ -199,7 +199,7 @@ class PharmacyDispensingService
             }
 
             $billingItem = BillingItem::query()
-                ->forTenant($order->company_id, $order->branch_id)
+                ->forTenant($order->organization_id, $order->branch_id)
                 ->where('is_clinically_chargeable', true)
                 ->where('clinical_event_type', 'pharmacy_medication')
                 ->where('clinical_event_key', $medication->code)
@@ -208,7 +208,7 @@ class PharmacyDispensingService
 
             if ($billingItem) {
                 $this->charges->createManual($billingItem, $allocatedQuantity, [
-                    'company_id' => $order->company_id,
+                    'organization_id' => $order->organization_id,
                     'branch_id' => $order->branch_id,
                     'patient_id' => $order->patient_id,
                     'encounter_id' => $order->encounter_id,

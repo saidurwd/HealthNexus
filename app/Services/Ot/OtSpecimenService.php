@@ -28,9 +28,9 @@ class OtSpecimenService
 
         if ($sendToLab) {
             $order = ClinicalOrder::create([
-                'company_id' => $surgery->company_id,
+                'organization_id' => $surgery->organization_id,
                 'branch_id' => $surgery->branch_id,
-                'order_number' => $this->clinicalNumbers->generateOrderNumber($surgery->company, $surgery->branch_id),
+                'order_number' => $this->clinicalNumbers->generateOrderNumber($surgery->organization, $surgery->branch_id),
                 'patient_id' => $surgery->patient_id,
                 'encounter_id' => $surgery->encounter_id,
                 'provider_id' => $user->id,
@@ -47,12 +47,12 @@ class OtSpecimenService
 
         $specimen = OtSpecimen::create([
             ...$data,
-            'company_id' => $surgery->company_id,
+            'organization_id' => $surgery->organization_id,
             'branch_id' => $surgery->branch_id,
             'surgery_id' => $surgery->id,
             'patient_id' => $surgery->patient_id,
             'encounter_id' => $surgery->encounter_id,
-            'specimen_number' => $this->numbers->generateSpecimenNumber($surgery->company_id, $surgery->branch_id),
+            'specimen_number' => $this->numbers->generateSpecimenNumber($surgery->organization_id, $surgery->branch_id),
             'collected_at' => $data['collected_at'] ?? now(),
             'collected_by' => $user->id,
             'clinical_order_id' => $clinicalOrderId,

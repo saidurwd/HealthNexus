@@ -17,10 +17,10 @@ class IcuAlertController extends Controller
     {
         $this->authorize('viewAny', IcuCriticalAlert::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $alerts = IcuCriticalAlert::forTenant($companyId, $branchId)
+        $alerts = IcuCriticalAlert::forTenant($organizationId, $branchId)
             ->with('episode.patient')
             ->when($request->filled('unacknowledged'), fn ($q) => $q->whereNull('acknowledged_at'))
             ->latest('triggered_at')
@@ -40,7 +40,7 @@ class IcuAlertController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return redirect()->route('admin.icu.alerts.index')->with('success', 'Alert acknowledged.');
+        return redirect()->route('admin.icu.alerts.index')->with('success', __('Alert acknowledged.'));
     }
 
     public function escalate(Request $request, IcuCriticalAlert $alert)
@@ -49,6 +49,6 @@ class IcuAlertController extends Controller
 
         $this->alerts->escalate($alert, $request->user(), $request->input('escalated_to'));
 
-        return redirect()->route('admin.icu.alerts.index')->with('success', 'Alert escalated.');
+        return redirect()->route('admin.icu.alerts.index')->with('success', __('Alert escalated.'));
     }
 }

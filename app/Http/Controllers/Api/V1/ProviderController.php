@@ -14,10 +14,12 @@ class ProviderController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        abort_unless($request->user()->can('appointments.view') || $request->user()->hasRole('super_admin'), 403);
+
         $user = $request->user();
 
         $providers = Provider::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->where('status', 'active')
             ->with(['department', 'specialty'])
             ->get();
@@ -27,11 +29,15 @@ class ProviderController extends Controller
 
     public function schedule(Provider $provider): JsonResponse
     {
+        abort_unless($request->user()->can('appointments.view') || $request->user()->hasRole('super_admin'), 403);
+
         return ApiResponse::success($provider->schedules()->with(['department', 'room'])->get());
     }
 
     public function availability(Request $request, Provider $provider): JsonResponse
     {
+        abort_unless($request->user()->can('appointments.view') || $request->user()->hasRole('super_admin'), 403);
+
         $validated = $request->validate(['date' => ['required', 'date']]);
 
         $slots = app(ProviderAvailabilityService::class)->availableSlotsOn($provider, Carbon::parse($validated['date']));

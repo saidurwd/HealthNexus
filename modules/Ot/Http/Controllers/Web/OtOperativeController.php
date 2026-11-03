@@ -45,7 +45,7 @@ class OtOperativeController extends Controller
 
         $this->auditLogger->log('CREATE', OtOperativeNote::class, $note->id, null, $note->toArray(), $request);
 
-        return back()->with('success', 'Operative note saved.');
+        return back()->with('success', __('Operative note saved.'));
     }
 
     public function finalizeNote(Request $request, OtOperativeNote $note)
@@ -60,7 +60,7 @@ class OtOperativeController extends Controller
 
         $this->auditLogger->log('FINALIZE', OtOperativeNote::class, $note->id, null, ['status' => 'final'], $request);
 
-        return back()->with('success', 'Operative note finalized.');
+        return back()->with('success', __('Operative note finalized.'));
     }
 
     public function amendNote(Request $request, OtOperativeNote $note)
@@ -75,7 +75,7 @@ class OtOperativeController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        return back()->with('success', 'Addendum added.');
+        return back()->with('success', __('Addendum added.'));
     }
 
     public function storeComplication(Request $request, OtSurgery $surgery)
@@ -95,7 +95,7 @@ class OtOperativeController extends Controller
 
         $this->auditLogger->log('CREATE', OtSurgicalComplication::class, $complication->id, null, $complication->toArray(), $request);
 
-        return back()->with('success', 'Complication recorded.');
+        return back()->with('success', __('Complication recorded.'));
     }
 
     public function storeCount(Request $request, OtSurgery $surgery)
@@ -114,6 +114,6 @@ class OtOperativeController extends Controller
 
         $this->auditLogger->log('CREATE', OtSurgicalCount::class, $count->id, null, $count->toArray(), $request);
 
-        return back()->with('success', 'Count recorded.');
+        return back()->with('success', __('Count recorded.'));
     }
 }

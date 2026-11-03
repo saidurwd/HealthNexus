@@ -4,8 +4,11 @@ namespace App\Services\Billing;
 
 use App\Events\Billing\InvoiceCancelled;
 use App\Events\Billing\InvoiceFinalized;
+use App\Models\Billing\BillingCorporate;
 use App\Models\Billing\BillingInvoice;
 use App\Models\User;
+use App\Services\Insurance\CorporateCreditService;
+use App\Services\ModuleManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -33,8 +36,14 @@ class InvoiceLifecycleService
                 throw ValidationException::withMessages(['invoice' => 'Cannot finalize an invoice with no line items.']);
             }
 
+            // Phase 14: a corporate client at its credit limit cannot be billed more until it pays (only when the Insurance / Corporate module is on).
+            if ($invoice->corporate_id && app(ModuleManager::class)->isEnabled('insurance', $invoice->organization_id)) {
+                $corporate = BillingCorporate::find($invoice->corporate_id);
+                $corporate && app(CorporateCreditService::class)->assertCanBill($corporate, (string) $invoice->grand_total);
+            }
+
             $invoice->update([
-                'invoice_number' => $this->numbers->generateInvoiceNumber($invoice->company_id, $invoice->branch_id),
+                'invoice_number' => $this->numbers->generateInvoiceNumber($invoice->organization_id, $invoice->branch_id),
                 'status' => $this->deriveStatusAfterFinalize($invoice),
                 'finalized_by' => $user->id,
                 'finalized_at' => now(),

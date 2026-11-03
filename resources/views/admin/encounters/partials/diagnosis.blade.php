@@ -1,18 +1,18 @@
 <div class="tab-pane fade" id="diagnosis" role="tabpanel">
     <div class="card card-danger card-outline">
         <div class="card-header">
-            <h3 class="card-title">Diagnoses</h3>
+            <h3 class="card-title">{{ __('Diagnoses') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->diagnoses->isNotEmpty())
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Primary</th>
-                            <th>Status</th>
+                            <th>{{ __('Code') }}</th>
+                            <th>{{ __('Description') }}</th>
+                            <th>{{ __('Type') }}</th>
+                            <th>{{ __('Primary') }}</th>
+                            <th>{{ __('Status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +28,7 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-muted">No diagnoses recorded.</p>
+                <p class="text-muted">{{ __('No diagnoses recorded.') }}</p>
             @endif
         </div>
     </div>

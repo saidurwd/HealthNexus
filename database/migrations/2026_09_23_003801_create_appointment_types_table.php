@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appointment_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('code');
             $table->string('name');
             $table->string('color', 20)->nullable();
@@ -21,9 +21,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // company_id nullable = a system-wide default type available to every company;
-            // a non-null company_id lets a hospital add its own custom type.
-            $table->unique(['company_id', 'code'], 'appointment_type_company_code_unique');
+            // organization_id nullable = a system-wide default type available to every organization;
+            // a non-null organization_id lets a hospital add its own custom type.
+            $table->unique(['organization_id', 'code'], 'appointment_type_organization_code_unique');
         });
     }
 

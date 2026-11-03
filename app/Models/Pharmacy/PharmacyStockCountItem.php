@@ -22,7 +22,18 @@ class PharmacyStockCountItem extends Model
         ];
     }
 
-    public function stockCount(): BelongsTo { return $this->belongsTo(PharmacyStockCount::class, 'stock_count_id'); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function batch(): BelongsTo { return $this->belongsTo(PharmacyBatch::class, 'batch_id'); }
+    public function stockCount(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyStockCount::class, 'stock_count_id');
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyBatch::class, 'batch_id');
+    }
 }

@@ -56,6 +56,7 @@ Route::prefix('lab')->name('lab.')->group(function () {
     Route::middleware(['can:lab.specimen.view'])->group(function () {
         Route::get('specimens', [LabSpecimenController::class, 'index'])->name('specimens.index');
         Route::get('specimens/{specimen}', [LabSpecimenController::class, 'show'])->name('specimens.show');
+        Route::get('specimens/{specimen}/label', [LabSpecimenController::class, 'label'])->name('specimens.label');
     });
 
     Route::middleware(['can:lab.specimen.collect'])->group(function () {

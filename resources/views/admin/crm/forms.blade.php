@@ -1,0 +1,12 @@
+@extends('layouts.adminlte')
+
+@section('page_title', __('Patient forms'))
+
+@section('page_content')
+    @include('admin.crm._flash')
+    <div class="row g-3"><div class="col-lg-6"><div class="card"><div class="card-header"><h3 class="card-title">{{ __('Forms patients can fill in') }}</h3></div><ul class="list-group list-group-flush small">@forelse($rows as $f)<li class="list-group-item d-flex justify-content-between"><span><strong>{{ $f->title }}</strong> <span class="text-muted">{{ $f->code }} · {{ __('version') }} {{ $f->version }} · {{ count($f->fields) }} {{ __('questions') }}</span></span><x-ui.status-badge :status="$f->status" /></li>@empty<li class="list-group-item text-muted">{{ __('No forms yet.') }}</li>@endforelse</ul></div>
+        @can('crm.form.manage')<form method="POST" action="{{ route('admin.crm.forms.store') }}" class="card"><div class="card-header"><h3 class="card-title">{{ __('New form or new version') }}</h3></div><div class="card-body row g-2">@csrf
+            <div class="col-md-4"><input name="code" class="form-control" placeholder="pre-visit" required pattern="[a-z0-9-]{2,40}"></div><div class="col-md-8"><input name="title" class="form-control" placeholder="{{ __('Title') }}" required></div>
+            <div class="col-12"><textarea name="fields" class="form-control font-monospace" rows="6" required placeholder="smoker | Do you smoke? | yesno | y&#10;weight | Weight in kg | number | n&#10;pain | Where is the pain? | select | n | head,chest,stomach,other"></textarea><div class="form-text">{{ __('One question per line: key | question | type (text, textarea, select, yesno, number, date) | required y or n | choices for a select, separated by commas. Using the same code again makes a new version; old answers keep the questions they were given.') }}</div></div></div><div class="card-footer"><button class="btn btn-primary">{{ __('Save') }}</button></div></form>@endcan</div>
+        <div class="col-lg-6"><div class="card"><div class="card-header"><h3 class="card-title">{{ __('Answers waiting to be looked at') }}</h3></div><ul class="list-group list-group-flush small">@forelse($inbox as $s)<li class="list-group-item d-flex justify-content-between"><a href="{{ route('admin.crm.forms.submission', $s->public_id) }}">{{ $s->form->title }} · {{ $s->patient->first_name }} {{ $s->patient->last_name }}</a><span class="text-muted">{{ $s->created_at->format('d M H:i') }}</span></li>@empty<li class="list-group-item text-muted">{{ __('Nothing waiting.') }}</li>@endforelse</ul></div></div></div>
+@stop

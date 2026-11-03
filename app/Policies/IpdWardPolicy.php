@@ -37,7 +37,7 @@ class IpdWardPolicy
 
     private function inScope(User $user, IpdWard $ward): bool
     {
-        return $user->companies()->where('companies.id', $ward->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $ward->organization_id)->exists()
             && (! $ward->branch_id || $user->branches()->where('branches.id', $ward->branch_id)->exists());
     }
 }

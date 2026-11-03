@@ -22,11 +22,11 @@ class BillingAdjustmentController extends Controller
     {
         $this->authorize('viewAny', BillingAdjustment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $adjustments = BillingAdjustment::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with('invoice.patient')
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('requested_at')
@@ -62,7 +62,7 @@ class BillingAdjustmentController extends Controller
 
         $this->auditLogger->log('CREATE', BillingAdjustment::class, $adjustment->id, null, $adjustment->toArray(), $request);
 
-        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', 'Adjustment requested successfully.');
+        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', __('Adjustment requested successfully.'));
     }
 
     public function show(BillingAdjustment $adjustment)
@@ -87,6 +87,6 @@ class BillingAdjustmentController extends Controller
 
         $this->auditLogger->log('APPROVE', BillingAdjustment::class, $adjustment->id, $oldValues, $adjustment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', 'Adjustment approved and applied.');
+        return redirect()->route('admin.billing.adjustments.show', $adjustment)->with('success', __('Adjustment approved and applied.'));
     }
 }

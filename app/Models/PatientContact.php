@@ -12,7 +12,7 @@ class PatientContact extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'name',
         'relationship',
@@ -26,9 +26,9 @@ class PatientContact extends Model
         'is_emergency' => 'boolean',
     ];
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function patient(): BelongsTo

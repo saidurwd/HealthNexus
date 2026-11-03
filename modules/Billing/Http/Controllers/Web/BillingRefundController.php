@@ -22,11 +22,11 @@ class BillingRefundController extends Controller
     {
         $this->authorize('viewAny', BillingRefund::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $refunds = BillingRefund::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['patient', 'payment'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest('requested_at')
@@ -55,7 +55,7 @@ class BillingRefundController extends Controller
 
         $this->auditLogger->log('CREATE', BillingRefund::class, $refund->id, null, $refund->toArray(), $request);
 
-        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', 'Refund requested successfully.');
+        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', __('Refund requested successfully.'));
     }
 
     public function show(BillingRefund $refund)
@@ -79,7 +79,7 @@ class BillingRefundController extends Controller
 
         $this->auditLogger->log('APPROVE', BillingRefund::class, $refund->id, $oldValues, $refund->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', 'Refund approved.');
+        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', __('Refund approved.'));
     }
 
     public function process(Request $request, BillingRefund $refund)
@@ -94,6 +94,6 @@ class BillingRefundController extends Controller
 
         $this->auditLogger->log('PROCESS', BillingRefund::class, $refund->id, $oldValues, $refund->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', 'Refund processed.');
+        return redirect()->route('admin.billing.refunds.show', $refund)->with('success', __('Refund processed.'));
     }
 }

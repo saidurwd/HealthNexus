@@ -26,6 +26,6 @@ class PasswordController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return back()->with('success', 'Password changed successfully.');
+        return back()->with('success', __('Password changed successfully.'));
     }
 }

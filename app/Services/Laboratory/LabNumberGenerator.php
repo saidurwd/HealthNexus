@@ -17,11 +17,11 @@ class LabNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -43,25 +43,25 @@ class LabNumberGenerator
         });
     }
 
-    public function generateOrderNumber(int $companyId, ?int $branchId): string
+    public function generateOrderNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('laboratory.order_prefix', 'LAB');
 
-        return $this->generate($companyId, $branchId, 'LAB', $prefix);
+        return $this->generate($organizationId, $branchId, 'LAB', $prefix);
     }
 
-    public function generateAccessionNumber(int $companyId, ?int $branchId): string
+    public function generateAccessionNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('laboratory.accession_prefix', 'ACC');
 
-        return $this->generate($companyId, $branchId, 'ACC', $prefix);
+        return $this->generate($organizationId, $branchId, 'ACC', $prefix);
     }
 
-    public function generateReportNumber(int $companyId, ?int $branchId): string
+    public function generateReportNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('laboratory.report_prefix', 'RPT');
 
-        return $this->generate($companyId, $branchId, 'RPT', $prefix);
+        return $this->generate($organizationId, $branchId, 'RPT', $prefix);
     }
 
     private function format(string $prefix, int $sequence): string

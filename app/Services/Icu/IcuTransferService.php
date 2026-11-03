@@ -24,7 +24,7 @@ class IcuTransferService
     public function requestTransfer(IcuEpisode $episode, string $destination, User $user, ?string $reason = null): IcuEpisodeEvent
     {
         return IcuEpisodeEvent::create([
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'event_type' => IcuEpisodeEvent::TYPE_TRANSFER_REQUESTED,
@@ -47,7 +47,7 @@ class IcuTransferService
             $this->lifecycle->transitionTo($episode, $toStatus);
 
             IcuEpisodeEvent::create([
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'episode_id' => $episode->id,
                 'event_type' => IcuEpisodeEvent::TYPE_TRANSFER_COMPLETED,

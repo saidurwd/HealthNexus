@@ -23,12 +23,12 @@ class PharmacyOrderService
     {
         return DB::transaction(function () use ($prescription) {
             $order = PharmacyOrder::create([
-                'company_id' => $prescription->company_id,
+                'organization_id' => $prescription->organization_id,
                 'branch_id' => $prescription->branch_id,
                 'prescription_id' => $prescription->id,
                 'patient_id' => $prescription->patient_id,
                 'encounter_id' => $prescription->encounter_id,
-                'order_number' => $this->numbers->generateOrderNumber($prescription->company_id, $prescription->branch_id),
+                'order_number' => $this->numbers->generateOrderNumber($prescription->organization_id, $prescription->branch_id),
                 'status' => 'pending',
                 'ordered_by' => $prescription->issued_by,
                 'ordered_at' => $prescription->issued_at ?? now(),
@@ -36,7 +36,7 @@ class PharmacyOrderService
 
             foreach ($prescription->items as $prescriptionItem) {
                 $medication = $this->medications->findByFreeTextName(
-                    $prescription->company_id,
+                    $prescription->organization_id,
                     $prescription->branch_id,
                     $prescriptionItem->medicine_name,
                 );

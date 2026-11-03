@@ -15,9 +15,9 @@ class IcuReportingController extends Controller
     {
         Gate::authorize('icu.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $byStatus = IcuEpisode::where('icu_episodes.company_id', $companyId)
+        $byStatus = IcuEpisode::where('icu_episodes.organization_id', $organizationId)
             ->select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total', 'status');
 
         return view('admin.icu.reports.occupancy', compact('byStatus'));
@@ -27,9 +27,9 @@ class IcuReportingController extends Controller
     {
         Gate::authorize('icu.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $admissionsPerDay = IcuEpisode::where('icu_episodes.company_id', $companyId)
+        $admissionsPerDay = IcuEpisode::where('icu_episodes.organization_id', $organizationId)
             ->select(DB::raw('DATE(admitted_at) as day'), DB::raw('count(*) as total'))
             ->groupBy('day')->orderByDesc('day')->limit(30)->get();
 
@@ -40,14 +40,14 @@ class IcuReportingController extends Controller
     {
         Gate::authorize('icu.reports.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $criticalEvents = IcuCriticalEvent::join('icu_episodes', 'icu_episodes.id', '=', 'icu_critical_events.episode_id')
-            ->where('icu_episodes.company_id', $companyId)
+            ->where('icu_episodes.organization_id', $organizationId)
             ->select('icu_critical_events.event_type', DB::raw('count(*) as total'))
             ->groupBy('icu_critical_events.event_type')->pluck('total', 'event_type');
 
-        $byDestination = IcuEpisode::where('icu_episodes.company_id', $companyId)
+        $byDestination = IcuEpisode::where('icu_episodes.organization_id', $organizationId)
             ->whereNotNull('discharged_at')
             ->select(DB::raw("'discharged' as destination"), DB::raw('count(*) as total'))
             ->groupBy('destination')->pluck('total', 'destination');

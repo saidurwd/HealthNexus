@@ -29,7 +29,7 @@ class OtSafetyChecklistPolicy
     {
         $surgery = $checklist->surgery;
 
-        return $user->companies()->where('companies.id', $surgery->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $surgery->organization_id)->exists()
             && (! $surgery->branch_id || $user->branches()->where('branches.id', $surgery->branch_id)->exists());
     }
 }

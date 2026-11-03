@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Patients;
 
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
 use App\Services\TenantContextResolver;
@@ -17,7 +17,7 @@ class PatientSubResourcesTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Patient $patient;
 
@@ -27,9 +27,9 @@ class PatientSubResourcesTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $this->company = Company::factory()->create();
+        $this->organization = Organization::factory()->create();
         $this->user = User::factory()->create();
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
 
         foreach (['patients.view', 'patients.update', 'patients.consents.view', 'patients.consents.manage'] as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
@@ -37,15 +37,15 @@ class PatientSubResourcesTest extends TestCase
         }
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
-        app(TenantContextResolver::class)->setCompanyId($this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
     }
 
     public function test_can_add_an_address(): void
     {
-        $response = $this->post("/admin/patients/{$this->patient->id}/addresses", [
+        $response = $this->post("/patients/{$this->patient->public_id}/addresses", [
             'address_type' => 'present',
             'line1' => '123 Main St',
             'city' => 'Dhaka',
@@ -60,8 +60,8 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_a_second_primary_address_of_the_same_type_demotes_the_first(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
-        $this->post("/admin/patients/{$this->patient->id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
+        $this->post("/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
+        $this->post("/patients/{$this->patient->public_id}/addresses", ['address_type' => 'present', 'is_primary' => true]);
 
         $this->assertSame(1, $this->patient->addresses()->where('address_type', 'present')->where('is_primary', true)->count());
         $this->assertSame(2, $this->patient->addresses()->where('address_type', 'present')->count());
@@ -69,7 +69,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_add_a_guardian(): void
     {
-        $response = $this->post("/admin/patients/{$this->patient->id}/guardians", [
+        $response = $this->post("/patients/{$this->patient->public_id}/guardians", [
             'name' => 'John Guardian',
             'relationship' => 'Father',
         ]);
@@ -80,7 +80,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_set_preferences(): void
     {
-        $response = $this->put("/admin/patients/{$this->patient->id}/preferences", [
+        $response = $this->put("/patients/{$this->patient->public_id}/preferences", [
             'preferred_language' => 'bn',
             'preferred_contact_method' => 'sms',
         ]);
@@ -93,7 +93,7 @@ class PatientSubResourcesTest extends TestCase
 
     public function test_can_grant_and_withdraw_consent(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
 
         $this->assertDatabaseHas('patient_consents', [
             'patient_id' => $this->patient->id, 'consent_type' => 'treatment', 'status' => 'active', 'version' => 1,
@@ -101,15 +101,15 @@ class PatientSubResourcesTest extends TestCase
 
         $consent = $this->patient->consents()->first();
 
-        $this->put("/admin/patients/{$this->patient->id}/consents/{$consent->id}/withdraw");
+        $this->put("/patients/{$this->patient->public_id}/consents/{$consent->public_id}/withdraw");
 
         $this->assertDatabaseHas('patient_consents', ['id' => $consent->id, 'status' => 'withdrawn']);
     }
 
     public function test_granting_a_new_consent_of_the_same_type_versions_instead_of_overwriting(): void
     {
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
-        $this->post("/admin/patients/{$this->patient->id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
+        $this->post("/patients/{$this->patient->public_id}/consents", ['consent_type' => 'treatment']);
 
         $this->assertSame(2, $this->patient->consents()->where('consent_type', 'treatment')->count());
         $this->assertSame(1, $this->patient->consents()->where('status', 'active')->count());

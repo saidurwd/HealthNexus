@@ -10,7 +10,7 @@ class EncounterProcedure extends Model
     protected $fillable = [
         'encounter_id',
         'patient_id',
-        'company_id',
+        'organization_id',
         'procedure_code',
         'procedure_name',
         'procedure_date',
@@ -36,9 +36,9 @@ class EncounterProcedure extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function provider(): BelongsTo

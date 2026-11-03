@@ -2,6 +2,8 @@
 
 namespace App\Models\Laboratory;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +15,7 @@ class LabSpecimenType extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'code', 'name', 'description',
+        'organization_id', 'branch_id', 'code', 'name', 'description',
         'collection_requirements', 'storage_temperature', 'stability_hours',
         'max_processing_minutes', 'is_active',
     ];
@@ -23,12 +25,23 @@ class LabSpecimenType extends Model
         return ['is_active' => 'boolean', 'stability_hours' => 'integer', 'max_processing_minutes' => 'integer'];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function tests(): HasMany { return $this->hasMany(LabTest::class, 'specimen_type_id'); }
-
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function organization(): BelongsTo
     {
-        return $query->where('company_id', $companyId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function tests(): HasMany
+    {
+        return $this->hasMany(LabTest::class, 'specimen_type_id');
+    }
+
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
+    {
+        return $query->where('organization_id', $organizationId)->where(fn ($q) => $q->where('branch_id', $branchId)->orWhereNull('branch_id'));
     }
 }

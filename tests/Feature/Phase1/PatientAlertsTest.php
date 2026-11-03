@@ -3,7 +3,7 @@
 namespace Tests\Feature\Phase1;
 
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAlert;
 use App\Models\User;
@@ -18,7 +18,7 @@ class PatientAlertsTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Patient $patient;
 
@@ -27,23 +27,23 @@ class PatientAlertsTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        Permission::create(['name' => 'manage companies', 'guard_name' => 'web']);
+        Permission::create(['name' => 'manage organizations', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.view', 'guard_name' => 'web']);
         Permission::create(['name' => 'patients.update', 'guard_name' => 'web']);
-        $this->user->givePermissionTo('manage companies');
+        $this->user->givePermissionTo('manage organizations');
         $this->user->givePermissionTo('patients.view');
         $this->user->givePermissionTo('patients.update');
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->actingAs($this->user);
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
     }
 
     private function alertPayload(): array
@@ -60,19 +60,19 @@ class PatientAlertsTest extends TestCase
 
     public function test_admin_can_view_alerts_page(): void
     {
-        $this->get('/admin/patients/'.$this->patient->id.'/alerts')->assertOk();
+        $this->get('/patients/'.$this->patient->public_id.'/alerts')->assertOk();
     }
 
     public function test_admin_can_add_alert_and_it_is_audited(): void
     {
-        $this->post('/admin/patients/'.$this->patient->id.'/alerts', $this->alertPayload())
-            ->assertRedirect('/admin/patients/'.$this->patient->id.'/alerts');
+        $this->post('/patients/'.$this->patient->public_id.'/alerts', $this->alertPayload())
+            ->assertRedirect('/patients/'.$this->patient->public_id.'/alerts');
 
         $this->assertDatabaseHas('patient_alerts', [
             'patient_id' => $this->patient->id,
             'title' => 'Penicillin Allergy',
             'severity' => 'critical',
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
 
         $this->assertDatabaseHas('audit_logs', [
@@ -85,7 +85,7 @@ class PatientAlertsTest extends TestCase
     {
         app(PatientService::class)->addAlert($this->patient, $this->alertPayload());
 
-        $this->get('/admin/patients/'.$this->patient->id.'/alerts')
+        $this->get('/patients/'.$this->patient->public_id.'/alerts')
             ->assertOk()
             ->assertSee('Penicillin Allergy');
     }
@@ -94,11 +94,11 @@ class PatientAlertsTest extends TestCase
     {
         $alert = PatientAlert::factory()->create([
             'patient_id' => $this->patient->id,
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'status' => 'active',
         ]);
 
-        $this->put('/admin/patients/'.$this->patient->id.'/alerts/'.$alert->id.'/resolve', [
+        $this->put('/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id.'/resolve', [
             'resolution_note' => 'Confirmed via chart review.',
         ])->assertRedirect();
 
@@ -112,10 +112,10 @@ class PatientAlertsTest extends TestCase
     {
         $alert = PatientAlert::factory()->create([
             'patient_id' => $this->patient->id,
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
         ]);
 
-        $this->delete('/admin/patients/'.$this->patient->id.'/alerts/'.$alert->id)
+        $this->delete('/patients/'.$this->patient->public_id.'/alerts/'.$alert->public_id)
             ->assertRedirect();
 
         $this->assertSoftDeleted($alert);

@@ -14,6 +14,13 @@ class IpdBedChargeEvent extends Model
         return ['charge_date' => 'date'];
     }
 
-    public function admission(): BelongsTo { return $this->belongsTo(IpdAdmission::class, 'admission_id'); }
-    public function bed(): BelongsTo { return $this->belongsTo(IpdBed::class, 'bed_id'); }
+    public function admission(): BelongsTo
+    {
+        return $this->belongsTo(IpdAdmission::class, 'admission_id');
+    }
+
+    public function bed(): BelongsTo
+    {
+        return $this->belongsTo(IpdBed::class, 'bed_id');
+    }
 }

@@ -16,6 +16,7 @@ class MasterDataCrudTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Country $country;
 
     protected function setUp(): void
@@ -36,7 +37,7 @@ class MasterDataCrudTest extends TestCase
     // Countries
     public function test_user_can_view_countries_page(): void
     {
-        $response = $this->get('/admin/master-data/countries');
+        $response = $this->get('/master-data/countries');
 
         $response->assertStatus(200)
             ->assertViewIs('admin.master-data.countries');
@@ -44,7 +45,7 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_create_country(): void
     {
-        $response = $this->post('/admin/master-data/countries', [
+        $response = $this->post('/master-data/countries', [
             'name' => 'Test Country',
             'code' => 'TC',
             'currency_code' => 'TCD',
@@ -56,7 +57,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/countries');
+        $response->assertRedirect('/master-data/countries');
         $this->assertDatabaseHas('countries', [
             'name' => 'Test Country',
             'code' => 'TC',
@@ -65,7 +66,7 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_edit_country(): void
     {
-        $response = $this->put('/admin/master-data/countries/'.$this->country->id, [
+        $response = $this->put('/master-data/countries/'.$this->country->id, [
             'name' => 'Updated Country',
             'code' => $this->country->code,
             'currency_code' => 'USD',
@@ -77,7 +78,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/countries');
+        $response->assertRedirect('/master-data/countries');
         $this->assertDatabaseHas('countries', [
             'id' => $this->country->id,
             'name' => 'Updated Country',
@@ -86,9 +87,9 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_delete_country(): void
     {
-        $response = $this->delete('/admin/master-data/countries/'.$this->country->id);
+        $response = $this->delete('/master-data/countries/'.$this->country->id);
 
-        $response->assertRedirect('/admin/master-data/countries');
+        $response->assertRedirect('/master-data/countries');
         $this->assertSoftDeleted('countries', [
             'id' => $this->country->id,
         ]);
@@ -97,7 +98,7 @@ class MasterDataCrudTest extends TestCase
     // Currencies
     public function test_user_can_view_currencies_page(): void
     {
-        $response = $this->get('/admin/master-data/currencies');
+        $response = $this->get('/master-data/currencies');
 
         $response->assertStatus(200)
             ->assertViewIs('admin.master-data.currencies');
@@ -105,7 +106,7 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_create_currency(): void
     {
-        $response = $this->post('/admin/master-data/currencies', [
+        $response = $this->post('/master-data/currencies', [
             'name' => 'Test Currency',
             'code' => 'TST',
             'symbol' => 'T',
@@ -113,7 +114,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/currencies');
+        $response->assertRedirect('/master-data/currencies');
         $this->assertDatabaseHas('currencies', [
             'name' => 'Test Currency',
             'code' => 'TST',
@@ -124,7 +125,7 @@ class MasterDataCrudTest extends TestCase
     {
         $currency = Currency::factory()->create();
 
-        $response = $this->put('/admin/master-data/currencies/'.$currency->id, [
+        $response = $this->put('/master-data/currencies/'.$currency->id, [
             'name' => 'Updated Currency',
             'code' => $currency->code,
             'symbol' => 'U',
@@ -132,7 +133,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/currencies');
+        $response->assertRedirect('/master-data/currencies');
         $this->assertDatabaseHas('currencies', [
             'id' => $currency->id,
             'name' => 'Updated Currency',
@@ -143,9 +144,9 @@ class MasterDataCrudTest extends TestCase
     {
         $currency = Currency::factory()->create();
 
-        $response = $this->delete('/admin/master-data/currencies/'.$currency->id);
+        $response = $this->delete('/master-data/currencies/'.$currency->id);
 
-        $response->assertRedirect('/admin/master-data/currencies');
+        $response->assertRedirect('/master-data/currencies');
         $this->assertSoftDeleted('currencies', [
             'id' => $currency->id,
         ]);
@@ -154,7 +155,7 @@ class MasterDataCrudTest extends TestCase
     // Identification Types
     public function test_user_can_view_identification_types_page(): void
     {
-        $response = $this->get('/admin/master-data/identification-types');
+        $response = $this->get('/master-data/identification-types');
 
         $response->assertStatus(200)
             ->assertViewIs('admin.master-data.identification-types');
@@ -162,7 +163,7 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_create_identification_type(): void
     {
-        $response = $this->post('/admin/master-data/identification-types', [
+        $response = $this->post('/master-data/identification-types', [
             'name' => 'Test ID Type',
             'code' => 'TEST_ID',
             'description' => 'Test description',
@@ -171,7 +172,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/identification-types');
+        $response->assertRedirect('/master-data/identification-types');
         $this->assertDatabaseHas('identification_types', [
             'name' => 'Test ID Type',
             'code' => 'TEST_ID',
@@ -182,7 +183,7 @@ class MasterDataCrudTest extends TestCase
     {
         $type = IdentificationType::factory()->create();
 
-        $response = $this->put('/admin/master-data/identification-types/'.$type->id, [
+        $response = $this->put('/master-data/identification-types/'.$type->id, [
             'name' => 'Updated ID Type',
             'code' => $type->code,
             'description' => 'Updated description',
@@ -191,7 +192,7 @@ class MasterDataCrudTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/identification-types');
+        $response->assertRedirect('/master-data/identification-types');
         $this->assertDatabaseHas('identification_types', [
             'id' => $type->id,
             'name' => 'Updated ID Type',
@@ -202,9 +203,9 @@ class MasterDataCrudTest extends TestCase
     {
         $type = IdentificationType::factory()->create();
 
-        $response = $this->delete('/admin/master-data/identification-types/'.$type->id);
+        $response = $this->delete('/master-data/identification-types/'.$type->id);
 
-        $response->assertRedirect('/admin/master-data/identification-types');
+        $response->assertRedirect('/master-data/identification-types');
         $this->assertSoftDeleted('identification_types', [
             'id' => $type->id,
         ]);
@@ -213,7 +214,7 @@ class MasterDataCrudTest extends TestCase
     // States
     public function test_user_can_view_states_page(): void
     {
-        $response = $this->get('/admin/master-data/states');
+        $response = $this->get('/master-data/states');
 
         $response->assertStatus(200)
             ->assertViewIs('admin.master-data.all-states');
@@ -221,14 +222,14 @@ class MasterDataCrudTest extends TestCase
 
     public function test_user_can_create_state(): void
     {
-        $response = $this->post('/admin/master-data/states', [
+        $response = $this->post('/master-data/states', [
             'country_id' => $this->country->id,
             'name' => 'Test State',
             'code' => 'TS',
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/states');
+        $response->assertRedirect('/master-data/states');
         $this->assertDatabaseHas('states', [
             'name' => 'Test State',
             'country_id' => $this->country->id,
@@ -239,14 +240,14 @@ class MasterDataCrudTest extends TestCase
     {
         $state = State::factory()->create(['country_id' => $this->country->id]);
 
-        $response = $this->put('/admin/master-data/states/'.$state->id, [
+        $response = $this->put('/master-data/states/'.$state->id, [
             'country_id' => $this->country->id,
             'name' => 'Updated State',
             'code' => 'US',
             'is_active' => true,
         ]);
 
-        $response->assertRedirect('/admin/master-data/states');
+        $response->assertRedirect('/master-data/states');
         $this->assertDatabaseHas('states', [
             'id' => $state->id,
             'name' => 'Updated State',
@@ -257,9 +258,9 @@ class MasterDataCrudTest extends TestCase
     {
         $state = State::factory()->create(['country_id' => $this->country->id]);
 
-        $response = $this->delete('/admin/master-data/states/'.$state->id);
+        $response = $this->delete('/master-data/states/'.$state->id);
 
-        $response->assertRedirect('/admin/master-data/states');
+        $response->assertRedirect('/master-data/states');
         $this->assertSoftDeleted('states', [
             'id' => $state->id,
         ]);

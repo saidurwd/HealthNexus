@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('lab_analyzers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('section_id')->nullable()->constrained('lab_sections')->nullOnDelete();
             $table->string('code');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
         });
 
         Schema::create('lab_analyzer_tests', function (Blueprint $table) {

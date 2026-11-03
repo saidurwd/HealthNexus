@@ -16,7 +16,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->index(['company_id', 'provider_id', 'appointment_date', 'appointment_time'], 'appointment_provider_datetime_idx');
+            $table->index(['organization_id', 'provider_id', 'appointment_date', 'appointment_time'], 'appointment_provider_datetime_idx');
         });
     }
 

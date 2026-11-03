@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Console\Commands\RefreshSystemStatistics;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\User;
 use App\Services\Dashboard\DashboardWidget;
 use App\Services\Dashboard\DashboardWidgetRegistry;
@@ -39,13 +39,13 @@ class DashboardServiceProvider extends ServiceProvider
         ));
 
         $registry->register(new DashboardWidget(
-            key: 'total_companies',
-            title: 'Companies',
-            valueResolver: fn () => $this->cachedStat('total_companies', fn () => Company::count()),
+            key: 'total_organizations',
+            title: 'Organizations',
+            valueResolver: fn () => $this->cachedStat('total_organizations', fn () => Organization::count()),
             icon: 'bi bi-building',
             color: 'info',
-            routeName: 'admin.companies.index',
-            permission: 'manage companies',
+            routeName: 'admin.organizations.index',
+            permission: 'manage organizations',
         ));
 
         $registry->register(new DashboardWidget(
@@ -54,9 +54,9 @@ class DashboardServiceProvider extends ServiceProvider
             valueResolver: fn () => $this->cachedStat('total_branches', fn () => Branch::count()),
             icon: 'bi bi-shop',
             color: 'success',
-            // Branches are managed per-company (admin.companies.branches.index needs a
-            // {company} route param), so this widget links to the companies list instead.
-            routeName: 'admin.companies.index',
+            // Branches are managed per-organization (admin.organizations.branches.index needs a
+            // {organization} route param), so this widget links to the organizations list instead.
+            routeName: 'admin.organizations.index',
             permission: 'manage branches',
         ));
 

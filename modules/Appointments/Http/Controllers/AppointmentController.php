@@ -4,11 +4,11 @@ namespace Modules\Appointments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\AppointmentDocument;
 use App\Models\AppointmentType;
 use App\Models\Patient;
 use App\Models\Provider;
 use App\Models\User;
-use App\Models\AppointmentDocument;
 use App\Services\Appointments\AppointmentBookingService;
 use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\AuditLogger;
@@ -32,11 +32,11 @@ class AppointmentController extends Controller
     {
         $this->authorize('viewAny', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($branchId, fn ($q, $id) => $q->where('branch_id', $id))
             ->when($request->filled('patient_id'), fn ($q, $id) => $q->where('patient_id', $id))
             ->when($request->filled('provider_id'), fn ($q, $id) => $q->where('provider_id', $id))
@@ -68,23 +68,24 @@ class AppointmentController extends Controller
     {
         $this->authorize('create', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $branches = auth()->user()->branches()->where('branches.company_id', $companyId)->get();
-        $appointmentTypes = AppointmentType::forCompany($companyId)->where('is_active', true)->orderBy('sort_order')->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $branches = auth()->user()->branches()->where('branches.organization_id', $organizationId)->get();
+        $appointmentTypes = AppointmentType::forOrganization($organizationId)->where('is_active', true)->orderBy('sort_order')->get();
 
         // Supports "Book Appointment" from the Patient 360 profile (spec §25) — the patient
         // comes pre-selected but the user can still change it via an explicit action.
-        $selectedPatient = $request->filled('patient_id')
-            ? Patient::where('company_id', $companyId)->find($request->input('patient_id'))
+        // The patient dropdown asks the server as the user types (admin.lookup.patients), so only the chosen patient is loaded here: the one from the profile link, or the one the form had before a validation error.
+        $chosen = $request->input('patient_id', old('patient_id'));
+        $selectedPatient = $chosen
+            ? Patient::where('organization_id', $organizationId)->find($chosen)
             : null;
 
-        return view('admin.appointments.create', compact('patients', 'doctors', 'providers', 'branches', 'appointmentTypes', 'selectedPatient'));
+        return view('admin.appointments.create', compact('doctors', 'providers', 'branches', 'appointmentTypes', 'selectedPatient'));
     }
 
     public function store(StoreAppointmentRequest $request)
@@ -98,7 +99,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CREATE', Appointment::class, $appointment->id, null, $appointment->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment created successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment created successfully.'));
     }
 
     public function show(Appointment $appointment)
@@ -114,14 +115,14 @@ class AppointmentController extends Controller
     {
         $this->authorize('update', $appointment);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        $patients = Patient::where('company_id', $companyId)->orderBy('first_name')->paginate(50);
+        $patients = Patient::where('organization_id', $organizationId)->orderBy('first_name')->paginate(50);
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $branches = auth()->user()->branches()->where('branches.company_id', $companyId)->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $branches = auth()->user()->branches()->where('branches.organization_id', $organizationId)->get();
 
         return view('admin.appointments.edit', compact('appointment', 'patients', 'doctors', 'providers', 'branches'));
     }
@@ -143,7 +144,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('UPDATE', Appointment::class, $appointment->id, $oldValues, $appointment->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment updated successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment updated successfully.'));
     }
 
     public function destroy(Appointment $appointment)
@@ -157,7 +158,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('DELETE', Appointment::class, $appointment->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment deleted successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment deleted successfully.'));
     }
 
     public function reschedule(Request $request, Appointment $appointment)
@@ -178,7 +179,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('RESCHEDULE', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment rescheduled successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Appointment rescheduled successfully.'));
     }
 
     public function cancel(Request $request, Appointment $appointment)
@@ -194,7 +195,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CANCEL', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment cancelled successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment cancelled successfully.'));
     }
 
     public function noShow(Request $request, Appointment $appointment)
@@ -210,7 +211,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('NO_SHOW', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment marked as no-show.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment marked as no-show.'));
     }
 
     public function confirm(Request $request, Appointment $appointment)
@@ -222,7 +223,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CONFIRM', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Appointment confirmed successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Appointment confirmed successfully.'));
     }
 
     public function checkIn(Request $request, Appointment $appointment)
@@ -234,7 +235,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CHECK_IN', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Patient checked in successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Patient checked in successfully.'));
     }
 
     public function start(Request $request, Appointment $appointment)
@@ -246,7 +247,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('START', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Consultation started.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Consultation started.'));
     }
 
     public function complete(Request $request, Appointment $appointment)
@@ -258,7 +259,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('COMPLETE', Appointment::class, $appointment->id, $oldValues, $appointment->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment completed successfully.');
+        return redirect()->route('admin.appointments.index')->with('success', __('Appointment completed successfully.'));
     }
 
     public function createFollowUp(Request $request, Appointment $appointment)
@@ -275,7 +276,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('CREATE', Appointment::class, $followUp->id, null, $followUp->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $followUp)->with('success', 'Follow-up appointment created.');
+        return redirect()->route('admin.appointments.show', $followUp)->with('success', __('Follow-up appointment created.'));
     }
 
     public function addNote(Request $request, Appointment $appointment)
@@ -290,7 +291,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('NOTE_ADDED', Appointment::class, $appointment->id, null, ['note' => $validated['note']], $request);
 
-        return back()->with('success', 'Note added successfully.');
+        return back()->with('success', __('Note added successfully.'));
     }
 
     public function history(Appointment $appointment)
@@ -328,7 +329,7 @@ class AppointmentController extends Controller
         $file = $this->fileService->store($validated['document'], $appointment, $request->user());
 
         $document = AppointmentDocument::create([
-            'company_id' => $appointment->company_id,
+            'organization_id' => $appointment->organization_id,
             'appointment_id' => $appointment->id,
             'file_id' => $file->id,
             'document_type' => $validated['document_type'],
@@ -337,7 +338,7 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('UPLOAD', AppointmentDocument::class, $document->id, null, $document->toArray(), $request);
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Document uploaded successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Document uploaded successfully.'));
     }
 
     public function downloadDocument(Request $request, Appointment $appointment, AppointmentDocument $document)
@@ -364,6 +365,6 @@ class AppointmentController extends Controller
 
         $this->auditLogger->log('DELETE', AppointmentDocument::class, $document->id, $oldValues, null, request());
 
-        return redirect()->route('admin.appointments.show', $appointment)->with('success', 'Document removed successfully.');
+        return redirect()->route('admin.appointments.show', $appointment)->with('success', __('Document removed successfully.'));
     }
 }

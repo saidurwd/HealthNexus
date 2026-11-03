@@ -14,7 +14,7 @@ class NotifyOnDischargeEvents
     public function handleRequested(DischargeRequested $event): void
     {
         $request = $event->request;
-        $recipients = $this->coordinatorsFor($request->company_id);
+        $recipients = $this->coordinatorsFor($request->organization_id);
 
         if ($recipients->isEmpty()) {
             return;
@@ -29,7 +29,7 @@ class NotifyOnDischargeEvents
     public function handleCompleted(PatientDischarged $event): void
     {
         $admission = $event->admission;
-        $recipients = $this->coordinatorsFor($admission->company_id);
+        $recipients = $this->coordinatorsFor($admission->organization_id);
 
         if ($recipients->isEmpty()) {
             return;
@@ -46,10 +46,10 @@ class NotifyOnDischargeEvents
      * role name isn't defined yet, which would crash this listener during ordinary discharge
      * request/completion. whereHas against the pivot never throws for a missing role.
      */
-    private function coordinatorsFor(int $companyId)
+    private function coordinatorsFor(int $organizationId)
     {
         return User::whereHas('roles', fn ($q) => $q->whereIn('name', ['ipd_coordinator', 'ward_manager']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
     }
 }

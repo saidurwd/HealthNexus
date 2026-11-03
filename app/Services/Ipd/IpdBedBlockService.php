@@ -23,7 +23,7 @@ class IpdBedBlockService
             $this->bedStatus->transitionTo($locked, $targetStatus, $user, $reason);
 
             $block = IpdBedBlock::create([
-                'company_id' => $locked->company_id,
+                'organization_id' => $locked->organization_id,
                 'branch_id' => $locked->branch_id,
                 'bed_id' => $locked->id,
                 'reason_type' => $reasonType,

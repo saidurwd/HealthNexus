@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\DoctorSchedule;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +18,7 @@ class DoctorScheduleFactory extends Factory
         $endTime = fake()->time('H:i', '17:00');
 
         return [
-            'company_id' => Company::factory(),
+            'organization_id' => Organization::factory(),
             'branch_id' => Branch::factory(),
             'doctor_id' => User::factory(),
             'name' => 'Dr. '.fake()->name().' Schedule',

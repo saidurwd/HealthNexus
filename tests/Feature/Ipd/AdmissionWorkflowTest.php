@@ -11,6 +11,7 @@ use App\Models\Ipd\IpdBed;
 use App\Models\Patient;
 use App\Services\Ipd\IpdAdmissionRequestService;
 use App\Services\Ipd\IpdAdmissionService;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Proves the full Admission Request -> Approval -> Admission -> Encounter -> Bed Allocation ->
@@ -25,10 +26,10 @@ class AdmissionWorkflowTest extends IpdTestCase
     {
         $this->makeAdmissionFeeBillingItem();
         $bed = $this->makeBed();
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $request = app(IpdAdmissionRequestService::class)->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'priority' => 'routine',
@@ -41,7 +42,7 @@ class AdmissionWorkflowTest extends IpdTestCase
         $this->assertSame(IpdAdmissionRequest::STATUS_APPROVED, $request->status);
 
         $admission = app(IpdAdmissionService::class)->admit([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'bed_id' => $bed->id,
@@ -69,10 +70,10 @@ class AdmissionWorkflowTest extends IpdTestCase
     public function test_admission_requires_an_approved_request(): void
     {
         $bed = $this->makeBed();
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $request = app(IpdAdmissionRequestService::class)->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'priority' => 'routine',
@@ -80,10 +81,10 @@ class AdmissionWorkflowTest extends IpdTestCase
 
         $this->assertSame(IpdAdmissionRequest::STATUS_PENDING_APPROVAL, $request->status);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdAdmissionService::class)->admit([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'bed_id' => $bed->id,
@@ -95,10 +96,10 @@ class AdmissionWorkflowTest extends IpdTestCase
         $this->makeAdmissionFeeBillingItem();
         $bed = $this->makeBed();
         $secondBed = $this->makeBed();
-        $patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $request = app(IpdAdmissionRequestService::class)->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'priority' => 'routine',
@@ -106,16 +107,16 @@ class AdmissionWorkflowTest extends IpdTestCase
         $request = app(IpdAdmissionRequestService::class)->approve($request, $this->user);
 
         app(IpdAdmissionService::class)->admit([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'bed_id' => $bed->id,
         ], $this->user, $request);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         app(IpdAdmissionService::class)->admit([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $patient->id,
             'bed_id' => $secondBed->id,
@@ -125,12 +126,12 @@ class AdmissionWorkflowTest extends IpdTestCase
     private function makeAdmissionFeeBillingItem(): void
     {
         $category = BillingCategory::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'name' => 'Inpatient', 'code' => 'IPD', 'is_active' => true,
         ]);
 
         BillingItem::create([
-            'company_id' => $this->company->id, 'branch_id' => null,
+            'organization_id' => $this->organization->id, 'branch_id' => null,
             'category_id' => $category->id, 'item_code' => 'IPD-ADM-general', 'item_type' => 'admission_fee',
             'name' => 'Admission Fee', 'base_price' => '500.00', 'is_taxable' => false,
             'is_clinically_chargeable' => true, 'clinical_event_type' => 'ipd_admission_fee',

@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Clinical Timeline</h3>
+        <h3 class="card-title">{{ __('Clinical Timeline') }}</h3>
     </div>
     <div class="card-body">
         <div class="timeline">
@@ -14,7 +14,7 @@
                     </div>
                 </div>
             @empty
-                <p class="text-muted">No events recorded yet.</p>
+                <p class="text-muted">{{ __('No events recorded yet.') }}</p>
             @endforelse
         </div>
     </div>

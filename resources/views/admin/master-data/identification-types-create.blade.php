@@ -6,41 +6,41 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Create Identification Type</h3>
-                    <a href="{{ route('admin.master-data.identification-types') }}" class="btn btn-secondary float-end">Back</a>
+                    <h3 class="card-title">{{ __('Create Identification Type') }}</h3>
+                    <a href="{{ route('admin.master-data.identification-types') }}" class="btn btn-secondary float-end">{{ __('Back') }}</a>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.master-data.identification-types.store') }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label">{{ __('Name') }}</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
-                            <label for="code" class="form-label">Code</label>
+                            <label for="code" class="form-label">{{ __('Code') }}</label>
                             <input type="text" class="form-control @error('code') is-invalid @enderror" id="code" name="code" value="{{ old('code') }}" required maxlength="50">
                             @error('code')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
+                            <label for="description" class="form-label">{{ __('Description') }}</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description') }}</textarea>
                             @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3">
-                            <label for="issuing_authority" class="form-label">Issuing Authority</label>
+                            <label for="issuing_authority" class="form-label">{{ __('Issuing Authority') }}</label>
                             <input type="text" class="form-control @error('issuing_authority') is-invalid @enderror" id="issuing_authority" name="issuing_authority" value="{{ old('issuing_authority') }}" maxlength="255">
                             @error('issuing_authority')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="is_primary" name="is_primary" value="1" {{ old('is_primary') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_primary">Primary</label>
+                            <label class="form-check-label" for="is_primary">{{ __('Primary') }}</label>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_active">Active</label>
+                            <label class="form-check-label" for="is_active">{{ __('Active') }}</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
                     </form>
                 </div>
             </div>

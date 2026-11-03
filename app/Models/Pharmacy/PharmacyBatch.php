@@ -2,6 +2,8 @@
 
 namespace App\Models\Pharmacy;
 
+use App\Models\Branch;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +15,7 @@ class PharmacyBatch extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'branch_id', 'medication_id', 'batch_number', 'manufacturer',
+        'organization_id', 'branch_id', 'medication_id', 'batch_number', 'manufacturer',
         'manufacturing_date', 'expiry_date', 'unit_cost', 'selling_price',
         'supplier_reference', 'is_quarantined', 'created_by',
     ];
@@ -29,20 +31,39 @@ class PharmacyBatch extends Model
         ];
     }
 
-    public function company(): BelongsTo { return $this->belongsTo(\App\Models\Company::class); }
-    public function branch(): BelongsTo { return $this->belongsTo(\App\Models\Branch::class); }
-    public function medication(): BelongsTo { return $this->belongsTo(PharmacyMedication::class, 'medication_id'); }
-    public function stock(): HasMany { return $this->hasMany(PharmacyStock::class, 'batch_id'); }
-    public function createdBy(): BelongsTo { return $this->belongsTo(User::class, 'created_by'); }
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function medication(): BelongsTo
+    {
+        return $this->belongsTo(PharmacyMedication::class, 'medication_id');
+    }
+
+    public function stock(): HasMany
+    {
+        return $this->hasMany(PharmacyStock::class, 'batch_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     public function isExpired(): bool
     {
         return $this->expiry_date->isPast();
     }
 
-    public function scopeForTenant($query, int $companyId, ?int $branchId = null)
+    public function scopeForTenant($query, int $organizationId, ?int $branchId = null)
     {
-        return $query->where('pharmacy_batches.company_id', $companyId)
+        return $query->where('pharmacy_batches.organization_id', $organizationId)
             ->where(fn ($q) => $q->where('pharmacy_batches.branch_id', $branchId)->orWhereNull('pharmacy_batches.branch_id'));
     }
 }

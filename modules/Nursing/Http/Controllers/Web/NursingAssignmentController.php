@@ -32,7 +32,7 @@ class NursingAssignmentController extends Controller
 
         $this->auditLogger->log('CREATE', NursingAssignment::class, $assignment->id, null, $assignment->toArray(), $request);
 
-        return back()->with('success', 'Nurse assigned.');
+        return back()->with('success', __('Nurse assigned.'));
     }
 
     public function destroy(Request $request, NursingAssignment $assignment)
@@ -43,6 +43,6 @@ class NursingAssignmentController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingAssignment::class, $assignment->id, null, ['ended_at' => now()], $request);
 
-        return back()->with('success', 'Assignment ended.');
+        return back()->with('success', __('Assignment ended.'));
     }
 }

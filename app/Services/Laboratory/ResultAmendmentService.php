@@ -35,7 +35,7 @@ class ResultAmendmentService
 
             $amended = LabResult::create([
                 ...$result->only([
-                    'company_id', 'branch_id', 'lab_order_item_id', 'test_id', 'specimen_id',
+                    'organization_id', 'branch_id', 'lab_order_item_id', 'test_id', 'specimen_id',
                     'result_type', 'unit', 'reference_range_low', 'reference_range_high', 'reference_range_text',
                 ]),
                 'numeric_value' => $data['numeric_value'] ?? $result->numeric_value,

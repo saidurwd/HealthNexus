@@ -7,7 +7,7 @@ use App\Models\Radiology\RadiologyPacsServer;
 
 /**
  * Resolves the adapter per RadiologyPacsServer row (Phase 6 plan decision #2) — not a single
- * container-wide binding, since PACS configuration is genuinely per-server data (a company may
+ * container-wide binding, since PACS configuration is genuinely per-server data (an organization may
  * configure more than one PACS server).
  */
 class PacsClientFactory

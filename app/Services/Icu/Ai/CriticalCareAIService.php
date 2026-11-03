@@ -21,5 +21,5 @@ interface CriticalCareAIService
 
     public function draftProgressNote(IcuEpisode $episode): array;
 
-    public function forecastBedDemand(int $companyId, ?int $branchId, Carbon $horizon): array;
+    public function forecastBedDemand(int $organizationId, ?int $branchId, Carbon $horizon): array;
 }

@@ -4,39 +4,26 @@ namespace Modules\Ot\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ot\OtSurgery;
-use App\Models\Ot\OtSurgeryRequest;
-use App\Models\Ot\OtTheatre;
+use App\Services\Dashboard\DashboardCache;
+use App\Services\Ot\OtOverview;
 use App\Services\TenantContextResolver;
+use App\Support\Dashboard\Days;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class OtDashboardController extends Controller
 {
+    public function __construct(private readonly OtOverview $overview, private readonly DashboardCache $cache, private readonly TenantContextResolver $tenant) {}
+
     public function index(Request $request)
     {
         Gate::authorize('ot.dashboard.view');
+        $org = (int) $this->tenant->getOrganizationId();
+        $branch = $this->tenant->getBranchId() ? (int) $this->tenant->getBranchId() : null;
+        $r = $this->cache->remember($request->user(), 'ot', $org, $branch, null, fn () => $this->overview->summary($org, $branch), fresh: $request->boolean('fresh'));
+        // Today's list names patients and surgeons: a worklist for the theatre team, not part of the cached figures.
+        $todaysList = OtSurgery::forTenant($org, $branch)->whereDate('scheduled_date', Days::today()->toDateString())->with(['patient', 'theatre', 'primarySurgeon', 'primaryProcedure'])->orderBy('scheduled_start_at')->get();
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $branchId = app(TenantContextResolver::class)->getBranchId();
-        $today = now()->toDateString();
-
-        $metrics = [
-            'scheduled_today' => OtSurgery::forTenant($companyId, $branchId)->whereDate('scheduled_date', $today)->count(),
-            'completed_today' => OtSurgery::forTenant($companyId, $branchId)->whereDate('scheduled_date', $today)->where('status', OtSurgery::STATUS_PROCEDURE_COMPLETED)->count(),
-            'in_procedure' => OtSurgery::forTenant($companyId, $branchId)->where('status', OtSurgery::STATUS_IN_PROCEDURE)->count(),
-            'in_recovery' => OtSurgery::forTenant($companyId, $branchId)->where('status', OtSurgery::STATUS_RECOVERY)->count(),
-            'cancelled_today' => OtSurgery::forTenant($companyId, $branchId)->whereDate('scheduled_date', $today)->where('status', OtSurgery::STATUS_CANCELLED)->count(),
-            'pending_requests' => OtSurgeryRequest::forTenant($companyId, $branchId)->whereIn('status', [OtSurgeryRequest::STATUS_REQUESTED, OtSurgeryRequest::STATUS_PENDING_APPROVAL])->count(),
-            'theatres_available' => OtTheatre::forTenant($companyId, $branchId)->where('status', OtTheatre::STATUS_AVAILABLE)->count(),
-            'theatres_occupied' => OtTheatre::forTenant($companyId, $branchId)->where('status', OtTheatre::STATUS_OCCUPIED)->count(),
-        ];
-
-        $todaysList = OtSurgery::forTenant($companyId, $branchId)
-            ->whereDate('scheduled_date', $today)
-            ->with(['patient', 'theatre', 'primarySurgeon', 'primaryProcedure'])
-            ->orderBy('scheduled_start_at')
-            ->get();
-
-        return view('admin.ot.dashboard.index', compact('metrics', 'todaysList'));
+        return view('admin.ot.dashboard.index', ['metrics' => $r['data'], 'asOf' => $r['as_of'], 'todaysList' => $todaysList]);
     }
 }

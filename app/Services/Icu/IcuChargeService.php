@@ -31,7 +31,7 @@ class IcuChargeService
             ]);
 
             return $this->charges->createFromClinicalEvent($event, 'icu_bed_day', 'general', [
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'patient_id' => $episode->patient_id,
                 'encounter_id' => $episode->encounter_id,
@@ -49,7 +49,7 @@ class IcuChargeService
             ]);
 
             return $this->charges->createFromClinicalEvent($event, 'icu_ventilator_day', 'general', [
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'patient_id' => $episode->patient_id,
                 'encounter_id' => $episode->encounter_id,
@@ -67,7 +67,7 @@ class IcuChargeService
             ]);
 
             return $this->charges->createFromClinicalEvent($event, 'icu_critical_care_service', 'general', [
-                'company_id' => $episode->company_id,
+                'organization_id' => $episode->organization_id,
                 'branch_id' => $episode->branch_id,
                 'patient_id' => $episode->patient_id,
                 'encounter_id' => $episode->encounter_id,
@@ -80,7 +80,7 @@ class IcuChargeService
         $record->loadMissing(['procedure', 'episode']);
 
         return $this->charges->createFromClinicalEvent($record, 'icu_procedure_fee', $record->procedure?->code ?? 'general', [
-            'company_id' => $record->company_id,
+            'organization_id' => $record->organization_id,
             'branch_id' => $record->branch_id,
             'patient_id' => $record->episode->patient_id,
             'encounter_id' => $record->episode->encounter_id,

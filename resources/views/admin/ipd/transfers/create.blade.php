@@ -10,11 +10,11 @@
         <form method="POST" action="{{ route('admin.ipd.transfers.store', $admission) }}">
             @csrf
             <div class="card-body">
-                <p><strong>Current bed:</strong> {{ $admission->currentAllocation?->bed?->bed_code ?? '—' }} ({{ $admission->currentAllocation?->bed?->room?->ward?->name }})</p>
+                <p><strong>{{ __('Current bed:') }}</strong> {{ $admission->currentAllocation?->bed?->bed_code ?? '—' }} ({{ $admission->currentAllocation?->bed?->room?->ward?->name }})</p>
                 <div class="mb-3">
-                    <label class="form-label">Destination Bed</label>
+                    <label class="form-label">{{ __('Destination Bed') }}</label>
                     <select name="bed_id" class="form-control @error('bed_id') is-invalid @enderror" required>
-                        <option value="">Select Bed</option>
+                        <option value="">{{ __('Select Bed') }}</option>
                         @foreach($availableBeds as $bed)
                             <option value="{{ $bed->id }}">{{ $bed->room?->ward?->name }} / {{ $bed->room?->room_number }} / {{ $bed->bed_code }}</option>
                         @endforeach
@@ -22,13 +22,13 @@
                     @error('bed_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Reason</label>
+                    <label class="form-label">{{ __('Reason') }}</label>
                     <textarea name="reason" class="form-control"></textarea>
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Request Transfer</button>
+                <a href="{{ route('admin.ipd.admissions.show', $admission) }}" class="btn btn-secondary">{{ __('Cancel') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('Request Transfer') }}</button>
             </div>
         </form>
     </div>

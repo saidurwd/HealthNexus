@@ -1,0 +1,12 @@
+@extends('portal.layout')
+@section('title', __('Appointments'))
+@section('content')
+<div class="row"><h1>{{ __('Appointments') }}</h1><a class="btn" href="{{ route('portal.appointments.book') }}">{{ __('Book a new appointment') }}</a></div>
+@forelse($upcoming as $u)@php($a = $u['a'])<div class="card"><div class="row"><div><strong>{{ $a->appointment_date->format('l, d M Y') }} {{ $a->appointment_time->format('H:i') }}</strong><div class="muted">{{ $a->provider?->name }} · {{ $a->branch?->name }} · {{ __('Token') }} {{ $a->token?->token_number }}</div>@if($a->reason)<div class="muted">{{ $a->reason }}</div>@endif</div><span class="pill">{{ __(\Illuminate\Support\Str::headline($a->status)) }}</span></div>
+@if($u['queue'])<p class="flash warn" style="margin:.7rem 0 0">{{ $u['queue']['called'] ? __('You are being called now.') : __('Your token is :t. :n people are ahead of you.', ['t' => $u['queue']['token'], 'n' => $u['queue']['ahead']]) }}</p>@endif
+@if(in_array($a->status, ['scheduled', 'confirmed']))<div class="row noprint" style="margin-top:.6rem;justify-content:flex-start"><a class="btn alt" href="{{ route('portal.appointments.book', ['reschedule' => $a->public_id]) }}">{{ __('Change time') }}</a><form method="POST" action="{{ route('portal.appointments.cancel', $a->public_id) }}" onsubmit="return confirm('{{ __('Cancel this appointment?') }}')">@csrf<button class="bad">{{ __('Cancel') }}</button></form></div>@endif</div>
+@empty<p class="muted">{{ __('You have no appointments coming up.') }}</p>@endforelse
+<h2>{{ __('Past visits') }}</h2>
+@foreach($past as $a)<div class="card"><div class="row"><div>{{ $a->appointment_date->format('d M Y') }} · {{ $a->provider?->name }} <span class="pill">{{ __(\Illuminate\Support\Str::headline($a->status)) }}</span></div>
+@if($a->status === 'completed' && ! in_array($a->id, $rated, true))<form method="POST" action="{{ route('portal.appointments.rate', $a->public_id) }}" class="noprint row" style="gap:.4rem">@csrf<select name="rating" aria-label="{{ __('Rating') }}" style="width:auto">@foreach([5, 4, 3, 2, 1] as $n)<option value="{{ $n }}">{{ str_repeat('★', $n) }}</option>@endforeach</select><input name="comment" aria-label="{{ __('How was your visit?') }}" placeholder="{{ __('How was your visit?') }}" maxlength="300" style="width:14rem"><button class="alt">{{ __('Rate') }}</button></form>@endif</div></div>@endforeach
+@endsection

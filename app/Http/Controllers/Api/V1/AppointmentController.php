@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Appointment;
 use App\Models\AppointmentSlot;
+use App\Models\Provider;
 use App\Services\Appointments\AppointmentBookingService;
 use App\Services\Appointments\AppointmentLifecycleService;
 use App\Services\Appointments\ProviderAvailabilityService;
@@ -27,10 +28,12 @@ class AppointmentController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $user = $request->user();
 
         $appointments = Appointment::query()
-            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('company_id', $user->companies()->pluck('companies.id')))
+            ->when(! $user->hasRole('super_admin'), fn ($q) => $q->whereIn('organization_id', $user->organizations()->pluck('organizations.id')))
             ->when($request->filled('patient_id'), fn ($q, $id) => $q->where('patient_id', $id))
             ->when($request->filled('provider_id'), fn ($q, $id) => $q->where('provider_id', $id))
             ->when($request->filled('status'), fn ($q, $status) => $q->where('status', $status))
@@ -43,11 +46,13 @@ class AppointmentController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $this->authorize('viewAny', Appointment::class);
+
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $search = $request->input('q', '');
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($search, fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('appointment_no', 'like', "%{$search}%")
                     ->orWhereHas('patient', fn ($q3) => $q3->where('first_name', 'like', "%{$search}%")
@@ -61,6 +66,8 @@ class AppointmentController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Appointment::class);
+
         $validated = $request->validate([
             'patient_id' => ['required', 'integer', 'exists:patients,id'],
             'doctor_id' => ['nullable', 'integer', 'exists:users,id'],
@@ -74,7 +81,7 @@ class AppointmentController extends Controller
             'reason' => ['nullable', 'string'],
         ]);
 
-        $validated['company_id'] = app(TenantContextResolver::class)->getCompanyId();
+        $validated['organization_id'] = app(TenantContextResolver::class)->getOrganizationId();
         $validated['branch_id'] = app(TenantContextResolver::class)->getBranchId();
         $validated['created_by'] = $request->user()->id;
 
@@ -172,12 +179,14 @@ class AppointmentController extends Controller
 
     public function availability(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Appointment::class);
+
         $validated = $request->validate([
             'provider_id' => ['required', 'integer', 'exists:providers,id'],
             'date' => ['required', 'date'],
         ]);
 
-        $provider = \App\Models\Provider::findOrFail($validated['provider_id']);
+        $provider = Provider::findOrFail($validated['provider_id']);
         $slots = app(ProviderAvailabilityService::class)->availableSlotsOn($provider, Carbon::parse($validated['date']));
 
         return ApiResponse::success($slots->map(fn (AppointmentSlot $slot) => [
@@ -189,11 +198,13 @@ class AppointmentController extends Controller
 
     public function calendar(Request $request): JsonResponse
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $this->authorize('viewAny', Appointment::class);
+
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $date = $request->input('date', today()->toDateString());
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->whereDate('appointment_date', $date)
             ->with(['patient', 'provider', 'token'])
             ->orderBy('appointment_time')

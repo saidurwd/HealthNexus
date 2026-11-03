@@ -4,7 +4,7 @@
 
 @section('page_content')
 <div class="card">
-    <div class="card-header"><h3 class="card-title">About This System</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('About This System') }}</h3></div>
     <div class="card-body p-0">
         <table class="table table-striped mb-0">
             <tbody>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PatientPortalAccount;
 use App\Models\User;
 
 return [
@@ -42,6 +43,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Patients (Phase 17): never the same guard as staff.
+        'portal' => [
+            'driver' => 'session',
+            'provider' => 'portal_accounts',
+        ],
     ],
 
     /*
@@ -65,6 +72,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'portal_accounts' => [
+            'driver' => 'eloquent',
+            'model' => PatientPortalAccount::class,
         ],
 
         // 'users' => [

@@ -38,7 +38,7 @@ class GenerateExpiryAlerts implements ShouldQueue
             // whereHas against the roles pivot, not Spatie's role() scope — that throws
             // RoleDoesNotExist if a listed role isn't defined yet for a given deployment.
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'pharmacy_administrator']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $batch->company_id))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $batch->organization_id))
                 ->get();
 
             if ($recipients->isEmpty()) {

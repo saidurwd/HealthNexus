@@ -37,7 +37,7 @@ class NursingEscalationPolicy
 
     private function inScope(User $user, NursingEscalation $escalation): bool
     {
-        return $user->companies()->where('companies.id', $escalation->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $escalation->organization_id)->exists()
             && (! $escalation->branch_id || $user->branches()->where('branches.id', $escalation->branch_id)->exists());
     }
 }

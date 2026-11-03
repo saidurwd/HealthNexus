@@ -29,10 +29,10 @@ class EscalateUnacknowledgedCriticalAlerts implements ShouldQueue
             ->get();
 
         foreach ($stale as $alert) {
-            $alerts->escalate($alert, $alert->episode->createdBy ?? $alert->episode->attendingProvider?->user ?? $this->systemUser($alert->company_id), 'icu_team');
+            $alerts->escalate($alert, $alert->episode->createdBy ?? $alert->episode->attendingProvider?->user ?? $this->systemUser($alert->organization_id), 'icu_team');
 
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['icu_charge_nurse', 'icu_manager', 'hospital_admin']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $alert->company_id))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $alert->organization_id))
                 ->get();
 
             if ($recipients->isNotEmpty()) {
@@ -44,8 +44,8 @@ class EscalateUnacknowledgedCriticalAlerts implements ShouldQueue
         }
     }
 
-    private function systemUser(int $companyId): User
+    private function systemUser(int $organizationId): User
     {
-        return User::whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))->first();
+        return User::whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))->first();
     }
 }

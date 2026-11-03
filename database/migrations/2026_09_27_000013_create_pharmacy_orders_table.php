@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('prescription_id')->constrained('prescriptions')->cascadeOnDelete();
@@ -25,8 +25,8 @@ return new class extends Migration
             $table->text('cancellation_reason')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'order_number']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->unique(['organization_id', 'order_number']);
+            $table->index(['organization_id', 'branch_id', 'status']);
             $table->index('patient_id');
             $table->index('prescription_id');
         });

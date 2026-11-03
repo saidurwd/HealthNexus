@@ -3,15 +3,12 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Appointment;
+use App\Models\AppointmentToken;
 use App\Models\Branch;
-use App\Models\Company;
-use App\Models\Diagnosis;
-use App\Models\InvestigationOrder;
+use App\Models\Organization;
 use App\Models\Patient;
-use App\Models\Prescription;
-use App\Models\PrescriptionItem;
 use App\Models\User;
-use App\Models\VitalSign;
+use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -23,7 +20,7 @@ class OpdConsultationTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -38,27 +35,27 @@ class OpdConsultationTest extends TestCase
         Role::create(['name' => 'doctor', 'guard_name' => 'web']);
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
-        foreach (['manage companies', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.checkin'] as $permission) {
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
+        foreach (['manage organizations', 'appointments.view', 'appointments.create', 'appointments.update', 'appointments.checkin'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
 
         $this->actingAs($this->user);
 
-        session()->put('tenant_company_id', $this->company->id);
+        session()->put('tenant_organization_id', $this->organization->id);
         session()->put('tenant_branch_id', $this->branch->id);
-        app(\App\Services\TenantContextResolver::class)->setCompanyId($this->company->id);
-        app(\App\Services\TenantContextResolver::class)->setBranchId($this->branch->id);
+        app(TenantContextResolver::class)->setOrganizationId($this->organization->id);
+        app(TenantContextResolver::class)->setBranchId($this->branch->id);
 
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
         $this->appointment = Appointment::create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'doctor_id' => $this->user->id,
@@ -74,8 +71,8 @@ class OpdConsultationTest extends TestCase
             'status' => 'confirmed',
         ]);
 
-        \App\Models\AppointmentToken::create([
-            'company_id' => $this->company->id,
+        AppointmentToken::create([
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'appointment_id' => $this->appointment->id,
             'token_number' => 'T-001',
@@ -86,7 +83,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_view_consultation(): void
     {
-        $response = $this->get('/admin/appointments/'.$this->appointment->id.'/consultation');
+        $response = $this->get('/appointments/'.$this->appointment->public_id.'/consultation');
 
         $response->assertStatus(200);
         $response->assertViewHas('appointment');
@@ -94,7 +91,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_record_vital_signs(): void
     {
-        $response = $this->post('/admin/opd/vital-signs', [
+        $response = $this->post('/opd/vital-signs', [
             'appointment_id' => $this->appointment->id,
             'temperature' => 36.5,
             'systolic' => 120,
@@ -118,7 +115,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_add_diagnosis(): void
     {
-        $response = $this->post('/admin/opd/diagnoses', [
+        $response = $this->post('/opd/diagnoses', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
             'code_type' => 'ICD-10',
@@ -139,7 +136,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_add_investigation_order(): void
     {
-        $response = $this->post('/admin/opd/investigation-orders', [
+        $response = $this->post('/opd/investigation-orders', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
             'test_name' => 'Complete Blood Count',
@@ -159,7 +156,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_create_prescription(): void
     {
-        $response = $this->post('/admin/opd/prescriptions', [
+        $response = $this->post('/opd/prescriptions', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
             'clinical_notes' => 'Patient has fever',
@@ -206,7 +203,7 @@ class OpdConsultationTest extends TestCase
     {
         $this->appointment->update(['status' => 'checked_in']);
 
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/status/in-progress');
+        $response = $this->post('/appointments/'.$this->appointment->public_id.'/status/in-progress');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -219,7 +216,7 @@ class OpdConsultationTest extends TestCase
     {
         $this->appointment->update(['status' => 'in_progress']);
 
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/status/completed');
+        $response = $this->post('/appointments/'.$this->appointment->public_id.'/status/completed');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -230,7 +227,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_vital_sign_validation_requires_appointment(): void
     {
-        $response = $this->post('/admin/opd/vital-signs', [
+        $response = $this->post('/opd/vital-signs', [
             'temperature' => 36.5,
         ]);
 
@@ -239,7 +236,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_diagnosis_validation_requires_description(): void
     {
-        $response = $this->post('/admin/opd/diagnoses', [
+        $response = $this->post('/opd/diagnoses', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
         ]);
@@ -249,7 +246,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_investigation_order_validation_requires_test_name(): void
     {
-        $response = $this->post('/admin/opd/investigation-orders', [
+        $response = $this->post('/opd/investigation-orders', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
         ]);
@@ -259,7 +256,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_prescription_requires_at_least_one_item(): void
     {
-        $response = $this->post('/admin/opd/prescriptions', [
+        $response = $this->post('/opd/prescriptions', [
             'appointment_id' => $this->appointment->id,
             'patient_id' => $this->patient->id,
             'items' => [],
@@ -270,7 +267,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_check_in_appointment(): void
     {
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/check-in');
+        $response = $this->post('/appointments/'.$this->appointment->public_id.'/check-in');
 
         $response->assertRedirect();
         $this->assertDatabaseHas('appointments', [
@@ -285,7 +282,7 @@ class OpdConsultationTest extends TestCase
 
     public function test_user_can_create_follow_up_appointment(): void
     {
-        $response = $this->post('/admin/appointments/'.$this->appointment->id.'/follow-up', [
+        $response = $this->post('/appointments/'.$this->appointment->public_id.'/follow-up', [
             'appointment_date' => '2025-02-01',
             'appointment_time' => '10:00',
             'reason' => 'Follow-up on treatment',

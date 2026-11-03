@@ -5,37 +5,37 @@
 @section('page_content')
 <form method="get" action="{{ route('admin.security.index') }}" class="card card-outline card-danger mb-4">
     <div class="card-body row">
-        <div class="col-3"><input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search"></div>
+        <div class="col-3"><input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search') }}"></div>
         <div class="col-3">
             <select name="severity" class="form-select">
-                <option value="all">All Severities</option>
-                <option value="info" {{ request('severity')==='info'?'selected':'' }}>Info</option>
-                <option value="warning" {{ request('severity')==='warning'?'selected':'' }}>Warning</option>
-                <option value="critical" {{ request('severity')==='critical'?'selected':'' }}>Critical</option>
+                <option value="all">{{ __('All Severities') }}</option>
+                <option value="info" {{ request('severity')==='info'?'selected':'' }}>{{ __('Info') }}</option>
+                <option value="warning" {{ request('severity')==='warning'?'selected':'' }}>{{ __('Warning') }}</option>
+                <option value="critical" {{ request('severity')==='critical'?'selected':'' }}>{{ __('Critical') }}</option>
             </select>
         </div>
         <div class="col-3">
             <div class="form-check mt-2">
                 <input type="checkbox" name="unresolved" value="1" {{ request('unresolved')?'checked':'' }} class="form-check-input">
-                <label class="form-check-label">Unresolved only</label>
+                <label class="form-check-label">{{ __('Unresolved only') }}</label>
             </div>
         </div>
-        <div class="col-3"><button class="btn btn-primary w-100">Filter</button></div>
+        <div class="col-3"><button class="btn btn-primary w-100">{{ __('Filter') }}</button></div>
     </div>
 </form>
 
 <div class="card">
-    <div class="card-header"><h3 class="card-title">Security Events</h3></div>
+    <div class="card-header"><h3 class="card-title">{{ __('Security Events') }}</h3></div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Event</th>
-                    <th>Severity</th>
-                    <th>Resolved</th>
-                    <th>Created At</th>
+                    <th>{{ __('ID') }}</th>
+                    <th>{{ __('User') }}</th>
+                    <th>{{ __('Event') }}</th>
+                    <th>{{ __('Severity') }}</th>
+                    <th>{{ __('Resolved') }}</th>
+                    <th>{{ __('Created At') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                         <td>{{ $event->created_at?->format('Y-m-d H:i') }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="text-center">No security events found.</td></tr>
+                    <tr><td colspan="6" class="text-center">{{ __('No security events found.') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

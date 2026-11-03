@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('pharmacy_batches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('medication_id')->constrained('pharmacy_medications')->cascadeOnDelete();
             $table->string('batch_number');
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->unique(['company_id', 'medication_id', 'batch_number']);
-            $table->index(['company_id', 'branch_id', 'medication_id']);
+            $table->unique(['organization_id', 'medication_id', 'batch_number'], 'pharmacy_batches_7d802b5f_uq');
+            $table->index(['organization_id', 'branch_id', 'medication_id']);
             $table->index('expiry_date');
             $table->index('is_quarantined');
         });

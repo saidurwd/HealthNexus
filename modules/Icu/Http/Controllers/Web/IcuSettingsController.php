@@ -33,6 +33,6 @@ class IcuSettingsController extends Controller
 
         $this->settings->set('icu.admission_requires_approval', (bool) ($validated['admission_requires_approval'] ?? false));
 
-        return redirect()->route('admin.icu.settings.index')->with('success', 'ICU settings updated.');
+        return redirect()->route('admin.icu.settings.index')->with('success', __('ICU settings updated.'));
     }
 }

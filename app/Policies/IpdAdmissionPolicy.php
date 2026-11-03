@@ -32,7 +32,7 @@ class IpdAdmissionPolicy
 
     private function inScope(User $user, IpdAdmission $admission): bool
     {
-        return $user->companies()->where('companies.id', $admission->company_id)->exists()
+        return $user->organizations()->where('organizations.id', $admission->organization_id)->exists()
             && $user->branches()->where('branches.id', $admission->branch_id)->exists();
     }
 }

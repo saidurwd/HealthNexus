@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('encounter_id')->nullable()->constrained()->nullOnDelete();
@@ -48,8 +48,8 @@ return new class extends Migration
             $table->timestamp('written_off_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'invoice_number']);
-            $table->index(['company_id', 'branch_id', 'status', 'invoice_date']);
+            $table->unique(['organization_id', 'invoice_number']);
+            $table->index(['organization_id', 'branch_id', 'status', 'invoice_date'], 'billing_invoices_77f3c613_idx');
             $table->index(['patient_id', 'status']);
             $table->index(['corporate_id', 'status']);
             $table->index(['insurance_policy_id', 'status']);

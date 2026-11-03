@@ -3,10 +3,11 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Encounter;
+use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\User;
+use App\Services\Clinical\EncounterClinicalService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -17,7 +18,7 @@ class EncounterApiTest extends TestCase
 
     private User $user;
 
-    private Company $company;
+    private Organization $organization;
 
     private Branch $branch;
 
@@ -28,15 +29,15 @@ class EncounterApiTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-        $this->branch = Branch::factory()->create(['company_id' => $this->company->id]);
-        $this->patient = Patient::factory()->create(['company_id' => $this->company->id]);
+        $this->organization = Organization::factory()->create();
+        $this->branch = Branch::factory()->create(['organization_id' => $this->organization->id]);
+        $this->patient = Patient::factory()->create(['organization_id' => $this->organization->id]);
 
-        $this->user->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $this->user->branches()->attach($this->branch->id, ['access_level' => 'staff', 'company_id' => $this->company->id]);
+        $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $this->user->branches()->attach($this->branch->id, ['access_level' => 'staff', 'organization_id' => $this->organization->id]);
 
         foreach ([
-            'encounters.create', 'encounters.update', 'encounters.delete',
+            'encounters.view', 'encounters.create', 'encounters.update', 'encounters.delete',
             'clinical.vitals.create', 'clinical.diagnosis.create', 'clinical.order.create',
             'prescription.create', 'prescription.issue', 'prescription.cancel', 'encounter.amend',
         ] as $permission) {
@@ -46,13 +47,13 @@ class EncounterApiTest extends TestCase
 
         $token = $this->user->createToken('test-token')->plainTextToken;
         $this->withHeader('Authorization', 'Bearer '.$token);
-        $this->withHeader('X-Company-Id', (string) $this->company->id);
+        $this->withHeader('X-Organization-Id', (string) $this->organization->id);
         $this->withHeader('X-Branch-Id', (string) $this->branch->id);
     }
 
     public function test_user_can_list_encounters(): void
     {
-        Encounter::factory()->count(3)->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        Encounter::factory()->count(3)->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
         $response = $this->get('/api/v1/encounters');
 
@@ -63,7 +64,7 @@ class EncounterApiTest extends TestCase
     public function test_user_can_create_encounter(): void
     {
         $response = $this->post('/api/v1/encounters', [
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'patient_id' => $this->patient->id,
             'encounter_type' => 'OPD',
@@ -75,19 +76,19 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_view_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->get('/api/v1/encounters/'.$encounter->id);
+        $response = $this->get('/api/v1/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.id', $encounter->id);
+            ->assertJsonPath('data.public_id', $encounter->public_id);
     }
 
     public function test_user_can_update_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id, 'status' => 'in_progress']);
 
-        $response = $this->put('/api/v1/encounters/'.$encounter->id, [
+        $response = $this->put('/api/v1/encounters/'.$encounter->public_id, [
             'status' => 'completed',
         ]);
 
@@ -97,9 +98,9 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_delete_encounter(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->delete('/api/v1/encounters/'.$encounter->id);
+        $response = $this->delete('/api/v1/encounters/'.$encounter->public_id);
 
         $response->assertStatus(200);
         $this->assertSoftDeleted('encounters', [
@@ -109,9 +110,9 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_record_vital_signs_via_api(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/vitals", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/vitals", [
             'systolic' => 118,
             'diastolic' => 76,
             'pulse_rate' => 70,
@@ -120,16 +121,16 @@ class EncounterApiTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('data.systolic', 118);
 
-        $this->get("/api/v1/encounters/{$encounter->id}/vitals")
+        $this->get("/api/v1/encounters/{$encounter->public_id}/vitals")
             ->assertStatus(200)
             ->assertJsonCount(1, 'data');
     }
 
     public function test_user_can_add_diagnosis_via_api(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/diagnoses", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/diagnoses", [
             'description' => 'Acute bronchitis',
             'diagnosis_type' => 'primary',
         ]);
@@ -140,9 +141,9 @@ class EncounterApiTest extends TestCase
 
     public function test_user_can_create_and_issue_prescription_via_api(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/prescriptions", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/prescriptions", [
             'items' => [
                 ['medicine_name' => 'Amoxicillin', 'frequency' => 'TDS', 'duration' => '7 days'],
             ],
@@ -151,18 +152,18 @@ class EncounterApiTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('data.status', 'draft');
 
-        $prescriptionId = $response->json('data.id');
+        $prescriptionId = $response->json('data.public_id');
 
-        $this->post("/api/v1/encounters/{$encounter->id}/prescriptions/{$prescriptionId}/issue")
+        $this->post("/api/v1/encounters/{$encounter->public_id}/prescriptions/{$prescriptionId}/issue")
             ->assertStatus(200)
             ->assertJsonPath('data.status', 'issued');
     }
 
     public function test_user_can_create_clinical_order_via_api(): void
     {
-        $encounter = Encounter::factory()->create(['company_id' => $this->company->id, 'branch_id' => $this->branch->id]);
+        $encounter = Encounter::factory()->create(['organization_id' => $this->organization->id, 'branch_id' => $this->branch->id]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/orders", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/orders", [
             'order_type' => 'lab',
             'items' => [
                 ['item_name' => 'CBC'],
@@ -176,13 +177,13 @@ class EncounterApiTest extends TestCase
     public function test_user_can_request_amendment_via_api(): void
     {
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'status' => 'completed',
             'locked_at' => now(),
         ]);
 
-        $response = $this->post("/api/v1/encounters/{$encounter->id}/amendments", [
+        $response = $this->post("/api/v1/encounters/{$encounter->public_id}/amendments", [
             'amendment_type' => 'correction',
             'reason' => 'Corrected diagnosis code',
             'content' => 'Diagnosis code changed from I10 to I11.',
@@ -198,21 +199,21 @@ class EncounterApiTest extends TestCase
     public function test_a_different_user_can_approve_an_amendment_via_api(): void
     {
         $encounter = Encounter::factory()->create([
-            'company_id' => $this->company->id,
+            'organization_id' => $this->organization->id,
             'branch_id' => $this->branch->id,
             'status' => 'completed',
             'locked_at' => now(),
         ]);
 
-        $amendment = app(\App\Services\Clinical\EncounterClinicalService::class)->createAmendment($encounter, [
+        $amendment = app(EncounterClinicalService::class)->createAmendment($encounter, [
             'amendment_type' => 'correction',
             'reason' => 'Corrected diagnosis code',
             'content' => 'Diagnosis code changed from I10 to I11.',
         ], $this->user);
 
         $approver = User::factory()->create();
-        $approver->companies()->attach($this->company->id, ['access_level' => 'admin']);
-        $approver->branches()->attach($this->branch->id, ['access_level' => 'manager', 'company_id' => $this->company->id]);
+        $approver->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
+        $approver->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
         $approver->givePermissionTo('encounter.amend');
 
         $token = $approver->createToken('approver-token')->plainTextToken;
@@ -220,9 +221,9 @@ class EncounterApiTest extends TestCase
         $this->app['auth']->forgetGuards();
 
         $this->withHeader('Authorization', 'Bearer '.$token)
-            ->withHeader('X-Company-Id', (string) $this->company->id)
+            ->withHeader('X-Organization-Id', (string) $this->organization->id)
             ->withHeader('X-Branch-Id', (string) $this->branch->id)
-            ->put("/api/v1/encounters/{$encounter->id}/amendments/{$amendment->id}/approve")
+            ->put("/api/v1/encounters/{$encounter->public_id}/amendments/{$amendment->public_id}/approve")
             ->assertStatus(200)
             ->assertJsonPath('data.approved_by', $approver->id);
     }

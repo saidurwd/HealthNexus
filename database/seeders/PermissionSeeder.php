@@ -13,7 +13,7 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             // Core Administration
-            'manage companies',
+            'manage organizations',
             'manage branches',
             'manage departments',
             'manage users',
@@ -30,6 +30,34 @@ class PermissionSeeder extends Seeder
             'patients.delete',
             'patients.merge',
             'patients.export',
+            'ed.board.view',
+            'ed.visit.view',
+            'ed.visit.create',
+            'ed.visit.update',
+            'ed.triage.perform',
+            'ed.zone.manage',
+            'ed.resus.record',
+            'ed.monitor.record',
+            'ed.order.place',
+            'ed.medication.administer',
+            'ed.procedure.record',
+            'ed.protocol.run',
+            'ed.observation.manage',
+            'ed.consult.manage',
+            'ed.disposition.decide',
+            'ed.death.declare',
+            'ed.kpi.view',
+            'ed.mci.manage',
+            'downtime.view',
+            'import.view',
+            'import.patients',
+            'import.services',
+            'import.medications',
+            'import.lab_tests',
+            'import.beds',
+            'import.users',
+            'import.opening_stock',
+            'patients.export.sensitive',
             'patients.print',
             'patients.alert.view',
             'patients.alert.manage',
@@ -138,6 +166,14 @@ class PermissionSeeder extends Seeder
             'clinical.note.update',
             'clinical.vitals.view',
             'clinical.vitals.create',
+            'clinical.observation.view',
+            'clinical.observation.record',
+            'clinical.observation.amend',
+            'clinical.alert.view',
+            'clinical.alert.acknowledge',
+            'clinical.alert.resolve',
+            'clinical.alert.override',
+            'clinical.alert.report',
             'clinical.diagnosis.view',
             'clinical.diagnosis.create',
             'clinical.diagnosis.update',
@@ -563,6 +599,72 @@ class PermissionSeeder extends Seeder
             'icu.audit.view',
             'icu.settings.manage',
 
+            // Blood Bank (Phase 13)
+            'bloodbank.dashboard.view',
+            'bloodbank.donor.view',
+            'bloodbank.donor.create',
+            'bloodbank.donor.update',
+            'bloodbank.screening.perform',
+            'bloodbank.donation.view',
+            'bloodbank.donation.collect',
+            'bloodbank.unit.view',
+            'bloodbank.unit.process',
+            'bloodbank.unit.release',
+            'bloodbank.unit.discard',
+            'bloodbank.test.record',
+            'bloodbank.inventory.view',
+            'bloodbank.inventory.manage',
+            'bloodbank.temperature.record',
+            'bloodbank.request.view',
+            'bloodbank.request.create',
+            'bloodbank.request.cancel',
+            'bloodbank.sample.receive',
+            'bloodbank.crossmatch.perform',
+            'bloodbank.issue.perform',
+            'bloodbank.issue.emergency',
+            'bloodbank.return.accept',
+            'bloodbank.transfusion.view',
+            'bloodbank.transfusion.record',
+            'bloodbank.reaction.record',
+            'bloodbank.incident.view',
+            'bloodbank.incident.manage',
+            'bloodbank.recall.manage',
+            'bloodbank.lookback.view',
+            'bloodbank.mtp.activate',
+            'bloodbank.report.view',
+            'bloodbank.report.export',
+            'bloodbank.settings.manage',
+
+            // Insurance and corporate claims (Phase 14)
+            'insurance.dashboard.view',
+            'insurance.payer.view',
+            'insurance.payer.manage',
+            'insurance.plan.view',
+            'insurance.plan.manage',
+            'insurance.policy.view',
+            'insurance.policy.manage',
+            'insurance.eligibility.verify',
+            'insurance.preauth.view',
+            'insurance.preauth.request',
+            'insurance.preauth.decide',
+            'insurance.claim.view',
+            'insurance.claim.create',
+            'insurance.claim.edit',
+            'insurance.claim.submit',
+            'insurance.claim.cancel',
+            'insurance.query.manage',
+            'insurance.appeal.manage',
+            'insurance.remittance.view',
+            'insurance.remittance.record',
+            'insurance.writeoff.request',
+            'insurance.writeoff.approve',
+            'insurance.corporate.view',
+            'insurance.corporate.manage',
+            'insurance.aging.view',
+            'insurance.report.view',
+            'insurance.report.export',
+            'insurance.settings.manage',
+
             // Insurance
             'insurance.view',
             'insurance.create',
@@ -577,6 +679,60 @@ class PermissionSeeder extends Seeder
             'finance.post',
             'finance.close',
 
+            // Inventory and procurement (Phase 15)
+            'inventory.dashboard.view',
+            'inventory.item.view',
+            'inventory.item.manage',
+            'inventory.store.view',
+            'inventory.store.manage',
+            'inventory.stock.view',
+            'inventory.expiry.view',
+            'inventory.expiry.manage',
+            'inventory.transfer.view',
+            'inventory.transfer.create',
+            'inventory.transfer.dispatch',
+            'inventory.transfer.receive',
+            'inventory.request.view',
+            'inventory.request.create',
+            'inventory.request.issue',
+            'inventory.consumption.record',
+            'inventory.count.view',
+            'inventory.count.perform',
+            'inventory.count.approve',
+            'inventory.adjustment.view',
+            'inventory.adjustment.request',
+            'inventory.adjustment.approve',
+            'inventory.valuation.view',
+            'inventory.report.view',
+            'inventory.report.export',
+            'inventory.settings.manage',
+            'procurement.supplier.view',
+            'procurement.supplier.manage',
+            'procurement.supplier.qualify',
+            'procurement.requisition.view',
+            'procurement.requisition.create',
+            'procurement.approval.level1',
+            'procurement.approval.level2',
+            'procurement.approval.level3',
+            'procurement.rfq.view',
+            'procurement.rfq.manage',
+            'procurement.po.view',
+            'procurement.po.create',
+            'procurement.po.issue',
+            'procurement.po.amend',
+            'procurement.emergency.create',
+            'procurement.grn.view',
+            'procurement.grn.receive',
+            'procurement.grn.inspect',
+            'procurement.invoice.view',
+            'procurement.invoice.record',
+            'procurement.invoice.approve',
+            'procurement.return.manage',
+            'procurement.budget.view',
+            'procurement.budget.manage',
+            'procurement.contract.manage',
+            'procurement.report.view',
+
             // Inventory
             'inventory.view',
             'inventory.create',
@@ -589,6 +745,333 @@ class PermissionSeeder extends Seeder
             'procurement.create',
             'procurement.update',
             'procurement.approve',
+
+            // HR, attendance, leave, payroll and compensation (Phase 16)
+            'hr.dashboard.view',
+            'hr.employee.view',
+            'hr.employee.manage',
+            'hr.employee.sensitive',
+            'hr.employee.separate',
+            'hr.provider_link.review',
+            'hr.job.manage',
+            'hr.contract.manage',
+            'hr.credential.view',
+            'hr.credential.manage',
+            'hr.document.manage',
+            'hr.onboarding.manage',
+            'hr.recruitment.manage',
+            'hr.roster.view',
+            'hr.roster.manage',
+            'hr.shift.manage',
+            'hr.staffing.view',
+            'hr.training.manage',
+            'hr.appraisal.manage',
+            'hr.report.view',
+            'hr.report.export',
+            'hr.settings.manage',
+            'hr.self.view',
+            'attendance.view',
+            'attendance.punch.import',
+            'attendance.process',
+            'attendance.device.manage',
+            'attendance.regularize.request',
+            'attendance.regularize.approve',
+            'leave.type.manage',
+            'leave.request.view',
+            'leave.request.create',
+            'leave.approve.manager',
+            'leave.approve.hr',
+            'leave.balance.view',
+            'leave.balance.adjust',
+            'leave.accrue',
+            'payroll.period.manage',
+            'payroll.run.create',
+            'payroll.run.view',
+            'payroll.run.approve',
+            'payroll.adjustment.manage',
+            'payroll.payslip.view',
+            'payroll.payslip.publish',
+            'payroll.payment.file',
+            'payroll.journal.post',
+            'payroll.overtime.approve',
+            'payroll.loan.manage',
+            'payroll.exception.view',
+            'payroll.tax.manage',
+            'payroll.reconcile.view',
+            'compensation.component.manage',
+            'compensation.structure.view',
+            'compensation.structure.manage',
+
+            // BI and Analytics (Phase 19)
+            'analytics.dashboard.view',
+            'analytics.dashboard.manage',
+            'analytics.kpi.view',
+            'analytics.kpi.manage',
+            'analytics.query.run',
+            'analytics.report.view',
+            'analytics.report.manage',
+            'analytics.report.export',
+            'analytics.schedule.manage',
+            'analytics.quality.view',
+            'analytics.quality.manage',
+            'analytics.load.view',
+            'analytics.load.run',
+            'analytics.load.rebuild',
+            'analytics.research.request',
+            'analytics.research.approve',
+            'analytics.research.download',
+            'analytics.benchmark.view',
+            'analytics.benchmark.manage',
+            'analytics.national.view',
+            'analytics.national.export',
+            'analytics.national.manage',
+            'analytics.forecast.view',
+            'analytics.question.ask',
+            'analytics.scope.organization',
+            'analytics.sensitive.view',
+
+            // Quality, Safety and Compliance (Phase 23)
+            'quality.dashboard.view',
+            'quality.incident.report',
+            'quality.incident.view',
+            'quality.incident.triage',
+            'quality.incident.amend',
+            'quality.incident.reveal',
+            'quality.incident.export',
+            'quality.investigation.manage',
+            'quality.investigation.review',
+            'quality.action.view',
+            'quality.action.manage',
+            'quality.action.verify',
+            'quality.infection.view',
+            'quality.infection.manage',
+            'quality.indicator.view',
+            'quality.indicator.manage',
+            'quality.audit.view',
+            'quality.audit.manage',
+            'quality.mortality.view',
+            'quality.mortality.review',
+            'quality.document.view',
+            'quality.document.manage',
+            'quality.document.approve',
+            'quality.document.acknowledge',
+            'quality.privilege.view',
+            'quality.privilege.request',
+            'quality.privilege.decide',
+            'quality.privilege.manage',
+            'quality.compliance.view',
+            'quality.compliance.manage',
+            'quality.accreditation.view',
+            'quality.accreditation.manage',
+            'quality.committee.view',
+            'quality.committee.manage',
+            'quality.complaint.link',
+
+            // Facility and Support Services (Phase 22)
+            'facility.dashboard.view',
+            'facility.asset.view',
+            'facility.asset.manage',
+            'facility.asset.label',
+            'facility.workorder.view',
+            'facility.workorder.report',
+            'facility.workorder.manage',
+            'facility.workorder.verify',
+            'facility.calibration.record',
+            'facility.housekeeping.view',
+            'facility.housekeeping.work',
+            'facility.housekeeping.manage',
+            'facility.housekeeping.inspect',
+            'facility.cssd.view',
+            'facility.cssd.manage',
+            'facility.cssd.release',
+            'facility.linen.view',
+            'facility.linen.manage',
+            'facility.waste.view',
+            'facility.waste.manage',
+            'facility.diet.view',
+            'facility.diet.order',
+            'facility.diet.kitchen',
+            'facility.ambulance.view',
+            'facility.ambulance.manage',
+            'facility.ambulance.request',
+            'facility.mortuary.view',
+            'facility.mortuary.manage',
+            'facility.mortuary.release',
+            'facility.visitor.view',
+            'facility.visitor.issue',
+            'facility.visitor.gate',
+            'facility.visitor.manage',
+
+            // AI and Clinical Intelligence (Phase 20)
+            'ai.dashboard.view',
+            'ai.use',
+            'ai.output.review',
+            'ai.output.view_all',
+            'ai.usecase.view',
+            'ai.usecase.manage',
+            'ai.usecase.approve',
+            'ai.killswitch',
+            'ai.provider.manage',
+            'ai.provider.legal',
+            'ai.model.manage',
+            'ai.model.approve',
+            'ai.prompt.manage',
+            'ai.knowledge.manage',
+            'ai.knowledge.approve',
+            'ai.eval.run',
+            'ai.eval.view',
+            'ai.incident.view',
+            'ai.incident.manage',
+            'ai.monitor.view',
+            'ai.audit.view',
+
+            // Dashboards (D1)
+            'dashboard.today.view',
+
+            // Patient Welfare Fund (Phase 26, Bangladesh pack)
+            'welfare.dashboard.view',
+            'welfare.fund.view',
+            'welfare.fund.manage',
+            'welfare.donation.record',
+            'welfare.assessment.view',
+            'welfare.assessment.create',
+            'welfare.assessment.decide',
+            'welfare.grant.view',
+            'welfare.grant.request',
+            'welfare.grant.approve',
+            'welfare.grant.apply',
+            'welfare.report.view',
+            'welfare.settings.manage',
+
+            // Births, deaths and police cases (Phase 26, Bangladesh pack)
+            'vital.dashboard.view',
+            'vital.birth.view',
+            'vital.birth.create',
+            'vital.birth.issue',
+            'vital.birth.register',
+            'vital.birth.cancel',
+            'vital.death.view',
+            'vital.death.create',
+            'vital.death.certify',
+            'vital.death.issue',
+            'vital.death.cancel',
+            'vital.medicolegal.view',
+            'vital.medicolegal.register',
+            'vital.medicolegal.manage',
+
+            // Mothers and babies (Phase 26, Bangladesh pack)
+            'mch.dashboard.view',
+            'mch.pregnancy.view',
+            'mch.pregnancy.book',
+            'mch.anc.record',
+            'mch.delivery.record',
+            'mch.immunisation.view',
+            'mch.immunisation.give',
+
+            // Disease watch (Phase 26, Bangladesh pack)
+            'watch.dashboard.view',
+            'watch.signal.view',
+            'watch.signal.decide',
+            'watch.signal.report',
+            'watch.condition.manage',
+
+            // Bed and cabin rates (Phase 26, Bangladesh pack)
+            'rates.bed.view',
+            'rates.opd.view',
+
+            // Finance and Accounting (Phase 21)
+            'finance.dashboard.view',
+            'finance.chart.view',
+            'finance.chart.manage',
+            'finance.journal.view',
+            'finance.journal.create',
+            'finance.journal.approve',
+            'finance.journal.reverse',
+            'finance.period.manage',
+            'finance.year.close',
+            'finance.ledger.view',
+            'finance.posting.view',
+            'finance.posting.retry',
+            'finance.receivable.view',
+            'finance.receivable.writeoff',
+            'finance.receivable.writeoff_approve',
+            'finance.payable.view',
+            'finance.payable.manage',
+            'finance.payable.approve',
+            'finance.payable.pay',
+            'finance.bank.view',
+            'finance.bank.manage',
+            'finance.bank.reconcile',
+            'finance.tax.view',
+            'finance.tax.manage',
+            'finance.budget.view',
+            'finance.budget.manage',
+            'finance.budget.approve',
+            'finance.asset.view',
+            'finance.asset.manage',
+            'finance.report.view',
+            'finance.report.export',
+            'finance.feeshare.manage',
+            'finance.settings.manage',
+
+            // Interoperability (Phase 18)
+            'interoperability.dashboard.view',
+            'interoperability.partner.view',
+            'interoperability.partner.manage',
+            'interoperability.credential.manage',
+            'interoperability.route.manage',
+            'interoperability.message.view',
+            'interoperability.message.replay',
+            'interoperability.message.send_test',
+            'interoperability.idmap.view',
+            'interoperability.idmap.manage',
+            'interoperability.exchange.log.view',
+            'interoperability.consent.override',
+            'interoperability.hl7.review',
+            'interoperability.dicom.worklist.view',
+            'interoperability.dicom.worklist.manage',
+            'interoperability.fhir.read',
+            'interoperability.fhir.write',
+            'interoperability.terminology.view',
+            'interoperability.national.publish',
+            'interoperability.report.view',
+            'interoperability.settings.manage',
+
+            // Patient portal and CRM (Phase 17)
+            'portal.dashboard.view',
+            'portal.account.view',
+            'portal.account.manage',
+            'portal.proxy.review',
+            'portal.release.view',
+            'portal.release.manage',
+            'portal.release.policy',
+            'portal.refill.review',
+            'portal.message.view',
+            'portal.message.reply',
+            'portal.request.manage',
+            'portal.payment.view',
+            'portal.payment.reconcile',
+            'portal.document.view',
+            'portal.communication.view',
+            'portal.report.view',
+            'portal.settings.manage',
+            'crm.dashboard.view',
+            'crm.interaction.view',
+            'crm.interaction.manage',
+            'crm.segment.view',
+            'crm.segment.manage',
+            'crm.segment.approve',
+            'crm.campaign.view',
+            'crm.campaign.manage',
+            'crm.campaign.approve',
+            'crm.feedback.view',
+            'crm.feedback.manage',
+            'crm.complaint.view',
+            'crm.complaint.manage',
+            'crm.complaint.close',
+            'crm.form.view',
+            'crm.form.manage',
+            'crm.report.view',
 
             // HR
             'hr.view',
@@ -645,7 +1128,18 @@ class PermissionSeeder extends Seeder
         $roles = [
             'super_admin' => $permissions,
             'hospital_admin' => [
-                'manage companies', 'manage branches', 'manage departments', 'manage users', 'manage patients',
+                'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.usecase.manage', 'ai.usecase.approve', 'ai.killswitch', 'ai.provider.manage', 'ai.provider.legal', 'ai.model.manage', 'ai.model.approve', 'ai.prompt.manage', 'ai.knowledge.manage', 'ai.knowledge.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view',
+                'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.workorder.verify', 'facility.calibration.record', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.cssd.view', 'facility.cssd.manage', 'facility.cssd.release', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request', 'facility.mortuary.view', 'facility.mortuary.manage', 'facility.mortuary.release', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate', 'facility.visitor.manage',
+                'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
+                'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
+                'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
+                'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
+                'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
+                'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
+                'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage', 'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
+                'downtime.view', 'import.view', 'import.patients', 'import.services', 'import.medications', 'import.lab_tests', 'import.beds', 'import.users', 'import.opening_stock',
+                'manage organizations', 'manage branches', 'manage departments', 'manage users', 'manage patients',
                 'patients.view', 'patients.create', 'patients.update', 'patients.delete', 'patients.merge', 'patients.export', 'patients.print',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.consents.manage', 'patients.amend.request', 'patients.amend.approve', 'patients.portal.manage',
@@ -661,7 +1155,7 @@ class PermissionSeeder extends Seeder
                 'encounter.start', 'encounter.complete', 'encounter.cancel', 'encounter.amend',
                 'encounter.lock', 'encounter.export', 'encounter.print',
                 'clinical.note.view', 'clinical.note.create', 'clinical.note.update',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view', 'clinical.diagnosis.create', 'clinical.diagnosis.update',
                 'clinical.order.view', 'clinical.order.create', 'clinical.order.cancel',
                 'clinical.referral.view', 'clinical.referral.create',
@@ -776,6 +1270,8 @@ class PermissionSeeder extends Seeder
                 'workflow.view', 'workflow.act', 'workflow.manage',
             ],
             'doctor' => [
+                'portal.release.view', 'portal.release.manage', 'portal.refill.review',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.order.place', 'ed.medication.administer', 'ed.procedure.record', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.consult.manage', 'ed.disposition.decide', 'ed.death.declare', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.transfusion.view', 'bloodbank.reaction.record', 'bloodbank.issue.emergency', 'bloodbank.mtp.activate', 'bloodbank.lookback.view', 'bloodbank.incident.view', 'insurance.policy.view', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.claim.view',
                 'patients.view', 'patients.create', 'patients.update',
                 'patients.alert.view', 'patients.alert.manage', 'patients.documents.view', 'patients.documents.manage',
                 'patients.consents.view', 'patients.amend.request',
@@ -787,7 +1283,7 @@ class PermissionSeeder extends Seeder
                 'encounter.start', 'encounter.complete', 'encounter.cancel', 'encounter.amend',
                 'encounter.lock', 'encounter.export', 'encounter.print',
                 'clinical.note.view', 'clinical.note.create', 'clinical.note.update',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view', 'clinical.diagnosis.create', 'clinical.diagnosis.update',
                 'clinical.order.view', 'clinical.order.create', 'clinical.order.cancel',
                 'clinical.referral.view', 'clinical.referral.create',
@@ -823,6 +1319,8 @@ class PermissionSeeder extends Seeder
             // to the same permission set as 'staff_nurse' rather than left orphaned on the old
             // generic 'nursing.*' stub permissions (still granted below for backward compatibility).
             'nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.view', 'nursing.create', 'nursing.update', 'nursing.administer',
                 'nursing.dashboard.view',
@@ -845,7 +1343,7 @@ class PermissionSeeder extends Seeder
                 'emr.view', 'emr.create', 'emr.update',
                 'encounters.view', 'encounters.update', 'encounter.start',
                 'clinical.note.view', 'clinical.note.create',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view',
                 'prescription.view',
                 'ipd.dashboard.view', 'ipd.admission.view',
@@ -856,6 +1354,8 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'receptionist' => [
+                'insurance.policy.view', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create',
                 'patients.view', 'patients.create', 'patients.update', 'patients.print',
                 'patients.documents.view', 'patients.documents.manage', 'patients.consents.view', 'patients.consents.manage',
                 'appointments.view', 'appointments.create', 'appointments.update',
@@ -943,6 +1443,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'radiologist' => [
+                'interoperability.dicom.worklist.view',
                 'radiology.view', 'radiology.report',
                 'radiology.dashboard.view',
                 'radiology.order.view',
@@ -1076,6 +1577,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export', 'reporting.print',
             ],
             'cashier' => [
+                'insurance.policy.view', 'insurance.claim.view',
                 'billing.view', 'billing.create', 'billing.update', 'billing.payment',
                 'billing.dashboard.view', 'billing.charge.view', 'billing.invoice.view',
                 'billing.payment.view', 'billing.payment.create', 'billing.receipt.view',
@@ -1128,6 +1630,8 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'staff_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view',
@@ -1149,7 +1653,7 @@ class PermissionSeeder extends Seeder
                 'emr.view', 'emr.create', 'emr.update',
                 'encounters.view', 'encounters.update', 'encounter.start',
                 'clinical.note.view', 'clinical.note.create',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view',
                 'prescription.view',
                 'ipd.dashboard.view', 'ipd.admission.view', 'ipd.bed.view',
@@ -1157,6 +1661,8 @@ class PermissionSeeder extends Seeder
                 'reporting.view',
             ],
             'senior_staff_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.observation.manage', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1178,7 +1684,7 @@ class PermissionSeeder extends Seeder
                 'emr.view', 'emr.create', 'emr.update',
                 'encounters.view', 'encounters.update', 'encounter.start',
                 'clinical.note.view', 'clinical.note.create',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view',
                 'prescription.view',
                 'ipd.dashboard.view', 'ipd.admission.view', 'ipd.bed.view',
@@ -1186,6 +1692,8 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'charge_nurse' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
+                'ed.board.view', 'ed.visit.view', 'ed.visit.create', 'ed.visit.update', 'ed.triage.perform', 'ed.zone.manage', 'ed.resus.record', 'ed.monitor.record', 'ed.medication.administer', 'ed.protocol.run', 'ed.mci.manage', 'ed.observation.manage', 'ed.disposition.decide', 'ed.kpi.view', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1211,7 +1719,7 @@ class PermissionSeeder extends Seeder
                 'emr.view', 'emr.create', 'emr.update',
                 'encounters.view', 'encounters.update', 'encounter.start',
                 'clinical.note.view', 'clinical.note.create',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'clinical.diagnosis.view',
                 'prescription.view',
                 'ipd.dashboard.view', 'ipd.admission.view', 'ipd.bed.view',
@@ -1219,6 +1727,7 @@ class PermissionSeeder extends Seeder
                 'reporting.view', 'reporting.export',
             ],
             'nursing_supervisor' => [
+                'inventory.request.view', 'inventory.request.create', 'inventory.consumption.record', 'inventory.stock.view', 'inventory.item.view',
                 'patients.view', 'patients.alert.view', 'patients.documents.view',
                 'nursing.dashboard.view',
                 'nursing.assignment.view', 'nursing.assignment.create', 'nursing.assignment.update',
@@ -1303,7 +1812,7 @@ class PermissionSeeder extends Seeder
                 'ot.checklist.view', 'ot.checklist.complete',
                 'ot.procedure.view', 'ot.procedure.document',
                 'ot.recovery.view', 'ot.recovery.record', 'ot.recovery.complete',
-                'clinical.vitals.view', 'clinical.vitals.create',
+                'clinical.vitals.view', 'clinical.vitals.create', 'clinical.observation.view', 'clinical.alert.view', 'clinical.alert.acknowledge', 'clinical.alert.resolve', 'downtime.view', 'ed.board.view', 'ed.visit.view',
                 'reporting.view',
             ],
             'ot_nurse' => [
@@ -1530,7 +2039,247 @@ class PermissionSeeder extends Seeder
                 'icu.audit.view', 'icu.settings.manage',
                 'reporting.view', 'reporting.export', 'reporting.print',
             ],
+            'blood_bank_technician' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.lookback.view', 'bloodbank.report.view',
+            ],
+            'blood_bank_medical_officer' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
+            ],
+            'blood_bank_manager' => [
+                'patients.view',
+                'bloodbank.dashboard.view', 'bloodbank.donor.view', 'bloodbank.donor.create', 'bloodbank.donor.update', 'bloodbank.screening.perform', 'bloodbank.donation.view', 'bloodbank.donation.collect', 'bloodbank.unit.view', 'bloodbank.unit.process', 'bloodbank.unit.release', 'bloodbank.unit.discard', 'bloodbank.test.record', 'bloodbank.inventory.view', 'bloodbank.inventory.manage', 'bloodbank.temperature.record', 'bloodbank.request.view', 'bloodbank.request.create', 'bloodbank.request.cancel', 'bloodbank.sample.receive', 'bloodbank.crossmatch.perform', 'bloodbank.issue.perform', 'bloodbank.issue.emergency', 'bloodbank.return.accept', 'bloodbank.transfusion.view', 'bloodbank.transfusion.record', 'bloodbank.reaction.record', 'bloodbank.incident.view', 'bloodbank.incident.manage', 'bloodbank.recall.manage', 'bloodbank.lookback.view', 'bloodbank.mtp.activate', 'bloodbank.report.view', 'bloodbank.report.export', 'bloodbank.settings.manage',
+                'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'insurance_officer' => [
+                'patients.view',
+                'insurance.dashboard.view', 'insurance.payer.view', 'insurance.plan.view', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export',
+                'billing.view',
+            ],
+            'claims_manager' => [
+                'patients.view',
+                'insurance.dashboard.view', 'insurance.payer.view', 'insurance.payer.manage', 'insurance.plan.view', 'insurance.plan.manage', 'insurance.policy.view', 'insurance.policy.manage', 'insurance.eligibility.verify', 'insurance.preauth.view', 'insurance.preauth.request', 'insurance.preauth.decide', 'insurance.claim.view', 'insurance.claim.create', 'insurance.claim.edit', 'insurance.claim.submit', 'insurance.claim.cancel', 'insurance.query.manage', 'insurance.appeal.manage', 'insurance.remittance.view', 'insurance.remittance.record', 'insurance.writeoff.request', 'insurance.writeoff.approve', 'insurance.corporate.view', 'insurance.corporate.manage', 'insurance.aging.view', 'insurance.report.view', 'insurance.report.export', 'insurance.settings.manage',
+                'billing.view', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'storekeeper' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.adjustment.view', 'inventory.adjustment.request', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.return.manage',
+            ],
+            'inventory_manager' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.item.manage', 'inventory.store.view', 'inventory.store.manage', 'inventory.stock.view', 'inventory.expiry.view', 'inventory.expiry.manage', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.transfer.dispatch', 'inventory.transfer.receive', 'inventory.request.view', 'inventory.request.create', 'inventory.request.issue', 'inventory.consumption.record', 'inventory.count.view', 'inventory.count.perform', 'inventory.count.approve', 'inventory.adjustment.view', 'inventory.adjustment.request', 'inventory.adjustment.approve', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'inventory.settings.manage', 'procurement.supplier.view', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.return.manage', 'procurement.po.view', 'procurement.budget.view', 'procurement.report.view', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'procurement_officer' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.valuation.view', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.contract.manage', 'procurement.budget.view', 'procurement.report.view',
+            ],
+            'procurement_manager' => [
+                'patients.view', 'inventory.dashboard.view', 'inventory.item.view', 'inventory.store.view', 'inventory.stock.view', 'inventory.valuation.view', 'inventory.report.view', 'inventory.report.export', 'procurement.supplier.view', 'procurement.supplier.manage', 'procurement.supplier.qualify', 'procurement.requisition.view', 'procurement.requisition.create', 'procurement.approval.level1', 'procurement.approval.level2', 'procurement.approval.level3', 'procurement.rfq.view', 'procurement.rfq.manage', 'procurement.po.view', 'procurement.po.create', 'procurement.po.issue', 'procurement.po.amend', 'procurement.emergency.create', 'procurement.grn.view', 'procurement.grn.receive', 'procurement.grn.inspect', 'procurement.invoice.view', 'procurement.invoice.record', 'procurement.invoice.approve', 'procurement.return.manage', 'procurement.budget.view', 'procurement.budget.manage', 'procurement.contract.manage', 'procurement.report.view', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'hr_officer' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.report.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.approve.hr', 'leave.balance.view',
+            ],
+            'hr_manager' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.manage', 'hr.employee.sensitive', 'hr.employee.separate', 'hr.provider_link.review', 'hr.job.manage', 'hr.contract.manage', 'hr.credential.view', 'hr.credential.manage', 'hr.document.manage', 'hr.onboarding.manage', 'hr.recruitment.manage', 'hr.roster.view', 'hr.roster.manage', 'hr.shift.manage', 'hr.staffing.view', 'hr.training.manage', 'hr.appraisal.manage', 'hr.report.view', 'hr.report.export', 'hr.settings.manage', 'hr.self.view', 'attendance.view', 'attendance.punch.import', 'attendance.process', 'attendance.device.manage', 'attendance.regularize.request', 'attendance.regularize.approve', 'leave.type.manage', 'leave.request.view', 'leave.request.create', 'leave.approve.manager', 'leave.approve.hr', 'leave.balance.view', 'leave.balance.adjust', 'leave.accrue', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'payroll_officer' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.sensitive', 'hr.report.view', 'attendance.view', 'leave.request.view', 'leave.balance.view', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payment.file', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage',
+            ],
+            'payroll_manager' => [
+                'patients.view', 'hr.dashboard.view', 'hr.employee.view', 'hr.employee.sensitive', 'hr.report.view', 'hr.report.export', 'attendance.view', 'leave.request.view', 'leave.balance.view', 'payroll.period.manage', 'payroll.run.create', 'payroll.run.view', 'payroll.run.approve', 'payroll.adjustment.manage', 'payroll.payslip.view', 'payroll.payslip.publish', 'payroll.payment.file', 'payroll.journal.post', 'payroll.overtime.approve', 'payroll.loan.manage', 'payroll.exception.view', 'payroll.tax.manage', 'payroll.reconcile.view', 'compensation.component.manage', 'compensation.structure.view', 'compensation.structure.manage', 'reporting.view', 'reporting.export', 'reporting.print',
+            ],
+            'patient_relations_manager' => [
+                'patients.view', 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.release.manage', 'portal.release.policy', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.payment.view', 'portal.payment.reconcile', 'portal.document.view', 'portal.communication.view', 'portal.report.view', 'portal.settings.manage', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.segment.manage', 'crm.segment.approve', 'crm.campaign.view', 'crm.campaign.manage', 'crm.campaign.approve', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.complaint.close', 'crm.form.view', 'crm.form.manage', 'crm.report.view',
+            ],
+            'patient_relations_officer' => [
+                'patients.view', 'portal.dashboard.view', 'portal.account.view', 'portal.account.manage', 'portal.proxy.review', 'portal.release.view', 'portal.refill.review', 'portal.message.view', 'portal.message.reply', 'portal.request.manage', 'portal.document.view', 'portal.communication.view', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.segment.view', 'crm.campaign.view', 'crm.feedback.view', 'crm.feedback.manage', 'crm.complaint.view', 'crm.complaint.manage', 'crm.form.view',
+            ],
+            'call_center_agent' => [
+                'patients.view', 'appointments.view', 'appointments.create', 'appointments.cancel', 'appointments.reschedule', 'crm.dashboard.view', 'crm.interaction.view', 'crm.interaction.manage', 'crm.complaint.view', 'crm.complaint.manage', 'portal.account.view', 'portal.message.view', 'portal.message.reply',
+            ],
+            'integration_manager' => [
+                'patients.view', 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.partner.manage', 'interoperability.credential.manage', 'interoperability.route.manage', 'interoperability.message.view', 'interoperability.message.replay', 'interoperability.message.send_test', 'interoperability.idmap.view', 'interoperability.idmap.manage', 'interoperability.exchange.log.view', 'interoperability.consent.override', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.dicom.worklist.manage', 'interoperability.fhir.read', 'interoperability.fhir.write', 'interoperability.terminology.view', 'interoperability.national.publish', 'interoperability.report.view', 'interoperability.settings.manage',
+            ],
+            'integration_officer' => [
+                'patients.view', 'interoperability.dashboard.view', 'interoperability.partner.view', 'interoperability.message.view', 'interoperability.idmap.view', 'interoperability.exchange.log.view', 'interoperability.hl7.review', 'interoperability.dicom.worklist.view', 'interoperability.terminology.view', 'interoperability.fhir.read', 'interoperability.report.view',
+            ],
+            'finance_manager' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.chart.manage', 'finance.journal.view', 'finance.journal.create', 'finance.journal.approve', 'finance.journal.reverse', 'finance.period.manage', 'finance.year.close', 'finance.ledger.view', 'finance.posting.view', 'finance.posting.retry', 'finance.receivable.view', 'finance.receivable.writeoff', 'finance.receivable.writeoff_approve', 'finance.payable.view', 'finance.payable.manage', 'finance.payable.approve', 'finance.payable.pay', 'finance.bank.view', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.view', 'finance.tax.manage', 'finance.budget.view', 'finance.budget.manage', 'finance.budget.approve', 'finance.asset.view', 'finance.asset.manage', 'finance.report.view', 'finance.report.export', 'finance.feeshare.manage', 'finance.settings.manage',
+            ],
+            'accountant' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view', 'finance.chart.manage', 'finance.journal.create', 'finance.journal.reverse', 'finance.period.manage', 'finance.posting.retry', 'finance.receivable.writeoff', 'finance.payable.manage', 'finance.bank.manage', 'finance.bank.reconcile', 'finance.tax.manage', 'finance.budget.manage', 'finance.asset.manage', 'finance.report.export', 'finance.feeshare.manage', 'finance.journal.approve', 'finance.receivable.writeoff_approve', 'finance.payable.approve', 'finance.payable.pay', 'finance.budget.approve',
+            ],
+            'accounts_officer' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view', 'finance.journal.create', 'finance.payable.manage', 'finance.receivable.writeoff', 'finance.bank.reconcile', 'finance.report.export',
+            ],
+            'finance_viewer' => [
+                'patients.view', 'finance.dashboard.view', 'finance.chart.view', 'finance.journal.view', 'finance.ledger.view', 'finance.posting.view', 'finance.receivable.view', 'finance.payable.view', 'finance.bank.view', 'finance.tax.view', 'finance.budget.view', 'finance.asset.view', 'finance.report.view',
+            ],
+            'analytics_manager' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.dashboard.manage', 'analytics.kpi.view', 'analytics.kpi.manage', 'analytics.query.run', 'analytics.report.view', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.quality.manage', 'analytics.load.view', 'analytics.load.run', 'analytics.load.rebuild', 'analytics.research.request', 'analytics.research.approve', 'analytics.research.download', 'analytics.benchmark.view', 'analytics.benchmark.manage', 'analytics.national.view', 'analytics.national.export', 'analytics.national.manage', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.scope.organization', 'analytics.sensitive.view',
+            ],
+            'data_analyst' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view', 'analytics.dashboard.manage', 'analytics.kpi.manage', 'analytics.report.manage', 'analytics.report.export', 'analytics.schedule.manage', 'analytics.quality.view', 'analytics.load.view', 'analytics.national.view', 'analytics.research.request', 'analytics.scope.organization',
+            ],
+            'executive_viewer' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view', 'analytics.scope.organization', 'analytics.sensitive.view', 'analytics.national.view', 'analytics.quality.view', 'analytics.load.view', 'analytics.report.export',
+            ],
+            'branch_manager_analytics' => [
+                'patients.view', 'analytics.dashboard.view', 'analytics.kpi.view', 'analytics.report.view', 'analytics.query.run', 'analytics.forecast.view', 'analytics.question.ask', 'analytics.benchmark.view',
+            ],
+            'quality_manager' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.report', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.incident.reveal', 'quality.incident.export', 'quality.investigation.manage', 'quality.investigation.review', 'quality.action.view', 'quality.action.manage', 'quality.action.verify', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.indicator.manage', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.mortality.review', 'quality.document.view', 'quality.document.manage', 'quality.document.approve', 'quality.document.acknowledge', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.decide', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.accreditation.view', 'quality.accreditation.manage', 'quality.committee.view', 'quality.committee.manage', 'quality.complaint.link',
+            ],
+            'quality_officer' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.view', 'quality.incident.triage', 'quality.incident.amend', 'quality.investigation.manage', 'quality.action.view', 'quality.action.manage', 'quality.indicator.view', 'quality.audit.view', 'quality.audit.manage', 'quality.mortality.view', 'quality.document.view', 'quality.document.manage', 'quality.committee.view', 'quality.accreditation.view', 'quality.compliance.view', 'quality.complaint.link',
+            ],
+            'infection_control_officer' => [
+                'patients.view', 'quality.dashboard.view', 'quality.infection.view', 'quality.infection.manage', 'quality.indicator.view', 'quality.action.view', 'quality.document.view', 'quality.committee.view',
+            ],
+            'clinical_auditor' => [
+                'patients.view', 'quality.dashboard.view', 'quality.audit.view', 'quality.audit.manage', 'quality.indicator.view', 'quality.mortality.view', 'quality.action.view', 'quality.document.view',
+            ],
+            'medical_director' => [
+                'patients.view', 'quality.dashboard.view', 'quality.incident.view', 'quality.investigation.review', 'quality.action.view', 'quality.action.verify', 'quality.indicator.view', 'quality.mortality.view', 'quality.mortality.review', 'quality.privilege.view', 'quality.privilege.decide', 'quality.committee.view', 'quality.accreditation.view', 'quality.compliance.view', 'quality.document.view', 'quality.document.approve',
+            ],
+            'credentialing_officer' => [
+                'patients.view', 'quality.privilege.view', 'quality.privilege.request', 'quality.privilege.manage', 'quality.compliance.view', 'quality.compliance.manage', 'quality.document.view',
+            ],
+            'facility_manager' => [
+                'patients.view', 'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.workorder.verify', 'facility.calibration.record', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.cssd.view', 'facility.cssd.manage', 'facility.cssd.release', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request', 'facility.mortuary.view', 'facility.mortuary.manage', 'facility.mortuary.release', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate', 'facility.visitor.manage',
+            ],
+            'biomedical_engineer' => [
+                'patients.view', 'facility.dashboard.view', 'facility.asset.view', 'facility.asset.manage', 'facility.asset.label', 'facility.workorder.view', 'facility.workorder.report', 'facility.workorder.manage', 'facility.calibration.record', 'facility.cssd.view',
+            ],
+            'housekeeping_supervisor' => [
+                'patients.view', 'facility.dashboard.view', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.housekeeping.manage', 'facility.housekeeping.inspect', 'facility.linen.view', 'facility.linen.manage', 'facility.waste.view', 'facility.waste.manage',
+            ],
+            'housekeeper' => [
+                'patients.view', 'facility.housekeeping.view', 'facility.housekeeping.work', 'facility.waste.view',
+            ],
+            'cssd_technician' => [
+                'patients.view', 'facility.cssd.view', 'facility.cssd.manage', 'facility.asset.view',
+            ],
+            'dietitian' => [
+                'patients.view', 'facility.dashboard.view', 'facility.diet.view', 'facility.diet.order', 'facility.diet.kitchen',
+            ],
+            'kitchen_staff' => [
+                'patients.view', 'facility.diet.view', 'facility.diet.kitchen',
+            ],
+            'ambulance_dispatcher' => [
+                'patients.view', 'facility.dashboard.view', 'facility.ambulance.view', 'facility.ambulance.manage', 'facility.ambulance.request',
+            ],
+            'mortuary_attendant' => [
+                'patients.view', 'facility.mortuary.view', 'facility.mortuary.manage',
+            ],
+            'security_guard' => [
+                'patients.view', 'facility.visitor.view', 'facility.visitor.gate',
+            ],
+            'reception_gate_officer' => [
+                'patients.view', 'facility.visitor.view', 'facility.visitor.issue', 'facility.visitor.gate',
+            ],
+            'ai_governance_lead' => [
+                'patients.view', 'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.usecase.manage', 'ai.usecase.approve', 'ai.killswitch', 'ai.provider.manage', 'ai.provider.legal', 'ai.model.manage', 'ai.model.approve', 'ai.prompt.manage', 'ai.knowledge.manage', 'ai.knowledge.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view',
+            ],
+            'ai_clinical_reviewer' => [
+                'patients.view', 'ai.dashboard.view', 'ai.use', 'ai.output.review', 'ai.output.view_all', 'ai.usecase.view', 'ai.eval.view', 'ai.incident.view', 'ai.monitor.view',
+            ],
+            'ai_safety_officer' => [
+                'patients.view', 'ai.dashboard.view', 'ai.usecase.view', 'ai.usecase.approve', 'ai.killswitch', 'ai.model.approve', 'ai.eval.run', 'ai.eval.view', 'ai.incident.view', 'ai.incident.manage', 'ai.monitor.view', 'ai.audit.view', 'ai.provider.legal',
+            ],
+            'hospital_director' => [
+                'patients.view', 'dashboard.today.view', 'encounters.view', 'ed.board.view', 'ipd.dashboard.view', 'ot.dashboard.view', 'billing.dashboard.view', 'analytics.dashboard.view', 'quality.dashboard.view', 'welfare.dashboard.view', 'welfare.grant.view', 'welfare.report.view', 'appointments.queue',
+            ],
+            'welfare_officer' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.assessment.view', 'welfare.assessment.create', 'welfare.grant.view', 'welfare.grant.request', 'welfare.grant.apply',
+            ],
+            'welfare_committee_member' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.assessment.view', 'welfare.assessment.decide', 'welfare.grant.view', 'welfare.grant.approve', 'welfare.report.view',
+            ],
+            'welfare_manager' => [
+                'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.fund.manage', 'welfare.donation.record', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.report.view', 'welfare.settings.manage',
+            ],
+            'surveillance_officer' => [
+                'patients.view', 'watch.dashboard.view', 'watch.signal.view', 'watch.signal.decide', 'watch.signal.report',
+            ],
+            'surveillance_manager' => [
+                'patients.view', 'watch.dashboard.view', 'watch.signal.view', 'watch.signal.decide', 'watch.signal.report', 'watch.condition.manage',
+            ],
+            'mch_midwife' => [
+                'patients.view', 'mch.dashboard.view', 'mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'mch.immunisation.view', 'vital.birth.view', 'vital.birth.create',
+            ],
+            'immunisation_nurse' => [
+                'patients.view', 'mch.dashboard.view', 'mch.immunisation.view', 'mch.immunisation.give',
+            ],
+            'records_officer' => [
+                'patients.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.birth.create', 'vital.birth.issue', 'vital.birth.register', 'vital.death.view', 'vital.death.create', 'vital.death.issue',
+            ],
+            'records_manager' => [
+                'patients.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.birth.create', 'vital.birth.issue', 'vital.birth.register', 'vital.birth.cancel', 'vital.death.view', 'vital.death.create', 'vital.death.issue', 'vital.death.cancel',
+            ],
+            'medicolegal_officer' => [
+                'patients.view', 'vital.dashboard.view', 'vital.death.view', 'vital.medicolegal.view', 'vital.medicolegal.register', 'vital.medicolegal.manage',
+            ],
+            'department_manager' => [
+                'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
+            ],
         ];
+
+        // Doctors and nurses of the wards see and run antenatal care and immunisation as their duties need.
+        foreach (['doctor', 'surgeon'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['mch.pregnancy.view', 'mch.pregnancy.book', 'mch.anc.record', 'mch.delivery.record', 'mch.immunisation.view', 'mch.immunisation.give'])));
+            }
+        }
+        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse'] as $nurse) {
+            if (isset($roles[$nurse])) {
+                $roles[$nurse] = array_values(array_unique(array_merge($roles[$nurse], ['mch.pregnancy.view', 'mch.anc.record', 'mch.immunisation.view', 'mch.immunisation.give'])));
+            }
+        }
+        if (isset($roles['hospital_director'])) {
+            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['mch.dashboard.view', 'watch.dashboard.view', 'watch.signal.view'])));
+        }
+
+        // Those who admit patients, bill them and answer their families see the rate card.
+        foreach (['cashier', 'receptionist', 'ipd_coordinator', 'charge_nurse', 'ward_manager', 'hospital_director', 'doctor'] as $desk) {
+            if (isset($roles[$desk])) {
+                $roles[$desk] = array_values(array_unique(array_merge($roles[$desk], ['rates.bed.view', 'rates.opd.view'])));
+            }
+        }
+
+        // A doctor writes and certifies the cause of death of a patient they treated, notifies the births they attend, and registers a police case.
+        foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['vital.death.view', 'vital.death.create', 'vital.death.certify', 'vital.birth.view', 'vital.birth.create', 'vital.medicolegal.view', 'vital.medicolegal.register'])));
+            }
+        }
+        if (isset($roles['hospital_director'])) {
+            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['vital.dashboard.view', 'vital.death.view', 'vital.birth.view'])));
+        }
+
+        // Clinicians can ask the AI to read a record back to them and are the people who accept or reject what it drafts; other clinical staff can use it and report problems.
+        foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician', 'senior_radiologist', 'pathologist'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['ai.use', 'ai.output.review'])));
+            }
+        }
+        foreach (['staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'data_analyst', 'accountant', 'inventory_manager', 'storekeeper', 'procurement_officer', 'procurement_manager', 'radiologist', 'senior_radiologist', 'radiology_manager', 'insurance_officer', 'claims_manager'] as $user) {
+            if (isset($roles[$user])) {
+                $roles[$user] = array_values(array_unique(array_merge($roles[$user], ['ai.use'])));
+            }
+        }
+
+        // Clinical staff can order diets, ask for an ambulance and ask for a clean.
+        foreach (['doctor', 'staff_nurse', 'senior_staff_nurse', 'charge_nurse', 'ward_manager', 'nursing_supervisor', 'icu_nurse', 'senior_icu_nurse'] as $clinical) {
+            if (isset($roles[$clinical])) {
+                $roles[$clinical] = array_values(array_unique(array_merge($roles[$clinical], ['facility.diet.order', 'facility.diet.view', 'facility.ambulance.request', 'facility.housekeeping.view'])));
+            }
+        }
+
+        // Employee self-service (Phase 16): every job role can see its own payslips, ask for leave and ask for a punch to be corrected.
+        foreach ($roles as $roleName => $rolePermissions) {
+            if ($roleName !== 'super_admin') {
+                $roles[$roleName] = array_values(array_unique(array_merge($rolePermissions, ['hr.self.view', 'leave.request.create', 'attendance.regularize.request', 'quality.incident.report', 'quality.document.view', 'quality.document.acknowledge', 'facility.workorder.report'])));
+            }
+        }
 
         foreach ($roles as $roleName => $rolePermissions) {
             $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);

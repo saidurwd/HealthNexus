@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_amendments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->foreignId('workflow_instance_id')->nullable()->constrained('workflow_instances')->nullOnDelete();
             $table->json('proposed_changes');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('applied_at')->nullable();
             $table->timestamps();
 
-            $table->index(['company_id', 'patient_id', 'status'], 'patient_amendment_status_idx');
+            $table->index(['organization_id', 'patient_id', 'status'], 'patient_amendment_status_idx');
         });
     }
 

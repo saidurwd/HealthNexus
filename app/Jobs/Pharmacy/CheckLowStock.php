@@ -41,7 +41,7 @@ class CheckLowStock implements ShouldQueue
             // whereHas against the roles pivot, not Spatie's role() scope — that throws
             // RoleDoesNotExist if a listed role isn't defined yet for a given deployment.
             $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['pharmacist', 'senior_pharmacist', 'pharmacy_manager', 'storekeeper', 'pharmacy_administrator']))
-                ->whereHas('companies', fn ($q) => $q->where('companies.id', $level->medication->company_id))
+                ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $level->medication->organization_id))
                 ->get();
 
             if ($recipients->isEmpty()) {

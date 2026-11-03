@@ -13,7 +13,7 @@ class PatientAllergyFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Patient::factory(),
+            'organization_id' => Patient::factory(),
             'patient_id' => Patient::factory(),
             'substance' => fake()->word(),
             'severity' => fake()->randomElement(['mild', 'moderate', 'severe']),

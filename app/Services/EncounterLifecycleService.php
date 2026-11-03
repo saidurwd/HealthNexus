@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
+use App\Events\Clinical\EncounterCompleted;
+use App\Events\Clinical\EncounterLocked;
+use App\Events\Clinical\EncounterStarted;
 use App\Models\Encounter;
 use App\Models\EncounterStatusHistory;
 use App\Models\User;
-use App\Events\Clinical\EncounterStarted;
-use App\Events\Clinical\EncounterCompleted;
-use App\Events\Clinical\EncounterLocked;
 use Illuminate\Support\Facades\DB;
 
 class EncounterLifecycleService

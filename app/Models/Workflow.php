@@ -11,16 +11,16 @@ class Workflow extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'code', 'name', 'description', 'is_active'];
+    protected $fillable = ['organization_id', 'code', 'name', 'description', 'is_active'];
 
     protected function casts(): array
     {
         return ['is_active' => 'boolean'];
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function steps(): HasMany

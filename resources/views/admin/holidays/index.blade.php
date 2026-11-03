@@ -5,8 +5,8 @@
 @section('page_content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Hospital Holidays</h2>
-            <a href="{{ route('admin.holidays.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Add Holiday</a>
+            <h2 class="mb-0">{{ __('Hospital Holidays') }}</h2>
+            <a href="{{ route('admin.holidays.create') }}" class="btn btn-primary"><i class="bi bi-plus me-1"></i>{{ __('Add Holiday') }}</a>
         </div>
 
         <div class="card">
@@ -15,11 +15,11 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Scope</th>
-                                <th class="text-center">Recurring Annually</th>
-                                <th class="text-center">Actions</th>
+                                <th>{{ __('Date') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Scope') }}</th>
+                                <th class="text-center">{{ __('Recurring Annually') }}</th>
+                                <th class="text-center">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,7 +40,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="text-center py-4 text-muted">No holidays configured.</td></tr>
+                                <tr><td colspan="5" class="text-center py-4 text-muted">{{ __('No holidays configured.') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>

@@ -1,7 +1,7 @@
 <div class="tab-pane fade" id="instructions" role="tabpanel">
     <div class="card card-light card-outline">
         <div class="card-header">
-            <h3 class="card-title">Instructions</h3>
+            <h3 class="card-title">{{ __('Instructions') }}</h3>
         </div>
         <div class="card-body">
             @if($encounter->instructions->isNotEmpty())
@@ -12,7 +12,7 @@
                     </div>
                 @endforeach
             @else
-                <p class="text-muted">No instructions recorded.</p>
+                <p class="text-muted">{{ __('No instructions recorded.') }}</p>
             @endif
 
             @if(!$encounter->locked_at)
@@ -21,24 +21,24 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Type</label>
+                                <label>{{ __('Type') }}</label>
                                 <select name="instruction_type" class="form-control" required>
-                                    <option value="medication">Medication</option>
-                                    <option value="diet">Diet</option>
-                                    <option value="lifestyle">Lifestyle</option>
-                                    <option value="warning">Warning Signs</option>
-                                    <option value="follow_up">Follow-up</option>
+                                    <option value="medication">{{ __('Medication') }}</option>
+                                    <option value="diet">{{ __('Diet') }}</option>
+                                    <option value="lifestyle">{{ __('Lifestyle') }}</option>
+                                    <option value="warning">{{ __('Warning Signs') }}</option>
+                                    <option value="follow_up">{{ __('Follow-up') }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="form-group">
-                                <label>Content</label>
+                                <label>{{ __('Content') }}</label>
                                 <textarea name="content" class="form-control" rows="2" required></textarea>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Add Instruction</button>
+                    <button type="submit" class="btn btn-primary mt-2">{{ __('Add Instruction') }}</button>
                 </form>
             @endif
         </div>

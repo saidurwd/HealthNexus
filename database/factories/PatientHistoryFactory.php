@@ -13,7 +13,7 @@ class PatientHistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => Patient::factory(),
+            'organization_id' => Patient::factory(),
             'patient_id' => Patient::factory(),
             'condition' => fake()->word(),
             'description' => fake()->optional()->sentence(),

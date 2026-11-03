@@ -18,10 +18,10 @@ class IcuProcedureController extends Controller
     {
         Gate::authorize('icu.procedure.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
-        $procedures = IcuProcedure::forTenant($companyId, $branchId)->orderBy('name')->paginate(20);
+        $procedures = IcuProcedure::forTenant($organizationId, $branchId)->orderBy('name')->paginate(20);
 
         return view('admin.icu.procedures.index', compact('procedures'));
     }
@@ -43,11 +43,11 @@ class IcuProcedureController extends Controller
             'category' => ['nullable', 'string'],
         ]);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
-        IcuProcedure::create([...$validated, 'company_id' => $companyId, 'is_active' => true]);
+        IcuProcedure::create([...$validated, 'organization_id' => $organizationId, 'is_active' => true]);
 
-        return redirect()->route('admin.icu.procedures.index')->with('success', 'ICU procedure added.');
+        return redirect()->route('admin.icu.procedures.index')->with('success', __('ICU procedure added.'));
     }
 
     public function record(Request $request, IcuEpisode $episode)
@@ -64,6 +64,6 @@ class IcuProcedureController extends Controller
 
         $this->procedures->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Procedure recorded.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Procedure recorded.'));
     }
 }

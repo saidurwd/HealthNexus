@@ -32,7 +32,7 @@ class DetectOverdueMedicationAdministration implements ShouldQueue
             ->with(['patient', 'medication', 'admission'])
             ->each(function (NursingMedicationAdministration $mar) use ($notifications) {
                 $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['charge_nurse', 'nursing_supervisor']))
-                    ->whereHas('companies', fn ($q) => $q->where('companies.id', $mar->company_id))
+                    ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $mar->organization_id))
                     ->get();
 
                 if ($recipients->isEmpty()) {

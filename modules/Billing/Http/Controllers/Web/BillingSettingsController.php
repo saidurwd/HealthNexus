@@ -43,6 +43,6 @@ class BillingSettingsController extends Controller
 
         $this->auditLogger->log('SETTINGS_UPDATE', 'billing_settings', null, null, $changes, $request);
 
-        return redirect()->route('admin.billing.settings.index')->with('success', 'Billing settings updated successfully.');
+        return redirect()->route('admin.billing.settings.index')->with('success', __('Billing settings updated successfully.'));
     }
 }

@@ -12,7 +12,7 @@ class NursingRiskAssessmentService
     {
         return NursingRiskAssessment::create([
             ...$data,
-            'company_id' => $episode->company_id,
+            'organization_id' => $episode->organization_id,
             'branch_id' => $episode->branch_id,
             'episode_id' => $episode->id,
             'admission_id' => $episode->admission_id,

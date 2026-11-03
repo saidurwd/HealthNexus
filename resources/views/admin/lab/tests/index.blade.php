@@ -5,31 +5,31 @@
 @section('page_content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Test Catalog</h3>
+            <h3 class="card-title">{{ __('Test Catalog') }}</h3>
             <div class="card-tools">
                 @can('lab.test.create')
-                    <a href="{{ route('admin.lab.tests.create') }}" class="btn btn-primary btn-sm">New Test</a>
+                    <a href="{{ route('admin.lab.tests.create') }}" class="btn btn-primary btn-sm">{{ __('New Test') }}</a>
                 @endcan
-                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary btn-sm">Panels</a>
+                <a href="{{ route('admin.lab.panels.index') }}" class="btn btn-secondary btn-sm">{{ __('Panels') }}</a>
             </div>
         </div>
         <div class="card-body p-0">
             <form method="GET" class="p-3">
                 <div class="input-group">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by name or code...">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('Search by name or code...') }}">
+                    <button type="submit" class="btn btn-primary">{{ __('Search') }}</button>
                 </div>
             </form>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Section</th>
-                        <th>Type</th>
-                        <th>Unit</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('Code') }}</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ __('Section') }}</th>
+                        <th>{{ __('Type') }}</th>
+                        <th>{{ __('Unit') }}</th>
+                        <th>{{ __('Status') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,12 +47,12 @@
                             </td>
                             <td>
                                 @can('lab.test.update')
-                                    <a href="{{ route('admin.lab.tests.edit', $test) }}" class="btn btn-xs btn-warning">Edit</a>
+                                    <a href="{{ route('admin.lab.tests.edit', $test) }}" class="btn btn-xs btn-warning">{{ __('Edit') }}</a>
                                 @endcan
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No lab tests found.</td></tr>
+                        <tr><td colspan="7" class="text-center">{{ __('No lab tests found.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

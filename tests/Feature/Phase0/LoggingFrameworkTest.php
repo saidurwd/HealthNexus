@@ -32,7 +32,7 @@ class LoggingFrameworkTest extends TestCase
     {
         $this->actingAs($this->admin);
 
-        $response = $this->get('/admin/activity-logs');
+        $response = $this->get('/activity-logs');
 
         $response->assertHeader('X-Request-Id');
         $this->assertNotNull($response->headers->get('X-Request-Id'));
@@ -40,7 +40,7 @@ class LoggingFrameworkTest extends TestCase
 
     public function test_guest_is_redirected_from_activity_logs(): void
     {
-        $this->get('/admin/activity-logs')->assertRedirect('/login');
+        $this->get('/activity-logs')->assertRedirect('/login');
     }
 
     public function test_user_without_permission_cannot_view_activity_logs(): void
@@ -48,7 +48,7 @@ class LoggingFrameworkTest extends TestCase
         $unauthorized = User::factory()->create();
         $this->actingAs($unauthorized);
 
-        $this->get('/admin/activity-logs')->assertForbidden();
+        $this->get('/activity-logs')->assertForbidden();
     }
 
     public function test_activity_log_is_recorded_and_visible(): void
@@ -58,7 +58,7 @@ class LoggingFrameworkTest extends TestCase
         $this->assertDatabaseCount('activity_logs', 1);
 
         $this->actingAs($this->admin)
-            ->get('/admin/activity-logs')
+            ->get('/activity-logs')
             ->assertOk()
             ->assertSee('USER_VIEWED');
     }
@@ -68,7 +68,7 @@ class LoggingFrameworkTest extends TestCase
         $log = app(ActivityLogger::class)->log('USER_CREATED', 'User created', properties: ['email' => 'test@example.com']);
 
         $this->actingAs($this->admin)
-            ->get('/admin/activity-logs/'.$log->id)
+            ->get('/activity-logs/'.$log->id)
             ->assertOk()
             ->assertSee('USER_CREATED');
     }
@@ -82,16 +82,16 @@ class LoggingFrameworkTest extends TestCase
         $event = SecurityEvent::first();
 
         $this->actingAs($this->admin)
-            ->get('/admin/security-events')
+            ->get('/security-events')
             ->assertOk()
             ->assertSee('LOGIN_FAILED');
 
         $this->actingAs($this->admin)
-            ->get('/admin/security-events/'.$event->id)
+            ->get('/security-events/'.$event->id)
             ->assertOk();
 
         $this->actingAs($this->admin)
-            ->put('/admin/security-events/'.$event->id.'/resolve', ['resolution_note' => 'Reviewed; false positive.'])
+            ->put('/security-events/'.$event->id.'/resolve', ['resolution_note' => 'Reviewed; false positive.'])
             ->assertRedirect();
 
         $this->assertNotNull($event->fresh()->resolved_at);
@@ -105,7 +105,7 @@ class LoggingFrameworkTest extends TestCase
         $unauthorized = User::factory()->create();
         $this->actingAs($unauthorized);
 
-        $this->put('/admin/security-events/'.$event->id.'/resolve', ['resolution_note' => 'x'])
+        $this->put('/security-events/'.$event->id.'/resolve', ['resolution_note' => 'x'])
             ->assertForbidden();
     }
 }

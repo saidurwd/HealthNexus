@@ -23,11 +23,11 @@ class PharmacyTransferController extends Controller
     {
         $this->authorize('viewAny', PharmacyTransfer::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $transfers = PharmacyTransfer::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['sourceStore', 'destinationStore'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->latest()
@@ -41,9 +41,9 @@ class PharmacyTransferController extends Controller
     {
         $this->authorize('create', PharmacyTransfer::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $stores = PharmacyStore::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $batches = PharmacyBatch::query()->where('company_id', $companyId)->where('is_quarantined', false)->with('medication')->orderBy('expiry_date')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $stores = PharmacyStore::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $batches = PharmacyBatch::query()->where('organization_id', $organizationId)->where('is_quarantined', false)->with('medication')->orderBy('expiry_date')->get();
 
         return view('admin.pharmacy.transfers.create', compact('stores', 'batches'));
     }
@@ -72,7 +72,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyTransfer::class, $transfer->id, null, $transfer->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer requested.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer requested.'));
     }
 
     public function show(PharmacyTransfer $transfer)
@@ -93,7 +93,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('APPROVE', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer approved.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer approved.'));
     }
 
     public function dispatch(Request $request, PharmacyTransfer $transfer)
@@ -110,7 +110,7 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('DISPATCH', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer dispatched.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer dispatched.'));
     }
 
     public function receive(Request $request, PharmacyTransfer $transfer)
@@ -122,6 +122,6 @@ class PharmacyTransferController extends Controller
 
         $this->auditLogger->log('RECEIVE', PharmacyTransfer::class, $transfer->id, $oldValues, $transfer->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', 'Transfer received.');
+        return redirect()->route('admin.pharmacy.transfers.show', $transfer)->with('success', __('Transfer received.'));
     }
 }

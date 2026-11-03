@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PatientPreference extends Model
 {
     protected $fillable = [
-        'company_id',
+        'organization_id',
         'patient_id',
         'preferred_language',
         'preferred_contact_method',

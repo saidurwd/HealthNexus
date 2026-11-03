@@ -14,6 +14,13 @@ class LabPanelItem extends Model
         return ['sequence' => 'integer'];
     }
 
-    public function panel(): BelongsTo { return $this->belongsTo(LabPanel::class, 'panel_id'); }
-    public function test(): BelongsTo { return $this->belongsTo(LabTest::class, 'test_id'); }
+    public function panel(): BelongsTo
+    {
+        return $this->belongsTo(LabPanel::class, 'panel_id');
+    }
+
+    public function test(): BelongsTo
+    {
+        return $this->belongsTo(LabTest::class, 'test_id');
+    }
 }

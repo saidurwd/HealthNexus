@@ -21,11 +21,11 @@ class PharmacyGenericController extends Controller
     {
         Gate::authorize('pharmacy.generic.view');
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $generics = PharmacyGeneric::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->when($request->filled('search'), fn ($q) => $q->where('generic_name', 'like', '%'.$request->input('search').'%'))
             ->orderBy('generic_name')
             ->paginate(20)
@@ -46,7 +46,7 @@ class PharmacyGenericController extends Controller
         Gate::authorize('pharmacy.generic.create');
 
         $validated = $request->validate([
-            'company_id' => ['required', 'integer', 'exists:companies,id'],
+            'organization_id' => ['required', 'integer', 'exists:organizations,id'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'code' => ['required', 'string', 'max:50'],
             'generic_name' => ['required', 'string', 'max:255'],
@@ -61,7 +61,7 @@ class PharmacyGenericController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyGeneric::class, $generic->id, null, $generic->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.generics.index')->with('success', 'Generic created.');
+        return redirect()->route('admin.pharmacy.generics.index')->with('success', __('Generic created.'));
     }
 
     public function edit(PharmacyGeneric $generic)
@@ -90,6 +90,6 @@ class PharmacyGenericController extends Controller
 
         $this->auditLogger->log('UPDATE', PharmacyGeneric::class, $generic->id, $oldValues, $generic->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.generics.index')->with('success', 'Generic updated.');
+        return redirect()->route('admin.pharmacy.generics.index')->with('success', __('Generic updated.'));
     }
 }

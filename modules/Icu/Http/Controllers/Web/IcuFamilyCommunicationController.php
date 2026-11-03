@@ -28,6 +28,6 @@ class IcuFamilyCommunicationController extends Controller
 
         $this->communications->record($episode, $validated, $request->user());
 
-        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', 'Family communication documented.');
+        return redirect()->route('admin.icu.episodes.show', $episode)->with('success', __('Family communication documented.'));
     }
 }

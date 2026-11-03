@@ -24,11 +24,11 @@ class PharmacyRecallService
     {
         return DB::transaction(function () use ($batch, $reason, $user) {
             $recall = PharmacyRecall::create([
-                'company_id' => $batch->company_id,
+                'organization_id' => $batch->organization_id,
                 'branch_id' => $batch->branch_id,
                 'medication_id' => $batch->medication_id,
                 'batch_id' => $batch->id,
-                'recall_number' => $this->numbers->generate($batch->company_id, $batch->branch_id, 'RCL', 'RCL'),
+                'recall_number' => $this->numbers->generate($batch->organization_id, $batch->branch_id, 'RCL', 'RCL'),
                 'reason' => $reason,
                 'status' => PharmacyRecall::STATUS_INITIATED,
                 'initiated_by' => $user->id,

@@ -4,7 +4,9 @@ namespace Modules\Nursing\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Nursing\NursingDevice;
+use App\Models\Nursing\NursingEducation;
 use App\Models\Nursing\NursingEpisode;
+use App\Models\Nursing\NursingIvInfusion;
 use App\Models\Nursing\NursingWoundAssessment;
 use App\Services\AuditLogger;
 use App\Services\Nursing\NursingDeviceService;
@@ -35,9 +37,9 @@ class NursingClinicalController extends Controller
 
         $episode->load(['patient']);
         $devices = NursingDevice::where('episode_id', $episode->id)->latest('insertion_date')->get();
-        $infusions = \App\Models\Nursing\NursingIvInfusion::where('episode_id', $episode->id)->latest('start_time')->get();
+        $infusions = NursingIvInfusion::where('episode_id', $episode->id)->latest('start_time')->get();
         $wounds = NursingWoundAssessment::where('episode_id', $episode->id)->latest('assessed_at')->get();
-        $education = \App\Models\Nursing\NursingEducation::where('episode_id', $episode->id)->latest('provided_at')->get();
+        $education = NursingEducation::where('episode_id', $episode->id)->latest('provided_at')->get();
 
         return view('admin.nursing.clinical.index', compact('episode', 'devices', 'infusions', 'wounds', 'education'));
     }
@@ -57,7 +59,7 @@ class NursingClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', NursingDevice::class, $device->id, null, $device->toArray(), $request);
 
-        return back()->with('success', 'Device recorded.');
+        return back()->with('success', __('Device recorded.'));
     }
 
     public function removeDevice(Request $request, NursingDevice $device)
@@ -68,7 +70,7 @@ class NursingClinicalController extends Controller
 
         $this->auditLogger->log('UPDATE', NursingDevice::class, $device->id, null, ['status' => 'removed'], $request);
 
-        return back()->with('success', 'Device removed.');
+        return back()->with('success', __('Device removed.'));
     }
 
     public function storeIv(Request $request, NursingEpisode $episode)
@@ -86,9 +88,9 @@ class NursingClinicalController extends Controller
 
         $infusion = $this->iv->start($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingIvInfusion::class, $infusion->id, null, $infusion->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingIvInfusion::class, $infusion->id, null, $infusion->toArray(), $request);
 
-        return back()->with('success', 'IV infusion started.');
+        return back()->with('success', __('IV infusion started.'));
     }
 
     public function storeWound(Request $request, NursingEpisode $episode)
@@ -112,7 +114,7 @@ class NursingClinicalController extends Controller
 
         $this->auditLogger->log('CREATE', NursingWoundAssessment::class, $wound->id, null, $wound->toArray(), $request);
 
-        return back()->with('success', 'Wound assessment recorded.');
+        return back()->with('success', __('Wound assessment recorded.'));
     }
 
     public function storeEducation(Request $request, NursingEpisode $episode)
@@ -129,8 +131,8 @@ class NursingClinicalController extends Controller
 
         $education = $this->education->record($episode, $validated, $request->user());
 
-        $this->auditLogger->log('CREATE', \App\Models\Nursing\NursingEducation::class, $education->id, null, $education->toArray(), $request);
+        $this->auditLogger->log('CREATE', NursingEducation::class, $education->id, null, $education->toArray(), $request);
 
-        return back()->with('success', 'Patient education recorded.');
+        return back()->with('success', __('Patient education recorded.'));
     }
 }

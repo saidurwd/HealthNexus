@@ -14,12 +14,12 @@ class CalendarController extends Controller
     {
         $this->authorize('viewAny', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
         $date = $request->input('date', today()->toDateString());
 
         $appointments = Appointment::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($branchId, fn ($q, $id) => $q->where('branch_id', $id))
             ->whereDate('appointment_date', $date)
             ->with(['patient', 'doctor', 'provider', 'token'])
@@ -33,11 +33,11 @@ class CalendarController extends Controller
     {
         $this->authorize('viewAny', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $providerId = $request->input('provider_id');
         $date = $request->input('date', today()->toDateString());
 
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->orderBy('name')->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->orderBy('name')->get();
 
         $appointments = $providerId
             ? Appointment::where('provider_id', $providerId)->whereDate('appointment_date', $date)->with(['patient', 'token'])->orderBy('appointment_time')->get()

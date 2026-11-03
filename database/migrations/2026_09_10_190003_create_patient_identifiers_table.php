@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('patient_identifiers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('patient_id')->constrained()->cascadeOnDelete();
             $table->string('identifier_type');
             $table->string('identifier_value');
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'patient_id', 'identifier_type', 'identifier_value'], 'patient_identifier_unique');
-            $table->index(['company_id', 'patient_id', 'identifier_type'], 'patient_identifier_type_idx');
+            $table->unique(['organization_id', 'patient_id', 'identifier_type', 'identifier_value'], 'patient_identifier_unique');
+            $table->index(['organization_id', 'patient_id', 'identifier_type'], 'patient_identifier_type_idx');
         });
     }
 

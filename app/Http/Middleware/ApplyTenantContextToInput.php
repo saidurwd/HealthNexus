@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Entry forms never ask the user for a company or branch. On every write request this stamps the
- * signed-in user's active tenant context (chosen at login) over any company_id/branch_id in the
+ * Entry forms never ask the user for an organization or branch. On every write request this stamps the
+ * signed-in user's active tenant context (chosen at login) over any organization_id/branch_id in the
  * input — so controllers and Form Requests keep validating the same fields, but the values can
  * only ever come from the login context, never from the client.
  *
  * The context itself must be one the user actually belongs to; a mismatch (e.g. a forged
- * X-Company-Id header on the API) is rejected rather than silently used.
+ * X-Organization-Id header on the API) is rejected rather than silently used.
  */
 class ApplyTenantContextToInput
 {
@@ -29,21 +29,21 @@ class ApplyTenantContextToInput
         }
 
         $user = $request->user();
-        $companyId = $this->resolver->getCompanyId();
+        $organizationId = $this->resolver->getOrganizationId();
         $branchId = $this->resolver->getBranchId();
 
-        if (! $user || ! $companyId) {
+        if (! $user || ! $organizationId) {
             return $next($request);
         }
 
-        if (! $user->companies()->where('companies.id', $companyId)->exists()) {
-            return response()->json(['error' => 'You do not have access to the active company.'], 403);
+        if (! $user->organizations()->where('organizations.id', $organizationId)->exists()) {
+            return response()->json(['error' => 'You do not have access to the active organization.'], 403);
         }
 
-        $merge = ['company_id' => $companyId];
+        $merge = ['organization_id' => $organizationId];
 
         if ($branchId) {
-            $belongs = $user->branches()->where('branches.id', $branchId)->where('branches.company_id', $companyId)->exists();
+            $belongs = $user->branches()->where('branches.id', $branchId)->where('branches.organization_id', $organizationId)->exists();
 
             if (! $belongs) {
                 return response()->json(['error' => 'You do not have access to the active branch.'], 403);

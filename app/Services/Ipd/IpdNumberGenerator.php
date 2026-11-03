@@ -16,11 +16,11 @@ class IpdNumberGenerator
 {
     public function __construct(private readonly SettingsService $settings) {}
 
-    public function generate(int $companyId, ?int $branchId, string $documentType, string $prefix): string
+    public function generate(int $organizationId, ?int $branchId, string $documentType, string $prefix): string
     {
-        return DB::transaction(function () use ($companyId, $branchId, $documentType, $prefix) {
+        return DB::transaction(function () use ($organizationId, $branchId, $documentType, $prefix) {
             $attributes = [
-                'company_id' => $companyId,
+                'organization_id' => $organizationId,
                 'branch_id' => $branchId,
                 'document_type' => $documentType,
                 'prefix' => $prefix,
@@ -42,11 +42,11 @@ class IpdNumberGenerator
         });
     }
 
-    public function generateAdmissionNumber(int $companyId, ?int $branchId): string
+    public function generateAdmissionNumber(int $organizationId, ?int $branchId): string
     {
         $prefix = $this->settings->get('ipd.admission_prefix', 'ADM');
 
-        return $this->generate($companyId, $branchId, 'ADM', $prefix);
+        return $this->generate($organizationId, $branchId, 'ADM', $prefix);
     }
 
     private function format(string $prefix, int $sequence): string

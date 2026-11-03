@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('lab_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained()->cascadeOnDelete();
             $table->foreignId('lab_order_id')->constrained('lab_orders')->cascadeOnDelete();
             $table->string('report_number');
@@ -25,9 +25,9 @@ return new class extends Migration
             $table->string('cancellation_reason')->nullable();
             $table->timestamps();
 
-            $table->unique(['company_id', 'report_number']);
+            $table->unique(['organization_id', 'report_number']);
             $table->index(['lab_order_id']);
-            $table->index(['company_id', 'branch_id', 'status']);
+            $table->index(['organization_id', 'branch_id', 'status']);
         });
     }
 

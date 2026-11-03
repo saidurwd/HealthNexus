@@ -4,7 +4,7 @@ namespace Modules\Pharmacy\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Models\Pharmacy\PharmacyBrand;
 use App\Models\Pharmacy\PharmacyDosageForm;
 use App\Models\Pharmacy\PharmacyGeneric;
@@ -28,11 +28,11 @@ class PharmacyMedicationController extends Controller
     {
         $this->authorize('viewAny', PharmacyMedication::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $medications = PharmacyMedication::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['generic', 'brand', 'dosageForm'])
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($sub) => $sub
                 ->where('name', 'like', '%'.$request->input('search').'%')
@@ -48,15 +48,15 @@ class PharmacyMedicationController extends Controller
     {
         $this->authorize('create', PharmacyMedication::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $generics = PharmacyGeneric::query()->forTenant($companyId)->where('is_active', true)->orderBy('generic_name')->get();
-        $brands = PharmacyBrand::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $dosageForms = PharmacyDosageForm::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $routes = PharmacyRoute::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
-        $companies = Company::all();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $generics = PharmacyGeneric::query()->forTenant($organizationId)->where('is_active', true)->orderBy('generic_name')->get();
+        $brands = PharmacyBrand::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $dosageForms = PharmacyDosageForm::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $routes = PharmacyRoute::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.pharmacy.medications.create', compact('generics', 'brands', 'dosageForms', 'routes', 'companies', 'branches'));
+        return view('admin.pharmacy.medications.create', compact('generics', 'brands', 'dosageForms', 'routes', 'organizations', 'branches'));
     }
 
     public function store(StorePharmacyMedicationRequest $request)
@@ -67,17 +67,17 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('CREATE', PharmacyMedication::class, $medication->id, null, $medication->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication created.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication created.'));
     }
 
     public function edit(PharmacyMedication $medication)
     {
         $this->authorize('update', $medication);
 
-        $generics = PharmacyGeneric::query()->forTenant($medication->company_id)->where('is_active', true)->orderBy('generic_name')->get();
-        $brands = PharmacyBrand::query()->forTenant($medication->company_id)->where('is_active', true)->orderBy('name')->get();
-        $dosageForms = PharmacyDosageForm::query()->forTenant($medication->company_id)->where('is_active', true)->orderBy('name')->get();
-        $routes = PharmacyRoute::query()->forTenant($medication->company_id)->where('is_active', true)->orderBy('name')->get();
+        $generics = PharmacyGeneric::query()->forTenant($medication->organization_id)->where('is_active', true)->orderBy('generic_name')->get();
+        $brands = PharmacyBrand::query()->forTenant($medication->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $dosageForms = PharmacyDosageForm::query()->forTenant($medication->organization_id)->where('is_active', true)->orderBy('name')->get();
+        $routes = PharmacyRoute::query()->forTenant($medication->organization_id)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.pharmacy.medications.edit', compact('medication', 'generics', 'brands', 'dosageForms', 'routes'));
     }
@@ -91,7 +91,7 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('UPDATE', PharmacyMedication::class, $medication->id, $oldValues, $medication->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication updated.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication updated.'));
     }
 
     public function destroy(Request $request, PharmacyMedication $medication)
@@ -103,6 +103,6 @@ class PharmacyMedicationController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', PharmacyMedication::class, $medication->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.pharmacy.medications.index')->with('success', 'Medication deactivated.');
+        return redirect()->route('admin.pharmacy.medications.index')->with('success', __('Medication deactivated.'));
     }
 }

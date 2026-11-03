@@ -3,6 +3,7 @@
 namespace Modules\Appointments\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Department;
 use App\Models\DoctorSchedule;
 use App\Models\Provider;
@@ -24,13 +25,13 @@ class DoctorScheduleController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $schedules = DoctorSchedule::query()
-            ->when($companyId, fn ($q, $id) => $q->where('company_id', $id))
+            ->when($organizationId, fn ($q, $id) => $q->where('organization_id', $id))
             ->when($branchId, fn ($q, $id) => $q->where('branch_id', $id))
             ->when($request->filled('doctor_id'), fn ($q, $id) => $q->where('doctor_id', $id))
             ->when($request->filled('day_of_week'), fn ($q, $day) => $q->where('day_of_week', $day))
@@ -43,23 +44,23 @@ class DoctorScheduleController extends Controller
 
     public function create()
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.schedules.create', compact('doctors', 'providers', 'departments', 'specialties'));
     }
 
     public function store(StoreDoctorScheduleRequest $request)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validated();
         $schedule = DoctorSchedule::create($validated);
@@ -72,12 +73,12 @@ class DoctorScheduleController extends Controller
 
         $this->auditLogger->log('CREATE', DoctorSchedule::class, $schedule->id, null, $schedule->toArray(), $request);
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule created successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule created successfully.'));
     }
 
     public function show(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $schedule->load(['doctor', 'provider', 'department', 'specialty', 'room', 'slots' => fn ($q) => $q->orderBy('slot_datetime')]);
 
@@ -86,23 +87,23 @@ class DoctorScheduleController extends Controller
 
     public function edit(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $doctors = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['doctor', 'consultant']))
-            ->whereHas('companies', fn ($q) => $q->where('companies.id', $companyId))
+            ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $organizationId))
             ->get();
-        $providers = Provider::where('company_id', $companyId)->where('status', 'active')->get();
-        $departments = Department::where('company_id', $companyId)->get();
-        $specialties = Specialty::where('company_id', $companyId)->where('is_active', true)->get();
+        $providers = Provider::where('organization_id', $organizationId)->where('status', 'active')->get();
+        $departments = Department::where('organization_id', $organizationId)->get();
+        $specialties = Specialty::where('organization_id', $organizationId)->where('is_active', true)->get();
 
         return view('admin.schedules.edit', compact('schedule', 'doctors', 'providers', 'departments', 'specialties'));
     }
 
     public function update(Request $request, DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -127,24 +128,24 @@ class DoctorScheduleController extends Controller
 
         $this->auditLogger->log('UPDATE', DoctorSchedule::class, $schedule->id, $oldValues, $schedule->toArray(), $request);
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule updated successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule updated successfully.'));
     }
 
     public function destroy(DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $oldValues = $schedule->toArray();
         $schedule->delete();
 
         $this->auditLogger->log('DELETE', DoctorSchedule::class, $schedule->id, $oldValues, null, request());
 
-        return redirect()->route('admin.schedules.index')->with('success', 'Doctor schedule deleted successfully.');
+        return redirect()->route('admin.schedules.index')->with('success', __('Doctor schedule deleted successfully.'));
     }
 
     public function generateSlots(Request $request, DoctorSchedule $schedule)
     {
-        $this->authorize('manageSchedule', \App\Models\Appointment::class);
+        $this->authorize('manageSchedule', Appointment::class);
 
         $validated = $request->validate([
             'from' => ['required', 'date'],

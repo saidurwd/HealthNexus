@@ -3,21 +3,25 @@
 namespace Modules\Patients\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\AuditLog;
 use App\Models\Branch;
-use App\Models\Company;
 use App\Models\Country;
 use App\Models\Gender;
 use App\Models\IdentificationType;
 use App\Models\MaritalStatus;
+use App\Models\Organization;
 use App\Models\Patient;
+use App\Models\PatientAddress;
 use App\Models\PatientAlert;
 use App\Models\PatientAllergy;
 use App\Models\PatientAmendment;
 use App\Models\PatientConsent;
 use App\Models\PatientDocument;
 use App\Models\PatientDuplicateCandidate;
+use App\Models\PatientGuardian;
 use App\Models\PatientHistory;
+use App\Models\PatientPortalAccount;
 use App\Models\PatientType;
 use App\Services\ActivityLogger;
 use App\Services\AuditLogger;
@@ -28,9 +32,11 @@ use App\Services\Patients\PatientBarcodeService;
 use App\Services\Patients\PatientDuplicateScoringService;
 use App\Services\Patients\PatientService;
 use App\Services\Patients\PatientTimelineService;
+use App\Services\Portal\PortalAuthService;
 use App\Services\TenantContextResolver;
 use App\Support\Fhir\PatientFhirMapper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Modules\Patients\Http\Requests\StorePatientRequest;
 use Modules\Patients\Http\Requests\UpdatePatientRequest;
@@ -52,10 +58,10 @@ class PatientController extends Controller
 
     public function index(Request $request)
     {
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $patients = Patient::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('search'), fn ($q, $search) => $q->where(function ($q2) use ($search) {
                 $q2->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
@@ -99,7 +105,7 @@ class PatientController extends Controller
 
     public function create()
     {
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $identificationTypes = IdentificationType::all();
         $genders = Gender::where('is_active', true)->orderBy('sort_order')->get();
@@ -107,7 +113,7 @@ class PatientController extends Controller
         $patientTypes = PatientType::where('is_active', true)->orderBy('sort_order')->get();
         $countries = Country::orderBy('name')->get();
 
-        return view('admin.patients.create', compact('companies', 'branches', 'identificationTypes', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
+        return view('admin.patients.create', compact('organizations', 'branches', 'identificationTypes', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
     }
 
     public function store(StorePatientRequest $request)
@@ -125,7 +131,7 @@ class PatientController extends Controller
 
         $this->duplicateScoring->scanForCandidate($patient);
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient created successfully.');
+        return redirect()->route('admin.patients.index')->with('success', __('Patient created successfully.'));
     }
 
     public function show(Patient $patient)
@@ -143,14 +149,14 @@ class PatientController extends Controller
     {
         $this->authorize('update', $patient);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
         $genders = Gender::where('is_active', true)->orderBy('sort_order')->get();
         $maritalStatuses = MaritalStatus::where('is_active', true)->orderBy('sort_order')->get();
         $patientTypes = PatientType::where('is_active', true)->orderBy('sort_order')->get();
         $countries = Country::orderBy('name')->get();
 
-        return view('admin.patients.edit', compact('patient', 'companies', 'branches', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
+        return view('admin.patients.edit', compact('patient', 'organizations', 'branches', 'genders', 'maritalStatuses', 'patientTypes', 'countries'));
     }
 
     /**
@@ -200,7 +206,7 @@ class PatientController extends Controller
     {
         $current = $patient->{$field};
 
-        if ($current instanceof \Illuminate\Support\Carbon) {
+        if ($current instanceof Carbon) {
             $current = $current->format('Y-m-d');
         }
 
@@ -217,19 +223,19 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', Patient::class, $patient->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.patients.index')->with('success', 'Patient deleted successfully.');
+        return redirect()->route('admin.patients.index')->with('success', __('Patient deleted successfully.'));
     }
 
     public function search(Request $request)
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $search = $request->input('q', '');
 
         $patients = Patient::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($search, function ($q, $search) {
                 $q->where(function ($q2) use ($search) {
                     $q2->where('first_name', 'like', "%{$search}%")
@@ -251,7 +257,7 @@ class PatientController extends Controller
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $firstName = $request->input('first_name', '');
         $lastName = $request->input('last_name', '');
@@ -259,7 +265,7 @@ class PatientController extends Controller
         $nationalId = $request->input('national_identifier');
         $email = $request->input('email');
 
-        $duplicates = $this->patientService->detectDuplicates($companyId, $firstName, $lastName, $phone, $nationalId, $email);
+        $duplicates = $this->patientService->detectDuplicates($organizationId, $firstName, $lastName, $phone, $nationalId, $email);
 
         return response()->json([
             'duplicates' => $duplicates->map(fn ($p) => [
@@ -276,10 +282,10 @@ class PatientController extends Controller
     {
         $this->authorize('viewAny', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $candidates = PatientDuplicateCandidate::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')), fn ($q) => $q->where('status', 'pending'))
             ->with(['patientA', 'patientB'])
             ->latest()
@@ -306,7 +312,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('REVIEW', PatientDuplicateCandidate::class, $candidate->id, null, $candidate->toArray(), $request);
 
-        return redirect()->route('admin.patients.duplicates')->with('success', 'Duplicate candidate reviewed.');
+        return redirect()->route('admin.patients.duplicates')->with('success', __('Duplicate candidate reviewed.'));
     }
 
     public function merge(Request $request)
@@ -316,9 +322,9 @@ class PatientController extends Controller
         $masterPatient = Patient::findOrFail($request->input('master_patient_id'));
         $duplicatePatient = Patient::findOrFail($request->input('duplicate_patient_id'));
 
-        // The "merge" ability only checks the permission grant, not company ownership (it takes
+        // The "merge" ability only checks the permission grant, not organization ownership (it takes
         // no Patient instance) — verify both records explicitly so a user with patients.update
-        // can't merge records belonging to a company they aren't assigned to.
+        // can't merge records belonging to an organization they aren't assigned to.
         $this->authorize('view', $masterPatient);
         $this->authorize('view', $duplicatePatient);
 
@@ -332,7 +338,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('MERGE', Patient::class, $duplicatePatient->id, $oldValues, ['merged_into' => $masterPatient->id], $request);
 
-        return redirect()->route('admin.patients.show', $masterPatient)->with('success', 'Patients merged successfully.');
+        return redirect()->route('admin.patients.show', $masterPatient)->with('success', __('Patients merged successfully.'));
     }
 
     public function timeline(Patient $patient)
@@ -381,7 +387,7 @@ class PatientController extends Controller
         $path = $file->store('patient-documents');
 
         $document = PatientDocument::create([
-            'company_id' => $patient->company_id,
+            'organization_id' => $patient->organization_id,
             'patient_id' => $patient->id,
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
@@ -395,7 +401,7 @@ class PatientController extends Controller
         $this->auditLogger->log('UPLOAD', PatientDocument::class, $document->id, null, $document->toArray(), $request);
         $this->timeline->record($patient, 'DOCUMENT_UPLOADED', "Document uploaded: {$document->file_name}", $document, $request->user());
 
-        return redirect()->route('admin.patients.documents', $patient)->with('success', 'Document uploaded successfully.');
+        return redirect()->route('admin.patients.documents', $patient)->with('success', __('Document uploaded successfully.'));
     }
 
     public function downloadDocument(Request $request, Patient $patient, PatientDocument $document)
@@ -421,7 +427,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientDocument::class, $document->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.documents', $patient)->with('success', 'Document deleted successfully.');
+        return redirect()->route('admin.patients.documents', $patient)->with('success', __('Document deleted successfully.'));
     }
 
     public function allergies(Patient $patient)
@@ -450,7 +456,7 @@ class PatientController extends Controller
         $this->auditLogger->log('CREATE', PatientAllergy::class, $allergy->id, null, $allergy->toArray(), $request);
         $this->timeline->record($patient, 'ALLERGY_ADDED', "Allergy recorded: {$allergy->substance}", $allergy, $request->user());
 
-        return redirect()->route('admin.patients.allergies', $patient)->with('success', 'Allergy added successfully.');
+        return redirect()->route('admin.patients.allergies', $patient)->with('success', __('Allergy added successfully.'));
     }
 
     public function deleteAllergy(Patient $patient, PatientAllergy $allergy)
@@ -463,7 +469,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientAllergy::class, $allergy->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.allergies', $patient)->with('success', 'Allergy removed successfully.');
+        return redirect()->route('admin.patients.allergies', $patient)->with('success', __('Allergy removed successfully.'));
     }
 
     public function history(Patient $patient)
@@ -491,7 +497,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientHistory::class, $history->id, null, $history->toArray(), $request);
 
-        return redirect()->route('admin.patients.history', $patient)->with('success', 'Medical history added successfully.');
+        return redirect()->route('admin.patients.history', $patient)->with('success', __('Medical history added successfully.'));
     }
 
     public function deleteHistory(Patient $patient, PatientHistory $history)
@@ -504,7 +510,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientHistory::class, $history->id, $oldValues, null, request());
 
-        return redirect()->route('admin.patients.history', $patient)->with('success', 'Medical history removed successfully.');
+        return redirect()->route('admin.patients.history', $patient)->with('success', __('Medical history removed successfully.'));
     }
 
     public function alerts(Patient $patient)
@@ -534,7 +540,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientAlert::class, $alert->id, null, $alert->toArray(), $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert added successfully.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert added successfully.'));
     }
 
     public function resolveAlert(Request $request, Patient $patient, PatientAlert $alert)
@@ -551,7 +557,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', PatientAlert::class, $alert->id, $oldValues, $alert->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert resolved.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert resolved.'));
     }
 
     public function deleteAlert(Request $request, Patient $patient, PatientAlert $alert)
@@ -564,14 +570,14 @@ class PatientController extends Controller
 
         $this->auditLogger->log('DELETE', PatientAlert::class, $alert->id, $oldValues, null, $request);
 
-        return redirect()->route('admin.patients.alerts', $patient)->with('success', 'Patient alert removed successfully.');
+        return redirect()->route('admin.patients.alerts', $patient)->with('success', __('Patient alert removed successfully.'));
     }
 
     public function addresses(Patient $patient)
     {
         $this->authorize('view', $patient);
 
-        $addresses = $patient->addresses()->with(['country', 'state'])->get();
+        $addresses = $patient->addresses()->with(['country', 'state', 'geoDivision', 'geoDistrict', 'geoUpazila', 'geoUnion'])->get();
 
         return view('admin.patients.addresses', compact('patient', 'addresses'));
     }
@@ -588,15 +594,20 @@ class PatientController extends Controller
             'country_id' => ['nullable', 'integer', 'exists:countries,id'],
             'state_id' => ['nullable', 'integer', 'exists:states,id'],
             'district' => ['nullable', 'string', 'max:100'],
+            'division_id' => ['nullable', 'integer', 'exists:geo_divisions,id'],
+            'district_id' => ['nullable', 'integer', 'exists:geo_districts,id'],
+            'upazila_id' => ['nullable', 'integer', 'exists:geo_upazilas,id'],
+            'union_id' => ['nullable', 'integer', 'exists:geo_unions,id'],
+            'village_area' => ['nullable', 'string', 'max:120'],
             'postal_code' => ['nullable', 'string', 'max:20'],
             'is_primary' => ['boolean'],
         ]);
 
         $address = $this->patientService->addAddress($patient, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientAddress::class, $address->id, null, $address->toArray(), $request);
+        $this->auditLogger->log('CREATE', PatientAddress::class, $address->id, null, $address->toArray(), $request);
 
-        return redirect()->route('admin.patients.addresses', $patient)->with('success', 'Address added successfully.');
+        return redirect()->route('admin.patients.addresses', $patient)->with('success', __('Address added successfully.'));
     }
 
     public function guardians(Patient $patient)
@@ -623,9 +634,9 @@ class PatientController extends Controller
 
         $guardian = $this->patientService->addGuardian($patient, $validated);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientGuardian::class, $guardian->id, null, $guardian->toArray(), $request);
+        $this->auditLogger->log('CREATE', PatientGuardian::class, $guardian->id, null, $guardian->toArray(), $request);
 
-        return redirect()->route('admin.patients.guardians', $patient)->with('success', 'Guardian added successfully.');
+        return redirect()->route('admin.patients.guardians', $patient)->with('success', __('Guardian added successfully.'));
     }
 
     public function setPreferences(Request $request, Patient $patient)
@@ -641,7 +652,7 @@ class PatientController extends Controller
 
         $this->patientService->setPreferences($patient, $validated);
 
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Preferences updated successfully.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Preferences updated successfully.'));
     }
 
     public function uploadPhoto(Request $request, Patient $patient)
@@ -658,7 +669,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', Patient::class, $patient->id, null, ['photo_file_id' => $file->id], $request);
 
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Photo updated successfully.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Photo updated successfully.'));
     }
 
     public function consents(Patient $patient)
@@ -683,7 +694,7 @@ class PatientController extends Controller
 
         $this->auditLogger->log('CREATE', PatientConsent::class, $consent->id, null, $consent->toArray(), $request);
 
-        return redirect()->route('admin.patients.consents', $patient)->with('success', 'Consent recorded successfully.');
+        return redirect()->route('admin.patients.consents', $patient)->with('success', __('Consent recorded successfully.'));
     }
 
     public function withdrawConsent(Request $request, Patient $patient, PatientConsent $consent)
@@ -696,17 +707,17 @@ class PatientController extends Controller
 
         $this->auditLogger->log('UPDATE', PatientConsent::class, $consent->id, null, ['status' => 'withdrawn'], $request);
 
-        return redirect()->route('admin.patients.consents', $patient)->with('success', 'Consent withdrawn.');
+        return redirect()->route('admin.patients.consents', $patient)->with('success', __('Consent withdrawn.'));
     }
 
     public function amendments(Request $request)
     {
         $this->authorize('approveAmendment', Patient::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
 
         $amendments = PatientAmendment::query()
-            ->when($companyId, fn ($q, $companyId) => $q->where('company_id', $companyId))
+            ->when($organizationId, fn ($q, $organizationId) => $q->where('organization_id', $organizationId))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')), fn ($q) => $q->whereIn('status', ['submitted', 'pending_approval']))
             ->with(['patient', 'requestedBy'])
             ->latest()
@@ -741,7 +752,7 @@ class PatientController extends Controller
 
         $this->amendmentService->approve($amendment, $request->user(), $request->input('note'));
 
-        return redirect()->route('admin.patients.amendments')->with('success', 'Amendment approved and applied.');
+        return redirect()->route('admin.patients.amendments')->with('success', __('Amendment approved and applied.'));
     }
 
     public function rejectAmendment(Request $request, PatientAmendment $amendment)
@@ -752,7 +763,7 @@ class PatientController extends Controller
 
         $this->amendmentService->reject($amendment, $request->user(), $validated['reason']);
 
-        return redirect()->route('admin.patients.amendments')->with('success', 'Amendment rejected.');
+        return redirect()->route('admin.patients.amendments')->with('success', __('Amendment rejected.'));
     }
 
     public function auditTrail(Patient $patient)
@@ -776,7 +787,7 @@ class PatientController extends Controller
     {
         $this->authorize('view', $patient);
 
-        $appointments = \App\Models\Appointment::where('patient_id', $patient->id)
+        $appointments = Appointment::where('patient_id', $patient->id)
             ->with(['provider', 'doctor', 'appointmentType'])
             ->latest('appointment_date')
             ->paginate(20);
@@ -791,6 +802,16 @@ class PatientController extends Controller
         $patient->load(['addresses', 'contacts', 'allergies']);
 
         return view('admin.patients.print', compact('patient'));
+    }
+
+    /** The identification band for the patient's wrist: name, number, birth date, blood group, allergies and a barcode. */
+    public function wristband(Patient $patient)
+    {
+        $this->authorize('print', $patient);
+
+        $patient->load(['allergies' => fn ($q) => $q->where('is_active', true)]);
+
+        return view('admin.patients.wristband', ['patient' => $patient, 'barcode' => $this->barcodeService->svg($patient)]);
     }
 
     public function barcode(Patient $patient)
@@ -817,15 +838,12 @@ class PatientController extends Controller
             'email' => ['required', 'email', 'max:255'],
         ]);
 
-        $account = \App\Models\PatientPortalAccount::updateOrCreate(
-            ['patient_id' => $patient->id],
-            ['company_id' => $patient->company_id, 'email' => $validated['email'], 'is_active' => false, 'invited_at' => now()],
-        );
+        // Phase 17: the invitation is a one-time code handed to the patient after the desk has checked who they are (the account is the same table as before).
+        [$account, $code] = app(PortalAuthService::class)->invite($patient, $request->user()->id);
+        $account->update(['email' => $validated['email']]);
 
-        $patient->update(['portal_enabled' => true]);
+        $this->auditLogger->log('CREATE', PatientPortalAccount::class, $account->id, null, ['patient_id' => $patient->id, 'kind' => 'invitation'], $request);
 
-        $this->auditLogger->log('CREATE', \App\Models\PatientPortalAccount::class, $account->id, null, $account->toArray(), $request);
-
-        return redirect()->route('admin.patients.show', $patient)->with('success', 'Patient portal invitation created.');
+        return redirect()->route('admin.patients.show', $patient)->with('success', __('Patient portal invitation created.'))->with('portal_invitation_code', $code);
     }
 }

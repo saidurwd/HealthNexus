@@ -42,6 +42,6 @@ class PharmacyTransferPolicy
 
     private function inScope(User $user, PharmacyTransfer $transfer): bool
     {
-        return $user->companies()->where('companies.id', $transfer->company_id)->exists();
+        return $user->organizations()->where('organizations.id', $transfer->organization_id)->exists();
     }
 }

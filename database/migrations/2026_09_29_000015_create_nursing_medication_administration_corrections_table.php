@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index('administration_id');
+            $table->index('administration_id', 'nursing_mar_corr_admin_idx');
         });
     }
 

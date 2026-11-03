@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('code');
             $table->string('slug');
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['company_id', 'code']);
-            $table->unique(['company_id', 'slug']);
+            $table->unique(['organization_id', 'code']);
+            $table->unique(['organization_id', 'slug']);
         });
     }
 

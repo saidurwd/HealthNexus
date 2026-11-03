@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,11 +28,12 @@ class ActivityLogger
         $request ??= request();
 
         $user = Auth::user();
+        $user = $user instanceof User ? $user : null; // a patient's login (Phase 17) is not a staff user
         $requestId = $this->requestId();
 
         $activity = ActivityLog::create([
             'user_id' => $user?->id,
-            'company_id' => $this->resolver->getCompanyId(),
+            'organization_id' => $this->resolver->getOrganizationId(),
             'branch_id' => $this->resolver->getBranchId(),
             'action' => $action,
             'entity_type' => $entity ? $entity->getMorphClass() : null,

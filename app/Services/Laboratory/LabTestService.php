@@ -16,7 +16,7 @@ class LabTestService
     public function create(array $data, User $user): LabTest
     {
         return DB::transaction(function () use ($data, $user) {
-            $this->assertUniqueCode($data['company_id'], $data['branch_id'] ?? null, $data['code']);
+            $this->assertUniqueCode($data['organization_id'], $data['branch_id'] ?? null, $data['code']);
 
             return LabTest::create([
                 ...$data,
@@ -30,7 +30,7 @@ class LabTestService
     {
         return DB::transaction(function () use ($test, $data, $user) {
             if (isset($data['code']) && $data['code'] !== $test->code) {
-                $this->assertUniqueCode($test->company_id, $test->branch_id, $data['code'], $test->id);
+                $this->assertUniqueCode($test->organization_id, $test->branch_id, $data['code'], $test->id);
             }
 
             $test->update([...$data, 'updated_by' => $user->id]);
@@ -45,10 +45,10 @@ class LabTestService
         $test->delete();
     }
 
-    private function assertUniqueCode(int $companyId, ?int $branchId, string $code, ?int $exceptId = null): void
+    private function assertUniqueCode(int $organizationId, ?int $branchId, string $code, ?int $exceptId = null): void
     {
         $exists = LabTest::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->where('code', $code)
             ->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))
             ->exists();

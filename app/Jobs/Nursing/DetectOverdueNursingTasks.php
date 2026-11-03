@@ -30,7 +30,7 @@ class DetectOverdueNursingTasks implements ShouldQueue
                 $task->update(['status' => NursingTask::STATUS_OVERDUE]);
 
                 $recipients = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['charge_nurse', 'nursing_supervisor']))
-                    ->whereHas('companies', fn ($q) => $q->where('companies.id', $task->company_id))
+                    ->whereHas('organizations', fn ($q) => $q->where('organizations.id', $task->organization_id))
                     ->get();
 
                 if ($task->assignedNurse) {

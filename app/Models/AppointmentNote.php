@@ -9,7 +9,7 @@ class AppointmentNote extends Model
 {
     protected $fillable = [
         'appointment_id',
-        'company_id',
+        'organization_id',
         'note',
         'created_by',
     ];
@@ -19,9 +19,9 @@ class AppointmentNote extends Model
         return $this->belongsTo(Appointment::class);
     }
 
-    public function company(): BelongsTo
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Organization::class);
     }
 
     public function creator(): BelongsTo

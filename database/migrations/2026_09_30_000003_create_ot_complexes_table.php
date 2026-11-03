@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('ot_complexes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->string('code');
             $table->string('name');
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['company_id', 'branch_id', 'code']);
+            $table->unique(['organization_id', 'branch_id', 'code']);
         });
     }
 

@@ -7,7 +7,7 @@ use App\Models\Billing\BillingItem;
 use App\Models\Billing\BillingPriceList;
 use App\Models\Billing\BillingPriceListItem;
 use App\Models\Branch;
-use App\Models\Company;
+use App\Models\Organization;
 use App\Services\AuditLogger;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -23,11 +23,11 @@ class BillingPriceListController extends Controller
     {
         $this->authorize('viewAny', BillingPriceList::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $priceLists = BillingPriceList::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->orderByDesc('priority')
             ->paginate(20);
 
@@ -38,10 +38,10 @@ class BillingPriceListController extends Controller
     {
         $this->authorize('create', BillingPriceList::class);
 
-        $companies = Company::all();
+        $organizations = Organization::all();
         $branches = Branch::all();
 
-        return view('admin.billing.price-lists.create', compact('companies', 'branches'));
+        return view('admin.billing.price-lists.create', compact('organizations', 'branches'));
     }
 
     public function store(StoreBillingPriceListRequest $request)
@@ -56,7 +56,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('CREATE', BillingPriceList::class, $priceList->id, null, $priceList->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.index')->with('success', 'Price list created successfully.');
+        return redirect()->route('admin.billing.price-lists.index')->with('success', __('Price list created successfully.'));
     }
 
     public function show(BillingPriceList $priceList)
@@ -65,8 +65,8 @@ class BillingPriceListController extends Controller
 
         $priceList->load(['items.billingItem', 'items.department', 'items.provider', 'items.corporate', 'items.insurancePolicy']);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
-        $billingItems = BillingItem::query()->forTenant($companyId)->where('is_active', true)->orderBy('name')->get();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
+        $billingItems = BillingItem::query()->forTenant($organizationId)->where('is_active', true)->orderBy('name')->get();
 
         return view('admin.billing.price-lists.show', compact('priceList', 'billingItems'));
     }
@@ -88,7 +88,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('UPDATE', BillingPriceList::class, $priceList->id, $oldValues, $priceList->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.index')->with('success', 'Price list updated successfully.');
+        return redirect()->route('admin.billing.price-lists.index')->with('success', __('Price list updated successfully.'));
     }
 
     public function storeItem(StoreBillingPriceListItemRequest $request, BillingPriceList $priceList)
@@ -105,7 +105,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('CREATE', BillingPriceListItem::class, $item->id, null, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', 'Price added successfully.');
+        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', __('Price added successfully.'));
     }
 
     public function destroyItem(Request $request, BillingPriceList $priceList, BillingPriceListItem $item)
@@ -118,7 +118,7 @@ class BillingPriceListController extends Controller
 
         $this->auditLogger->log('DEACTIVATE', BillingPriceListItem::class, $item->id, $oldValues, $item->toArray(), $request);
 
-        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', 'Price deactivated successfully.');
+        return redirect()->route('admin.billing.price-lists.show', $priceList)->with('success', __('Price deactivated successfully.'));
     }
 
     private function scopeHash(array $data): string

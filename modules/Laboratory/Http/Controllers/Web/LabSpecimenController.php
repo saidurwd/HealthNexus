@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Laboratory\LabOrder;
 use App\Models\Laboratory\LabSpecimen;
 use App\Services\AuditLogger;
+use App\Services\Laboratory\LabBarcodeService;
 use App\Services\Laboratory\SpecimenService;
 use App\Services\TenantContextResolver;
 use Illuminate\Http\Request;
@@ -23,11 +24,11 @@ class LabSpecimenController extends Controller
     {
         $this->authorize('viewAny', LabSpecimen::class);
 
-        $companyId = app(TenantContextResolver::class)->getCompanyId();
+        $organizationId = app(TenantContextResolver::class)->getOrganizationId();
         $branchId = app(TenantContextResolver::class)->getBranchId();
 
         $specimens = LabSpecimen::query()
-            ->forTenant($companyId, $branchId)
+            ->forTenant($organizationId, $branchId)
             ->with(['labOrder.patient', 'specimenType'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn ($q) => $q->where('accession_number', 'like', '%'.$request->input('search').'%'))
@@ -47,6 +48,16 @@ class LabSpecimenController extends Controller
         return view('admin.lab.specimens.show', compact('specimen'));
     }
 
+    /** The tube label: accession barcode, patient, specimen type and the tests asked for. */
+    public function label(LabSpecimen $specimen)
+    {
+        $this->authorize('view', $specimen);
+
+        $specimen->load(['labOrder.patient', 'specimenType', 'orderItems.test', 'collectedBy']);
+
+        return view('admin.lab.specimens.label', ['specimen' => $specimen, 'barcode' => app(LabBarcodeService::class)->svg($specimen)]);
+    }
+
     public function collect(CollectSpecimenRequest $request, LabOrder $order)
     {
         $this->authorize('collect', LabSpecimen::class);
@@ -55,7 +66,7 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('COLLECT', LabSpecimen::class, $specimen->id, null, $specimen->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen collected: '.$specimen->accession_number);
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen collected: ').$specimen->accession_number);
     }
 
     public function receive(Request $request, LabSpecimen $specimen)
@@ -67,7 +78,7 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('RECEIVE', LabSpecimen::class, $specimen->id, $oldValues, $specimen->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen received.');
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen received.'));
     }
 
     public function reject(RejectSpecimenRequest $request, LabSpecimen $specimen)
@@ -79,6 +90,6 @@ class LabSpecimenController extends Controller
 
         $this->auditLogger->log('REJECT', LabSpecimen::class, $specimen->id, $oldValues, $specimen->fresh()->toArray(), $request);
 
-        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', 'Specimen rejected — recollection required.');
+        return redirect()->route('admin.lab.specimens.show', $specimen)->with('success', __('Specimen rejected — recollection required.'));
     }
 }

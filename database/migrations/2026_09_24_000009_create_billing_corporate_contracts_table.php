@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('billing_corporate_contracts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('corporate_id')->constrained('billing_corporates')->cascadeOnDelete();
             $table->foreignId('price_list_id')->nullable()->constrained('billing_price_lists')->nullOnDelete();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->timestamps();
 
-            $table->index(['company_id', 'branch_id', 'corporate_id', 'status'], 'billing_corporate_contracts_scope_idx');
+            $table->index(['organization_id', 'branch_id', 'corporate_id', 'status'], 'billing_corporate_contracts_scope_idx');
             $table->index(['effective_from', 'effective_to']);
         });
     }

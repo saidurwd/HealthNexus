@@ -1,0 +1,13 @@
+/* Searchable dropdowns (Tom Select, Bootstrap 5 theme) fitted to the AdminLTE look, light and dark. See public/js/searchable-select.js. */
+.ts-wrapper { min-width: 0; }
+.ts-wrapper.single .ts-control, .ts-wrapper.multi .ts-control { background-color: var(--bs-body-bg); color: var(--bs-body-color); }
+.ts-wrapper.form-select-sm .ts-control, .ts-wrapper.form-control-sm .ts-control { min-height: calc(1.5em + .5rem + 2px); padding-top: .15rem; padding-bottom: .15rem; font-size: .875rem; }
+.ts-wrapper.is-invalid .ts-control { border-color: var(--bs-form-invalid-border-color, var(--bs-danger)); }
+.ts-wrapper.disabled .ts-control { background-color: var(--bs-secondary-bg); opacity: .75; }
+.ts-dropdown { background-color: var(--bs-body-bg); color: var(--bs-body-color); border-color: var(--bs-border-color); z-index: 2000; }
+.ts-dropdown .active { background-color: var(--bs-primary-bg-subtle, rgba(13, 110, 253, .12)); color: var(--bs-body-color); }
+.ts-dropdown .no-results { padding: .5rem .75rem; color: var(--bs-secondary-color); }
+.ts-dropdown .optgroup-header { color: var(--bs-secondary-color); background: var(--bs-tertiary-bg); }
+/* inside a table cell or an input group the control fills the space it is given */
+.input-group > .ts-wrapper { flex: 1 1 auto; width: 1%; }
+td > .ts-wrapper, th > .ts-wrapper { min-width: 9rem; }

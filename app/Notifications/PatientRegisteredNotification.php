@@ -4,17 +4,12 @@ namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class PatientRegisteredNotification extends BaseNotification
 {
     use Queueable;
 
-    public function __construct(public string $patientName, public string $patientNumber)
-    {
-    }
+    public function __construct(public string $patientName, public string $patientNumber) {}
 
     public function via(User $notifiable): array
     {

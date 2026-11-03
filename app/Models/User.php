@@ -10,14 +10,13 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'profile_picture', 'timezone', 'locale', 'is_active', 'failed_login_attempts', 'locked_until'])]
+#[Fillable(['name', 'email', 'password', 'phone', 'avatar', 'profile_picture', 'timezone', 'locale', 'bangla_digits', 'is_active', 'failed_login_attempts', 'locked_until'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -34,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'bangla_digits' => 'boolean',
             'last_login_at' => 'datetime',
             'failed_login_attempts' => 'integer',
             'locked_until' => 'datetime',
@@ -45,9 +45,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->locked_until !== null && $this->locked_until->isFuture();
     }
 
-    public function companies(): BelongsToMany
+    public function organizations(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class, 'user_companies')
+        return $this->belongsToMany(Organization::class, 'user_organizations')
             ->withPivot('access_level', 'is_default', 'metadata')
             ->withTimestamps();
     }
@@ -66,9 +66,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
-    public function companyAccess(): HasMany
+    public function organizationAccess(): HasMany
     {
-        return $this->hasMany(UserCompany::class);
+        return $this->hasMany(UserOrganization::class);
     }
 
     public function branchAccess(): HasMany
