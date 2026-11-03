@@ -98,6 +98,7 @@
         .page-head .breadcrumb-item + .breadcrumb-item::before { content: "›"; }
         .page-head .breadcrumb a { text-decoration: none; }
         .page-head-title { letter-spacing: -.01em; }
+        #page-actions > #auto-print { order: 99; } /* Print always sits last, at the far right */
     </style>
 @endpush
 
@@ -173,7 +174,8 @@
                 var probe = el.cloneNode(true);
                 probe.querySelectorAll('.btn,.badge,script,style').forEach(function (n) { n.remove(); });
                 if (probe.textContent.trim() !== '' || probe.querySelector('input:not([type=hidden]),select,textarea,table,.card')) { return false; }
-                el.classList.remove('mb-3', 'mb-2', 'mb-4', 'mt-3', 'mt-2');
+                el.className = (el.className || '').split(/\s+/).filter(function (c) { return !/^(m[tbsex]?-|justify-|float-|w-|col|d-print)/.test(c); }).join(' ');
+                el.classList.add('d-flex', 'flex-wrap', 'align-items-center', 'gap-2');
                 bar.insertBefore(el, bar.firstChild);
                 return true;
             });
