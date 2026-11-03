@@ -13,6 +13,7 @@ use App\Services\Facility\LinenService;
 use App\Services\Finance\LedgerService;
 use App\Services\Finance\ReconciliationService;
 use App\Services\Inventory\InventoryLedgerReconciler;
+use App\Services\Rates\BedRateService;
 use Carbon\Carbon;
 use Database\Seeders\BillingSeeder;
 use Database\Seeders\ClinicalMasterDataSeeder;
@@ -331,6 +332,11 @@ class DemoHistoryTest extends TestCase
         $this->assertSame(0, DB::table('sv_signals')->whereIn('status', ['confirmed', 'dismissed'])->where(fn ($q) => $q->whereNull('decided_by')->orWhereNull('decision_note'))->count(), 'every decision has a person and a reason');
         $this->assertSame(0, DB::table('sv_signals')->whereNotNull('reported_at')->where('status', '<>', 'confirmed')->count(), 'only a confirmed signal is reported');
         $this->assertSame(0, DB::table('sv_signals')->whereNotNull('reported_at')->where(fn ($q) => $q->whereNull('reported_to')->orWhereNull('reported_by'))->count(), 'a report says to whom and by whom');
+        // bed and cabin rates: every bed type in use has a price in Billing (otherwise a night would not be charged), and the category prices are real prices of bed-day items
+        $card = app(BedRateService::class)->card($org);
+        $this->assertSame([], $card['gaps']['no_item'], 'every bed type with beds has a bed-day price');
+        $this->assertContains('corporate', $card['categories'], 'the demo price list offers a corporate category');
+        $this->assertSame(0, DB::table('billing_price_list_items as p')->join('billing_items as i', 'i.id', '=', 'p.billing_item_id')->join('billing_price_lists as l', 'l.id', '=', 'p.price_list_id')->where('l.code', 'BED-CLASSES')->where(fn ($q) => $q->where('i.clinical_event_type', '<>', 'ipd_bed_day')->orWhere('p.unit_price', '<=', 0))->count(), 'the bed-class list prices only bed days, above zero');
         foreach (['medication_review', 'radiology_worklist', 'insurance_claim_check', 'risk_scoring'] as $code) {
             $this->assertSame(1, DB::table('ai_use_cases')->where('code', $code)->where('status', 'enabled')->whereColumn('approved_by', '!=', 'registered_by')->count(), "$code was switched on by a second person");
             $waiting = $code === 'radiology_worklist' ? DB::table('radiology_examinations as e')->join('radiology_order_items as i', 'i.id', '=', 'e.order_item_id')->whereIn('e.status', ['completed', 'images_available'])->whereNotIn('i.status', ['reported', 'cancelled'])->count() : 1;

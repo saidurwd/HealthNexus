@@ -1573,7 +1573,7 @@ return [
         ],
         [
             'header' => 'Billing and insurance',
-            'can' => ['billing.dashboard.view', 'insurance.dashboard.view', 'welfare.dashboard.view', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.fund.view'],
+            'can' => ['billing.dashboard.view', 'insurance.dashboard.view', 'welfare.dashboard.view', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.fund.view', 'rates.bed.view'],
         ],
         [
             'text' => 'Billing and cashier',
@@ -1808,6 +1808,13 @@ return [
                 ['text' => 'Corporate clients', 'url' => '/admin/insurance/corporate', 'icon' => 'bi bi-briefcase', 'can' => 'insurance.corporate.view'],
                 ['text' => 'Denials to work', 'url' => '/admin/insurance/worklist', 'icon' => 'bi bi-exclamation-triangle', 'can' => 'insurance.claim.view'],
             ],
+        ],
+        [
+            'text' => 'Bed and cabin rates',
+            'module' => 'rates',
+            'url' => '/admin/rates/beds',
+            'icon' => 'bi bi-hospital',
+            'can' => 'rates.bed.view',
         ],
         [
             'text' => 'Patient welfare',

@@ -975,6 +975,9 @@ class PermissionSeeder extends Seeder
             'watch.signal.report',
             'watch.condition.manage',
 
+            // Bed and cabin rates (Phase 26, Bangladesh pack)
+            'rates.bed.view',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -2232,6 +2235,13 @@ class PermissionSeeder extends Seeder
         }
         if (isset($roles['hospital_director'])) {
             $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['mch.dashboard.view', 'watch.dashboard.view', 'watch.signal.view'])));
+        }
+
+        // Those who admit patients, bill them and answer their families see the rate card.
+        foreach (['cashier', 'receptionist', 'ipd_coordinator', 'charge_nurse', 'ward_manager', 'hospital_director'] as $desk) {
+            if (isset($roles[$desk])) {
+                $roles[$desk] = array_values(array_unique(array_merge($roles[$desk], ['rates.bed.view'])));
+            }
         }
 
         // A doctor writes and certifies the cause of death of a patient they treated, notifies the births they attend, and registers a police case.

@@ -28,6 +28,7 @@ use App\Services\Demo\History\Modules\PharmacyHistory;
 use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\Demo\History\Modules\QualityHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
+use App\Services\Demo\History\Modules\RatesHistory;
 use App\Services\Demo\History\Modules\VitalHistory;
 use App\Services\Demo\History\Modules\WatchHistory;
 use App\Services\Demo\History\Modules\WelfareHistory;
@@ -42,6 +43,7 @@ return [
         GeographyHistory::class,
         CatalogHistory::class,
         BillingCatalogHistory::class,
+        RatesHistory::class,
         InsuranceSetupHistory::class,
         AppointmentsAndOpdHistory::class,
         EdHistory::class,
