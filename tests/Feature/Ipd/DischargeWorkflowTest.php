@@ -90,4 +90,17 @@ class DischargeWorkflowTest extends IpdTestCase
 
         return $admission->fresh();
     }
+
+    public function test_the_discharge_summary_prints_marked_not_final_until_completed(): void
+    {
+        $admission = $this->makeAdmittedPatient($this->makeBed());
+        $request = app(IpdDischargeService::class)->request($admission, ['discharge_type' => 'routine', 'discharge_diagnosis' => 'Community acquired pneumonia', 'instructions' => 'Rest and plenty of fluids'], $this->user);
+
+        $this->get('/admin/ipd/discharge/'.$request->public_id.'/print')
+            ->assertOk()
+            ->assertSee('Community acquired pneumonia')
+            ->assertSee('Rest and plenty of fluids')
+            ->assertSee('ds-stamp', false)
+            ->assertSee($admission->admission_number);
+    }
 }

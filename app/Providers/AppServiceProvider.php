@@ -138,6 +138,7 @@ use App\Services\Search\PatientSearchIndexer;
 use App\Services\SettingsService;
 use App\Services\Stock\DatabaseStockLedger;
 use App\Services\TenantContextResolver;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -188,6 +189,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // The screens are Bootstrap 5; the default page links are Tailwind and render as oversized arrows.
+        Paginator::useBootstrapFive();
+
         Patient::observe(PatientSearchObserver::class);
         foreach ([PatientIdentifier::class, PatientContact::class, PatientBranchRegistration::class] as $child) {
             $reindex = function ($row) {

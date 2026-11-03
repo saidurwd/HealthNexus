@@ -5,6 +5,7 @@
 @section('page_content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Discharge — {{ $dischargeRequest->patient?->full_name }} <x-ui.status-badge :status="$dischargeRequest->status" /></h3>
+        <a href="{{ route('admin.ipd.discharge.print', $dischargeRequest) }}" target="_blank" class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer"></i> {{ __('Print discharge summary') }}</a>
         @can('complete', $dischargeRequest)
             @if($dischargeRequest->status === 'approved')
                 <form method="POST" action="{{ route('admin.ipd.discharge.complete', $dischargeRequest) }}">

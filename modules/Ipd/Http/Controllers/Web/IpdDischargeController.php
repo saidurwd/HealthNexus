@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ipd\IpdAdmission;
 use App\Models\Ipd\IpdDischargeDisposition;
 use App\Models\Ipd\IpdDischargeRequest;
+use App\Models\PrescriptionItem;
 use App\Services\AuditLogger;
 use App\Services\Ipd\IpdDischargeService;
 use App\Services\TenantContextResolver;
@@ -77,6 +78,20 @@ class IpdDischargeController extends Controller
         $dischargeRequest->load(['patient', 'admission.currentAllocation.bed.room.ward', 'disposition', 'followUpProvider']);
 
         return view('admin.ipd.discharge.show', compact('dischargeRequest'));
+    }
+
+    /** The discharge summary the patient takes home: stay, diagnosis, medicines, advice and follow-up. */
+    public function print(IpdDischargeRequest $dischargeRequest)
+    {
+        $this->authorize('view', $dischargeRequest);
+
+        $dischargeRequest->load(['patient', 'disposition', 'followUpProvider', 'approvedBy', 'admission.attendingProvider', 'admission.department', 'admission.allocations.bed.room.ward']);
+        $encounterId = IpdAdmission::query()->whereKey($dischargeRequest->admission_id)->value('encounter_id');
+        $medicines = $encounterId
+            ? PrescriptionItem::query()->where('is_active', true)->whereHas('prescription', fn ($q) => $q->where('encounter_id', $encounterId)->where('status', 'issued'))->get()
+            : collect();
+
+        return view('admin.ipd.discharge.print', compact('dischargeRequest', 'medicines'));
     }
 
     public function recordClearance(Request $request, IpdDischargeRequest $dischargeRequest)

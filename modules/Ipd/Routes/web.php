@@ -120,6 +120,7 @@ Route::prefix('ipd')->name('ipd.')->group(function () {
     Route::middleware(['can:ipd.discharge.view'])->group(function () {
         Route::get('discharge', [IpdDischargeController::class, 'index'])->name('discharge.index');
         Route::get('discharge/{dischargeRequest}', [IpdDischargeController::class, 'show'])->name('discharge.show');
+        Route::get('discharge/{dischargeRequest}/print', [IpdDischargeController::class, 'print'])->name('discharge.print');
     });
     Route::middleware(['can:ipd.discharge.create'])->group(function () {
         Route::get('admissions/{admission}/discharge', [IpdDischargeController::class, 'create'])->name('discharge.create');

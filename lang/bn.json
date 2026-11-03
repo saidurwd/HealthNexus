@@ -7502,5 +7502,21 @@
     "Clinical notes": "ক্লিনিক্যাল নোট",
     "No medicines on this prescription.": "এই প্রেসক্রিপশনে কোনো ওষুধ নেই।",
     "Signature and seal": "স্বাক্ষর ও সিল",
-    "Print prescription": "প্রেসক্রিপশন ছাপুন"
+    "Print prescription": "প্রেসক্রিপশন ছাপুন",
+    "Discharge summary": "ছাড়পত্র সারসংক্ষেপ",
+    "DISCHARGE SUMMARY": "ছাড়পত্র সারসংক্ষেপ",
+    "Print discharge summary": "ছাড়পত্র সারসংক্ষেপ ছাপুন",
+    "Back to the discharge": "ছাড়পত্রে ফিরুন",
+    "The discharge is not completed yet; the printout is marked so.": "ছাড়পত্র এখনও সম্পন্ন হয়নি; ছাপা কপিতে সেটি লেখা থাকবে।",
+    "NOT FINAL": "চূড়ান্ত নয়",
+    "Admission no.": "ভর্তি নং",
+    "first bed": "প্রথম বেড",
+    "Consultant": "কনসালট্যান্ট",
+    "Diagnosis at discharge": "ছাড়ার সময়ের রোগনির্ণয়",
+    "Condition and type of discharge": "ছাড়ার ধরন ও অবস্থা",
+    "Medicines to continue": "চালিয়ে যাওয়ার ওষুধ",
+    "Please come back": "অনুগ্রহ করে আবার আসবেন",
+    "to": "যাঁর কাছে",
+    "No follow-up needed.": "ফলো-আপের প্রয়োজন নেই।",
+    "Come to the emergency department at once if the condition worsens.": "অবস্থার অবনতি হলে সঙ্গে সঙ্গে জরুরি বিভাগে আসুন।"
 }
