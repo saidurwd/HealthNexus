@@ -7473,5 +7473,8 @@
     "yearly limit": "বার্ষিক সীমা",
     "years": "বছর",
     "yes": "হ্যাঁ",
-    "± days": "± দিন"
+    "± days": "± দিন",
+    "Print this page": "এই পাতা ছাপুন",
+    "Printed by :name on :when": ":when তারিখে :name ছাপিয়েছেন",
+    "Confidential — patient and hospital information": "গোপনীয় — রোগী ও হাসপাতালের তথ্য"
 }

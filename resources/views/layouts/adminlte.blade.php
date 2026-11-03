@@ -90,6 +90,10 @@
     </span>
 @stop
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('css/print.css') }}" media="all">
+@endpush
+
 @section('content_header')
     @if(app(\App\Services\Ops\TrainingMode::class)->active())
         <div class="alert alert-warning text-center fw-bold mb-2 py-2" role="status" data-training-banner>
@@ -100,9 +104,13 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">@yield('page_title', 'Dashboard')</h1>
+                <h1 class="m-0 d-print-none">@yield('page_title', 'Dashboard')</h1>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 d-print-none">
+                @php $printable = request()->isMethod('GET') && ! str_contains((string) request()->route()?->getName(), 'create') && ! str_contains((string) request()->route()?->getName(), 'edit'); @endphp
+                @if($printable)
+                    <button type="button" id="auto-print" class="btn btn-sm btn-outline-secondary float-sm-end ms-2" onclick="window.print()" title="{{ __('Print this page') }}"><i class="bi bi-printer"></i> {{ __('Print') }}</button>
+                @endif
                 <ol class="breadcrumb float-sm-end">
                     @auth
                         {!! app(\App\Services\Breadcrumbs::class)->render() !!}
@@ -114,5 +122,28 @@
 @stop
 
 @section('content')
+    @php
+        $printOrg = app(\App\Services\TenantContextResolver::class)->getOrganization();
+        $printBranch = app(\App\Services\TenantContextResolver::class)->getBranch();
+        $printWhen = now()->format('d M Y, H:i');
+        $printUser = auth()->user()?->name;
+    @endphp
+    <div class="print-only print-letterhead">
+        @if($printOrg?->logo)<img class="logo" src="{{ \Illuminate\Support\Str::startsWith($printOrg->logo, ['http', '/']) ? $printOrg->logo : asset('storage/'.$printOrg->logo) }}" alt="">@endif
+        <div class="org">{{ $printOrg?->name ?? config('app.name') }}</div>
+        <div class="meta">{{ collect([$printBranch?->name, $printOrg?->address, $printOrg?->phone, $printOrg?->email])->filter()->implode(' · ') }}</div>
+        <div class="title">@yield('page_title', 'Dashboard')</div>
+    </div>
+    <div class="print-only print-footer"><span>{{ __('Printed by :name on :when', ['name' => $printUser ?? '—', 'when' => $printWhen]) }}</span><span>{{ __('Confidential — patient and hospital information') }}</span></div>
     @yield('page_content')
 @stop
+
+@push('js')
+<script>
+    // A screen that already carries its own print button (A4 cards, certificates) keeps that one only.
+    document.addEventListener('DOMContentLoaded', function () {
+        var auto = document.getElementById('auto-print');
+        if (auto && document.querySelector('[onclick*="window.print"]:not(#auto-print)')) { auto.remove(); }
+    });
+</script>
+@endpush
