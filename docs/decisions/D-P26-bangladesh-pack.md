@@ -5,7 +5,7 @@ Owner instruction (2026-11-02): "Go for Bangladesh gaps" — the gaps listed in 
 | Slice | Gap | State |
 |---|---|---|
 | **B1** | Patient welfare fund and waivers | **built** (this document) |
-| B2 | Birth and death notification and certification (P-25), medico-legal flag | next |
+| B2 | Birth and death notification and certification (P-25), medico-legal flag | built 2026-11-03 - see `D-VITAL-01-births-deaths-police-cases.md` |
 | B3 | Address master: division → district → upazila → union (P-04) | built 2026-11-03 - see `D-GEO-01-address-master.md` (unions have no source data yet) |
 | B4 | Maternity and newborn, immunisation (EPI) (Phase 24 packs) | planned |
 | B5 | Outbreak watch (dengue and others); Quality already tracks outbreaks inside infection control | planned |

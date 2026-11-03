@@ -943,6 +943,22 @@ class PermissionSeeder extends Seeder
             'welfare.report.view',
             'welfare.settings.manage',
 
+            // Births, deaths and police cases (Phase 26, Bangladesh pack)
+            'vital.dashboard.view',
+            'vital.birth.view',
+            'vital.birth.create',
+            'vital.birth.issue',
+            'vital.birth.register',
+            'vital.birth.cancel',
+            'vital.death.view',
+            'vital.death.create',
+            'vital.death.certify',
+            'vital.death.issue',
+            'vital.death.cancel',
+            'vital.medicolegal.view',
+            'vital.medicolegal.register',
+            'vital.medicolegal.manage',
+
             // Finance and Accounting (Phase 21)
             'finance.dashboard.view',
             'finance.chart.view',
@@ -2161,10 +2177,29 @@ class PermissionSeeder extends Seeder
             'welfare_manager' => [
                 'patients.view', 'welfare.dashboard.view', 'welfare.fund.view', 'welfare.fund.manage', 'welfare.donation.record', 'welfare.assessment.view', 'welfare.grant.view', 'welfare.report.view', 'welfare.settings.manage',
             ],
+            'records_officer' => [
+                'patients.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.birth.create', 'vital.birth.issue', 'vital.birth.register', 'vital.death.view', 'vital.death.create', 'vital.death.issue',
+            ],
+            'records_manager' => [
+                'patients.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.birth.create', 'vital.birth.issue', 'vital.birth.register', 'vital.birth.cancel', 'vital.death.view', 'vital.death.create', 'vital.death.issue', 'vital.death.cancel',
+            ],
+            'medicolegal_officer' => [
+                'patients.view', 'vital.dashboard.view', 'vital.death.view', 'vital.medicolegal.view', 'vital.medicolegal.register', 'vital.medicolegal.manage',
+            ],
             'department_manager' => [
                 'patients.view', 'hr.employee.view', 'hr.roster.view', 'hr.roster.manage', 'hr.staffing.view', 'hr.appraisal.manage', 'attendance.view', 'attendance.regularize.approve', 'leave.request.view', 'leave.approve.manager', 'leave.balance.view', 'payroll.overtime.approve',
             ],
         ];
+
+        // A doctor writes and certifies the cause of death of a patient they treated, notifies the births they attend, and registers a police case.
+        foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician'] as $clinician) {
+            if (isset($roles[$clinician])) {
+                $roles[$clinician] = array_values(array_unique(array_merge($roles[$clinician], ['vital.death.view', 'vital.death.create', 'vital.death.certify', 'vital.birth.view', 'vital.birth.create', 'vital.medicolegal.view', 'vital.medicolegal.register'])));
+            }
+        }
+        if (isset($roles['hospital_director'])) {
+            $roles['hospital_director'] = array_values(array_unique(array_merge($roles['hospital_director'], ['vital.dashboard.view', 'vital.death.view', 'vital.birth.view'])));
+        }
 
         // Clinicians can ask the AI to read a record back to them and are the people who accept or reject what it drafts; other clinical staff can use it and report problems.
         foreach (['doctor', 'surgeon', 'intensivist', 'icu_physician', 'senior_radiologist', 'pathologist'] as $clinician) {

@@ -27,6 +27,7 @@ use App\Services\Demo\History\Modules\PharmacyHistory;
 use App\Services\Demo\History\Modules\PortalHistory;
 use App\Services\Demo\History\Modules\QualityHistory;
 use App\Services\Demo\History\Modules\RadiologyHistory;
+use App\Services\Demo\History\Modules\VitalHistory;
 use App\Services\Demo\History\Modules\WelfareHistory;
 
 /*
@@ -59,6 +60,7 @@ return [
         InteropHistory::class,
         FinanceHistory::class,
         WelfareHistory::class,
+        VitalHistory::class,
         AnalyticsHistory::class,
         QualityHistory::class,
         FacilityHistory::class,

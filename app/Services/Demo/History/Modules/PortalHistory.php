@@ -248,6 +248,10 @@ class PortalHistory implements DemoHistoryModule
             $this->bookAhead($context, $accounts);
             $this->showcase($context, $accounts);
             $this->payments()->sweep();
+            // the days above decide by chance whether anyone complained; a hospital's history always has at least one to work
+            if ($this->summary['complaints'] === 0 && $accounts !== []) {
+                $this->complain($context, reset($accounts), $context->to->subDays(3)->toDateString());
+            }
             $this->complaints->escalateOverdue();
         });
 

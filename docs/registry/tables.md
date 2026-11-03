@@ -666,6 +666,12 @@ _Generated from the Schema::create calls in database/migrations._
 - `radiology_series`
 - `radiology_studies`
 
+## vital (3)
+
+- `vr_birth_notifications`
+- `vr_death_certifications`
+- `vr_medicolegal_cases`
+
 ## welfare (6)
 
 - `wf_applications`

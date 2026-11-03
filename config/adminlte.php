@@ -1948,8 +1948,8 @@ return [
         ],
         [
             'header' => 'Hospital services',
-            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view'],
-            'modules' => ['facility', 'quality', 'portal'],
+            'can' => ['facility.dashboard.view', 'facility.workorder.report', 'facility.housekeeping.view', 'facility.visitor.gate', 'facility.diet.view', 'facility.mortuary.view', 'quality.incident.report', 'quality.dashboard.view', 'crm.dashboard.view', 'portal.dashboard.view', 'vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view'],
+            'modules' => ['facility', 'quality', 'portal', 'vital'],
         ],
         [
             'text' => 'Facility and support',
@@ -1969,6 +1969,18 @@ return [
                 ['text' => 'Mortuary', 'url' => '/admin/facility/mortuary', 'icon' => 'bi bi-door-closed', 'can' => 'facility.mortuary.view'],
                 ['text' => 'Visitors and attendants', 'url' => '/admin/facility/visitors', 'icon' => 'bi bi-people', 'can' => 'facility.visitor.view'],
                 ['text' => 'The gate', 'url' => '/admin/facility/gate', 'icon' => 'bi bi-box-arrow-in-right', 'can' => 'facility.visitor.gate'],
+            ],
+        ],
+        [
+            'text' => 'Births, deaths and police cases',
+            'module' => 'vital',
+            'icon' => 'bi bi-journal-medical',
+            'can' => ['vital.dashboard.view', 'vital.birth.view', 'vital.death.view', 'vital.medicolegal.view'],
+            'submenu' => [
+                ['text' => 'Overview', 'url' => '/admin/vital', 'icon' => 'bi bi-speedometer2', 'can' => 'vital.dashboard.view'],
+                ['text' => 'Birth notifications', 'url' => '/admin/vital/births', 'icon' => 'bi bi-balloon-heart', 'can' => 'vital.birth.view'],
+                ['text' => 'Death certificates', 'url' => '/admin/vital/deaths', 'icon' => 'bi bi-file-earmark-medical', 'can' => 'vital.death.view'],
+                ['text' => 'Police cases', 'url' => '/admin/vital/police-cases', 'icon' => 'bi bi-shield-exclamation', 'can' => 'vital.medicolegal.view'],
             ],
         ],
         [
