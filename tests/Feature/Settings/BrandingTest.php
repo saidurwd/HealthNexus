@@ -52,6 +52,8 @@ class BrandingTest extends FrontDoorTestCase
 
         app(BrandingService::class)->apply();
         $this->assertSame('storage/'.$logo, config('adminlte.logo_img'));
+        $this->assertSame('', config('adminlte.logo'), 'the logo stands alone, without the system name');
+        $this->assertStringNotContainsString('brand-text', $this->as($me)->get('/settings/system')->getContent());
         $this->assertStringContainsString('rel="icon"', $this->as($me)->get('/settings/system?tab=branding')->getContent());
 
         $this->as($me)->post('/settings/system/branding', ['logo' => UploadedFile::fake()->image('new.jpg', 300, 120)]);

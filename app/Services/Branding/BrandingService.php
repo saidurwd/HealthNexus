@@ -159,6 +159,9 @@ class BrandingService
             $logo = $this->get('brand.logo');
             if (is_string($logo) && Storage::disk(self::DISK)->exists($logo)) {
                 config([
+                    // The hospital's own logo stands alone: no system name beside it.
+                    'adminlte.logo' => '',
+                    'adminlte.logo_img_class' => 'brand-image brand-logo-only',
                     'adminlte.logo_img' => 'storage/'.$logo,
                     'adminlte.auth_logo.enabled' => true,
                     'adminlte.auth_logo.img.path' => 'storage/'.$logo,

@@ -106,6 +106,8 @@
         .page-head .breadcrumb-item + .breadcrumb-item::before { content: "›"; }
         .page-head .breadcrumb a { text-decoration: none; }
         .page-head-title { letter-spacing: -.01em; }
+        .brand-link .brand-logo-only { max-height: 44px; max-width: 100%; width: auto; height: auto; float: none; margin: 0 auto; display: block; opacity: 1; box-shadow: none; }
+        .sidebar-collapse .brand-link .brand-logo-only { max-width: 36px; }
         #page-actions > #auto-print { order: 99; } #page-actions > #auto-export { order: 98; } /* Print always sits last, at the far right */
     </style>
 @endpush
