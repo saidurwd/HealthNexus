@@ -8,6 +8,7 @@ use App\Models\Diagnosis;
 use App\Models\Encounter;
 use App\Models\EncounterAmendment;
 use App\Models\Prescription;
+use App\Models\Provider;
 use App\Models\VitalSign;
 use App\Services\AuditLogger;
 use App\Services\Clinical\EncounterClinicalService;
@@ -124,6 +125,17 @@ class EncounterClinicalController extends Controller
         $this->auditLogger->log('CREATE', Diagnosis::class, $diagnosis->id, null, $diagnosis->toArray(), $request);
 
         return back()->with('success', __('Diagnosis added successfully.'));
+    }
+
+    /** The prescription as a one-page A4 slip the patient takes to the pharmacy. */
+    public function printPrescription(Prescription $prescription)
+    {
+        $this->authorize('view', $prescription);
+
+        $prescription->load(['patient', 'items' => fn ($q) => $q->where('is_active', true), 'doctor', 'branch']);
+        $provider = Provider::query()->with('specialty')->where('user_id', $prescription->doctor_id)->first();
+
+        return view('admin.clinical.prescription-print', compact('prescription', 'provider'));
     }
 
     public function storePrescription(StoreEncounterPrescriptionRequest $request, Encounter $encounter)

@@ -7493,5 +7493,14 @@
     "cancelled": "বাতিল",
     "written off": "অবলোপিত",
     "refunded": "ফেরত",
-    "draft": "খসড়া"
+    "draft": "খসড়া",
+    "Back to the visit": "ভিজিটে ফিরুন",
+    "This prescription is not issued yet; the printout is marked so.": "এই প্রেসক্রিপশন এখনও ইস্যু হয়নি; ছাপা কপিতে সেটি লেখা থাকবে।",
+    "DRAFT": "খসড়া",
+    "CANCELLED": "বাতিল",
+    "Registration no.": "নিবন্ধন নং",
+    "Clinical notes": "ক্লিনিক্যাল নোট",
+    "No medicines on this prescription.": "এই প্রেসক্রিপশনে কোনো ওষুধ নেই।",
+    "Signature and seal": "স্বাক্ষর ও সিল",
+    "Print prescription": "প্রেসক্রিপশন ছাপুন"
 }

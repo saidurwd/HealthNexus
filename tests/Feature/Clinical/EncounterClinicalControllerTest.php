@@ -7,6 +7,7 @@ use App\Models\Encounter;
 use App\Models\Organization;
 use App\Models\Patient;
 use App\Models\PatientAllergy;
+use App\Models\Prescription;
 use App\Models\User;
 use App\Services\TenantContextResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -39,7 +40,7 @@ class EncounterClinicalControllerTest extends TestCase
         $this->user->organizations()->attach($this->organization->id, ['access_level' => 'admin']);
         $this->user->branches()->attach($this->branch->id, ['access_level' => 'manager', 'organization_id' => $this->organization->id]);
 
-        foreach (['encounters.view', 'clinical.vitals.create', 'clinical.diagnosis.create', 'prescription.create'] as $permission) {
+        foreach (['encounters.view', 'clinical.vitals.create', 'clinical.diagnosis.create', 'prescription.create', 'prescription.view'] as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
             $this->user->givePermissionTo($permission);
         }
@@ -150,5 +151,21 @@ class EncounterClinicalControllerTest extends TestCase
         $response->assertSee('Essential hypertension');
         $response->assertSee('Paracetamol');
         $response->assertSee('120');
+    }
+
+    public function test_prescription_prints_as_a_slip_marked_when_not_issued(): void
+    {
+        $this->post("/admin/encounters/{$this->encounter->public_id}/prescriptions", [
+            'advice' => 'Plenty of fluids',
+            'items' => [['medicine_name' => 'Paracetamol', 'strength' => '500 mg', 'frequency' => 'TDS', 'duration' => '5 days', 'quantity' => 15]],
+        ]);
+        $prescription = Prescription::query()->firstOrFail();
+
+        $this->get("/admin/prescriptions/{$prescription->public_id}/print")
+            ->assertOk()
+            ->assertSee('Paracetamol')
+            ->assertSee('Plenty of fluids')
+            ->assertSee('rx-stamp', false)
+            ->assertSee('Signature and seal');
     }
 }

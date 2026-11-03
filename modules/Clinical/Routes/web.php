@@ -56,6 +56,10 @@ Route::middleware(['can:clinical.diagnosis.create'])->group(function () {
     Route::post('encounters/{encounter}/problems', [EncounterClinicalController::class, 'storeProblem'])->name('encounters.problems.store');
 });
 
+Route::middleware(['can:prescription.view'])->group(function () {
+    Route::get('prescriptions/{prescription}/print', [EncounterClinicalController::class, 'printPrescription'])->name('prescriptions.print');
+});
+
 Route::middleware(['can:prescription.create'])->group(function () {
     Route::post('encounters/{encounter}/prescriptions', [EncounterClinicalController::class, 'storePrescription'])->name('encounters.prescriptions.store');
 });

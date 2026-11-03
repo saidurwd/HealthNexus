@@ -7,7 +7,7 @@
             @if($encounter->prescriptions->isNotEmpty())
                 @foreach($encounter->prescriptions as $prescription)
                     <div class="callout callout-success">
-                        <h5>Prescription #{{ $prescription->prescription_no }}</h5>
+                        <h5>Prescription #{{ $prescription->prescription_no }} @can('prescription.view')<a href="{{ route('admin.prescriptions.print', $prescription) }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-2"><i class="bi bi-printer"></i> {{ __('Print prescription') }}</a>@endcan</h5>
                         <p class="mb-1"><strong>{{ __('Notes:') }}</strong> {{ $prescription->clinical_notes ?? '-' }}</p>
                         <p class="mb-0"><strong>{{ __('Advice:') }}</strong> {{ $prescription->advice ?? '-' }}</p>
                         @if($prescription->items->isNotEmpty())
