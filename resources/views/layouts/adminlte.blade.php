@@ -98,7 +98,7 @@
         .page-head .breadcrumb-item + .breadcrumb-item::before { content: "›"; }
         .page-head .breadcrumb a { text-decoration: none; }
         .page-head-title { letter-spacing: -.01em; }
-        #page-actions > #auto-print { order: 99; } /* Print always sits last, at the far right */
+        #page-actions > #auto-print { order: 99; } #page-actions > #auto-export { order: 98; } /* Print always sits last, at the far right */
     </style>
 @endpush
 
@@ -121,6 +121,15 @@
             <h1 class="page-head-title h3 fw-semibold mb-0" id="page-title">{{ $headTitle }}</h1>
             <div id="page-actions" class="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
                 @yield('page_actions')
+                @if($printable && str_starts_with((string) request()->route()?->getName(), 'admin.') && ! \Illuminate\Support\Str::is((array) config('export.except', []), (string) request()->route()?->getName()))
+                    <div class="dropdown" id="auto-export" style="display:none">
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-download"></i> {{ __('Export') }}</button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-export="xlsx"><i class="bi bi-file-earmark-excel text-success me-1"></i> {{ __('Excel (.xlsx)') }}</a></li>
+                            <li><a class="dropdown-item" href="#" data-export="pdf"><i class="bi bi-file-earmark-pdf text-danger me-1"></i> {{ __('PDF') }}</a></li>
+                        </ul>
+                    </div>
+                @endif
                 @if($printable)
                     <button type="button" id="auto-print" class="btn btn-sm btn-outline-secondary" onclick="window.print()" title="{{ __('Print this page') }}"><i class="bi bi-printer"></i> {{ __('Print') }}</button>
                 @endif
@@ -180,6 +189,19 @@
                 el.classList.add('d-flex', 'flex-wrap', 'align-items-center', 'gap-2');
                 bar.insertBefore(el, bar.firstChild);
                 return true;
+            });
+        }
+        // Export is offered when the page shows a table with rows; the link is this same address with ?export=.
+        var exp = document.getElementById('auto-export');
+        if (exp && document.querySelector('.app-content table tbody tr')) {
+            exp.style.display = '';
+            exp.querySelectorAll('[data-export]').forEach(function (a) {
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var u = new URL(window.location.href);
+                    u.searchParams.set('export', a.getAttribute('data-export'));
+                    window.location.href = u.toString();
+                });
             });
         }
         var auto = document.getElementById('auto-print');

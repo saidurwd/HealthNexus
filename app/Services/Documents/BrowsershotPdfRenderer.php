@@ -34,6 +34,13 @@ class BrowsershotPdfRenderer implements PdfRenderer
         if (isset(self::PAPER[$paper])) {
             [$width, $height] = self::PAPER[$paper];
             $shot->paperSize($width, $height, 'mm');
+        } elseif (str_starts_with($paper, 'a4-report')) {
+            // Exported lists and reports: margins for a running footer with the page number.
+            $shot->format('A4')->margins(12, 10, 16, 10, 'mm')->showBrowserHeaderAndFooter()->hideHeader()
+                ->footerHtml('<div style="font-size:8px;width:100%;text-align:right;padding-right:10mm;color:#555"><span class="pageNumber"></span> / <span class="totalPages"></span></div>');
+            if (str_ends_with($paper, 'landscape')) {
+                $shot->landscape();
+            }
         } else {
             $shot->format(strtoupper($paper) === 'A5' ? 'A5' : 'A4');
         }

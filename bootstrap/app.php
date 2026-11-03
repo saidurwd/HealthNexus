@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureModuleEnabled;
+use App\Http\Middleware\ExportPage;
 use App\Http\Middleware\PortalAuthenticate;
 use App\Http\Middleware\PortalEtag;
 use App\Http\Middleware\RequestIdMiddleware;
@@ -40,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             SetLocale::class,
             SetTenantContext::class,
+            ExportPage::class,
         ]);
 
         $middleware->alias([
